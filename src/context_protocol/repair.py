@@ -60,8 +60,8 @@ ISSUE_SYMBOLS = {
     "YAML_DRIFT": ("🗺️", "≋"),
 }
 
-# Agent symbols for parallel execution
-AGENT_SYMBOLS = ["◆", "●", "▲", "■", "★", "◈", "▶", "◉"]
+# Agent symbols for parallel execution (highly distinct shapes)
+AGENT_SYMBOLS = ["◆", "●", "▲", "■", "★", "⬟", "✦", "◐", "⬡", "✿"]
 
 
 def get_issue_symbol(issue_type: str) -> tuple:

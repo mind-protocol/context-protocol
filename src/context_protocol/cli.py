@@ -147,9 +147,9 @@ def main():
         help="Don't save to HEALTH.md"
     )
     doctor_parser.add_argument(
-        "--github",
+        "--no-github",
         action="store_true",
-        help="Create GitHub issues for findings"
+        help="Don't create GitHub issues for findings (default: creates issues)"
     )
     doctor_parser.add_argument(
         "--github-max",
@@ -259,7 +259,7 @@ def main():
     elif args.command == "doctor":
         exit_code = doctor_command(
             args.dir, args.format, args.level, args.no_save,
-            github=args.github, github_max=args.github_max
+            github=not args.no_github, github_max=args.github_max
         )
         sys.exit(exit_code)
     elif args.command == "map":

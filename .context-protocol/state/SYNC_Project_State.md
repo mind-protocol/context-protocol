@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-18
-UPDATED_BY: repair-agent (doctor.py monolith refactor)
+UPDATED_BY: repair-agent (repair.py monolith refactor)
 ```
 
 ---
@@ -15,7 +15,13 @@ Documentation coverage is complete. The `src/` directory containing the CLI impl
 
 ### Recent Changes
 
-**2025-12-18:** Refactored `doctor.py` to reduce monolith size:
+**2025-12-18:** Refactored `repair.py` to reduce monolith size:
+- Created `repair_instructions.py` module with issue instruction dictionary (~885 lines)
+- Moved: `get_issue_instructions()` function (725+ lines) containing all issue type prompts
+- `repair.py` reduced from 1907 → 1613 lines (294 lines extracted, still above 800 threshold)
+- Module hierarchy: `repair.py` → imports `get_issue_instructions` from `repair_instructions.py`
+
+**2025-12-18 (earlier):** Refactored `doctor.py` to reduce monolith size:
 - Created `doctor_files.py` module with file/path utilities (~280 lines extracted)
 - Moved: `parse_gitignore`, `load_doctor_config`, `should_ignore_path`, `is_binary_file`, `find_source_files`, `find_code_directories`, `count_lines`, `find_long_sections`
 - `doctor.py` reduced from 1337 → 1217 non-empty lines (still needs further splitting)
@@ -25,7 +31,8 @@ Documentation coverage is complete. The `src/` directory containing the CLI impl
 
 ## ACTIVE WORK
 
-- MONOLITH issues remain: `doctor.py` (1217 lines) and `repair.py` (1918 lines) still above 800 threshold
+- MONOLITH issues remain: `doctor.py` (1217 lines) and `repair.py` (1613 lines) still above 800 threshold
+- Next extraction candidates for `repair.py`: `repair_command()` (439L), report generation functions
 
 ---
 

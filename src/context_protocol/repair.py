@@ -17,6 +17,7 @@ from threading import Lock
 from typing import List, Dict, Any, Optional
 
 from .doctor import run_doctor, load_doctor_config, DoctorIssue
+from .repair_instructions import get_issue_instructions
 
 
 # ANSI color codes
@@ -24,6 +25,8 @@ class Colors:
     RESET = "\033[0m"
     BOLD = "\033[1m"
     DIM = "\033[2m"
+    ITALIC = "\033[3m"
+    GRAY = "\033[38;5;245m"
 
     # Agent colors (cycle through for parallel agents)
     AGENT_COLORS = [
@@ -58,6 +61,16 @@ ISSUE_SYMBOLS = {
     "UNDOC_IMPL": ("📋", "◎"),
     "LARGE_DOC_MODULE": ("📚", "▤"),
     "YAML_DRIFT": ("🗺️", "≋"),
+    "MISSING_TESTS": ("🧪", "⚗"),
+    "ORPHAN_DOCS": ("👻", "◌"),
+    "STALE_IMPL": ("📉", "⇅"),
+    "DOC_GAPS": ("🕳️", "○"),
+    "ARBITRAGE": ("⚖️", "⚡"),
+    "SUGGESTION": ("💡", "?"),
+    "NEW_UNDOC_CODE": ("🆕", "+"),
+    "COMPONENT_NO_STORIES": ("📖", "◇"),
+    "HOOK_UNDOC": ("🪝", "⌒"),
+    "DOC_DUPLICATION": ("📋", "≡"),
 }
 
 # Human-readable descriptions for issue types
@@ -74,43 +87,111 @@ ISSUE_DESCRIPTIONS = {
     "UNDOC_IMPL": ("add to IMPLEMENTATION docs:", ""),
     "LARGE_DOC_MODULE": ("reduce size of", "docs"),
     "YAML_DRIFT": ("fix modules.yaml entry for", ""),
+    "MISSING_TESTS": ("add tests for", ""),
+    "ORPHAN_DOCS": ("link or remove orphan docs in", ""),
+    "STALE_IMPL": ("update IMPLEMENTATION doc for", ""),
+    "DOC_GAPS": ("complete gaps left in", ""),
+    "ARBITRAGE": ("resolve conflict in", ""),
+    "SUGGESTION": ("implement suggestion from", ""),
+    "NEW_UNDOC_CODE": ("update docs for", ""),
+    "COMPONENT_NO_STORIES": ("add stories for", ""),
+    "HOOK_UNDOC": ("document hook", ""),
+    "DOC_DUPLICATION": ("consolidate duplicate docs in", ""),
 }
 
 
+def get_learnings_content(target_dir: Path) -> str:
+    """
+    Load learnings from GLOBAL_LEARNINGS.md and return content to append.
+
+    For repair agents, we use GLOBAL learnings since they're not VIEW-specific.
+    """
+    learnings_parts = []
+    views_dir = target_dir / ".context-protocol" / "views"
+
+    # Load global learnings
+    global_learnings = views_dir / "GLOBAL_LEARNINGS.md"
+    if global_learnings.exists():
+        content = global_learnings.read_text()
+        # Only include if there are actual learnings (more than just the template)
+        if "## Learnings" in content and content.count("\n") > 10:
+            learnings_parts.append("# GLOBAL LEARNINGS (apply to ALL tasks)\n")
+            learnings_parts.append(content)
+
+    if learnings_parts:
+        return "\n\n---\n\n" + "\n\n".join(learnings_parts)
+    return ""
+
+
+def get_issue_action_parts(issue_type: str) -> tuple:
+    """Get action parts (prefix, suffix) for an issue type."""
+    return ISSUE_DESCRIPTIONS.get(issue_type, ("fix", ""))
+
+
 def get_issue_action(issue_type: str, path: str) -> str:
-    """Get human-readable action for an issue."""
-    desc = ISSUE_DESCRIPTIONS.get(issue_type, ("fix", ""))
-    prefix, suffix = desc
+    """Get human-readable action for an issue (uncolored)."""
+    prefix, suffix = get_issue_action_parts(issue_type)
     if suffix:
         return f"{prefix} {path} {suffix}"
     return f"{prefix} {path}"
+
+
+def get_severity_color(severity: str) -> str:
+    """Get color code for severity level."""
+    return {
+        "critical": Colors.FAILURE,
+        "warning": Colors.WARNING,
+        "info": Colors.DIM,
+    }.get(severity, Colors.RESET)
 
 # Agent symbols for parallel execution (memorable characters!)
 AGENT_SYMBOLS = ["🥷", "🧚", "🤖", "🦊", "🐙", "🦄", "🧙", "🐲", "🦅", "🐺"]
 
 # Issue priority (lower = fix first) - ordered by impact
 ISSUE_PRIORITY = {
-    # Foundation issues - fix these first
+    # Foundation - fix manifest first
     "YAML_DRIFT": 1,          # Broken manifest breaks everything
-    "BROKEN_IMPL_LINK": 2,    # Broken links mislead agents
 
-    # Documentation gaps - high value fixes
-    "UNDOCUMENTED": 3,        # No docs = agents guess
-    "INCOMPLETE_CHAIN": 4,    # Partial docs confuse
-    "PLACEHOLDER": 5,         # Template content useless
+    # Documentation creation - in dependency order
+    "UNDOCUMENTED": 2,        # Create module + initial docs
+    "INCOMPLETE_CHAIN": 3,    # Complete doc chain (needs UNDOCUMENTED first)
+    "PLACEHOLDER": 4,         # Fill in content
 
-    # Staleness - moderate priority
-    "STALE_SYNC": 6,          # Outdated state misleads
-    "UNDOC_IMPL": 7,          # Missing impl docs
+    # Link fixes - need docs to exist first
+    "BROKEN_IMPL_LINK": 5,    # Fix broken links (docs now exist)
+    "NO_DOCS_REF": 6,         # Add DOCS: comments (docs now exist)
 
-    # Code quality - lower priority (more complex)
-    "MONOLITH": 8,            # Large files harder to fix
-    "STUB_IMPL": 9,           # Needs real implementation
-    "INCOMPLETE_IMPL": 10,    # Needs code completion
+    # Staleness
+    "STALE_SYNC": 7,          # Outdated state misleads
+    "UNDOC_IMPL": 8,          # Add files to IMPLEMENTATION
 
-    # Size issues - lowest priority
-    "LARGE_DOC_MODULE": 11,   # Docs too big
-    "NO_DOCS_REF": 12,        # Missing DOCS: comment (minor)
+    # Staleness and drift
+    "STALE_IMPL": 9,          # IMPLEMENTATION doesn't match files
+
+    # Code quality - more complex, do last
+    "MONOLITH": 10,           # Large files harder to fix
+    "STUB_IMPL": 11,          # Needs real implementation
+    "INCOMPLETE_IMPL": 12,    # Needs code completion
+
+    # Size and cleanup
+    "LARGE_DOC_MODULE": 13,   # Docs too big
+    "ORPHAN_DOCS": 14,        # Docs not linked from code
+    "MISSING_TESTS": 15,      # No tests (lowest - tests are optional)
+
+    # Handoff from previous agents
+    "DOC_GAPS": 3,            # High priority - previous agent left work
+
+    # Conflicts needing resolution
+    "ARBITRAGE": 0,           # Highest priority - needs human decision first
+
+    # User-requested actions
+    "SUGGESTION": 1,          # User accepted - do after conflicts but before other work
+
+    # Documentation drift
+    "NEW_UNDOC_CODE": 8,      # Code changed but docs not updated
+    "COMPONENT_NO_STORIES": 16,  # FE component without stories (low priority)
+    "HOOK_UNDOC": 16,         # Hook without docs (low priority)
+    "DOC_DUPLICATION": 6,     # Consolidate duplicate docs (after docs created)
 }
 
 
@@ -168,6 +249,7 @@ DEPTH_LINKS = {
     "BROKEN_IMPL_LINK",   # Fix broken file references in IMPLEMENTATION doc
     "YAML_DRIFT",         # Fix modules.yaml mappings
     "UNDOC_IMPL",         # Add file to IMPLEMENTATION doc
+    "ORPHAN_DOCS",        # Link or remove orphan docs
 }
 
 DEPTH_DOCS = DEPTH_LINKS | {
@@ -177,6 +259,10 @@ DEPTH_DOCS = DEPTH_LINKS | {
     "PLACEHOLDER",        # Fill in placeholder content
     "INCOMPLETE_CHAIN",   # Create missing doc types
     "LARGE_DOC_MODULE",   # Reduce doc module size
+    "STALE_IMPL",         # Update outdated IMPLEMENTATION doc
+    "DOC_GAPS",           # Complete gaps from previous agent
+    "ARBITRAGE",          # Resolve conflicts with human decision
+    "DOC_DUPLICATION",    # Consolidate duplicate documentation
 }
 
 DEPTH_FULL = DEPTH_DOCS | {
@@ -184,6 +270,7 @@ DEPTH_FULL = DEPTH_DOCS | {
     "MONOLITH",           # Split large files
     "STUB_IMPL",          # Implement stub functions
     "INCOMPLETE_IMPL",    # Complete empty functions
+    "MISSING_TESTS",      # Write tests for module
 }
 
 
@@ -196,6 +283,7 @@ class RepairResult:
     agent_output: str
     duration_seconds: float
     error: Optional[str] = None
+    decisions_made: List[Dict[str, str]] = None  # [{name, conflict, resolution, reasoning}]
 
 
 # Agent system prompt template
@@ -209,456 +297,110 @@ CRITICAL RULES:
 5. Do NOT make unrelated changes or "improvements"
 6. Report completion status clearly at the end
 
+CLI COMMANDS (use these!):
+- `context-protocol context {file}` - Get full doc chain for any source file
+- `context-protocol validate` - Check protocol invariants after changes
+- `context-protocol doctor --no-github` - Re-check project health
+
 BIDIRECTIONAL LINKS:
 - When creating new docs, add CHAIN section linking to related docs
 - When modifying code, ensure DOCS: reference points to correct docs
 - When creating module docs, add mapping to modules.yaml
 
-GIT COMMITS:
-- After making changes, commit with a descriptive message
-- If a GitHub issue number is provided, include "Closes #NUMBER" in the commit message
-- Use conventional commit format when appropriate (fix:, feat:, docs:, refactor:)
+AFTER CHANGES:
+- Run `context-protocol validate` to verify links are correct
+- Update SYNC file with what changed
+- Commit with descriptive message (include "Closes #NUMBER" if GitHub issue provided)
+
+IF YOU CAN'T COMPLETE THE FULL FIX:
+- Still report "REPAIR COMPLETE" for what you DID finish
+- Add a "## GAPS" section to the relevant SYNC file listing:
+  - What was completed
+  - What remains to be done
+  - Why you couldn't finish (missing info, too complex, needs human decision, etc.)
+- Example SYNC addition:
+  ```
+  ## GAPS
+
+  ### From repair session {date}
+  - [x] Created PATTERNS doc
+  - [ ] ALGORITHM doc needs: detailed flow for edge cases
+  - [ ] Blocked: need clarification on error handling strategy
+  ```
+- This ensures the next agent knows exactly where to pick up
+
+IF YOU FIND CONTRADICTIONS (docs vs code, or doc vs doc):
+- Add a "## CONFLICTS" section to the relevant SYNC file
+- **BE DECISIVE** - make the call yourself unless you truly cannot
+- We can always improve later; progress > perfection
+
+**Before making a DECISION:**
+- If <70% confident, RE-READ the relevant docs first
+- Check: PATTERNS (why), BEHAVIORS (what), ALGORITHM (how), VALIDATION (constraints)
+- Often the answer is in the docs - you just need to look again
+
+- For each conflict, categorize as DECISION or ARBITRAGE:
+  - DECISION: You resolve it (this should be 90%+ of conflicts)
+  - ARBITRAGE: Only when you truly cannot decide (missing critical info, major architectural choice)
+
+- **DECISION format** (preferred - be decisive!):
+  ```
+  ### DECISION: {conflict name}
+  - Conflict: {what contradicted what}
+  - Resolution: {what you decided}
+  - Reasoning: {why this choice}
+  - Updated: {what files you changed}
+  ```
+
+- ARBITRAGE only when truly blocked - can be TWO types:
+
+  **Type 1: Choice needed** - you understand but can't decide
+  - Provide options in (A)/(B)/(C) format with pros/cons
+  - Give recommendation with reasoning if you have one
+
+  **Type 2: Context needed** - you lack information to proceed
+  - Explain what you're trying to do
+  - Explain what you need to know
+  - Be specific about what context would unblock you
+
+- Example SYNC addition:
+  ```
+  ## CONFLICTS
+
+  ### DECISION: Auth timeout value
+  - BEHAVIORS says 30 min, code uses 15 min
+  - Resolved: Updated BEHAVIORS to match code (15 min is intentional per commit history)
+
+  ### ARBITRAGE: Error handling strategy
+  - PATTERNS says "fail fast", ALGORITHM says "retry 3 times"
+  - Needs human: Which approach should we use?
+  - (A) Fail fast everywhere
+    - Pro: Simpler, surfaces bugs early, easier to debug
+    - Con: Poor UX for transient network issues
+  - (B) Retry for network errors only
+    - Pro: Resilient to transient failures, better UX
+    - Con: Can mask real issues, adds latency
+  - (C) Configurable per-call
+    - Pro: Maximum flexibility
+    - Con: More complex API, decisions pushed to callers
+  - **Recommendation:** (B) - Most codebases benefit from retry on network errors.
+    The "fail fast" in PATTERNS likely refers to logic errors, not I/O.
+
+  ### ARBITRAGE: Payment provider integration
+  - Trying to: Document the payment flow in ALGORITHM
+  - Need to know: Which payment provider is being used? (Stripe, PayPal, custom?)
+  - Context needed: The code uses `PaymentClient` but I can't find its implementation
+    or configuration. Is this an internal service or third-party API?
+  - This would help me: Write accurate ALGORITHM docs and error handling guidance
+  ```
+- DECISION items: resolve and mark as resolved
+- ARBITRAGE items: leave for human review, will be detected by doctor
+- The `repair` command will prompt users interactively for ARBITRAGE items
 """
 
 
-def get_issue_instructions(issue: DoctorIssue, target_dir: Path) -> Dict[str, Any]:
-    """Generate specific instructions for each issue type."""
-
-    instructions = {
-        "MONOLITH": {
-            "view": "VIEW_Refactor_Improve_Code_Structure.md",
-            "description": "Split a monolith file into smaller modules",
-            "docs_to_read": [
-                ".context-protocol/views/VIEW_Refactor_Improve_Code_Structure.md",
-                ".context-protocol/PRINCIPLES.md",
-            ],
-            "prompt": f"""## Task: Split Monolith File
-
-**Target:** `{issue.path}`
-**Problem:** {issue.message}
-{f"**Suggestion:** {issue.suggestion}" if issue.suggestion else ""}
-
-## Steps:
-
-1. Read the VIEW and PRINCIPLES docs listed above
-2. Read the target file to understand its structure
-3. Identify the largest function/class mentioned in the suggestion
-4. Create a new file for the extracted code (e.g., `{Path(issue.path).stem}_utils.py`)
-5. Move the function/class to the new file
-6. Update imports in the original file
-7. Run any existing tests to verify nothing broke
-8. Update SYNC with what you changed
-
-## Success Criteria:
-- Original file is shorter
-- Code still works (tests pass if they exist)
-- Imports are correct
-- SYNC is updated
-
-Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
-""",
-            "docs_to_update": [".context-protocol/state/SYNC_Project_State.md"],
-        },
-
-        "UNDOCUMENTED": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "description": "Create documentation for undocumented code",
-            "docs_to_read": [
-                ".context-protocol/views/VIEW_Document_Create_Module_Documentation.md",
-                ".context-protocol/templates/PATTERNS_TEMPLATE.md",
-                ".context-protocol/templates/SYNC_TEMPLATE.md",
-            ],
-            "prompt": f"""## Task: Document Module
-
-**Target:** `{issue.path}`
-**Problem:** {issue.message}
-
-## Steps:
-
-1. Read the VIEW and template docs listed above
-2. Read the code in `{issue.path}` to understand what it does
-3. Add mapping to `modules.yaml`:
-   ```yaml
-   modules:
-     {Path(issue.path).name}:
-       code: "{issue.path}/**"
-       docs: "docs/{issue.path}/"
-       maturity: DESIGNING
-   ```
-4. Create minimum viable docs:
-   - `docs/{issue.path}/PATTERNS_*.md` - why this module exists, design approach
-   - `docs/{issue.path}/SYNC_*.md` - current state
-5. Add DOCS: reference to main source file
-6. Update SYNC_Project_State.md with what you created
-
-## Success Criteria:
-- modules.yaml has mapping
-- PATTERNS doc exists with actual content (not placeholders)
-- SYNC doc exists
-- Main source file has DOCS: reference
-
-Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
-""",
-            "docs_to_update": [
-                "modules.yaml",
-                ".context-protocol/state/SYNC_Project_State.md",
-            ],
-        },
-
-        "STALE_SYNC": {
-            "view": "VIEW_Implement_Write_Or_Modify_Code.md",
-            "description": "Update stale SYNC file",
-            "docs_to_read": [
-                ".context-protocol/views/VIEW_Implement_Write_Or_Modify_Code.md",
-                issue.path,  # The stale SYNC file itself
-            ],
-            "prompt": f"""## Task: Update Stale SYNC File
-
-**Target:** `{issue.path}`
-**Problem:** {issue.message}
-
-## Steps:
-
-1. Read the VIEW doc and the current SYNC file
-2. Read the code/docs that this SYNC file describes
-3. Compare current state with what SYNC says
-4. Update SYNC to reflect reality:
-   - Update LAST_UPDATED to today's date
-   - Update STATUS if needed
-   - Update CURRENT STATE section
-   - Remove outdated information
-   - Add any new developments
-5. If the SYNC is for a module, also check if the module's code has changed
-
-## Success Criteria:
-- LAST_UPDATED is today's date
-- Content reflects current reality
-- No outdated information
-
-Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
-""",
-            "docs_to_update": [issue.path],
-        },
-
-        "PLACEHOLDER": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "description": "Fill in placeholder content",
-            "docs_to_read": [
-                ".context-protocol/views/VIEW_Document_Create_Module_Documentation.md",
-                issue.path,
-            ],
-            "prompt": f"""## Task: Fill In Placeholders
-
-**Target:** `{issue.path}`
-**Problem:** {issue.message}
-**Placeholders found:** {issue.details.get('placeholders', [])}
-
-## Steps:
-
-1. Read the VIEW doc and the file with placeholders
-2. Identify each placeholder (like {{MODULE_NAME}}, {{DESCRIPTION}}, etc.)
-3. Read related code/docs to understand what should replace each placeholder
-4. Replace all placeholders with actual content
-5. Ensure the document makes sense and is complete
-
-## Success Criteria:
-- No {{PLACEHOLDER}} patterns remain
-- Content is meaningful, not generic
-- Document is useful for agents
-
-Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
-""",
-            "docs_to_update": [issue.path],
-        },
-
-        "INCOMPLETE_CHAIN": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "description": "Complete documentation chain",
-            "docs_to_read": [
-                ".context-protocol/views/VIEW_Document_Create_Module_Documentation.md",
-            ],
-            "prompt": f"""## Task: Complete Documentation Chain
-
-**Target:** `{issue.path}`
-**Missing docs:** {issue.details.get('missing', [])}
-**Existing docs:** {issue.details.get('present', [])}
-
-## Steps:
-
-1. Read the VIEW doc
-2. Read existing docs in `{issue.path}` to understand the module
-3. For EACH missing doc type, create the file:
-   - Use templates from `.context-protocol/templates/`
-   - Fill with actual content based on the code
-4. Ensure CHAIN sections link all docs together
-5. Update SYNC with what you created
-
-## Priority order for creation:
-1. PATTERNS (if missing) - most important
-2. IMPLEMENTATION (if missing) - code structure
-3. SYNC (if missing) - current state
-4. Others as needed
-
-## Success Criteria:
-- Missing doc types are created
-- Content is real, not placeholders
-- CHAIN sections link correctly
-
-Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
-""",
-            "docs_to_update": [issue.path],
-        },
-
-        "NO_DOCS_REF": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "description": "Add DOCS: reference to source file",
-            "docs_to_read": [
-                ".context-protocol/views/VIEW_Document_Create_Module_Documentation.md",
-            ],
-            "prompt": f"""## Task: Add DOCS Reference
-
-**Target:** `{issue.path}`
-**Problem:** {issue.message}
-
-## Steps:
-
-1. Find the documentation for this code (check docs/ and modules.yaml)
-2. Add a DOCS: reference near the top of the file:
-   - Python: `# DOCS: docs/path/to/PATTERNS_*.md`
-   - JS/TS: `// DOCS: docs/path/to/PATTERNS_*.md`
-3. If no docs exist, create minimum PATTERNS + SYNC docs first
-
-## Success Criteria:
-- Source file has DOCS: reference in header
-- Reference points to existing doc file
-
-Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
-""",
-            "docs_to_update": [issue.path],
-        },
-
-        "BROKEN_IMPL_LINK": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "description": "Fix broken file references in IMPLEMENTATION doc",
-            "docs_to_read": [
-                ".context-protocol/views/VIEW_Document_Create_Module_Documentation.md",
-                issue.path,
-            ],
-            "prompt": f"""## Task: Fix Broken Implementation Links
-
-**Target:** `{issue.path}`
-**Problem:** {issue.message}
-**Missing files:** {issue.details.get('missing_files', [])}
-
-## Steps:
-
-1. Read the IMPLEMENTATION doc
-2. For each missing file reference:
-   - Search the codebase for the actual file location
-   - If file was moved: update the path in the doc
-   - If file was renamed: update the reference
-   - If file was deleted: remove the reference or note it's deprecated
-3. Verify all remaining file references point to existing files
-4. Update SYNC with what you fixed
-
-## Success Criteria:
-- All file references in IMPLEMENTATION doc point to existing files
-- No broken links remain
-- SYNC updated
-
-Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
-""",
-            "docs_to_update": [issue.path],
-        },
-
-        "STUB_IMPL": {
-            "view": "VIEW_Implement_Write_Or_Modify_Code.md",
-            "description": "Implement stub functions",
-            "docs_to_read": [
-                ".context-protocol/views/VIEW_Implement_Write_Or_Modify_Code.md",
-                ".context-protocol/PRINCIPLES.md",
-            ],
-            "prompt": f"""## Task: Implement Stub Functions
-
-**Target:** `{issue.path}`
-**Problem:** {issue.message}
-**Stub indicators:** {issue.details.get('stubs', [])}
-
-## Steps:
-
-1. Read the file and identify all stub patterns (TODO, NotImplementedError, pass, etc.)
-2. For each stub function:
-   - Understand what it should do from context (docstring, function name, callers)
-   - Implement the actual logic
-   - Remove the stub marker
-3. If you cannot implement (missing requirements), document why in SYNC
-4. Run any existing tests to verify implementations work
-
-## Success Criteria:
-- Stub functions have real implementations
-- No NotImplementedError, TODO in function bodies
-- Tests pass (if they exist)
-- SYNC updated with what was implemented
-
-Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
-""",
-            "docs_to_update": [".context-protocol/state/SYNC_Project_State.md"],
-        },
-
-        "INCOMPLETE_IMPL": {
-            "view": "VIEW_Implement_Write_Or_Modify_Code.md",
-            "description": "Complete empty functions",
-            "docs_to_read": [
-                ".context-protocol/views/VIEW_Implement_Write_Or_Modify_Code.md",
-            ],
-            "prompt": f"""## Task: Complete Empty Functions
-
-**Target:** `{issue.path}`
-**Problem:** {issue.message}
-**Empty functions:** {[f['name'] for f in issue.details.get('empty_functions', [])]}
-
-## Steps:
-
-1. Read the file and find empty functions (only have pass, docstring, or trivial body)
-2. For each empty function:
-   - Understand its purpose from name, docstring, and how it's called
-   - Implement the logic
-3. If a function should remain empty (abstract base, protocol), add a comment explaining why
-4. Update SYNC with implementations added
-
-## Success Criteria:
-- Empty functions have real implementations
-- Or have comments explaining why they're intentionally empty
-- SYNC updated
-
-Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
-""",
-            "docs_to_update": [".context-protocol/state/SYNC_Project_State.md"],
-        },
-
-        "UNDOC_IMPL": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "description": "Document implementation file",
-            "docs_to_read": [
-                ".context-protocol/views/VIEW_Document_Create_Module_Documentation.md",
-            ],
-            "prompt": f"""## Task: Document Implementation File
-
-**Target:** `{issue.path}`
-**Problem:** {issue.message}
-
-## Steps:
-
-1. Read the source file to understand what it does
-2. Find the relevant IMPLEMENTATION_*.md doc (or create one if none exists)
-3. Add the file to the IMPLEMENTATION doc with:
-   - File path
-   - Brief description of what it does
-   - Key functions/classes it contains
-   - How it fits in the data flow
-4. Update the CHAIN section if needed
-5. Update SYNC
-
-## Success Criteria:
-- File is referenced in an IMPLEMENTATION doc
-- Description is accurate and helpful
-- Bidirectional link established
-
-Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
-""",
-            "docs_to_update": [],
-        },
-
-        "LARGE_DOC_MODULE": {
-            "view": "VIEW_Refactor_Improve_Code_Structure.md",
-            "description": "Reduce documentation module size",
-            "docs_to_read": [
-                ".context-protocol/views/VIEW_Refactor_Improve_Code_Structure.md",
-                issue.path,
-            ],
-            "prompt": f"""## Task: Reduce Documentation Size
-
-**Target:** `{issue.path}`
-**Problem:** {issue.message}
-**File sizes:** {[(f['file'], f'{f["chars"]//1000}K') for f in issue.details.get('file_sizes', [])[:5]]}
-
-## Steps:
-
-1. Read the docs in the module folder
-2. Identify content that can be reduced:
-   - Old/archived sections -> move to dated archive file
-   - Duplicate information -> consolidate
-   - Verbose explanations -> make concise
-   - Implementation details that changed -> update or remove
-3. For large individual files, consider splitting into focused sub-docs
-4. Update CHAIN sections after any splits
-5. Update SYNC with what was reorganized
-
-## Archiving pattern:
-- Create `{issue.path}/archive/SYNC_archive_2024-12.md` for old content
-- Keep only current state in main docs
-
-## Success Criteria:
-- Total chars under 50K
-- Content is current and relevant
-- No duplicate information
-- CHAIN links still work
-
-Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
-""",
-            "docs_to_update": [issue.path],
-        },
-
-        "YAML_DRIFT": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "description": "Fix modules.yaml drift",
-            "docs_to_read": [
-                ".context-protocol/views/VIEW_Document_Create_Module_Documentation.md",
-                "modules.yaml",
-            ],
-            "prompt": f"""## Task: Fix YAML Drift
-
-**Target:** `{issue.path}`
-**Module:** {issue.details.get('module', 'unknown')}
-**Issues:** {issue.details.get('issues', [])}
-
-## Steps:
-
-1. Read modules.yaml and find the module entry
-2. For each drift issue:
-   - **Path not found**: Search for where the code/docs actually are, update the path
-   - **Dependency not defined**: Either add the missing module or remove the dependency
-3. If the module was completely removed, delete its entry from modules.yaml
-4. Verify all paths now exist
-5. Update SYNC with what was fixed
-
-## Success Criteria:
-- All code/docs/tests paths in the module entry point to existing directories
-- All dependencies reference defined modules
-- modules.yaml reflects reality
-
-Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
-""",
-            "docs_to_update": ["modules.yaml"],
-        },
-    }
-
-    return instructions.get(issue.issue_type, {
-        "view": "VIEW_Implement_Write_Or_Modify_Code.md",
-        "description": f"Fix {issue.issue_type} issue",
-        "docs_to_read": [".context-protocol/PROTOCOL.md"],
-        "prompt": f"""## Task: Fix Issue
-
-**Target:** `{issue.path}`
-**Problem:** {issue.message}
-**Suggestion:** {issue.suggestion}
-
-Review and fix this issue following the Context Protocol.
-
-Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
-""",
-        "docs_to_update": [],
-    })
+# NOTE: get_issue_instructions() moved to repair_instructions.py
+# See import at top: from .repair_instructions import get_issue_instructions
 
 
 def build_agent_prompt(
@@ -700,15 +442,72 @@ Load and follow: `.context-protocol/views/{instructions['view']}`
 """
 
 
+def parse_decisions_from_output(output: str) -> List[Dict[str, str]]:
+    """Parse DECISION items from agent output."""
+    decisions = []
+    lines = output.split('\n')
+
+    current_decision = None
+    for line in lines:
+        stripped = line.strip()
+
+        # Look for DECISION headers
+        if '### DECISION:' in stripped or '### Decision:' in stripped:
+            if current_decision and current_decision.get('name'):
+                decisions.append(current_decision)
+            name = stripped.split(':', 1)[1].strip() if ':' in stripped else ''
+            current_decision = {'name': name, 'conflict': '', 'resolution': '', 'reasoning': ''}
+        elif current_decision:
+            lower = stripped.lower()
+            if lower.startswith('- conflict:') or lower.startswith('conflict:'):
+                current_decision['conflict'] = stripped.split(':', 1)[1].strip()
+            elif lower.startswith('- resolution:') or lower.startswith('resolution:'):
+                current_decision['resolution'] = stripped.split(':', 1)[1].strip()
+            elif lower.startswith('- reasoning:') or lower.startswith('reasoning:'):
+                current_decision['reasoning'] = stripped.split(':', 1)[1].strip()
+            elif lower.startswith('- updated:') or lower.startswith('updated:'):
+                current_decision['updated'] = stripped.split(':', 1)[1].strip()
+            elif stripped.startswith('###') or stripped.startswith('## '):
+                # New section, save current decision
+                if current_decision.get('name'):
+                    decisions.append(current_decision)
+                current_decision = None
+
+    # Don't forget last decision
+    if current_decision and current_decision.get('name'):
+        decisions.append(current_decision)
+
+    return decisions
+
+
 def spawn_repair_agent(
     issue: DoctorIssue,
     target_dir: Path,
     dry_run: bool = False,
     github_issue_number: Optional[int] = None,
+    arbitrage_decisions: Optional[List['ArbitrageDecision']] = None,
+    agent_symbol: str = "→",
 ) -> RepairResult:
     """Spawn a Claude Code agent to fix a single issue."""
 
     instructions = get_issue_instructions(issue, target_dir)
+
+    # For ARBITRAGE issues, inject the human decisions into the prompt
+    if issue.issue_type == "ARBITRAGE" and arbitrage_decisions:
+        decisions_text = "\n".join(
+            f"- **{d.conflict_title}**: {d.decision}"
+            for d in arbitrage_decisions if not d.passed
+        )
+        instructions["prompt"] = instructions["prompt"].replace(
+            "{arbitrage_decisions}",
+            decisions_text or "(No decisions provided)"
+        )
+    elif issue.issue_type == "ARBITRAGE":
+        instructions["prompt"] = instructions["prompt"].replace(
+            "{arbitrage_decisions}",
+            "(No decisions provided - skip this issue)"
+        )
+
     prompt = build_agent_prompt(issue, instructions, target_dir, github_issue_number)
 
     if dry_run:
@@ -728,12 +527,15 @@ def spawn_repair_agent(
             duration_seconds=0,
         )
 
+    # Build system prompt with learnings
+    system_prompt = AGENT_SYSTEM_PROMPT + get_learnings_content(target_dir)
+
     # Build the claude command
     cmd = [
         "claude",
         "-p", prompt,
         "--dangerously-skip-permissions",
-        "--append-system-prompt", AGENT_SYSTEM_PROMPT,
+        "--append-system-prompt", system_prompt,
         "--verbose",
         "--output-format", "stream-json",
     ]
@@ -773,26 +575,38 @@ def spawn_repair_agent(
                             text = content.get("text", "")
                             if text:
                                 text_output.append(text)
-                                # Show concise progress (first 100 chars)
-                                preview = text[:100].replace('\n', ' ')
-                                if len(text) > 100:
-                                    preview += "..."
-                                sys.stdout.write(f"    → {preview}\n")
-                                sys.stdout.flush()
-
-                # Show tool usage (condensed)
-                elif msg_type == "assistant":
-                    message = data.get("message", {})
-                    for content in message.get("content", []):
-                        if content.get("type") == "tool_use":
+                                # Show full text output, indented
+                                for line in text.split('\n'):
+                                    stripped = line.strip()
+                                    if stripped:
+                                        # Highlight DECISION items
+                                        if '### DECISION:' in stripped or '### Decision:' in stripped:
+                                            decision_name = stripped.split(':', 1)[1].strip() if ':' in stripped else ''
+                                            sys.stdout.write(f"    {Colors.BOLD}{agent_symbol} ⚡ DECISION: {decision_name}{Colors.RESET}\n")
+                                        elif stripped.lower().startswith('- resolution:') or stripped.lower().startswith('resolution:'):
+                                            resolution = stripped.split(':', 1)[1].strip()
+                                            sys.stdout.write(f"    {agent_symbol} {Colors.SUCCESS}→ {resolution}{Colors.RESET}\n")
+                                        else:
+                                            sys.stdout.write(f"    {agent_symbol} {line}\n")
+                                        sys.stdout.flush()
+                        elif content.get("type") == "tool_use":
                             tool = content.get("name", "unknown")
-                            sys.stdout.write(f"    📎 Using {tool}...\n")
+                            tool_input = content.get("input", {})
+                            # Extract file path for file operations
+                            file_path = tool_input.get("file_path") or tool_input.get("path") or ""
+                            if file_path and tool in ("Read", "Write", "Edit", "Glob", "Grep"):
+                                # Shorten path for display
+                                short_path = file_path.split("/")[-2:] if "/" in file_path else [file_path]
+                                path_display = "/".join(short_path)
+                                sys.stdout.write(f"    {agent_symbol} {Colors.DIM}{Colors.ITALIC}📎 {tool} {path_display}{Colors.RESET}\n")
+                            else:
+                                sys.stdout.write(f"    {agent_symbol} {Colors.DIM}{Colors.ITALIC}📎 {tool}{Colors.RESET}\n")
                             sys.stdout.flush()
 
             except json.JSONDecodeError:
                 # Not JSON, might be plain text
                 if line and not line.startswith("{"):
-                    sys.stdout.write(f"    {line}\n")
+                    sys.stdout.write(f"    {agent_symbol} {line}\n")
                     sys.stdout.flush()
 
         process.wait(timeout=600)
@@ -800,8 +614,11 @@ def spawn_repair_agent(
         output = "".join(output_lines)
         readable_output = "\n".join(text_output)
 
-        # Check for success markers in output
-        success = "REPAIR COMPLETE" in output and "REPAIR FAILED" not in output
+        # Check for success markers in readable text output (not raw JSON)
+        success = "REPAIR COMPLETE" in readable_output and "REPAIR FAILED" not in readable_output
+
+        # Parse decisions made by the agent
+        decisions = parse_decisions_from_output(readable_output)
 
         return RepairResult(
             issue_type=issue.issue_type,
@@ -810,6 +627,7 @@ def spawn_repair_agent(
             agent_output=output,
             duration_seconds=duration,
             error=None if process.returncode == 0 else f"Exit code: {process.returncode}",
+            decisions_made=decisions if decisions else None,
         )
 
     except subprocess.TimeoutExpired:
@@ -833,13 +651,151 @@ def spawn_repair_agent(
         )
 
 
+REPORT_PROMPT = """You are generating a repair report for a Context Protocol project.
+
+Analyze the repair session data and write a detailed, insightful report. Be specific about:
+1. What patterns you see in the repairs (common issue types, areas of the codebase)
+2. Why certain repairs may have failed
+3. Concrete next steps for the human or next agent
+4. Any systemic issues the repairs reveal about the project
+
+Write in a direct, professional tone. Use markdown formatting.
+
+## Repair Session Data
+
+**Project:** {project_name}
+**Date:** {date}
+
+### Health Score
+- Before: {score_before}/100
+- After: {score_after}/100
+- Change: {score_change:+d}
+
+### Issue Summary
+- Critical before: {critical_before} → after: {critical_after}
+- Warnings before: {warning_before} → after: {warning_after}
+
+### Repairs Attempted ({total_repairs})
+**Successful ({success_count}):**
+{successful_list}
+
+**Failed ({failed_count}):**
+{failed_list}
+
+**Total Duration:** {total_duration:.1f} seconds
+
+### Decisions Made by Agents
+{decisions_list}
+
+### Remaining Issues
+Critical: {remaining_critical}
+Warnings: {remaining_warning}
+
+---
+
+Write the report now. Include:
+1. Executive Summary (2-3 sentences)
+2. What Was Fixed (with insights, not just a list)
+3. Decisions Made (highlight key choices agents made and their reasoning)
+4. What Failed and Why (analysis)
+5. Patterns Observed (what do these issues say about the codebase?)
+6. Recommended Next Steps (specific, actionable)
+7. For Next Agent (handoff notes)
+"""
+
+
+def generate_llm_report(
+    before_results: Dict[str, Any],
+    after_results: Dict[str, Any],
+    repair_results: List[RepairResult],
+    target_dir: Path,
+) -> Optional[str]:
+    """Generate a detailed report using Claude."""
+
+    successful = [r for r in repair_results if r.success]
+    failed = [r for r in repair_results if not r.success]
+
+    successful_list = "\n".join(
+        f"- {r.issue_type}: `{r.target_path}` ({r.duration_seconds:.1f}s)"
+        for r in successful
+    ) or "None"
+
+    failed_list = "\n".join(
+        f"- {r.issue_type}: `{r.target_path}` — {r.error or 'unknown error'}"
+        for r in failed
+    ) or "None"
+
+    # Collect all decisions made
+    all_decisions = []
+    for r in repair_results:
+        if r.decisions_made:
+            for d in r.decisions_made:
+                all_decisions.append(f"- **{d.get('name', 'Unknown')}**: {d.get('resolution', 'No resolution')} (Reason: {d.get('reasoning', 'Not stated')})")
+    decisions_list = "\n".join(all_decisions) or "None"
+
+    prompt = REPORT_PROMPT.format(
+        project_name=target_dir.name,
+        date=datetime.now().strftime('%Y-%m-%d %H:%M'),
+        score_before=before_results["score"],
+        score_after=after_results["score"],
+        score_change=after_results["score"] - before_results["score"],
+        critical_before=before_results["summary"]["critical"],
+        critical_after=after_results["summary"]["critical"],
+        warning_before=before_results["summary"]["warning"],
+        warning_after=after_results["summary"]["warning"],
+        total_repairs=len(repair_results),
+        success_count=len(successful),
+        failed_count=len(failed),
+        successful_list=successful_list,
+        failed_list=failed_list,
+        decisions_list=decisions_list,
+        total_duration=sum(r.duration_seconds for r in repair_results),
+        remaining_critical=after_results["summary"]["critical"],
+        remaining_warning=after_results["summary"]["warning"],
+    )
+
+    try:
+        cmd = [
+            "claude",
+            "-p", prompt,
+            "--output-format", "text",
+        ]
+
+        result = subprocess.run(
+            cmd,
+            cwd=target_dir,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+
+        if result.returncode == 0 and result.stdout.strip():
+            # Add header
+            header = f"""# Context Protocol Repair Report
+
+```
+GENERATED: {datetime.now().strftime('%Y-%m-%d %H:%M')}
+PROJECT: {target_dir.name}
+GENERATED_BY: Claude
+```
+
+---
+
+"""
+            return header + result.stdout.strip()
+    except Exception as e:
+        print(f"  {Colors.DIM}(LLM report failed: {e}, using fallback){Colors.RESET}")
+
+    return None
+
+
 def generate_final_report(
     before_results: Dict[str, Any],
     after_results: Dict[str, Any],
     repair_results: List[RepairResult],
     target_dir: Path,
 ) -> str:
-    """Generate a final report summarizing all repairs."""
+    """Generate a final report summarizing all repairs (fallback if LLM fails)."""
 
     # Calculate improvements
     score_before = before_results["score"]
@@ -900,6 +856,29 @@ def generate_final_report(
                 lines.append(f"  - Error: {r.error}")
         lines.append("")
 
+    # Decisions made
+    all_decisions = []
+    for r in repair_results:
+        if r.decisions_made:
+            all_decisions.extend(r.decisions_made)
+
+    if all_decisions:
+        lines.append("## Decisions Made")
+        lines.append("")
+        lines.append("Agents made the following decisions to resolve conflicts:")
+        lines.append("")
+        for d in all_decisions:
+            lines.append(f"### {d.get('name', 'Unknown')}")
+            if d.get('conflict'):
+                lines.append(f"- **Conflict:** {d['conflict']}")
+            if d.get('resolution'):
+                lines.append(f"- **Resolution:** {d['resolution']}")
+            if d.get('reasoning'):
+                lines.append(f"- **Reasoning:** {d['reasoning']}")
+            if d.get('updated'):
+                lines.append(f"- **Updated:** {d['updated']}")
+            lines.append("")
+
     # Remaining issues
     if after_results["summary"]["critical"] > 0 or after_results["summary"]["warning"] > 0:
         lines.append("## Remaining Issues")
@@ -955,6 +934,245 @@ def get_depth_types(depth: str) -> set:
         return DEPTH_FULL
 
 
+@dataclass
+class ArbitrageDecision:
+    """User's decision for an ARBITRAGE conflict."""
+    conflict_title: str
+    decision: str  # User's choice or "pass"
+    passed: bool = False
+
+
+# Global state for manager input
+manager_input_queue = []
+manager_input_lock = Lock()
+stop_input_listener = False
+
+
+def input_listener_thread():
+    """Background thread that listens for user input during repairs."""
+    global stop_input_listener
+    import select
+    import sys
+
+    while not stop_input_listener:
+        try:
+            # Check if input is available (non-blocking on Unix)
+            if sys.platform != 'win32':
+                readable, _, _ = select.select([sys.stdin], [], [], 0.5)
+                if readable:
+                    line = sys.stdin.readline().strip()
+                    if line:
+                        with manager_input_lock:
+                            manager_input_queue.append(line)
+            else:
+                # Windows fallback - just sleep
+                time.sleep(0.5)
+        except Exception:
+            break
+
+
+def spawn_manager_agent(
+    user_input: str,
+    recent_logs: List[str],
+    target_dir: Path,
+) -> Optional[str]:
+    """Spawn the manager agent with user input and recent logs."""
+
+    manager_dir = target_dir / ".context-protocol" / "agents" / "manager"
+    if not manager_dir.exists():
+        print(f"  {Colors.DIM}(Manager agent not found at {manager_dir}){Colors.RESET}")
+        return None
+
+    # Build context with recent logs
+    logs_context = "\n".join(recent_logs[-50:]) if recent_logs else "(No recent logs)"
+
+    prompt = f"""## Human Input During Repair
+
+The human has provided input during an active repair session:
+
+**Human says:** {user_input}
+
+## Recent Repair Logs
+
+```
+{logs_context}
+```
+
+## Your Task
+
+Respond to the human's input. If they're:
+- Asking a question → Answer it
+- Providing context → Acknowledge and explain how it helps
+- Making a decision → Record it as a DECISION
+- Redirecting → Acknowledge the new direction
+
+Keep your response concise - repairs are in progress.
+"""
+
+    try:
+        cmd = [
+            "claude",
+            "--continue",
+            "-p", prompt,
+            "--output-format", "text",
+        ]
+
+        print()
+        print(f"{Colors.BOLD}🎛️  Manager Agent{Colors.RESET}")
+        print(f"{'─'*40}")
+
+        result = subprocess.run(
+            cmd,
+            cwd=manager_dir,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+
+        if result.returncode == 0 and result.stdout.strip():
+            response = result.stdout.strip()
+            print(response)
+            print(f"{'─'*40}")
+            return response
+
+    except Exception as e:
+        print(f"  {Colors.DIM}(Manager error: {e}){Colors.RESET}")
+
+    return None
+
+
+def check_for_manager_input(recent_logs: List[str], target_dir: Path) -> Optional[str]:
+    """Check if user has provided input, spawn manager if so."""
+    global manager_input_queue
+
+    with manager_input_lock:
+        if manager_input_queue:
+            user_input = manager_input_queue.pop(0)
+            return spawn_manager_agent(user_input, recent_logs, target_dir)
+
+    return None
+
+
+def resolve_arbitrage_interactive(issue: DoctorIssue) -> List[ArbitrageDecision]:
+    """Interactively resolve ARBITRAGE conflicts with user input."""
+    decisions = []
+    items = issue.details.get("items", [])
+
+    print()
+    print(f"{Colors.BOLD}⚖️  ARBITRAGE: Conflicts need your decision{Colors.RESET}")
+    print(f"   File: {issue.path}")
+    print(f"{'─'*60}")
+
+    for i, item in enumerate(items, 1):
+        title = item.get("title", "Unknown conflict")
+        details = item.get("details", [])
+
+        print()
+        print(f"{Colors.BOLD}Conflict {i}/{len(items)}: {title}{Colors.RESET}")
+        print()
+
+        # Parse details into context, options, pros/cons, recommendation, and context-needed fields
+        options = []
+        recommendation = None
+        context_lines = []
+        trying_to = None
+        need_to_know = None
+        context_needed = None
+        would_help = None
+
+        for detail in details:
+            stripped = detail.strip()
+            if stripped.startswith("(") and ")" in stripped[:4]:
+                # Option: (A) text or (1) text
+                options.append(stripped)
+            elif stripped.lower().startswith("pro:"):
+                # Pro for previous option
+                if options:
+                    options[-1] += f"\n      {Colors.SUCCESS}✓ {stripped[4:].strip()}{Colors.RESET}"
+            elif stripped.lower().startswith("con:"):
+                # Con for previous option
+                if options:
+                    options[-1] += f"\n      {Colors.FAILURE}✗ {stripped[4:].strip()}{Colors.RESET}"
+            elif "**recommendation" in stripped.lower() or stripped.lower().startswith("recommendation:"):
+                # Agent's recommendation
+                recommendation = stripped.replace("**Recommendation:**", "").replace("**recommendation:**", "").strip()
+            elif stripped.lower().startswith("trying to:"):
+                trying_to = stripped.split(":", 1)[1].strip()
+            elif stripped.lower().startswith("need to know:"):
+                need_to_know = stripped.split(":", 1)[1].strip()
+            elif stripped.lower().startswith("context needed:"):
+                context_needed = stripped.split(":", 1)[1].strip()
+            elif stripped.lower().startswith("this would help"):
+                would_help = stripped.split(":", 1)[1].strip() if ":" in stripped else stripped
+            else:
+                context_lines.append(stripped)
+
+        # Determine if this is a "context needed" type ARBITRAGE
+        is_context_type = trying_to or need_to_know or context_needed
+
+        if is_context_type:
+            # Show context-needed format
+            if trying_to:
+                print(f"  {Colors.BOLD}🎯 Trying to:{Colors.RESET} {trying_to}")
+            if need_to_know:
+                print(f"  {Colors.BOLD}❓ Need to know:{Colors.RESET} {need_to_know}")
+            if context_needed:
+                print(f"  {Colors.DIM}   {context_needed}{Colors.RESET}")
+            if would_help:
+                print(f"  {Colors.BOLD}💡 This would help:{Colors.RESET} {would_help}")
+            # Show any additional context
+            for line in context_lines:
+                print(f"  {Colors.DIM}{line}{Colors.RESET}")
+        else:
+            # Show choice-type format - context first
+            for line in context_lines:
+                print(f"  {Colors.DIM}{line}{Colors.RESET}")
+
+        # Show options with pros/cons
+        if options:
+            print()
+            print(f"  {Colors.BOLD}Options:{Colors.RESET}")
+            for opt in options:
+                for line in opt.split('\n'):
+                    print(f"    {line}")
+
+        # Show recommendation
+        if recommendation:
+            print()
+            print(f"  {Colors.BOLD}💡 Agent recommends:{Colors.RESET} {recommendation}")
+
+        print()
+        print(f"  Enter your decision (or 'pass' to skip):")
+        print(f"  > ", end="")
+
+        try:
+            user_input = input().strip()
+        except (EOFError, KeyboardInterrupt):
+            user_input = "pass"
+
+        if user_input.lower() == "pass" or not user_input:
+            decisions.append(ArbitrageDecision(
+                conflict_title=title,
+                decision="",
+                passed=True
+            ))
+            print(f"  {Colors.DIM}Skipped{Colors.RESET}")
+        else:
+            decisions.append(ArbitrageDecision(
+                conflict_title=title,
+                decision=user_input,
+                passed=False
+            ))
+            print(f"  {Colors.SUCCESS}Decision recorded{Colors.RESET}")
+
+    print(f"{'─'*60}")
+    resolved = len([d for d in decisions if not d.passed])
+    print(f"  {resolved}/{len(decisions)} conflicts decided")
+    print()
+
+    return decisions
+
+
 def repair_command(
     target_dir: Path,
     max_issues: Optional[int] = None,
@@ -978,7 +1196,7 @@ def repair_command(
     print()
 
     # Step 1: Run doctor to get issues
-    print("📋 Step 1: Analyzing project health...")
+    print(f"{Colors.BOLD}📋 Step 1: Analyzing project health...{Colors.RESET}")
     print()
     config = load_doctor_config(target_dir)
     before_results = run_doctor(target_dir, config)
@@ -1009,6 +1227,29 @@ def repair_command(
 
     if not all_issues:
         print(f"✅ No issues to repair at depth '{depth}'!")
+        print()
+
+        # Count total issues at all depths for context
+        total_critical = before_results['summary']['critical']
+        total_warnings = before_results['summary']['warning']
+        has_other_issues = total_critical > 0 or total_warnings > 0
+
+        # Provide guidance based on current depth
+        if depth == "links":
+            print(f"  {Colors.DIM}All link/reference issues are resolved.{Colors.RESET}")
+            if has_other_issues:
+                print(f"  {Colors.DIM}There are {total_critical} critical + {total_warnings} warning issues at deeper depths.{Colors.RESET}")
+            print(f"  {Colors.DIM}To check documentation issues: {Colors.RESET}{Colors.BOLD}context-protocol repair --depth docs{Colors.RESET}")
+            print(f"  {Colors.DIM}To check all issues:           {Colors.RESET}{Colors.BOLD}context-protocol repair --depth full{Colors.RESET}")
+        elif depth == "docs":
+            print(f"  {Colors.DIM}All documentation issues are resolved.{Colors.RESET}")
+            if has_other_issues:
+                print(f"  {Colors.DIM}There are {total_critical} critical + {total_warnings} warning issues at 'full' depth.{Colors.RESET}")
+            print(f"  {Colors.DIM}To check implementation issues: {Colors.RESET}{Colors.BOLD}context-protocol repair --depth full{Colors.RESET}")
+        else:  # full
+            print(f"  {Colors.DIM}Project is healthy at all depths!{Colors.RESET}")
+            print(f"  {Colors.DIM}Run {Colors.RESET}{Colors.BOLD}context-protocol doctor{Colors.RESET}{Colors.DIM} to see the full health report.{Colors.RESET}")
+        print()
         return 0
 
     # Limit number of issues if specified
@@ -1018,7 +1259,7 @@ def repair_command(
         issues_to_fix = all_issues
 
     # Step 2: Show the repair plan
-    print(f"📝 Step 2: Repair Plan")
+    print(f"{Colors.BOLD}📝 Step 2: Repair Plan{Colors.RESET}")
     print()
 
     print(f"  {color(str(len(issues_to_fix)), Colors.BOLD)} issues to fix:")
@@ -1026,14 +1267,20 @@ def repair_command(
         print(f"  {color(f'(showing first {max_issues} of {len(all_issues)})', Colors.DIM)}")
     print()
 
-    # Show each issue with natural language description
+    # Show each issue with problem description and action
     for i, issue in enumerate(issues_to_fix[:15]):
         agent_sym = get_agent_symbol(i)
         agent_clr = get_agent_color(i)
-        action = get_issue_action(issue.issue_type, issue.path)
+        prefix, suffix = get_issue_action_parts(issue.issue_type)
+        sev_color = get_severity_color(issue.severity)
 
-        # Natural language: "🥷 will add module mapping + docs for src/"
-        print(f"    {i+1}. {color(agent_sym, agent_clr)} will {action}")
+        # Format: "No documentation mapping (red): 🥷 will add docs for `path`"
+        msg = color(issue.message, sev_color)
+        action = f"{Colors.GRAY}{Colors.ITALIC}{prefix}{Colors.RESET}"
+        path_fmt = f"`{issue.path}`"
+        suffix_fmt = f" {Colors.GRAY}{Colors.ITALIC}{suffix}{Colors.RESET}" if suffix else ""
+
+        print(f"    {i+1}. {msg}: {color(agent_sym, agent_clr)} {action} {path_fmt}{suffix_fmt}")
 
     if len(issues_to_fix) > 15:
         print(f"    {color(f'   ... and {len(issues_to_fix) - 15} more', Colors.DIM)}")
@@ -1054,14 +1301,27 @@ def repair_command(
         print()
 
     # Step 3: Execute repairs
-    print(f"🔨 Step 3: Executing repairs...")
+    print(f"{Colors.BOLD}🔨 Step 3: Executing repairs...{Colors.RESET}")
+    print(f"  {Colors.DIM}(Type anytime to invoke manager agent){Colors.RESET}")
+    print(f"  {Colors.DIM}{'─' * 50}{Colors.RESET}")
     print()
+
+    # Start input listener for manager agent
+    global stop_input_listener, manager_input_queue
+    stop_input_listener = False
+    manager_input_queue = []
+    recent_logs: List[str] = []
+
+    import threading
+    listener = threading.Thread(target=input_listener_thread, daemon=True)
+    listener.start()
 
     repair_results: List[RepairResult] = []
     print_lock = Lock()
     completed_count = [0]  # Use list to allow modification in nested function
+    manager_responses: List[str] = []  # Track manager responses for report
 
-    def run_repair(issue_tuple):
+    def run_repair(issue_tuple, arbitrage_decisions=None):
         """Run a single repair in a thread."""
         idx, issue = issue_tuple
         github_issue_num = github_mapping.get(issue.path)
@@ -1069,17 +1329,24 @@ def repair_command(
         # Get agent and issue visual identifiers
         agent_clr = get_agent_color(idx - 1)
         agent_sym = get_agent_symbol(idx - 1)
-        action = get_issue_action(issue.issue_type, issue.path)
+        prefix, suffix = get_issue_action_parts(issue.issue_type)
+        sev_color = get_severity_color(issue.severity)
 
         with print_lock:
             agent_tag = color(agent_sym, agent_clr)
-            print(f"  {agent_tag} will {action}")
+            msg = color(issue.message, sev_color)
+            action = f"{Colors.GRAY}{Colors.ITALIC}{prefix}{Colors.RESET}"
+            path_fmt = f"`{issue.path}`"
+            suffix_fmt = f" {Colors.GRAY}{Colors.ITALIC}{suffix}{Colors.RESET}" if suffix else ""
+            print(f"  {msg}: {agent_tag} {action} {path_fmt}{suffix_fmt}")
 
         result = spawn_repair_agent(
             issue,
             target_dir,
             dry_run=False,
             github_issue_number=github_issue_num,
+            arbitrage_decisions=arbitrage_decisions,
+            agent_symbol=agent_sym,
         )
 
         with print_lock:
@@ -1092,40 +1359,166 @@ def repair_command(
 
         return result
 
-    # Run agents in parallel or sequentially
-    if parallel > 1:
-        active_workers = min(parallel, len(issues_to_fix))
-        print(f"  Running {len(issues_to_fix)} repairs with {active_workers} parallel agents...")
+    # Separate special issues (need interactive input) from others
+    arbitrage_issues = [(i, iss) for i, iss in enumerate(issues_to_fix, 1) if iss.issue_type == "ARBITRAGE"]
+    suggestion_issues = [(i, iss) for i, iss in enumerate(issues_to_fix, 1) if iss.issue_type == "SUGGESTION"]
+    other_issues = [(i, iss) for i, iss in enumerate(issues_to_fix, 1)
+                    if iss.issue_type not in ("ARBITRAGE", "SUGGESTION")]
+
+    # Handle ARBITRAGE issues first (interactive, sequential)
+    if arbitrage_issues:
+        print(f"  {Colors.BOLD}⚖️ Resolving {len(arbitrage_issues)} conflict(s) first...{Colors.RESET}")
         print()
 
-        # Show legend of agent symbols
-        legend = "  Agents: "
-        for i in range(active_workers):
-            sym = get_agent_symbol(i)
-            clr = get_agent_color(i)
-            legend += color(f"{sym} ", clr)
-        print(legend)
+        for idx, issue in arbitrage_issues:
+            # Interactive prompt
+            decisions = resolve_arbitrage_interactive(issue)
+
+            # Check if any decisions were made (not all passed)
+            has_decisions = any(not d.passed for d in decisions)
+
+            if has_decisions:
+                issue_emoji, _ = get_issue_symbol(issue.issue_type)
+                github_issue_num = github_mapping.get(issue.path)
+                print(f"  {issue_emoji} Spawning agent to implement decisions...")
+
+                result = spawn_repair_agent(
+                    issue,
+                    target_dir,
+                    dry_run=False,
+                    github_issue_number=github_issue_num,
+                    arbitrage_decisions=decisions,
+                )
+                repair_results.append(result)
+
+                if result.success:
+                    print(f"\n  {color('✓ Complete', Colors.SUCCESS)} ({result.duration_seconds:.1f}s)")
+                else:
+                    print(f"\n  {color('✗ Failed', Colors.FAILURE)}: {result.error or 'Unknown error'}")
+            else:
+                print(f"  {Colors.DIM}All conflicts skipped, no agent spawned{Colors.RESET}")
+                repair_results.append(RepairResult(
+                    issue_type=issue.issue_type,
+                    target_path=issue.path,
+                    success=True,
+                    agent_output="User passed all conflicts",
+                    duration_seconds=0,
+                ))
+
+        print()
+
+    # Handle SUGGESTION issues (interactive, ask user before spawning)
+    accepted_suggestions = []
+    if suggestion_issues:
+        print(f"  {Colors.BOLD}💡 {len(suggestion_issues)} agent suggestion(s) found:{Colors.RESET}")
+        print()
+
+        for idx, issue in suggestion_issues:
+            suggestion_text = issue.details.get("suggestion", issue.message)
+            source_file = issue.details.get("source_file", issue.path)
+
+            print(f"    {Colors.DIM}From: {source_file}{Colors.RESET}")
+            print(f"    💡 {suggestion_text}")
+            print()
+
+            try:
+                response = input(f"    {Colors.BOLD}Implement this? (y/n/q to quit): {Colors.RESET}").strip().lower()
+            except (EOFError, KeyboardInterrupt):
+                print("\n    Skipping remaining suggestions...")
+                break
+
+            if response == 'q':
+                print("    Skipping remaining suggestions...")
+                break
+            elif response in ('y', 'yes'):
+                accepted_suggestions.append((idx, issue))
+                print(f"    {Colors.SUCCESS}✓ Accepted{Colors.RESET}")
+            else:
+                print(f"    {Colors.DIM}Skipped{Colors.RESET}")
+            print()
+
+        # Spawn agents for accepted suggestions
+        if accepted_suggestions:
+            print(f"  {Colors.BOLD}Implementing {len(accepted_suggestions)} accepted suggestion(s)...{Colors.RESET}")
+            print()
+
+            for idx, issue in accepted_suggestions:
+                agent_sym = get_agent_symbol(idx - 1)
+                agent_clr = get_agent_color(idx - 1)
+                agent_tag = color(agent_sym, agent_clr)
+
+                suggestion_text = issue.details.get("suggestion", issue.message)
+                print(f"  {agent_tag} Implementing: {suggestion_text[:50]}...")
+
+                github_issue_num = github_mapping.get(issue.path)
+                result = spawn_repair_agent(
+                    issue,
+                    target_dir,
+                    dry_run=False,
+                    github_issue_number=github_issue_num,
+                    agent_symbol=agent_sym,
+                )
+                repair_results.append(result)
+
+                if result.success:
+                    print(f"\n  {agent_tag} {color('✓ Complete', Colors.SUCCESS)} ({result.duration_seconds:.1f}s)")
+                else:
+                    print(f"\n  {agent_tag} {color('✗ Failed', Colors.FAILURE)}: {result.error or 'Unknown error'}")
+                print()
+        else:
+            print(f"  {Colors.DIM}No suggestions accepted{Colors.RESET}")
+            print()
+
+    # Run remaining agents in parallel or sequentially
+    if not other_issues:
+        pass  # Only had ARBITRAGE issues
+    elif parallel > 1:
+        active_workers = min(parallel, len(other_issues))
+        print(f"  Running {len(other_issues)} repairs with {active_workers} parallel agents...")
         print()
 
         with ThreadPoolExecutor(max_workers=parallel) as executor:
             futures = {
-                executor.submit(run_repair, (i, issue)): issue
-                for i, issue in enumerate(issues_to_fix, 1)
+                executor.submit(run_repair, issue_tuple): issue_tuple[1]
+                for issue_tuple in other_issues
             }
 
             for future in as_completed(futures):
                 result = future.result()
                 repair_results.append(result)
+
+                # Log for manager context
+                log_entry = f"[{result.issue_type}] {result.target_path}: {'SUCCESS' if result.success else 'FAILED'}"
+                recent_logs.append(log_entry)
+
+                # Check for manager input periodically
+                manager_response = check_for_manager_input(recent_logs, target_dir)
+                if manager_response:
+                    manager_responses.append(manager_response)
     else:
         # Sequential execution with more verbose output
-        for i, issue in enumerate(issues_to_fix, 1):
+        for i, issue in other_issues:
+            # Check for manager input between repairs
+            manager_response = check_for_manager_input(recent_logs, target_dir)
+            if manager_response:
+                manager_responses.append(manager_response)
+                if "STOP REPAIRS" in manager_response:
+                    print(f"\n  {Colors.BOLD}Manager requested stop. Halting repairs.{Colors.RESET}")
+                    break
+
             issue_emoji, issue_sym = get_issue_symbol(issue.issue_type)
             print_progress_bar(i - 1, len(issues_to_fix), status=f"Starting {issue.issue_type}...")
             print()
 
             github_issue_num = github_mapping.get(issue.path)
             github_info = f" (#{github_issue_num})" if github_issue_num else ""
-            print(f"\n  {issue_emoji} [{i}/{len(issues_to_fix)}] {color(issue.issue_type, Colors.INFO)}: {issue.path}{github_info}")
+            prefix, suffix = get_issue_action_parts(issue.issue_type)
+            sev_color = get_severity_color(issue.severity)
+            msg = color(issue.message, sev_color)
+            action = f"{Colors.GRAY}{Colors.ITALIC}{prefix}{Colors.RESET}"
+            path_fmt = f"`{issue.path}`"
+            suffix_fmt = f" {Colors.GRAY}{Colors.ITALIC}{suffix}{Colors.RESET}" if suffix else ""
+            print(f"\n  {issue_emoji} [{i}/{len(issues_to_fix)}] {msg}: {action} {path_fmt}{suffix_fmt}{github_info}")
 
             result = spawn_repair_agent(
                 issue,
@@ -1135,6 +1528,10 @@ def repair_command(
             )
             repair_results.append(result)
 
+            # Log for manager context
+            log_entry = f"[{issue.issue_type}] {issue.path}: {'SUCCESS' if result.success else 'FAILED'}"
+            recent_logs.append(log_entry)
+
             if result.success:
                 print(f"\n  {color('✓ Complete', Colors.SUCCESS)} ({result.duration_seconds:.1f}s)")
             else:
@@ -1142,20 +1539,44 @@ def repair_command(
 
         print_progress_bar(len(issues_to_fix), len(issues_to_fix), status="Done!")
 
+    # Stop the input listener
+    stop_input_listener = True
+
+    # Final check for manager input
+    manager_response = check_for_manager_input(recent_logs, target_dir)
+    if manager_response:
+        manager_responses.append(manager_response)
+
     print("\n")
 
     # Step 4: Run doctor again
-    print("📊 Step 4: Running final health check...")
+    print(f"{Colors.BOLD}📊 Step 4: Running final health check...{Colors.RESET}")
     after_results = run_doctor(target_dir, config)
 
-    print(f"  Health Score: {after_results['score']}/100")
+    # Calculate and format score change
+    score_change = after_results['score'] - before_results['score']
+    if score_change > 0:
+        change_str = f" {Colors.SUCCESS}(+{score_change}){Colors.RESET}"
+    elif score_change < 0:
+        change_str = f" {Colors.FAILURE}({score_change}){Colors.RESET}"
+    else:
+        change_str = f" {Colors.DIM}(±0){Colors.RESET}"
+
+    print(f"  Health Score: {after_results['score']}/100{change_str}")
     print(f"  Critical: {after_results['summary']['critical']}")
     print(f"  Warnings: {after_results['summary']['warning']}")
     print()
 
     # Step 5: Generate report
-    print("📄 Step 5: Generating report...")
-    report = generate_final_report(before_results, after_results, repair_results, target_dir)
+    print(f"{Colors.BOLD}📄 Step 5: Generating report...{Colors.RESET}")
+
+    # Try LLM-generated report first, fall back to template
+    report = generate_llm_report(before_results, after_results, repair_results, target_dir)
+    if report:
+        print(f"  {Colors.DIM}(Generated by Claude){Colors.RESET}")
+    else:
+        report = generate_final_report(before_results, after_results, repair_results, target_dir)
+        print(f"  {Colors.DIM}(Using template report){Colors.RESET}")
 
     # Save report
     report_path = target_dir / ".context-protocol" / "state" / "REPAIR_REPORT.md"
@@ -1165,11 +1586,27 @@ def repair_command(
 
     print()
 
+    # Display report to CLI
+    print(f"{'─'*60}")
+    print(report)
+    print(f"{'─'*60}")
+    print()
+
     # Summary
     successful = len([r for r in repair_results if r.success])
+    score_before = before_results['score']
+    score_after = after_results['score']
+    score_diff = score_after - score_before
+    if score_diff > 0:
+        score_change_fmt = f"{Colors.SUCCESS}(+{score_diff}){Colors.RESET}"
+    elif score_diff < 0:
+        score_change_fmt = f"{Colors.FAILURE}({score_diff}){Colors.RESET}"
+    else:
+        score_change_fmt = f"{Colors.DIM}(±0){Colors.RESET}"
+
     print(f"{'='*60}")
     print(f"✅ Repair Complete: {successful}/{len(repair_results)} successful")
-    print(f"📈 Health Score: {before_results['score']} → {after_results['score']}")
+    print(f"📈 Health Score: {score_before} → {score_after} {score_change_fmt}")
     print(f"{'='*60}")
 
     # Return exit code

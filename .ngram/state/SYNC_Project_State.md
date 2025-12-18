@@ -21,6 +21,12 @@ A Claude Code-style TUI is being developed. Entry point: `ngram` (no subcommand)
 
 ### Recent Changes
 
+**2025-12-18:** Fixed INCOMPLETE_IMPL false positive in repair_core.py:
+- Functions `get_issue_symbol`, `get_issue_action_parts` are intentionally simple one-liner dictionary lookup functions
+- Added suppression entry to `.ngram/doctor-ignore.yaml` with detailed reason
+- These functions return tuples from ISSUE_SYMBOLS and ISSUE_DESCRIPTIONS dictionaries with sensible defaults
+- Used throughout repair.py for display formatting (imported and called at multiple locations)
+
 **2025-12-18:** Fixed INCOMPLETE_IMPL false positive in repair.py:
 - Functions `get_agent_color`, `get_agent_symbol`, `color` are intentionally simple one-line utility functions
 - Added block comment explaining they're complete implementations, not stubs

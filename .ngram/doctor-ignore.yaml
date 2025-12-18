@@ -12,3 +12,12 @@ ignores:
     operations (color lookup, symbol cycling, ANSI wrapping). Short body != incomplete.
   added_by: repair-agent
   added_date: '2025-12-18'
+- issue_type: INCOMPLETE_IMPL
+  path: src/ngram/repair_core.py
+  reason: >-
+    False positive - get_issue_symbol, get_issue_action_parts are intentionally
+    simple one-liner dictionary lookup functions with sensible defaults.
+    They return tuples from ISSUE_SYMBOLS and ISSUE_DESCRIPTIONS respectively.
+    Used throughout repair.py for display formatting. Short body != incomplete.
+  added_by: repair-agent
+  added_date: '2025-12-18'

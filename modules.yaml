@@ -52,54 +52,29 @@ modules:
 # =============================================================================
 
   cli:
-    code: "src/ngram/"
+    code: "src/ngram/**"
     docs: "docs/cli/"
-    maturity: CANONICAL
+    maturity: DESIGNING
     owner: agent
+
     entry_points:
       - cli.py
       - doctor.py
-      - repair.py
-    internal:
       - doctor_checks.py
-      - doctor_checks_content.py
-      - doctor_files.py
-      - doctor_report.py
-      - doctor_types.py
-      - github.py
-      - repair_core.py
-      - repair_instructions.py
-      - repair_report.py
-      - sync.py
-      - utils.py
-    notes: |
-      Core ngram CLI - doctor, repair, init, validate commands.
-      Doctor subsystem checks project health.
-      Repair subsystem spawns agents to fix issues.
 
-  tui:
-    code: "src/ngram/tui/**"
-    docs: "docs/tui/"
-    maturity: DESIGNING
-    owner: agent
-    entry_points:
-      - app.py
-      - commands.py
     internal:
-      - state.py
-      - manager.py
-      - widgets/
-    depends_on:
-      - cli
-    notes: |
-      Terminal UI for interactive repair sessions.
-      Currently in development - many stub implementations.
+      - doctor_checks_quality.py   # Extracted: magic values, hardcoded secrets checks
+      - doctor_checks_docs.py      # Extracted: placeholder docs, orphan docs, stale impl checks
+      - doctor_checks_sync.py      # SYNC file analysis checks
+      - doctor_checks_content.py   # Content analysis checks (long strings, duplication)
+      - doctor_types.py
+      - doctor_files.py
+      - utils.py
 
-  protocol:
-    code: ".ngram/**"
-    docs: "docs/protocol/"
-    maturity: CANONICAL
-    owner: human
     notes: |
-      The ADD Framework protocol itself - templates, views, state.
-      This is the meta-documentation about how documentation works.
+      CLI tools including doctor health checks.
+      doctor_checks.py was split due to size (>800 lines):
+      - doctor_checks_quality.py: code quality/security checks
+      - doctor_checks_docs.py: documentation quality checks
+
+# Add more modules as they emerge...

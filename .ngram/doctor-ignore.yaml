@@ -1,32 +1,50 @@
+# Doctor Ignore Configuration
+#
+# This file lists issues that should be suppressed by `ngram doctor`.
+# Use this for verified false positives or intentional exceptions.
+#
+# Each entry requires:
+#   - issue_type: The issue type to suppress (e.g., MONOLITH, HARDCODED_SECRET)
+#   - path: File/directory path or glob pattern (e.g., src/legacy/*, tests/**)
+#   - reason: Explanation of why this is being ignored (for audit trail)
+#
+# Optional fields:
+#   - added_by: Who added this entry (agent name, human, etc.)
+#   - added_date: When added (YYYY-MM-DD)
+#
+# Example entries:
+#
+# ignores:
+#   - issue_type: MONOLITH
+#     path: src/generated/schema.py
+#     reason: Auto-generated file, splitting not practical
+#     added_by: human
+#     added_date: 2025-01-15
+#
+#   - issue_type: HARDCODED_SECRET
+#     path: tests/fixtures/**
+#     reason: Test fixtures use fake credentials
+#     added_by: agent
+#     added_date: 2025-01-15
+#
+#   - issue_type: MAGIC_VALUES
+#     path: src/constants.py
+#     reason: This IS the constants file
+#     added_by: human
+#     added_date: 2025-01-15
+#
+# Pattern matching:
+#   - Exact: "src/file.py" matches only that file
+#   - Glob: "tests/**" matches all files under tests/
+#   - Wildcard: "*" with issue_type suppresses ALL issues of that type (use sparingly)
+
 ignores:
-- issue_type: MONOLITH
-  path: src/ngram/repair_instructions.py
-  reason: Intentionally large - contains all repair prompts
-  added_by: human
-  added_date: '2025-12-18'
-- issue_type: INCOMPLETE_IMPL
-  path: src/ngram/repair.py
-  reason: >-
-    False positive - get_agent_color, get_agent_symbol, color are intentionally
-    simple one-line utility functions. They provide semantic meaning to common
-    operations (color lookup, symbol cycling, ANSI wrapping). Short body != incomplete.
-  added_by: repair-agent
-  added_date: '2025-12-18'
-- issue_type: INCOMPLETE_IMPL
-  path: src/ngram/repair_core.py
-  reason: >-
-    False positive - get_issue_symbol, get_issue_action_parts are intentionally
-    simple one-liner dictionary lookup functions with sensible defaults.
-    They return tuples from ISSUE_SYMBOLS and ISSUE_DESCRIPTIONS respectively.
-    Used throughout repair.py for display formatting. Short body != incomplete.
-  added_by: repair-agent
-  added_date: '2025-12-18'
-- issue_type: HARDCODED_CONFIG
-  path: src/ngram/project_map_html.py
-  reason: >-
-    False positive - 'http://www.w3.org/2000/svg' is the W3C standard SVG namespace URI,
-    not a configurable URL. This is a fixed specification constant required for creating
-    SVG elements in JavaScript/DOM. It cannot be changed and is not configuration.
-    Similar to SQL keywords - it's part of the standard, not an endpoint.
-  added_by: repair-agent
-  added_date: '2025-12-18'
+  - issue_type: BROKEN_IMPL_LINK
+    path: docs/protocol/IMPLEMENTATION_Protocol_Code_Architecture.md
+    reason: |
+      False positive - references to .ngram/CLAUDE.md are correct but doctor's
+      extract_impl_file_refs() strips leading dots (line 294: ref.lstrip('./'))
+      causing .ngram/ paths to become ngram/ which doesn't exist.
+      Doctor bug tracked - the doc references are valid.
+    added_by: repair-agent
+    added_date: 2025-12-18

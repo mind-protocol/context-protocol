@@ -51,29 +51,28 @@ modules:
 # YOUR MODULES
 # =============================================================================
 
-# Uncomment and modify as you create modules:
+  # The core Context Protocol CLI implementation
+  context-protocol-cli:
+    code: "src/context_protocol/**"
+    docs: "docs/cli/"
+    maturity: DESIGNING
+    owner: agent
 
-context-protocol-cli:
-  code: "src/context_protocol/**"
-  docs: "docs/cli/"
-  maturity: DESIGNING
-  owner: agent
+    entry_points:
+      - cli.py
 
-  entry_points:
-    - cli.py
+    internal:
+      - utils.py
+      - __pycache__/
 
-  internal:
-    - utils.py
-    - __pycache__/
+    patterns:
+      - "Command-line interface pattern"
+      - "Modular subcommands"
+      - "Agent-driven repair"
 
-  patterns:
-    - "Command-line interface pattern"
-    - "Modular subcommands"
-    - "Agent-driven repair"
+    notes: |
+      The core Context Protocol CLI implementation.
+      Provides commands: init, validate, doctor, repair, sync, context, prompt, map.
+      Uses subprocess to spawn Claude Code agents for automated repairs.
 
-  notes: |
-    The core Context Protocol CLI implementation.
-    Provides commands: init, validate, doctor, repair, sync, context, prompt, map.
-    Uses subprocess to spawn Claude Code agents for automated repairs.
-
-# Add more modules as they emerge...
+  # Add more modules as they emerge...

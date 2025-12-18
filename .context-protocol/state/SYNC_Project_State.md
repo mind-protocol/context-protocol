@@ -11,22 +11,26 @@ UPDATED_BY: repair-agent
 
 The Context Protocol project is functional and in active use. The CLI provides commands for initializing, validating, diagnosing, and repairing protocol compliance in any project.
 
-Recent focus has been on documentation coverage. The `src/` directory containing the CLI implementation now has proper module documentation mapped in `modules.yaml`.
+Documentation coverage is complete. The `src/` directory containing the CLI implementation has proper module documentation mapped in `modules.yaml`.
 
 ---
 
 ## ACTIVE WORK
 
-### Documentation Coverage
-
-- **Area:** `docs/cli/`
-- **Status:** completed
-- **Owner:** repair-agent
-- **Context:** The src/ directory had 12 Python files with no documentation mapping. Created PATTERNS and SYNC docs.
+None currently.
 
 ---
 
 ## RECENT CHANGES
+
+### 2025-12-18: Fixed modules.yaml indentation
+
+- **What:** Fixed YAML indentation so `context-protocol-cli` module is properly nested under `modules:` key
+- **Why:** Doctor reported UNDOCUMENTED issue because the module entry was at root level, not under `modules:`
+- **Impact:** Module mapping now parses correctly, UNDOCUMENTED issue resolved
+
+Files modified:
+- `modules.yaml` — Fixed indentation (module entry was at root level instead of under `modules:`)
 
 ### 2025-12-18: CLI Module Documentation
 

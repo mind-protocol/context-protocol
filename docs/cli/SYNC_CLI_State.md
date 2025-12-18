@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-18
-UPDATED_BY: repair-agent
+UPDATED_BY: repair-agent (doctor.py extraction)
 STATUS: CANONICAL
 ```
 
@@ -46,7 +46,30 @@ The CLI is functional and in active use. All core commands work:
 
 ## IN PROGRESS
 
-No active development at this time. The module was just documented.
+No active development at this time.
+
+---
+
+## RECENT CHANGES
+
+### 2025-12-18: Extracted doctor_checks.py
+
+**What changed:**
+- Extracted all 23 `doctor_check_*()` functions from `doctor.py` to new `doctor_checks.py`
+- `doctor.py`: 1900L → 211L (now OK status)
+- `doctor_checks.py`: New file, 1732L (SPLIT status - needs further splitting)
+
+**Files created:**
+- `src/context_protocol/doctor_checks.py`
+
+**Files modified:**
+- `src/context_protocol/doctor.py`
+- `docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md`
+- `modules.yaml`
+
+**What still needs extraction:**
+- `doctor_checks.py` needs splitting by check category (doc checks, code checks, config checks)
+- `repair.py` and `repair_instructions.py` also still need extraction
 
 ---
 
@@ -105,7 +128,8 @@ CLI module now has documentation. All 8 commands work and are documented. Module
 |------|-------|
 | CLI entry point | `src/context_protocol/cli.py` |
 | Validation logic | `src/context_protocol/validate.py` |
-| Health checks | `src/context_protocol/doctor.py` |
+| Health check orchestration | `src/context_protocol/doctor.py` |
+| Health check functions | `src/context_protocol/doctor_checks.py` |
 | Repair agents | `src/context_protocol/repair.py` |
 | Module manifest | `modules.yaml` |
 | Design rationale | `docs/cli/PATTERNS_Why_CLI_Over_Copy.md` |

@@ -59,20 +59,38 @@ modules:
     owner: agent
 
     entry_points:
-      - cli.py
+      - cli.py              # Main CLI entry point
+
+    # Subsystems with their extracted helper modules
+    subsystems:
+      doctor:
+        - doctor.py           # Health check orchestration (OK - 211L)
+        - doctor_checks.py    # All health check functions (SPLIT - 1732L, needs further split)
+        - doctor_types.py     # DoctorIssue, DoctorConfig types
+        - doctor_report.py    # Report generation, scoring (WATCH)
+        - doctor_files.py     # File discovery utilities
+      repair:
+        - repair.py           # Repair orchestration (SPLIT - needs more extraction)
+        - repair_instructions.py  # Issue-specific prompts (SPLIT)
+      project_map:
+        - project_map.py      # Terminal dependency map
+        - project_map_html.py # HTML export
 
     internal:
       - utils.py
       - __pycache__/
 
     patterns:
-      - "Command-line interface pattern"
-      - "Modular subcommands"
-      - "Agent-driven repair"
+      - "Command Pattern for CLI subcommands"
+      - "Composition for health checks"
+      - "Subprocess isolation for agents"
+      - "Factory pattern for repair prompts"
 
     notes: |
       The core Context Protocol CLI implementation.
       Provides commands: init, validate, doctor, repair, sync, context, prompt, map.
       Uses subprocess to spawn Claude Code agents for automated repairs.
+
+      SPLIT status files need continued extraction - see IMPLEMENTATION doc for details.
 
   # Add more modules as they emerge...

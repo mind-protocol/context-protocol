@@ -29,7 +29,8 @@ src/context_protocol/
 ├── cli.py                  # Entry point, argparse routing
 ├── init_cmd.py             # Init command implementation
 ├── validate.py             # Validation checks
-├── doctor.py               # Health checks (core logic)
+├── doctor.py               # Health check orchestration (slim)
+├── doctor_checks.py        # All health check functions
 ├── doctor_types.py         # DoctorIssue, DoctorConfig types
 ├── doctor_report.py        # Report generation, scoring
 ├── doctor_files.py         # File discovery utilities
@@ -45,7 +46,7 @@ src/context_protocol/
 ```
 
 **Logical Groupings** (all in `src/context_protocol/`):
-- **Doctor subsystem:** doctor, doctor_types, doctor_report, doctor_files
+- **Doctor subsystem:** doctor, doctor_checks, doctor_types, doctor_report, doctor_files
 - **Repair subsystem:** repair, repair_instructions
 - **Project map:** project_map, project_map_html
 
@@ -56,7 +57,8 @@ src/context_protocol/
 | `src/context_protocol/cli.py` | Entry point, argument parsing | `main()` | ~290 | OK |
 | `src/context_protocol/init_cmd.py` | Protocol initialization | `init_protocol()` | ~168 | OK |
 | `src/context_protocol/validate.py` | Protocol invariant checking | `validate_protocol()`, `ValidationResult` | ~712 | SPLIT |
-| `src/context_protocol/doctor.py` | Health check orchestration | `run_doctor()`, `doctor_command()` | ~1345 | SPLIT |
+| `src/context_protocol/doctor.py` | Health check orchestration | `run_doctor()`, `doctor_command()` | ~211 | OK |
+| `src/context_protocol/doctor_checks.py` | Health check functions | `doctor_check_*()` (23 functions) | ~1732 | SPLIT |
 | `src/context_protocol/doctor_types.py` | Type definitions | `DoctorIssue`, `DoctorConfig` | ~41 | OK |
 | `src/context_protocol/doctor_report.py` | Report generation | `generate_health_markdown()`, `calculate_health_score()` | ~465 | WATCH |
 | `src/context_protocol/doctor_files.py` | File discovery | `find_source_files()`, `find_code_directories()` | ~321 | OK |
@@ -161,7 +163,7 @@ RepairResult:
 | main | src/context_protocol/cli.py:43 | context-protocol command |
 | init_protocol | src/context_protocol/init_cmd.py:15 | context-protocol init |
 | validate_protocol | src/context_protocol/validate.py:667 | context-protocol validate |
-| doctor_command | src/context_protocol/doctor.py:1629 | context-protocol doctor |
+| doctor_command | src/context_protocol/doctor.py:127 | context-protocol doctor |
 | repair_command | src/context_protocol/repair.py:970 | context-protocol repair |
 | sync_command | src/context_protocol/sync.py | context-protocol sync |
 | print_module_context | src/context_protocol/context.py:442 | context-protocol context |
@@ -340,11 +342,16 @@ cli.py
     └── imports → project_map.py
 
 doctor.py
+    └── imports → doctor_checks.py (all doctor_check_*() functions)
     └── imports → doctor_types.py (DoctorIssue, DoctorConfig)
-    └── imports → doctor_report.py (generate_health_markdown, calculate_health_score)
-    └── imports → doctor_files.py (find_source_files, find_code_directories)
-    └── imports → utils.py
+    └── imports → doctor_report.py (generate_health_markdown, print_doctor_report)
+    └── imports → doctor_files.py (load_doctor_config, load_doctor_ignore)
     └── imports → sync.py
+
+doctor_checks.py
+    └── imports → doctor_types.py (DoctorIssue, DoctorConfig)
+    └── imports → doctor_files.py (should_ignore_path, find_source_files, etc.)
+    └── imports → utils.py
 
 repair.py
     └── imports → doctor.py (run_doctor, DoctorIssue)
@@ -471,16 +478,22 @@ Files that reference this documentation:
 
 ## GAPS / IDEAS / QUESTIONS
 
-### Extraction Candidates (Planned - Files Don't Exist Yet)
+### Extraction Candidates (Remaining)
 
-Files at SPLIT status need continued decomposition. The "Extract To" column shows **proposed** new files:
+Files at SPLIT status need continued decomposition:
 
 | Current File | Lines | Target | Proposed New File | What to Move |
 |--------------|-------|--------|-------------------|--------------|
-| doctor | ~1641L | <400L | doctor_checks (planned) | All `doctor_check_*()` functions (~1000L) |
-| repair | ~1613L | <400L | repair_agent (planned) | `spawn_repair_agent()`, agent streaming logic |
-| repair_instructions | ~971L | <400L | Split by category | Group prompts: docs, code, tests |
+| doctor_checks | ~1732L | <400L | Split by category | Group by check type: doc checks, code checks, config checks |
+| repair | ~1384L | <400L | repair_agent (planned) | `spawn_repair_agent()`, agent streaming logic |
+| repair_instructions | ~1001L | <400L | Split by category | Group prompts: docs, code, tests |
 | validate | ~712L | <400L | validate_checks (planned) | Individual validation check functions |
+
+### Completed Extractions
+
+| Date | Source | Target | Lines Moved |
+|------|--------|--------|-------------|
+| 2025-12-18 | doctor.py (1900L) | doctor_checks.py | 23 check functions, ~1690L |
 
 ### Missing Implementation
 

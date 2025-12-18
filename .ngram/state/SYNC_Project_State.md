@@ -26,6 +26,22 @@ ngram CLI project with doctor/repair functionality for maintaining project healt
 
 ## RECENT CHANGES
 
+### 2025-12-18: Split doctor_checks.py monolith
+
+- **What:** Extracted 7 functions from doctor_checks.py into 2 new files:
+  - `doctor_checks_quality.py` (172L): doctor_check_magic_values, doctor_check_hardcoded_secrets
+  - `doctor_checks_docs.py` (316L): doctor_check_placeholder_docs, doctor_check_orphan_docs, doctor_check_stale_impl, doctor_check_large_doc_module, doctor_check_incomplete_chain
+- **Why:** MONOLITH issue - file was 1155 lines (threshold: 800)
+- **Impact:** doctor_checks.py reduced from 1155 lines to 733 lines (now under threshold). Functions are re-exported for backwards compatibility.
+- **Doc updates:** modules.yaml updated with cli module mapping including new files.
+
+### 2025-12-18: Split repair_instructions.py monolith
+
+- **What:** Removed duplicate doc-related instructions from repair_instructions.py that were already extracted to repair_instructions_docs.py. Updated get_issue_instructions() to delegate to get_doc_instructions() for doc-related issues.
+- **Why:** MONOLITH issue - file was 1226 lines (threshold: 800)
+- **Impact:** repair_instructions.py reduced from 1226 lines to 765 lines (WATCH status). repair_instructions_docs.py remains at 492 lines. Total 1257 lines split across 2 files.
+- **Doc updates:** IMPLEMENTATION_CLI_Code_Architecture.md updated with new file structure, file responsibilities, and dependency diagram.
+
 ### 2025-12-18: Remove duplicate code from repair.py
 
 - **What:** Removed ~270 lines of duplicate code from repair.py that was already defined in repair_interactive.py. Functions removed: print_progress_bar, input_listener_thread, spawn_manager_agent, check_for_manager_input, resolve_arbitrage_interactive, and associated global state variables.

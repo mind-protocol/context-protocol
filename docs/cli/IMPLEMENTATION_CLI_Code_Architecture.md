@@ -37,7 +37,8 @@ src/ngram/
 ├── doctor_files.py         # File discovery utilities
 ├── repair.py               # Agent orchestration for repairs
 ├── repair_report.py        # Repair report generation (LLM + template)
-├── repair_instructions.py  # Issue-specific repair prompts
+├── repair_instructions.py  # Code/test/config repair prompts (main)
+├── repair_instructions_docs.py # Doc-related repair prompts (extracted)
 ├── sync.py                 # SYNC file management
 ├── context.py              # Code-to-docs navigation
 ├── prompt.py               # Bootstrap prompt generation
@@ -49,7 +50,7 @@ src/ngram/
 
 **Logical Groupings** (all in `src/ngram/`):
 - **Doctor subsystem:** doctor, doctor_checks, doctor_checks_content, doctor_types, doctor_report, doctor_files
-- **Repair subsystem:** repair, repair_core, repair_report, repair_instructions
+- **Repair subsystem:** repair, repair_core, repair_report, repair_instructions, repair_instructions_docs
 - **Project map:** project_map, project_map_html
 
 ### File Responsibilities
@@ -67,7 +68,8 @@ src/ngram/
 | `src/ngram/doctor_files.py` | File discovery | `find_source_files()`, `find_code_directories()` | ~321 | OK |
 | `src/ngram/repair.py` | Repair orchestration | `repair_command()`, `spawn_repair_agent()` | ~1013 | SPLIT |
 | `src/ngram/repair_report.py` | Report generation | `generate_llm_report()`, `generate_final_report()` | ~305 | OK |
-| `src/ngram/repair_instructions.py` | Repair prompts | `get_issue_instructions()` | ~813 | SPLIT |
+| `src/ngram/repair_instructions.py` | Code/test/config repair prompts | `get_issue_instructions()` | ~765 | WATCH |
+| `src/ngram/repair_instructions_docs.py` | Doc-related repair prompts | `get_doc_instructions()` | ~492 | WATCH |
 | `src/ngram/sync.py` | SYNC file management | `sync_command()`, `archive_all_syncs()` | ~346 | OK |
 | `src/ngram/context.py` | Documentation discovery | `print_module_context()`, `get_module_context()` | ~553 | WATCH |
 | `src/ngram/prompt.py` | LLM prompt generation | `print_bootstrap_prompt()` | ~89 | OK |
@@ -226,6 +228,13 @@ repair.py
     └── imports → repair_report.py (generate_llm_report, generate_final_report)
     └── imports → repair_instructions.py (get_issue_instructions)
 
+repair_instructions.py
+    └── imports → doctor.py (DoctorIssue)
+    └── imports → repair_instructions_docs.py (get_doc_instructions)
+
+repair_instructions_docs.py
+    └── imports → doctor.py (DoctorIssue)
+
 repair_report.py
     └── imports → repair_core.py (RepairResult)
 
@@ -358,7 +367,6 @@ Files at SPLIT status need continued decomposition:
 |--------------|-------|--------|-------------------|--------------|
 | doctor_checks | ~1364L | <400L | doctor_checks_docs.py | Group remaining: doc checks, code checks, config checks |
 | repair | ~1013L | <400L | repair_interactive (planned) | Interactive UI: `resolve_arbitrage_interactive()`, manager agent functions |
-| repair_instructions | ~1001L | <400L | Split by category | Group prompts: docs, code, tests |
 | validate | ~712L | <400L | validate_checks (planned) | Individual validation check functions |
 
 ### Completed Extractions
@@ -368,6 +376,7 @@ Files at SPLIT status need continued decomposition:
 | 2025-12-18 | doctor.py (1900L) | doctor_checks.py | 23 check functions, ~1690L |
 | 2025-12-18 | repair.py (1273L) | repair_report.py | Report generation: REPORT_PROMPT, generate_llm_report(), generate_final_report() ~260L |
 | 2025-12-18 | doctor_checks.py (1738L) | doctor_checks_content.py | Content checks: doctor_check_doc_duplication, doctor_check_new_undoc_code, doctor_check_long_strings ~374L |
+| 2025-12-18 | repair_instructions.py (1226L) | repair_instructions_docs.py | Doc instructions: UNDOCUMENTED, PLACEHOLDER, INCOMPLETE_CHAIN, NO_DOCS_REF, UNDOC_IMPL, ORPHAN_DOCS, LARGE_DOC_MODULE, DOC_GAPS, STALE_IMPL, DOC_DUPLICATION ~461L |
 
 ### Missing Implementation
 

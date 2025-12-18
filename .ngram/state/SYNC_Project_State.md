@@ -26,6 +26,18 @@ UPDATED_BY: {AGENT/HUMAN}
 
 ## RECENT CHANGES
 
+### 2025-12-18: Added DOCS reference to prompt.py
+
+- **What:** Added `# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md` to `src/ngram/prompt.py`
+- **Why:** NO_DOCS_REF issue - file lacked bidirectional link to documentation
+- **Impact:** Enables `ngram context` to find doc chain for prompt.py
+
+### 2025-12-18: Added DOCS reference to project_map.py
+
+- **What:** Added `# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md` to `src/ngram/project_map.py`
+- **Why:** NO_DOCS_REF issue - file lacked bidirectional link to documentation
+- **Impact:** Enables `ngram context` to find doc chain for project_map.py
+
 ### 2025-12-18: Fixed BROKEN_IMPL_LINK in CLI docs
 
 - **What:** Updated `docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md` line 181 reference from `ALGORITHM_CLI_Logic.md` to `docs/cli/ALGORITHM_CLI_Logic.md`

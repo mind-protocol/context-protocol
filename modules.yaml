@@ -70,8 +70,10 @@ modules:
         - doctor_report.py    # Report generation, scoring (WATCH)
         - doctor_files.py     # File discovery utilities
       repair:
-        - repair.py           # Repair orchestration (SPLIT - needs more extraction)
-        - repair_instructions.py  # Issue-specific prompts (SPLIT)
+        - repair.py           # Repair orchestration (SPLIT - 1013L, needs more extraction)
+        - repair_core.py      # Shared repair logic, data structures (OK - 465L)
+        - repair_report.py    # Report generation (OK - 305L)
+        - repair_instructions.py  # Issue-specific prompts (SPLIT - 813L)
       project_map:
         - project_map.py      # Terminal dependency map
         - project_map_html.py # HTML export

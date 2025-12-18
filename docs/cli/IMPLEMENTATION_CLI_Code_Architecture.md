@@ -30,11 +30,13 @@ src/ngram/
 ├── init_cmd.py             # Init command implementation
 ├── validate.py             # Validation checks
 ├── doctor.py               # Health check orchestration (slim)
-├── doctor_checks.py        # All health check functions
+├── doctor_checks.py        # Health check functions (core)
+├── doctor_checks_content.py # Content analysis checks (extracted)
 ├── doctor_types.py         # DoctorIssue, DoctorConfig types
 ├── doctor_report.py        # Report generation, scoring
 ├── doctor_files.py         # File discovery utilities
 ├── repair.py               # Agent orchestration for repairs
+├── repair_report.py        # Repair report generation (LLM + template)
 ├── repair_instructions.py  # Issue-specific repair prompts
 ├── sync.py                 # SYNC file management
 ├── context.py              # Code-to-docs navigation
@@ -46,8 +48,8 @@ src/ngram/
 ```
 
 **Logical Groupings** (all in `src/ngram/`):
-- **Doctor subsystem:** doctor, doctor_checks, doctor_types, doctor_report, doctor_files
-- **Repair subsystem:** repair, repair_instructions
+- **Doctor subsystem:** doctor, doctor_checks, doctor_checks_content, doctor_types, doctor_report, doctor_files
+- **Repair subsystem:** repair, repair_core, repair_report, repair_instructions
 - **Project map:** project_map, project_map_html
 
 ### File Responsibilities
@@ -58,11 +60,13 @@ src/ngram/
 | `src/ngram/init_cmd.py` | Protocol initialization | `init_protocol()` | ~168 | OK |
 | `src/ngram/validate.py` | Protocol invariant checking | `validate_protocol()`, `ValidationResult` | ~712 | SPLIT |
 | `src/ngram/doctor.py` | Health check orchestration | `run_doctor()`, `doctor_command()` | ~211 | OK |
-| `src/ngram/doctor_checks.py` | Health check functions | `doctor_check_*()` (23 functions) | ~1732 | SPLIT |
+| `src/ngram/doctor_checks.py` | Health check functions (core) | `doctor_check_*()` (20 functions) | ~1364 | SPLIT |
+| `src/ngram/doctor_checks_content.py` | Content analysis checks | `doctor_check_doc_duplication()`, `doctor_check_new_undoc_code()`, `doctor_check_long_strings()` | ~410 | OK |
 | `src/ngram/doctor_types.py` | Type definitions | `DoctorIssue`, `DoctorConfig` | ~41 | OK |
 | `src/ngram/doctor_report.py` | Report generation | `generate_health_markdown()`, `calculate_health_score()` | ~465 | WATCH |
 | `src/ngram/doctor_files.py` | File discovery | `find_source_files()`, `find_code_directories()` | ~321 | OK |
-| `src/ngram/repair.py` | Repair orchestration | `repair_command()`, `spawn_repair_agent()` | ~1333 | SPLIT |
+| `src/ngram/repair.py` | Repair orchestration | `repair_command()`, `spawn_repair_agent()` | ~1013 | SPLIT |
+| `src/ngram/repair_report.py` | Report generation | `generate_llm_report()`, `generate_final_report()` | ~305 | OK |
 | `src/ngram/repair_instructions.py` | Repair prompts | `get_issue_instructions()` | ~813 | SPLIT |
 | `src/ngram/sync.py` | SYNC file management | `sync_command()`, `archive_all_syncs()` | ~346 | OK |
 | `src/ngram/context.py` | Documentation discovery | `print_module_context()`, `get_module_context()` | ~553 | WATCH |
@@ -342,7 +346,8 @@ cli.py
     └── imports → project_map.py
 
 doctor.py
-    └── imports → doctor_checks.py (all doctor_check_*() functions)
+    └── imports → doctor_checks.py (20 doctor_check_*() functions)
+    └── imports → doctor_checks_content.py (3 content analysis check functions)
     └── imports → doctor_types.py (DoctorIssue, DoctorConfig)
     └── imports → doctor_report.py (generate_health_markdown, print_doctor_report)
     └── imports → doctor_files.py (load_doctor_config, load_doctor_ignore)
@@ -353,9 +358,19 @@ doctor_checks.py
     └── imports → doctor_files.py (should_ignore_path, find_source_files, etc.)
     └── imports → utils.py
 
+doctor_checks_content.py
+    └── imports → doctor_types.py (DoctorIssue, DoctorConfig)
+    └── imports → doctor_files.py (should_ignore_path, find_source_files, count_lines)
+    └── imports → utils.py (find_module_directories)
+
 repair.py
     └── imports → doctor.py (run_doctor, DoctorIssue)
+    └── imports → repair_core.py (RepairResult, ArbitrageDecision, constants)
+    └── imports → repair_report.py (generate_llm_report, generate_final_report)
     └── imports → repair_instructions.py (get_issue_instructions)
+
+repair_report.py
+    └── imports → repair_core.py (RepairResult)
 
 project_map.py
     └── imports → project_map_html.py (generate_html_map)
@@ -484,8 +499,8 @@ Files at SPLIT status need continued decomposition:
 
 | Current File | Lines | Target | Proposed New File | What to Move |
 |--------------|-------|--------|-------------------|--------------|
-| doctor_checks | ~1732L | <400L | Split by category | Group by check type: doc checks, code checks, config checks |
-| repair | ~1384L | <400L | repair_agent (planned) | `spawn_repair_agent()`, agent streaming logic |
+| doctor_checks | ~1364L | <400L | doctor_checks_docs.py | Group remaining: doc checks, code checks, config checks |
+| repair | ~1013L | <400L | repair_interactive (planned) | Interactive UI: `resolve_arbitrage_interactive()`, manager agent functions |
 | repair_instructions | ~1001L | <400L | Split by category | Group prompts: docs, code, tests |
 | validate | ~712L | <400L | validate_checks (planned) | Individual validation check functions |
 
@@ -494,6 +509,8 @@ Files at SPLIT status need continued decomposition:
 | Date | Source | Target | Lines Moved |
 |------|--------|--------|-------------|
 | 2025-12-18 | doctor.py (1900L) | doctor_checks.py | 23 check functions, ~1690L |
+| 2025-12-18 | repair.py (1273L) | repair_report.py | Report generation: REPORT_PROMPT, generate_llm_report(), generate_final_report() ~260L |
+| 2025-12-18 | doctor_checks.py (1738L) | doctor_checks_content.py | Content checks: doctor_check_doc_duplication, doctor_check_new_undoc_code, doctor_check_long_strings ~374L |
 
 ### Missing Implementation
 

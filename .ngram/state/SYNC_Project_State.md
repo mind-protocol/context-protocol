@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-18
-UPDATED_BY: repair agent (HARDCODED_CONFIG false positive fix)
+UPDATED_BY: repair agent (TUI INCOMPLETE_CHAIN fix)
 ```
 
 ---
@@ -15,11 +15,24 @@ The ADD Framework project is functional and in active use. The CLI provides comm
 
 A Claude Code-style TUI is being developed. Entry point: `ngram` (no subcommand). Features manager + worker agent columns, input bar, /commands, white theme.
 
-- Documentation created: `docs/tui/PATTERNS_TUI_Design.md`, `docs/tui/SYNC_TUI_State.md`
+- Full documentation chain complete: PATTERNS, BEHAVIORS, ALGORITHM, VALIDATION, IMPLEMENTATION, TEST, SYNC
 - Module mapped: `ngram-tui` in `modules.yaml`
 - Core extraction done: `repair_core.py` with shared logic for CLI and TUI
 
 ### Recent Changes
+
+**2025-12-18:** Completed TUI documentation chain (INCOMPLETE_CHAIN fix):
+- Created: BEHAVIORS_TUI_Interactions.md, ALGORITHM_TUI_Flow.md, VALIDATION_TUI_Invariants.md
+- Created: IMPLEMENTATION_TUI_Code_Architecture.md, TEST_TUI_Coverage.md
+- Updated CHAIN sections in PATTERNS and SYNC docs (removed "(planned)" markers)
+- All 7 doc types now present in `docs/tui/`
+
+**2025-12-18:** Extracted report generation from repair.py to repair_report.py:
+- Created `repair_report.py` with `generate_llm_report()`, `generate_final_report()`, and `REPORT_PROMPT` (~305 lines)
+- `repair.py` reduced from 1273L → 1013L (260 lines extracted)
+- `repair.py` still at SPLIT status (1013L > 800L threshold)
+- Updated: `docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md`, `modules.yaml`
+- Next extraction target: Interactive UI functions (resolve_arbitrage_interactive, manager agent functions)
 
 **2025-12-18:** Fixed HARDCODED_CONFIG false positive in project_map_html.py:
 - The flagged URL `http://www.w3.org/2000/svg` is the W3C standard SVG namespace URI
@@ -92,13 +105,13 @@ A Claude Code-style TUI is being developed. Entry point: `ngram` (no subcommand)
 
 **TUI Implementation** (Priority):
 - ~~YAML_DRIFT: `ngram-tui` mapped but `src/ngram/tui/` doesn't exist yet~~ FIXED: Code path commented out
-- INCOMPLETE_CHAIN: `docs/tui/` needs BEHAVIORS, ALGORITHM, VALIDATION, IMPLEMENTATION, TEST
+- ~~INCOMPLETE_CHAIN: `docs/tui/` needs BEHAVIORS, ALGORITHM, VALIDATION, IMPLEMENTATION, TEST~~ FIXED: All 5 docs created
 - Next steps: Create package structure, implement widgets, update cli.py, then uncomment code path in modules.yaml
 
 **MONOLITH Cleanup** (Ongoing):
-- `doctor_checks.py` (1411L) - needs splitting by category
-- `repair.py` (1055L) - reduced from 1674L, still above threshold
-- `repair_instructions.py` (1001L) - needs further splitting
+- `doctor_checks.py` (1732L) - needs splitting by category
+- `repair.py` (1013L) - reduced from 1273L via repair_report.py extraction, still above threshold
+- `repair_instructions.py` (813L) - needs further splitting
 
 ---
 

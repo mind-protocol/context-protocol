@@ -1,6 +1,8 @@
 """
 Report generation for ngram repair command.
 
+DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
+
 This module contains:
 - LLM-generated report via Claude API
 - Fallback template-based report

@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-18
-UPDATED_BY: repair-agent (NO_DOCS_REF fix for repair.py)
+UPDATED_BY: repair-agent (NO_DOCS_REF fix for repair_report.py)
 ```
 
 ---
@@ -25,6 +25,12 @@ UPDATED_BY: repair-agent (NO_DOCS_REF fix for repair.py)
 ---
 
 ## RECENT CHANGES
+
+### 2025-12-18: Added DOCS reference to repair_report.py
+
+- **What:** Added `DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md` to docstring of `src/ngram/repair_report.py`
+- **Why:** NO_DOCS_REF issue - file lacked bidirectional link to documentation
+- **Impact:** Enables `ngram context` to find doc chain for repair_report.py
 
 ### 2025-12-18: Added DOCS reference to repair_instructions.py
 

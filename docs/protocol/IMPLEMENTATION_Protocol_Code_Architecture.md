@@ -84,10 +84,10 @@ When installed in a target project, files are copied to `.ngram/`:
 
 ### CLAUDE.md Bootstrap
 
-The `CLAUDE.md` file includes protocol files via `@` directives:
+The `.ngram/CLAUDE.md` file includes protocol files via `@` directives:
 
 ```
-CLAUDE.md
+.ngram/CLAUDE.md
 ├── @templates/CLAUDE_ADDITION     # Include directive
 ├── @templates/ngram/PRINCIPLES
 └── @templates/ngram/PROTOCOL
@@ -166,7 +166,7 @@ VIEW:
 
 | Entry Point | File | Triggered By |
 |-------------|------|--------------|
-| Bootstrap | CLAUDE.md | Agent session start |
+| Bootstrap | .ngram/CLAUDE.md | Agent session start |
 | Navigation | .ngram/PROTOCOL.md | After bootstrap |
 | Task Selection | .ngram/views/VIEW_*.md | Based on task type |
 | State Check | .ngram/state/SYNC_Project_State.md | Before any work |
@@ -186,7 +186,7 @@ VIEW:
          │ reads
          ▼
 ┌─────────────────┐
-│   CLAUDE.md     │ ← Bootstrap with @includes
+│ .ngram/CLAUDE.md│ ← Bootstrap with @includes
 │  (with @refs)   │
 └────────┬────────┘
          │ follows to
@@ -274,7 +274,7 @@ SYNC_*.md (WHERE we are now)
          ▼
 ┌─────────────────┐
 │ Create/update   │ ← Add @includes
-│ CLAUDE.md       │
+│.ngram/CLAUDE.md │
 └────────┬────────┘
          │
          ▼
@@ -334,7 +334,7 @@ task description
 ### Internal Dependencies (Protocol Files)
 
 ```
-CLAUDE.md
+.ngram/CLAUDE.md
     └── includes → PROTOCOL.md
     └── includes → PRINCIPLES.md
 

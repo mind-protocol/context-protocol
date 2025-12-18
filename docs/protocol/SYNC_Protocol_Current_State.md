@@ -48,6 +48,7 @@ Protocol V1 complete and in use. Dogfooding on itself + Blood Ledger.
   - Updated tree diagrams to use full project-relative paths in tables
   - Converted bare filename references to resolvable paths (e.g., `templates/ngram/PROTOCOL.md`)
   - Removed backticked paths that started with `.` (caused issues with validator path resolution)
+- Fixed CLAUDE.md references: Updated all references from `CLAUDE.md` to `.ngram/CLAUDE.md` since file moved from project root to `.ngram/` directory
 
 ---
 

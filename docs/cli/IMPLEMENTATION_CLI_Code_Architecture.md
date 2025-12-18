@@ -25,35 +25,88 @@ SYNC:            ./SYNC_CLI_State.md
 
 ```
 src/context_protocol/
-├── __init__.py         # Package init, empty
-├── cli.py              # Entry point, argparse routing
-├── init_cmd.py         # Init command implementation
-├── validate.py         # Validation checks
-├── doctor.py           # Health checks
-├── repair.py           # Agent orchestration for repairs
-├── sync.py             # SYNC file management
-├── context.py          # Code-to-docs navigation
-├── prompt.py           # Bootstrap prompt generation
-├── project_map.py      # Visual project mapping
-├── github.py           # GitHub issue integration
-└── utils.py            # Shared utilities
+├── __init__.py             # Package init
+├── cli.py                  # Entry point, argparse routing
+├── init_cmd.py             # Init command implementation
+├── validate.py             # Validation checks
+├── doctor.py               # Health checks (core logic)
+├── doctor_types.py         # DoctorIssue, DoctorConfig types
+├── doctor_report.py        # Report generation, scoring
+├── doctor_files.py         # File discovery utilities
+├── repair.py               # Agent orchestration for repairs
+├── repair_instructions.py  # Issue-specific repair prompts
+├── sync.py                 # SYNC file management
+├── context.py              # Code-to-docs navigation
+├── prompt.py               # Bootstrap prompt generation
+├── project_map.py          # Visual dependency map (terminal)
+├── project_map_html.py     # HTML export for project map
+├── github.py               # GitHub issue integration
+└── utils.py                # Shared utilities
 ```
+
+**Logical Groupings** (all in `src/context_protocol/`):
+- **Doctor subsystem:** doctor, doctor_types, doctor_report, doctor_files
+- **Repair subsystem:** repair, repair_instructions
+- **Project map:** project_map, project_map_html
 
 ### File Responsibilities
 
-| File | Purpose | Key Functions/Classes |
-|------|---------|----------------------|
-| `src/context_protocol/cli.py` | Entry point, argument parsing | `main()` |
-| `src/context_protocol/init_cmd.py` | Protocol initialization | `init_protocol()` |
-| `src/context_protocol/validate.py` | Protocol invariant checking | `validate_protocol()`, `ValidationResult` |
-| `src/context_protocol/doctor.py` | Project health analysis | `doctor_command()`, `DoctorIssue`, `DoctorConfig` |
-| `src/context_protocol/repair.py` | Automated issue fixing | `repair_command()`, `RepairResult`, `spawn_repair_agent()` |
-| `src/context_protocol/sync.py` | SYNC file status and archiving | `sync_command()`, `archive_all_syncs()` |
-| `src/context_protocol/context.py` | Documentation discovery | `print_module_context()`, `get_module_context()` |
-| `src/context_protocol/prompt.py` | LLM prompt generation | `print_bootstrap_prompt()` |
-| `src/context_protocol/project_map.py` | Visual dependency map | `print_project_map()` |
-| `src/context_protocol/github.py` | GitHub API integration | `create_issues_for_findings()` |
-| `src/context_protocol/utils.py` | Shared helpers | `get_templates_path()`, `find_module_directories()` |
+| File | Purpose | Key Functions/Classes | Lines | Status |
+|------|---------|----------------------|-------|--------|
+| `src/context_protocol/cli.py` | Entry point, argument parsing | `main()` | ~290 | OK |
+| `src/context_protocol/init_cmd.py` | Protocol initialization | `init_protocol()` | ~168 | OK |
+| `src/context_protocol/validate.py` | Protocol invariant checking | `validate_protocol()`, `ValidationResult` | ~712 | SPLIT |
+| `src/context_protocol/doctor.py` | Health check orchestration | `run_doctor()`, `doctor_command()` | ~1345 | SPLIT |
+| `src/context_protocol/doctor_types.py` | Type definitions | `DoctorIssue`, `DoctorConfig` | ~41 | OK |
+| `src/context_protocol/doctor_report.py` | Report generation | `generate_health_markdown()`, `calculate_health_score()` | ~465 | WATCH |
+| `src/context_protocol/doctor_files.py` | File discovery | `find_source_files()`, `find_code_directories()` | ~321 | OK |
+| `src/context_protocol/repair.py` | Repair orchestration | `repair_command()`, `spawn_repair_agent()` | ~1333 | SPLIT |
+| `src/context_protocol/repair_instructions.py` | Repair prompts | `get_issue_instructions()` | ~813 | SPLIT |
+| `src/context_protocol/sync.py` | SYNC file management | `sync_command()`, `archive_all_syncs()` | ~346 | OK |
+| `src/context_protocol/context.py` | Documentation discovery | `print_module_context()`, `get_module_context()` | ~553 | WATCH |
+| `src/context_protocol/prompt.py` | LLM prompt generation | `print_bootstrap_prompt()` | ~89 | OK |
+| `src/context_protocol/project_map.py` | Terminal dependency map | `print_project_map()` | ~359 | OK |
+| `src/context_protocol/project_map_html.py` | HTML export | `generate_html_map()` | ~315 | OK |
+| `src/context_protocol/github.py` | GitHub API integration | `create_issues_for_findings()` | ~288 | OK |
+| `src/context_protocol/utils.py` | Shared helpers | `get_templates_path()`, `find_module_directories()` | ~103 | OK |
+
+**Size Thresholds:**
+- **OK** (<400 lines): Healthy size
+- **WATCH** (400-700 lines): Monitor for extraction opportunities
+- **SPLIT** (>700 lines): Requires splitting
+
+---
+
+## DESIGN PATTERNS
+
+### Architecture Pattern
+
+**Pattern:** Modular CLI with Command Pattern
+
+**Why:** Each CLI subcommand is an independent module. Repair uses subprocess spawning for agent isolation. Doctor uses composition of check functions.
+
+### Code Patterns in Use
+
+| Pattern | Applied To | Purpose |
+|---------|------------|---------|
+| Command Pattern | cli module → each `*_command()` | Dispatch based on argparse |
+| Composition | doctor module → `doctor_check_*()` | Combine independent health checks |
+| Factory | repair_instructions module | Generate prompts per issue type |
+| Subprocess Isolation | repair module → `spawn_repair_agent()` | Each agent runs independently |
+
+### Anti-Patterns to Avoid
+
+- **God Object**: doctor and repair modules are currently too large - need continued extraction
+- **Copy-Paste**: Don't duplicate check logic; compose check functions instead
+- **Premature Abstraction**: Don't create base classes until 3+ similar implementations
+
+### Boundaries
+
+| Boundary | Inside | Outside | Interface |
+|----------|--------|---------|-----------|
+| Doctor subsystem | doctor_* modules | Other commands | `run_doctor()`, `DoctorIssue` |
+| Repair subsystem | repair_* modules | Other commands | `repair_command()`, `RepairResult` |
+| File discovery | doctor_files, utils | Check logic | `find_source_files()`, `find_code_directories()` |
 
 ---
 
@@ -287,11 +340,18 @@ cli.py
     └── imports → project_map.py
 
 doctor.py
+    └── imports → doctor_types.py (DoctorIssue, DoctorConfig)
+    └── imports → doctor_report.py (generate_health_markdown, calculate_health_score)
+    └── imports → doctor_files.py (find_source_files, find_code_directories)
     └── imports → utils.py
     └── imports → sync.py
 
 repair.py
-    └── imports → doctor.py
+    └── imports → doctor.py (run_doctor, DoctorIssue)
+    └── imports → repair_instructions.py (get_issue_instructions)
+
+project_map.py
+    └── imports → project_map_html.py (generate_html_map)
 
 validate.py
     └── imports → utils.py
@@ -301,14 +361,14 @@ validate.py
 
 | Package | Used For | Imported By |
 |---------|----------|-------------|
-| argparse | CLI parsing | cli.py |
-| pathlib | File paths | All files |
-| subprocess | Agent spawning | repair.py |
-| concurrent.futures | Parallel execution | repair.py |
-| yaml (optional) | modules.yaml parsing | utils.py, doctor.py |
-| json | JSON output, traces | doctor.py, context.py |
-| shutil | File copying | init_cmd.py |
-| re | Regex patterns | validate.py, doctor.py |
+| argparse | CLI parsing | cli |
+| pathlib | File paths | All modules |
+| subprocess | Agent spawning | repair |
+| concurrent.futures | Parallel execution | repair |
+| yaml (optional) | modules.yaml parsing | utils, doctor |
+| json | JSON output, traces | doctor, context |
+| shutil | File copying | init_cmd |
+| re | Regex patterns | validate, doctor |
 
 ---
 
@@ -411,8 +471,24 @@ Files that reference this documentation:
 
 ## GAPS / IDEAS / QUESTIONS
 
+### Extraction Candidates (Planned - Files Don't Exist Yet)
+
+Files at SPLIT status need continued decomposition. The "Extract To" column shows **proposed** new files:
+
+| Current File | Lines | Target | Proposed New File | What to Move |
+|--------------|-------|--------|-------------------|--------------|
+| doctor | ~1641L | <400L | doctor_checks (planned) | All `doctor_check_*()` functions (~1000L) |
+| repair | ~1613L | <400L | repair_agent (planned) | `spawn_repair_agent()`, agent streaming logic |
+| repair_instructions | ~971L | <400L | Split by category | Group prompts: docs, code, tests |
+| validate | ~712L | <400L | validate_checks (planned) | Individual validation check functions |
+
+### Missing Implementation
+
 - [ ] Add type hints throughout codebase
-- [ ] Consider extracting color/formatting to utils
-- [ ] Agent prompt templates could be externalized to files
+- [ ] Add DOCS: references to all source files
+
+### Ideas (Not Yet Implemented)
+
 - IDEA: Plugin system for custom checks
-- QUESTION: Should repair agents have access to previous repair results?
+- IDEA: Agent prompt templates could be externalized to markdown files
+- IDEA: Color/formatting utilities extracted to new file (formatting module)

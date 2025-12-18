@@ -12,48 +12,23 @@ Provides health checks for projects:
 
 import json
 import re
-from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List, Dict, Any
 
 from .utils import IGNORED_EXTENSIONS, HAS_YAML, find_module_directories
 from .sync import archive_all_syncs
+from .doctor_types import DoctorIssue, DoctorConfig
+from .doctor_report import (
+    get_issue_guidance,
+    get_issue_explanation,
+    generate_health_markdown,
+    print_doctor_report,
+    check_sync_status,
+)
 
 if HAS_YAML:
     import yaml
-
-
-@dataclass
-class DoctorIssue:
-    """A health issue found by the doctor command."""
-    issue_type: str      # MONOLITH, UNDOCUMENTED, STALE_SYNC, etc.
-    severity: str        # critical, warning, info
-    path: str            # Affected file/directory
-    message: str         # Human description
-    details: Dict[str, Any] = field(default_factory=dict)
-    suggestion: str = ""
-
-
-@dataclass
-class DoctorConfig:
-    """Configuration for doctor checks."""
-    monolith_lines: int = 500
-    stale_sync_days: int = 14
-    ignore: List[str] = field(default_factory=lambda: [
-        "node_modules/**",
-        ".next/**",
-        "dist/**",
-        "build/**",
-        "vendor/**",
-        "__pycache__/**",
-        ".git/**",
-        "*.min.js",
-        "*.bundle.js",
-        ".venv/**",
-        "venv/**",
-    ])
-    disabled_checks: List[str] = field(default_factory=list)
 
 
 def parse_gitignore(gitignore_path: Path) -> List[str]:
@@ -199,22 +174,62 @@ def find_source_files(target_dir: Path, config: DoctorConfig) -> List[Path]:
 
 
 def find_code_directories(target_dir: Path, config: DoctorConfig) -> List[Path]:
-    """Find directories that contain source code files."""
+    """Find leaf directories that contain source code files directly.
+
+    Only returns directories that have code files DIRECTLY in them,
+    not just subdirectories with code. This means:
+    - src/context_protocol/ is returned (has .py files directly)
+    - src/ is NOT returned (only has subdirectories)
+    """
     skip_dirs = {'.git', '.context-protocol', 'docs', '__pycache__', '.venv', 'venv', 'templates', 'data'}
     found = []
 
-    def has_code_files(directory: Path) -> bool:
-        """Check if directory has any non-ignored code files."""
-        for f in directory.rglob("*"):
+    def has_direct_code_files(directory: Path) -> bool:
+        """Check if directory has code files DIRECTLY in it (not in subdirs)."""
+        for f in directory.iterdir():  # iterdir, not rglob
             if not f.is_file():
                 continue
             if f.suffix.lower() in IGNORED_EXTENSIONS:
                 continue
             if should_ignore_path(f, config.ignore, target_dir):
                 continue
-            # Found a real file
-            return True
+            # Check if it's a code file (not just any file)
+            if f.suffix.lower() in {'.py', '.js', '.ts', '.tsx', '.jsx', '.go', '.rs', '.java', '.c', '.cpp', '.h', '.rb', '.php'}:
+                return True
         return False
+
+    def find_leaf_code_dirs(directory: Path, depth: int = 0) -> List[Path]:
+        """Recursively find leaf directories with code files."""
+        if depth > 5:  # Prevent infinite recursion
+            return []
+
+        results = []
+        has_direct_code = has_direct_code_files(directory)
+
+        # Check subdirectories
+        subdirs_with_code = []
+        for subdir in directory.iterdir():
+            if not subdir.is_dir():
+                continue
+            if subdir.name.startswith('.'):
+                continue
+            if subdir.name in skip_dirs:
+                continue
+            if should_ignore_path(subdir, config.ignore, target_dir):
+                continue
+
+            # Recursively find code dirs in subdirectory
+            sub_results = find_leaf_code_dirs(subdir, depth + 1)
+            if sub_results:
+                subdirs_with_code.extend(sub_results)
+
+        # If this dir has direct code files AND no subdirs with code, it's a leaf
+        # If this dir has direct code AND subdirs with code, include both
+        if has_direct_code:
+            results.append(directory)
+
+        results.extend(subdirs_with_code)
+        return results
 
     # Check all top-level directories
     for item in target_dir.iterdir():
@@ -227,16 +242,7 @@ def find_code_directories(target_dir: Path, config: DoctorConfig) -> List[Path]:
         if should_ignore_path(item, config.ignore, target_dir):
             continue
 
-        # Check if this directory contains code files
-        if has_code_files(item):
-            found.append(item)
-            # Also find immediate subdirectories with code
-            for subdir in item.iterdir():
-                if subdir.is_dir() and not subdir.name.startswith('.'):
-                    if should_ignore_path(subdir, config.ignore, target_dir):
-                        continue
-                    if has_code_files(subdir):
-                        found.append(subdir)
+        found.extend(find_leaf_code_dirs(item))
 
     return found
 
@@ -1115,6 +1121,390 @@ def doctor_check_incomplete_chain(target_dir: Path, config: DoctorConfig) -> Lis
     return issues
 
 
+def doctor_check_missing_tests(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
+    """Check for modules without tests."""
+    issues = []
+
+    if "MISSING_TESTS" in config.disabled_checks:
+        return issues
+
+    # Check modules.yaml for modules without tests
+    modules_yaml = target_dir / "modules.yaml"
+    if not modules_yaml.exists() or not HAS_YAML:
+        return issues
+
+    try:
+        with open(modules_yaml) as f:
+            data = yaml.safe_load(f) or {}
+
+        for module_name, module_data in data.get("modules", {}).items():
+            if not isinstance(module_data, dict):
+                continue
+
+            tests_path = module_data.get("tests")
+            code_path = module_data.get("code")
+
+            if not code_path:
+                continue
+
+            # Check if tests path exists
+            if tests_path:
+                test_dir = target_dir / tests_path.rstrip("/*")
+                if test_dir.exists():
+                    continue  # Has tests
+
+            # No tests defined or path doesn't exist
+            issues.append(DoctorIssue(
+                issue_type="MISSING_TESTS",
+                severity="info",
+                path=module_name,
+                message=f"No tests for module",
+                details={"module": module_name, "code": code_path},
+                suggestion="Add tests and update modules.yaml"
+            ))
+
+    except Exception:
+        pass
+
+    return issues
+
+
+def doctor_check_orphan_docs(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
+    """Check for docs not linked from code or modules.yaml."""
+    issues = []
+
+    if "ORPHAN_DOCS" in config.disabled_checks:
+        return issues
+
+    docs_dir = target_dir / "docs"
+    if not docs_dir.exists():
+        return issues
+
+    # Get all doc files
+    doc_files = set()
+    for pattern in ["**/*.md"]:
+        for f in docs_dir.glob(pattern):
+            if f.is_file():
+                doc_files.add(f.relative_to(target_dir))
+
+    # Get docs referenced in modules.yaml
+    referenced_docs = set()
+    modules_yaml = target_dir / "modules.yaml"
+    if modules_yaml.exists() and HAS_YAML:
+        try:
+            with open(modules_yaml) as f:
+                data = yaml.safe_load(f) or {}
+            for module_data in data.get("modules", {}).values():
+                if isinstance(module_data, dict) and module_data.get("docs"):
+                    docs_path = module_data["docs"].rstrip("/*")
+                    # Add all files under this docs path
+                    docs_subdir = target_dir / docs_path
+                    if docs_subdir.exists():
+                        for f in docs_subdir.glob("**/*.md"):
+                            referenced_docs.add(f.relative_to(target_dir))
+        except Exception:
+            pass
+
+    # Get docs referenced via DOCS: comments in code
+    for code_ext in [".py", ".js", ".ts", ".tsx", ".go", ".rs"]:
+        for code_file in target_dir.rglob(f"*{code_ext}"):
+            if should_ignore_path(code_file, config.ignore, target_dir):
+                continue
+            try:
+                content = code_file.read_text(errors="ignore")
+                for line in content.split("\n")[:20]:  # Check first 20 lines
+                    if "DOCS:" in line:
+                        # Extract path after DOCS:
+                        path_match = line.split("DOCS:")[-1].strip()
+                        if path_match:
+                            referenced_docs.add(Path(path_match))
+            except Exception:
+                pass
+
+    # Find orphans
+    orphan_docs = doc_files - referenced_docs
+    for orphan in sorted(orphan_docs)[:10]:  # Limit to 10
+        issues.append(DoctorIssue(
+            issue_type="ORPHAN_DOCS",
+            severity="info",
+            path=str(orphan),
+            message="Doc not linked from code or modules.yaml",
+            details={},
+            suggestion="Link from code, add to modules.yaml, or delete"
+        ))
+
+    return issues
+
+
+def doctor_check_conflicts(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
+    """Check for CONFLICTS sections with ARBITRAGE items needing human decision."""
+    issues = []
+
+    if "ARBITRAGE" in config.disabled_checks:
+        return issues
+
+    # Search SYNC files for ## CONFLICTS sections
+    search_paths = [
+        target_dir / ".context-protocol" / "state",
+        target_dir / "docs",
+    ]
+
+    for search_dir in search_paths:
+        if not search_dir.exists():
+            continue
+
+        for sync_file in search_dir.rglob("SYNC_*.md"):
+            if should_ignore_path(sync_file, config.ignore, target_dir):
+                continue
+
+            try:
+                content = sync_file.read_text()
+
+                # Look for ## CONFLICTS section
+                if "## CONFLICTS" not in content and "## Conflicts" not in content:
+                    continue
+
+                # Extract ARBITRAGE items (unresolved conflicts needing human input)
+                arbitrage_items = []
+                in_conflicts_section = False
+                current_item = None
+
+                for line in content.split("\n"):
+                    if line.strip().startswith("## CONFLICTS") or line.strip().startswith("## Conflicts"):
+                        in_conflicts_section = True
+                        continue
+                    elif line.strip().startswith("## ") and in_conflicts_section:
+                        # Left CONFLICTS section
+                        break
+                    elif in_conflicts_section:
+                        # Look for ARBITRAGE headers
+                        if "### ARBITRAGE:" in line or "### Arbitrage:" in line:
+                            if current_item:
+                                arbitrage_items.append(current_item)
+                            current_item = {"title": line.split(":", 1)[-1].strip(), "details": []}
+                        elif current_item and line.strip().startswith("-"):
+                            current_item["details"].append(line.strip().lstrip("- "))
+                        elif line.strip().startswith("### DECISION") or line.strip().startswith("### Decision"):
+                            # DECISION items are resolved, skip
+                            if current_item:
+                                arbitrage_items.append(current_item)
+                            current_item = None
+
+                if current_item:
+                    arbitrage_items.append(current_item)
+
+                if arbitrage_items:
+                    rel_path = str(sync_file.relative_to(target_dir))
+                    issues.append(DoctorIssue(
+                        issue_type="ARBITRAGE",
+                        severity="critical",  # Needs human decision
+                        path=rel_path,
+                        message=f"{len(arbitrage_items)} conflict(s) need human decision",
+                        details={
+                            "conflicts": [item["title"] for item in arbitrage_items],
+                            "items": arbitrage_items[:5],
+                        },
+                        suggestion=f"Decide: {arbitrage_items[0]['title']}" if arbitrage_items else ""
+                    ))
+
+            except Exception:
+                pass
+
+    return issues
+
+
+def doctor_check_doc_gaps(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
+    """Check for GAPS sections left by previous agents in SYNC files."""
+    issues = []
+
+    if "DOC_GAPS" in config.disabled_checks:
+        return issues
+
+    # Search SYNC files for ## GAPS sections
+    search_paths = [
+        target_dir / ".context-protocol" / "state",
+        target_dir / "docs",
+    ]
+
+    for search_dir in search_paths:
+        if not search_dir.exists():
+            continue
+
+        for sync_file in search_dir.rglob("SYNC_*.md"):
+            if should_ignore_path(sync_file, config.ignore, target_dir):
+                continue
+
+            try:
+                content = sync_file.read_text()
+
+                # Look for ## GAPS section
+                if "## GAPS" not in content and "## Gaps" not in content:
+                    continue
+
+                # Extract uncompleted items ([ ] not [x])
+                uncompleted = []
+                in_gaps_section = False
+
+                for line in content.split("\n"):
+                    if line.strip().startswith("## GAPS") or line.strip().startswith("## Gaps"):
+                        in_gaps_section = True
+                        continue
+                    elif line.strip().startswith("## ") and in_gaps_section:
+                        # Left GAPS section
+                        break
+                    elif in_gaps_section:
+                        # Look for uncompleted checkboxes
+                        if "[ ]" in line:
+                            # Extract the task text
+                            task = line.split("[ ]")[-1].strip().lstrip("- ")
+                            if task:
+                                uncompleted.append(task)
+
+                if uncompleted:
+                    rel_path = str(sync_file.relative_to(target_dir))
+                    issues.append(DoctorIssue(
+                        issue_type="DOC_GAPS",
+                        severity="warning",
+                        path=rel_path,
+                        message=f"{len(uncompleted)} incomplete task(s) from previous session",
+                        details={"gaps": uncompleted[:10], "total": len(uncompleted)},
+                        suggestion=f"Complete: {uncompleted[0][:50]}..." if uncompleted else ""
+                    ))
+
+            except Exception:
+                pass
+
+    return issues
+
+
+def doctor_check_suggestions(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
+    """Check for agent suggestions in SYNC files that user can act on."""
+    issues = []
+
+    if "SUGGESTION" in config.disabled_checks:
+        return issues
+
+    # Search SYNC files for ### Suggestions sections
+    search_paths = [
+        target_dir / ".context-protocol" / "state",
+        target_dir / "docs",
+    ]
+
+    for search_dir in search_paths:
+        if not search_dir.exists():
+            continue
+
+        for sync_file in search_dir.rglob("SYNC_*.md"):
+            if should_ignore_path(sync_file, config.ignore, target_dir):
+                continue
+
+            try:
+                content = sync_file.read_text()
+
+                # Look for ### Suggestions section
+                if "### Suggestions" not in content and "### suggestions" not in content:
+                    continue
+
+                # Extract uncompleted suggestions ([ ] not [x])
+                suggestions = []
+                in_suggestions_section = False
+
+                for line in content.split("\n"):
+                    if line.strip().startswith("### Suggestions") or line.strip().startswith("### suggestions"):
+                        in_suggestions_section = True
+                        continue
+                    elif line.strip().startswith("### ") and in_suggestions_section:
+                        # Left Suggestions section
+                        break
+                    elif line.strip().startswith("## ") and in_suggestions_section:
+                        # Left to new major section
+                        break
+                    elif in_suggestions_section:
+                        # Look for uncompleted checkboxes
+                        if "[ ]" in line:
+                            # Extract the suggestion text
+                            suggestion_text = line.split("[ ]")[-1].strip().lstrip("- ")
+                            # Remove HTML comments
+                            if "<!--" in suggestion_text:
+                                suggestion_text = suggestion_text.split("<!--")[0].strip()
+                            if suggestion_text:
+                                suggestions.append(suggestion_text)
+
+                if suggestions:
+                    rel_path = str(sync_file.relative_to(target_dir))
+                    for suggestion in suggestions:
+                        issues.append(DoctorIssue(
+                            issue_type="SUGGESTION",
+                            severity="info",
+                            path=rel_path,
+                            message=f"Agent suggestion: {suggestion[:60]}{'...' if len(suggestion) > 60 else ''}",
+                            details={"suggestion": suggestion, "source_file": rel_path},
+                            suggestion=suggestion
+                        ))
+
+            except Exception:
+                pass
+
+    return issues
+
+
+def doctor_check_stale_impl(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
+    """Check for IMPLEMENTATION docs that don't match actual files."""
+    issues = []
+
+    if "STALE_IMPL" in config.disabled_checks:
+        return issues
+
+    # Find all IMPLEMENTATION docs
+    docs_dir = target_dir / "docs"
+    if not docs_dir.exists():
+        return issues
+
+    for impl_doc in docs_dir.rglob("IMPLEMENTATION*.md"):
+        if should_ignore_path(impl_doc, config.ignore, target_dir):
+            continue
+
+        try:
+            content = impl_doc.read_text(errors="ignore")
+
+            # Extract file references from the doc
+            referenced_files = set()
+            for line in content.split("\n"):
+                # Look for file paths in backticks or table cells
+                import re
+                matches = re.findall(r'`([^`]+\.(?:py|js|ts|tsx|go|rs|java))`', line)
+                for match in matches:
+                    referenced_files.add(match)
+
+            if not referenced_files:
+                continue
+
+            # Check which files exist
+            missing_files = []
+            for ref_file in referenced_files:
+                # Try relative to target_dir
+                full_path = target_dir / ref_file
+                if not full_path.exists():
+                    missing_files.append(ref_file)
+
+            if missing_files and len(missing_files) < len(referenced_files):
+                # Some files missing but not all (if all missing, doc might be for different project)
+                rel_path = str(impl_doc.relative_to(target_dir))
+                issues.append(DoctorIssue(
+                    issue_type="STALE_IMPL",
+                    severity="warning",
+                    path=rel_path,
+                    message=f"{len(missing_files)} referenced files not found",
+                    details={"missing_files": missing_files[:5]},
+                    suggestion="Update doc to match actual file structure"
+                ))
+
+        except Exception:
+            pass
+
+    return issues
+
+
 def calculate_health_score(issues: Dict[str, List[DoctorIssue]]) -> int:
     """Calculate health score from issues."""
     score = 100
@@ -1144,6 +1534,13 @@ def run_doctor(target_dir: Path, config: DoctorConfig) -> Dict[str, Any]:
     all_issues.extend(doctor_check_undoc_impl(target_dir, config))
     all_issues.extend(doctor_check_large_doc_module(target_dir, config))
     all_issues.extend(doctor_check_yaml_drift(target_dir, config))
+    # New checks
+    all_issues.extend(doctor_check_missing_tests(target_dir, config))
+    all_issues.extend(doctor_check_orphan_docs(target_dir, config))
+    all_issues.extend(doctor_check_stale_impl(target_dir, config))
+    all_issues.extend(doctor_check_doc_gaps(target_dir, config))
+    all_issues.extend(doctor_check_conflicts(target_dir, config))
+    all_issues.extend(doctor_check_suggestions(target_dir, config))
 
     # Group by severity
     grouped = {
@@ -1164,435 +1561,6 @@ def run_doctor(target_dir: Path, config: DoctorConfig) -> Dict[str, Any]:
             "info": len(grouped["info"]),
         }
     }
-
-
-def get_issue_guidance(issue_type: str) -> Dict[str, str]:
-    """Get VIEW and file guidance for each issue type."""
-    guidance = {
-        "MONOLITH": {
-            "view": "VIEW_Refactor_Improve_Code_Structure.md",
-            "file": "Split into smaller modules",
-            "tip": "Extract related functions into separate files"
-        },
-        "UNDOCUMENTED": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "file": "modules.yaml",
-            "tip": "Add module mapping, then create PATTERNS + SYNC docs"
-        },
-        "STALE_SYNC": {
-            "view": "VIEW_Implement_Write_Or_Modify_Code.md",
-            "file": "The SYNC file itself",
-            "tip": "Update LAST_UPDATED date and review content"
-        },
-        "PLACEHOLDER": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "file": "The doc file with placeholders",
-            "tip": "Replace {PLACEHOLDER} markers with actual content"
-        },
-        "INCOMPLETE_CHAIN": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "file": "The module's docs/ folder",
-            "tip": "Create missing doc types (PATTERNS, BEHAVIORS, etc.)"
-        },
-        "NO_DOCS_REF": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "file": "The source file header",
-            "tip": "Add: # DOCS: path/to/PATTERNS.md"
-        },
-        "BROKEN_IMPL_LINK": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "file": "The IMPLEMENTATION doc",
-            "tip": "Update file references to match actual paths"
-        },
-        "STUB_IMPL": {
-            "view": "VIEW_Implement_Write_Or_Modify_Code.md",
-            "file": "The stub file",
-            "tip": "Implement the placeholder functions"
-        },
-        "INCOMPLETE_IMPL": {
-            "view": "VIEW_Implement_Write_Or_Modify_Code.md",
-            "file": "The incomplete file",
-            "tip": "Fill in empty functions"
-        },
-        "UNDOC_IMPL": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "file": "Relevant IMPLEMENTATION_*.md",
-            "tip": "Add file reference to IMPLEMENTATION doc"
-        },
-        "LARGE_DOC_MODULE": {
-            "view": "VIEW_Refactor_Improve_Code_Structure.md",
-            "file": "The module's doc folder",
-            "tip": "Split large docs or archive old content"
-        },
-        "YAML_DRIFT": {
-            "view": "VIEW_Document_Create_Module_Documentation.md",
-            "file": "modules.yaml",
-            "tip": "Update paths to match reality or remove stale modules"
-        },
-    }
-    return guidance.get(issue_type, {"view": "VIEW_Implement_Write_Or_Modify_Code.md", "file": "", "tip": ""})
-
-
-def get_issue_explanation(issue_type: str) -> Dict[str, str]:
-    """Get natural language explanation for each issue type."""
-    explanations = {
-        "MONOLITH": {
-            "risk": "Large files are hard to navigate, test, and maintain. They slow down agents who need to load context, and changes become risky because side effects are hard to predict.",
-            "action": "Extract cohesive functionality into separate modules. Start with the largest functions/classes listed above.",
-        },
-        "UNDOCUMENTED": {
-            "risk": "Code without documentation becomes a black box. Agents will reverse-engineer intent from implementation, make changes that violate invisible design decisions, or duplicate existing patterns.",
-            "action": "Add a mapping in modules.yaml (project root), then create at minimum PATTERNS + SYNC docs for the module.",
-        },
-        "STALE_SYNC": {
-            "risk": "Outdated SYNC files mislead agents about current state. They may work from wrong assumptions or miss important context about recent changes.",
-            "action": "Review the SYNC file, update LAST_UPDATED, and ensure it reflects what actually exists.",
-        },
-        "PLACEHOLDER": {
-            "risk": "Template placeholders mean the documentation was started but never completed. Agents loading these docs get no useful information.",
-            "action": "Fill in the placeholders with actual content, or delete the file if it's not needed yet.",
-        },
-        "INCOMPLETE_CHAIN": {
-            "risk": "Missing doc types mean agents can't answer certain questions about the module. For example, without IMPLEMENTATION, they don't know where code lives or how data flows.",
-            "action": "Create the missing doc types using templates from .context-protocol/templates/.",
-        },
-        "NO_DOCS_REF": {
-            "risk": "Without a DOCS: reference, the bidirectional link is broken. Agents reading code can't find the design docs, and `context-protocol context` won't work.",
-            "action": "Add a comment like `# DOCS: docs/path/to/PATTERNS_*.md` near the top of the file.",
-        },
-        "BROKEN_IMPL_LINK": {
-            "risk": "IMPLEMENTATION docs reference files that don't exist. Agents following these docs will waste time looking for non-existent code.",
-            "action": "Update file paths in the IMPLEMENTATION doc to match actual locations, or remove references to deleted files.",
-        },
-        "STUB_IMPL": {
-            "risk": "Stub implementations (TODO, NotImplementedError, pass) are placeholders that don't actually work. The code looks complete but fails at runtime.",
-            "action": "Implement the stub functions with actual logic, or mark the file as incomplete in SYNC.",
-        },
-        "INCOMPLETE_IMPL": {
-            "risk": "Empty functions indicate incomplete implementation. The interface exists but the behavior doesn't.",
-            "action": "Fill in the empty functions with actual implementation.",
-        },
-        "UNDOC_IMPL": {
-            "risk": "Implementation files not referenced in IMPLEMENTATION docs become invisible. Agents won't know they exist when trying to understand the codebase.",
-            "action": "Add the file to the relevant IMPLEMENTATION_*.md with a brief description of its role.",
-        },
-        "LARGE_DOC_MODULE": {
-            "risk": "Large doc modules consume significant context window when loaded. Agents may not be able to load everything they need.",
-            "action": "Archive old sections to dated files, split into sub-modules, or remove redundant content.",
-        },
-        "YAML_DRIFT": {
-            "risk": "modules.yaml references paths that don't exist. Agents trusting this manifest will look for code/docs that aren't there, wasting time and causing confusion.",
-            "action": "Update modules.yaml to match current file structure, or create the missing paths, or remove stale module entries.",
-        },
-    }
-    return explanations.get(issue_type, {"risk": "This issue may cause problems.", "action": "Review and fix."})
-
-
-def generate_health_markdown(results: Dict[str, Any], github_issues: List = None) -> str:
-    """Generate SYNC-formatted health report with natural language explanations."""
-    # Build a mapping of path -> GitHub issue for quick lookup
-    gh_issue_map = {}
-    if github_issues:
-        for gh in github_issues:
-            gh_issue_map[gh.path] = gh
-
-    lines = []
-
-    # Header in SYNC format
-    lines.append("# SYNC: Project Health")
-    lines.append("")
-    lines.append("```")
-    lines.append(f"LAST_UPDATED: {datetime.now().strftime('%Y-%m-%d')}")
-    lines.append("UPDATED_BY: context-protocol doctor")
-    score = results['score']
-    if score >= 80:
-        status = "HEALTHY"
-    elif score >= 50:
-        status = "NEEDS_ATTENTION"
-    else:
-        status = "CRITICAL"
-    lines.append(f"STATUS: {status}")
-    lines.append("```")
-    lines.append("")
-    lines.append("---")
-    lines.append("")
-
-    # Current State section
-    lines.append("## CURRENT STATE")
-    lines.append("")
-    lines.append(f"**Health Score:** {score}/100")
-    lines.append("")
-
-    if score >= 80:
-        lines.append("The project is in good health. Documentation is up to date and code is well-structured.")
-    elif score >= 50:
-        lines.append("The project needs attention. Some documentation is stale or incomplete, which may slow down agents.")
-    else:
-        lines.append("The project has critical issues that will significantly impact agent effectiveness. Address these before starting new work.")
-    lines.append("")
-
-    lines.append("| Severity | Count |")
-    lines.append("|----------|-------|")
-    lines.append(f"| Critical | {results['summary']['critical']} |")
-    lines.append(f"| Warning | {results['summary']['warning']} |")
-    lines.append(f"| Info | {results['summary']['info']} |")
-    lines.append("")
-
-    # Group issues by type for better organization
-    critical = results["issues"]["critical"]
-    warnings = results["issues"]["warning"]
-
-    if critical or warnings:
-        lines.append("---")
-        lines.append("")
-        lines.append("## ISSUES")
-        lines.append("")
-
-    # Group critical issues by type
-    if critical:
-        issues_by_type = {}
-        for issue in critical:
-            if issue.issue_type not in issues_by_type:
-                issues_by_type[issue.issue_type] = []
-            issues_by_type[issue.issue_type].append(issue)
-
-        for issue_type, issues in issues_by_type.items():
-            guidance = get_issue_guidance(issue_type)
-            explanation = get_issue_explanation(issue_type)
-
-            lines.append(f"### {issue_type} ({len(issues)} files)")
-            lines.append("")
-            lines.append(f"**What's wrong:** {explanation['risk']}")
-            lines.append("")
-            lines.append(f"**How to fix:** {explanation['action']}")
-            lines.append("")
-            lines.append(f"**Protocol:** Load `{guidance['view']}` before starting.")
-            lines.append("")
-            lines.append("**Files:**")
-            lines.append("")
-
-            for issue in issues[:10]:  # Limit to 10 per type
-                gh = gh_issue_map.get(issue.path)
-                gh_link = f" [#{gh.number}]({gh.url})" if gh else ""
-                if issue.suggestion and issue.suggestion != "Consider splitting into smaller modules":
-                    lines.append(f"- `{issue.path}`{gh_link} — {issue.message}")
-                    lines.append(f"  - {issue.suggestion}")
-                else:
-                    lines.append(f"- `{issue.path}`{gh_link} — {issue.message}")
-
-            if len(issues) > 10:
-                lines.append(f"- ... and {len(issues) - 10} more")
-            lines.append("")
-
-    # Group warnings by type
-    if warnings:
-        issues_by_type = {}
-        for issue in warnings:
-            if issue.issue_type not in issues_by_type:
-                issues_by_type[issue.issue_type] = []
-            issues_by_type[issue.issue_type].append(issue)
-
-        for issue_type, issues in issues_by_type.items():
-            guidance = get_issue_guidance(issue_type)
-            explanation = get_issue_explanation(issue_type)
-
-            lines.append(f"### {issue_type} ({len(issues)} files)")
-            lines.append("")
-            lines.append(f"**What's wrong:** {explanation['risk']}")
-            lines.append("")
-            lines.append(f"**How to fix:** {explanation['action']}")
-            lines.append("")
-            lines.append(f"**Protocol:** Load `{guidance['view']}` before starting.")
-            lines.append("")
-            lines.append("**Files:**")
-            lines.append("")
-
-            for issue in issues[:10]:
-                gh = gh_issue_map.get(issue.path)
-                gh_link = f" [#{gh.number}]({gh.url})" if gh else ""
-                lines.append(f"- `{issue.path}`{gh_link} — {issue.message}")
-
-            if len(issues) > 10:
-                lines.append(f"- ... and {len(issues) - 10} more")
-            lines.append("")
-
-    # Info as Later section
-    info = results["issues"]["info"]
-    if info:
-        lines.append("---")
-        lines.append("")
-        lines.append("## LATER")
-        lines.append("")
-        lines.append("These are minor issues that don't block work but would improve project health:")
-        lines.append("")
-        for issue in info[:10]:
-            lines.append(f"- [ ] `{issue.path}` — {issue.message}")
-        if len(info) > 10:
-            lines.append(f"- ... and {len(info) - 10} more")
-        lines.append("")
-
-    # Handoff section
-    lines.append("---")
-    lines.append("")
-    lines.append("## HANDOFF")
-    lines.append("")
-
-    if critical:
-        lines.append("**For the next agent:**")
-        lines.append("")
-        lines.append("Before starting your task, consider addressing critical issues — especially if your work touches affected files. Monoliths and undocumented code will slow you down.")
-        lines.append("")
-        lines.append("**Recommended first action:** Pick one MONOLITH file you'll be working in and split its largest function into a separate module.")
-    elif warnings:
-        lines.append("**For the next agent:**")
-        lines.append("")
-        lines.append("The project is in reasonable shape. If you have time, update any stale SYNC files related to your work area.")
-    else:
-        lines.append("**For the next agent:**")
-        lines.append("")
-        lines.append("Project health is good. Focus on your task.")
-
-    lines.append("")
-    lines.append("---")
-    lines.append("")
-    lines.append("*Generated by `context-protocol doctor`*")
-
-    return "\n".join(lines)
-
-
-def print_doctor_report(results: Dict[str, Any], output_format: str = "text"):
-    """Print doctor results in specified format."""
-    if output_format == "json":
-        # Convert DoctorIssue objects to dicts
-        json_results = {
-            "project": results["project"],
-            "score": results["score"],
-            "summary": results["summary"],
-            "issues": {
-                severity: [
-                    {
-                        "type": issue.issue_type,
-                        "path": issue.path,
-                        "message": issue.message,
-                        "details": issue.details,
-                        "suggestion": issue.suggestion,
-                    }
-                    for issue in issues
-                ]
-                for severity, issues in results["issues"].items()
-            }
-        }
-        print(json.dumps(json_results, indent=2))
-        return
-
-    # Text format
-    project_name = Path(results["project"]).name
-    print(f"🏥 Project Health Report: {project_name}")
-    print("=" * 50)
-    print()
-
-    # Critical issues
-    critical = results["issues"]["critical"]
-    if critical:
-        print(f"## Critical ({len(critical)} issues)")
-        print()
-        for issue in critical:
-            guidance = get_issue_guidance(issue.issue_type)
-            print(f"  ✗ {issue.issue_type}: {issue.path}")
-            print(f"    {issue.message}")
-            if issue.suggestion:
-                print(f"    → {issue.suggestion}")
-            print(f"    📖 {guidance['view']}")
-            print()
-
-    # Warnings
-    warnings = results["issues"]["warning"]
-    if warnings:
-        print(f"## Warnings ({len(warnings)} issues)")
-        print()
-        for issue in warnings:
-            guidance = get_issue_guidance(issue.issue_type)
-            print(f"  ⚠ {issue.issue_type}: {issue.path}")
-            print(f"    {issue.message}")
-            if issue.suggestion:
-                print(f"    → {issue.suggestion}")
-            print(f"    📖 {guidance['view']}")
-            print()
-
-    # Info
-    info = results["issues"]["info"]
-    if info:
-        print(f"## Info ({len(info)} issues)")
-        print()
-        for issue in info[:5]:  # Limit info display
-            print(f"  ℹ {issue.issue_type}: {issue.path}")
-            print(f"    {issue.message}")
-        if len(info) > 5:
-            print(f"  ... and {len(info) - 5} more")
-        print()
-
-    # Summary
-    print("─" * 50)
-    print(f"Health Score: {results['score']}/100")
-    print(f"Critical: {results['summary']['critical']} | Warnings: {results['summary']['warning']} | Info: {results['summary']['info']}")
-    print("─" * 50)
-
-    # Suggested actions
-    if critical or warnings:
-        print()
-        print("## Suggested Actions")
-        print()
-        action_num = 1
-        for issue in critical[:3]:
-            print(f"{action_num}. [ ] Fix {issue.issue_type.lower()}: {issue.path}")
-            action_num += 1
-        for issue in warnings[:2]:
-            print(f"{action_num}. [ ] Address {issue.issue_type.lower()}: {issue.path}")
-            action_num += 1
-        print()
-
-
-def check_sync_status(target_dir: Path) -> Dict[str, int]:
-    """Quick check of SYNC file status for doctor report."""
-    stale_count = 0
-    large_count = 0
-    threshold_days = 14
-    max_lines = 200
-    now = datetime.now()
-
-    search_paths = [
-        target_dir / ".context-protocol" / "state",
-        target_dir / "docs",
-    ]
-
-    for search_dir in search_paths:
-        if not search_dir.exists():
-            continue
-
-        for sync_file in search_dir.rglob("SYNC_*.md"):
-            try:
-                content = sync_file.read_text()
-                lines = content.split('\n')
-
-                # Check size
-                if len(lines) > max_lines:
-                    large_count += 1
-
-                # Check date
-                for line in lines[:30]:
-                    if 'LAST_UPDATED:' in line:
-                        date_str = line.split('LAST_UPDATED:')[1].strip()[:10]
-                        try:
-                            last_updated = datetime.strptime(date_str, "%Y-%m-%d")
-                            if (now - last_updated).days > threshold_days:
-                                stale_count += 1
-                        except ValueError:
-                            pass
-                        break
-            except Exception:
-                continue
-
-    return {"stale": stale_count, "large": large_count}
 
 
 def doctor_command(

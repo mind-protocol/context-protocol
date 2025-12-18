@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-18
-UPDATED_BY: repair-agent (doctor.py monolith split)
+UPDATED_BY: repair-agent (doctor.py monolith refactor)
 ```
 
 ---
@@ -13,11 +13,19 @@ The Context Protocol project is functional and in active use. The CLI provides c
 
 Documentation coverage is complete. The `src/` directory containing the CLI implementation has proper module documentation mapped in `modules.yaml`.
 
+### Recent Changes
+
+**2025-12-18:** Refactored `doctor.py` to reduce monolith size:
+- Created `doctor_files.py` module with file/path utilities (~280 lines extracted)
+- Moved: `parse_gitignore`, `load_doctor_config`, `should_ignore_path`, `is_binary_file`, `find_source_files`, `find_code_directories`, `count_lines`, `find_long_sections`
+- `doctor.py` reduced from 1337 → 1217 non-empty lines (still needs further splitting)
+- Module hierarchy: `doctor.py` → imports from `doctor_types.py`, `doctor_report.py`, `doctor_files.py`
+
 ---
 
 ## ACTIVE WORK
 
-None currently.
+- MONOLITH issues remain: `doctor.py` (1217 lines) and `repair.py` (1918 lines) still above 800 threshold
 
 ---
 

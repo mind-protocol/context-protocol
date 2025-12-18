@@ -26,307 +26,19 @@ from .doctor_report import (
     print_doctor_report,
     check_sync_status,
 )
+from .doctor_files import (
+    parse_gitignore,
+    load_doctor_config,
+    should_ignore_path,
+    is_binary_file,
+    find_source_files,
+    find_code_directories,
+    count_lines,
+    find_long_sections,
+)
 
 if HAS_YAML:
     import yaml
-
-
-def parse_gitignore(gitignore_path: Path) -> List[str]:
-    """Parse .gitignore file and return list of patterns."""
-    patterns = []
-    if not gitignore_path.exists():
-        return patterns
-
-    try:
-        with open(gitignore_path) as f:
-            for line in f:
-                line = line.strip()
-                # Skip empty lines and comments
-                if not line or line.startswith('#'):
-                    continue
-                # Normalize pattern for our matching
-                if line.endswith('/'):
-                    # Directory pattern - add /** suffix
-                    patterns.append(line.rstrip('/') + "/**")
-                else:
-                    patterns.append(line)
-    except Exception:
-        pass
-
-    return patterns
-
-
-def load_doctor_config(target_dir: Path) -> DoctorConfig:
-    """Load doctor configuration from config.yaml and .gitignore if they exist."""
-    config_path = target_dir / ".context-protocol" / "config.yaml"
-    gitignore_path = target_dir / ".gitignore"
-
-    config = DoctorConfig()
-
-    # Add patterns from .gitignore
-    gitignore_patterns = parse_gitignore(gitignore_path)
-    config.ignore.extend(gitignore_patterns)
-
-    if not config_path.exists():
-        return config
-
-    if not HAS_YAML:
-        return config
-
-    try:
-        with open(config_path) as f:
-            data = yaml.safe_load(f) or {}
-
-        doctor_config = data.get("doctor", {})
-
-        if "monolith_lines" in doctor_config:
-            config.monolith_lines = int(doctor_config["monolith_lines"])
-        if "stale_sync_days" in doctor_config:
-            config.stale_sync_days = int(doctor_config["stale_sync_days"])
-        if "ignore" in doctor_config:
-            # Extend defaults, don't replace
-            config.ignore.extend(doctor_config["ignore"])
-        if "disabled_checks" in doctor_config:
-            config.disabled_checks = list(doctor_config["disabled_checks"])
-
-    except Exception:
-        pass  # Use defaults on error
-
-    return config
-
-
-def should_ignore_path(path: Path, ignore_patterns: List[str], target_dir: Path) -> bool:
-    """Check if a path should be ignored based on patterns."""
-    import fnmatch
-
-    try:
-        rel_path = str(path.relative_to(target_dir))
-    except ValueError:
-        rel_path = str(path)
-
-    # Normalize path separators
-    rel_path = rel_path.replace("\\", "/")
-
-    for pattern in ignore_patterns:
-        pattern = pattern.replace("\\", "/")
-
-        # Pattern ending with /** means match this directory anywhere
-        if pattern.endswith("/**"):
-            dir_name = pattern[:-3]
-            # Match if dir_name is a component in the path
-            if f"/{dir_name}/" in f"/{rel_path}/" or rel_path.startswith(f"{dir_name}/"):
-                return True
-
-        # Pattern starting with **/ means match suffix
-        elif pattern.startswith("**/"):
-            suffix = pattern[3:]
-            if rel_path.endswith(suffix) or f"/{suffix}" in f"/{rel_path}":
-                return True
-
-        # Simple wildcard patterns
-        elif "*" in pattern:
-            # Try matching with fnmatch
-            if fnmatch.fnmatch(rel_path, pattern):
-                return True
-            # Also try matching just the filename
-            if fnmatch.fnmatch(Path(rel_path).name, pattern):
-                return True
-
-        # Exact match or prefix
-        else:
-            if rel_path == pattern or rel_path.startswith(pattern + "/"):
-                return True
-            # Also match if pattern appears as a path component
-            if f"/{pattern}/" in f"/{rel_path}/" or rel_path.startswith(f"{pattern}/"):
-                return True
-
-    return False
-
-
-def is_binary_file(file_path: Path) -> bool:
-    """Check if a file is binary."""
-    try:
-        with open(file_path, 'rb') as f:
-            chunk = f.read(8192)
-            return b'\x00' in chunk
-    except Exception:
-        return True
-
-
-def find_source_files(target_dir: Path, config: DoctorConfig) -> List[Path]:
-    """Find all source code files in the project."""
-    files = set()
-
-    # Check all code directories
-    for code_dir in find_code_directories(target_dir, config):
-        for file_path in code_dir.rglob("*"):
-            if not file_path.is_file():
-                continue
-            if file_path.suffix.lower() in IGNORED_EXTENSIONS:
-                continue
-            if should_ignore_path(file_path, config.ignore, target_dir):
-                continue
-            if is_binary_file(file_path):
-                continue
-            files.add(file_path)
-
-    return sorted(files)
-
-
-def find_code_directories(target_dir: Path, config: DoctorConfig) -> List[Path]:
-    """Find leaf directories that contain source code files directly.
-
-    Only returns directories that have code files DIRECTLY in them,
-    not just subdirectories with code. This means:
-    - src/context_protocol/ is returned (has .py files directly)
-    - src/ is NOT returned (only has subdirectories)
-    """
-    skip_dirs = {'.git', '.context-protocol', 'docs', '__pycache__', '.venv', 'venv', 'templates', 'data'}
-    found = []
-
-    def has_direct_code_files(directory: Path) -> bool:
-        """Check if directory has code files DIRECTLY in it (not in subdirs)."""
-        for f in directory.iterdir():  # iterdir, not rglob
-            if not f.is_file():
-                continue
-            if f.suffix.lower() in IGNORED_EXTENSIONS:
-                continue
-            if should_ignore_path(f, config.ignore, target_dir):
-                continue
-            # Check if it's a code file (not just any file)
-            if f.suffix.lower() in {'.py', '.js', '.ts', '.tsx', '.jsx', '.go', '.rs', '.java', '.c', '.cpp', '.h', '.rb', '.php'}:
-                return True
-        return False
-
-    def find_leaf_code_dirs(directory: Path, depth: int = 0) -> List[Path]:
-        """Recursively find leaf directories with code files."""
-        if depth > 5:  # Prevent infinite recursion
-            return []
-
-        results = []
-        has_direct_code = has_direct_code_files(directory)
-
-        # Check subdirectories
-        subdirs_with_code = []
-        for subdir in directory.iterdir():
-            if not subdir.is_dir():
-                continue
-            if subdir.name.startswith('.'):
-                continue
-            if subdir.name in skip_dirs:
-                continue
-            if should_ignore_path(subdir, config.ignore, target_dir):
-                continue
-
-            # Recursively find code dirs in subdirectory
-            sub_results = find_leaf_code_dirs(subdir, depth + 1)
-            if sub_results:
-                subdirs_with_code.extend(sub_results)
-
-        # If this dir has direct code files AND no subdirs with code, it's a leaf
-        # If this dir has direct code AND subdirs with code, include both
-        if has_direct_code:
-            results.append(directory)
-
-        results.extend(subdirs_with_code)
-        return results
-
-    # Check all top-level directories
-    for item in target_dir.iterdir():
-        if not item.is_dir():
-            continue
-        if item.name.startswith('.'):
-            continue
-        if item.name in skip_dirs:
-            continue
-        if should_ignore_path(item, config.ignore, target_dir):
-            continue
-
-        found.extend(find_leaf_code_dirs(item))
-
-    return found
-
-
-def count_lines(file_path: Path) -> int:
-    """Count non-empty lines in a file."""
-    try:
-        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
-            return sum(1 for line in f if line.strip())
-    except Exception:
-        return 0
-
-
-def find_long_sections(file_path: Path, min_lines: int = 50) -> List[Dict[str, Any]]:
-    """Find long functions, classes, or sections in a file."""
-    try:
-        content = file_path.read_text(encoding='utf-8', errors='ignore')
-        lines = content.split('\n')
-    except Exception:
-        return []
-
-    sections = []
-    suffix = file_path.suffix.lower()
-
-    # Language-specific patterns
-    if suffix in ['.py']:
-        # Python: def, class, async def
-        pattern = re.compile(r'^(\s*)(def |async def |class )(\w+)')
-    elif suffix in ['.js', '.ts', '.jsx', '.tsx']:
-        # JS/TS: function, class, const/let with arrow or function
-        pattern = re.compile(r'^(\s*)(function |class |(?:const|let|var)\s+)(\w+)')
-    elif suffix in ['.go']:
-        # Go: func
-        pattern = re.compile(r'^()(func\s+(?:\([^)]+\)\s+)?)(\w+)')
-    elif suffix in ['.rs']:
-        # Rust: fn, impl, struct
-        pattern = re.compile(r'^(\s*)(fn |impl |struct )(\w+)')
-    elif suffix in ['.java', '.kt']:
-        # Java/Kotlin: class, interface, method patterns
-        pattern = re.compile(r'^(\s*)(public |private |protected |class |interface |fun ).*?(\w+)\s*[({]')
-    elif suffix in ['.rb']:
-        # Ruby: def, class, module
-        pattern = re.compile(r'^(\s*)(def |class |module )(\w+)')
-    elif suffix in ['.md']:
-        # Markdown: ## headers
-        pattern = re.compile(r'^()(#{1,3}\s+)(.+)')
-    else:
-        return []  # Unsupported language
-
-    # Find all section starts
-    section_starts = []
-    for i, line in enumerate(lines):
-        match = pattern.match(line)
-        if match:
-            indent = len(match.group(1))
-            kind = match.group(2).strip()
-            name = match.group(3)
-            section_starts.append({
-                "line": i + 1,
-                "indent": indent,
-                "kind": kind,
-                "name": name,
-            })
-
-    # Calculate section lengths (until next section at same or lower indent)
-    for i, section in enumerate(section_starts):
-        start_line = section["line"]
-        end_line = len(lines)
-
-        # Find end: next section at same or lower indent level
-        for j in range(i + 1, len(section_starts)):
-            next_section = section_starts[j]
-            if next_section["indent"] <= section["indent"]:
-                end_line = next_section["line"] - 1
-                break
-
-        section["length"] = end_line - start_line + 1
-        section["end_line"] = end_line
-
-    # Filter to long sections and sort by length
-    long_sections = [s for s in section_starts if s["length"] >= min_lines]
-    long_sections.sort(key=lambda x: x["length"], reverse=True)
-
-    return long_sections[:5]  # Top 5 longest
 
 
 def doctor_check_monolith(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
@@ -956,8 +668,134 @@ def doctor_check_undoc_impl(target_dir: Path, config: DoctorConfig) -> List[Doct
     return issues
 
 
+def doctor_check_new_undoc_code(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
+    """Check for code files newer than their documentation.
+
+    Detects:
+    - Source files modified after their IMPLEMENTATION doc
+    - Frontend components without stories
+    - Hooks without documentation
+    - New exports not reflected in docs
+    """
+    if "new_undoc_code" in config.disabled_checks:
+        return []
+
+    issues = []
+    docs_dir = target_dir / "docs"
+
+    if not docs_dir.exists():
+        return issues
+
+    # Build map of module -> IMPLEMENTATION doc mtime
+    impl_doc_times = {}
+    for impl_file in docs_dir.rglob("IMPLEMENTATION_*.md"):
+        try:
+            # Extract module path from doc location
+            # e.g., docs/backend/auth/IMPLEMENTATION_Auth.md -> backend/auth
+            rel_impl = impl_file.relative_to(docs_dir)
+            module_path = str(rel_impl.parent)
+            impl_mtime = impl_file.stat().st_mtime
+            impl_doc_times[module_path] = (impl_file, impl_mtime)
+        except Exception:
+            pass
+
+    # Frontend file patterns
+    fe_extensions = {'.tsx', '.jsx', '.vue', '.svelte'}
+    hook_pattern = re.compile(r'^use[A-Z].*\.(ts|tsx|js|jsx)$')
+    story_extensions = {'.stories.tsx', '.stories.jsx', '.stories.ts', '.stories.js'}
+
+    # Check source files
+    for source_file in find_source_files(target_dir, config):
+        if should_ignore_path(source_file, config.ignore, target_dir):
+            continue
+
+        try:
+            rel_path = str(source_file.relative_to(target_dir))
+            source_mtime = source_file.stat().st_mtime
+        except Exception:
+            continue
+
+        # Skip small files and tests
+        line_count = count_lines(source_file)
+        if line_count < 30:
+            continue
+        if 'test' in source_file.name.lower() or '.test.' in source_file.name.lower():
+            continue
+        if '.spec.' in source_file.name.lower():
+            continue
+        if '.stories.' in source_file.name.lower():
+            continue
+
+        # Check 1: Source file newer than IMPLEMENTATION doc
+        for module_path, (impl_file, impl_mtime) in impl_doc_times.items():
+            # Check if this source file belongs to this module
+            if rel_path.startswith(module_path) or module_path in rel_path:
+                if source_mtime > impl_mtime + 86400:  # More than 1 day newer
+                    days_newer = int((source_mtime - impl_mtime) / 86400)
+                    issues.append(DoctorIssue(
+                        issue_type="NEW_UNDOC_CODE",
+                        severity="warning",
+                        path=rel_path,
+                        message=f"Modified {days_newer}d after IMPLEMENTATION doc",
+                        details={
+                            "impl_doc": str(impl_file.relative_to(target_dir)),
+                            "days_newer": days_newer
+                        },
+                        suggestion=f"Update {impl_file.name} with changes"
+                    ))
+                break
+
+        # Check 2: Frontend component without stories
+        suffix = source_file.suffix.lower()
+        if suffix in fe_extensions:
+            # Check if it's a component (capitalized name, not index)
+            if source_file.stem[0].isupper() and source_file.stem != 'Index':
+                # Look for corresponding stories file
+                has_stories = False
+                for story_ext in story_extensions:
+                    story_file = source_file.with_suffix('').with_suffix(story_ext)
+                    if story_file.exists():
+                        has_stories = True
+                        break
+                    # Also check in same directory with different naming
+                    story_file2 = source_file.parent / f"{source_file.stem}.stories{suffix}"
+                    if story_file2.exists():
+                        has_stories = True
+                        break
+
+                if not has_stories and line_count > 50:
+                    issues.append(DoctorIssue(
+                        issue_type="COMPONENT_NO_STORIES",
+                        severity="info",
+                        path=rel_path,
+                        message="Component without Storybook stories",
+                        details={"line_count": line_count},
+                        suggestion=f"Add {source_file.stem}.stories{suffix}"
+                    ))
+
+        # Check 3: Hook without documentation
+        if hook_pattern.match(source_file.name):
+            # Check if hook has JSDoc or is documented
+            try:
+                content = source_file.read_text()[:1000]
+                has_jsdoc = '/**' in content or '* @' in content
+                has_docs_ref = 'DOCS:' in content
+                if not has_jsdoc and not has_docs_ref and line_count > 30:
+                    issues.append(DoctorIssue(
+                        issue_type="HOOK_UNDOC",
+                        severity="info",
+                        path=rel_path,
+                        message="Custom hook without documentation",
+                        details={"line_count": line_count},
+                        suggestion="Add JSDoc or DOCS: reference"
+                    ))
+            except Exception:
+                pass
+
+    return issues
+
+
 def doctor_check_yaml_drift(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
-    """Check for modules.yaml mappings that don't match reality."""
     if "yaml_drift" in config.disabled_checks:
         return []
 
@@ -1532,6 +1370,7 @@ def run_doctor(target_dir: Path, config: DoctorConfig) -> Dict[str, Any]:
     all_issues.extend(doctor_check_stub_impl(target_dir, config))
     all_issues.extend(doctor_check_incomplete_impl(target_dir, config))
     all_issues.extend(doctor_check_undoc_impl(target_dir, config))
+    all_issues.extend(doctor_check_new_undoc_code(target_dir, config))
     all_issues.extend(doctor_check_large_doc_module(target_dir, config))
     all_issues.extend(doctor_check_yaml_drift(target_dir, config))
     # New checks

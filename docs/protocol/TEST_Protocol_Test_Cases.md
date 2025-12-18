@@ -24,7 +24,7 @@ SYNC:            ./SYNC_Protocol_Current_State.md
 ## TEST STRATEGY
 
 The protocol is tested through:
-1. **CLI validation** — `add-framework validate` checks invariants
+1. **CLI validation** — `ngram validate` checks invariants
 2. **Dogfooding** — The protocol uses itself
 3. **Real-world usage** — Testing on actual projects (blood-ledger)
 
@@ -32,19 +32,19 @@ The protocol is tested through:
 
 ## CLI TESTS
 
-### `add-framework init`
+### `ngram init`
 
 | Test | Input | Expected | Status |
 |------|-------|----------|--------|
-| Fresh install | Empty directory | Creates .add-framework/, CLAUDE.md | pass |
-| Already exists | Directory with .add-framework/ | Error unless --force | pass |
+| Fresh install | Empty directory | Creates .ngram/, CLAUDE.md | pass |
+| Already exists | Directory with .ngram/ | Error unless --force | pass |
 | Force overwrite | --force flag | Overwrites existing | pass |
 
-### `add-framework validate`
+### `ngram validate`
 
 | Test | Input | Expected | Status |
 |------|-------|----------|--------|
-| No protocol | Directory without .add-framework/ | Fails V6 | pass |
+| No protocol | Directory without .ngram/ | Fails V6 | pass |
 | Uninitialized SYNC | Template placeholders | Fails V6 | pass |
 | Missing VIEWs | Incomplete views/ | Fails V7 | pass |
 | Broken CHAIN links | Dead references | Fails V3 | pass |
@@ -52,13 +52,13 @@ The protocol is tested through:
 | Incomplete chain | Missing doc types | Fails FC | pass |
 | All valid | Complete protocol | All pass | pass |
 
-### `add-framework prompt`
+### `ngram prompt`
 
 | Test | Input | Expected | Status |
 |------|-------|----------|--------|
 | Generate prompt | Valid directory | Bootstrap prompt with paths | pass |
 
-### `add-framework context`
+### `ngram context`
 
 | Test | Input | Expected | Status |
 |------|-------|----------|--------|
@@ -73,9 +73,9 @@ The protocol is tested through:
 
 ```
 GIVEN:  Protocol repo exists
-WHEN:   Run `add-framework init` on itself
-THEN:   .add-framework/ created
-AND:    `add-framework validate` passes
+WHEN:   Run `ngram init` on itself
+THEN:   .ngram/ created
+AND:    `ngram validate` passes
 STATUS: pass
 ```
 
@@ -83,7 +83,7 @@ STATUS: pass
 
 ```
 GIVEN:  blood-ledger project exists
-WHEN:   Run `add-framework init --dir ~/the-blood-ledger`
+WHEN:   Run `ngram init --dir ~/the-blood-ledger`
 THEN:   Protocol installed
 AND:    CLAUDE.md updated
 AND:    Validate shows gaps to fix
@@ -119,12 +119,12 @@ STATUS: pass
 
 ```bash
 # Manual testing via CLI
-add-framework validate --dir /path/to/project
-add-framework context file.py --dir /path/to/project
+ngram validate --dir /path/to/project
+ngram context file.py --dir /path/to/project
 
 # Dogfood test
-add-framework init --dir /home/mind-protocol/add-framework --force
-add-framework validate --dir /home/mind-protocol/add-framework
+ngram init --dir /home/mind-protocol/ngram --force
+ngram validate --dir /home/mind-protocol/ngram
 ```
 
 ---
@@ -142,5 +142,5 @@ add-framework validate --dir /home/mind-protocol/add-framework
 
 - [ ] Add pytest test suite
 - [ ] Add GitHub Actions CI
-- IDEA: `add-framework test` command to run self-tests
+- IDEA: `ngram test` command to run self-tests
 - QUESTION: Should validate be strict (fail) or lenient (warn)?

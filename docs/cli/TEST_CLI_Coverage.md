@@ -38,11 +38,11 @@ The CLI module currently lacks automated tests. Testing is performed manually th
 
 | Test | Input | Expected | Status |
 |------|-------|----------|--------|
-| init_creates_protocol_dir | empty directory | .add-framework/ created | NOT TESTED |
+| init_creates_protocol_dir | empty directory | .ngram/ created | NOT TESTED |
 | init_creates_claude_md | directory without CLAUDE.md | CLAUDE.md created | NOT TESTED |
 | init_updates_claude_md | directory with existing CLAUDE.md | Protocol section appended | NOT TESTED |
 | init_no_duplicate | CLAUDE.md already has protocol | No duplicate section | NOT TESTED |
-| init_force_overwrites | --force flag | Existing .add-framework/ replaced | NOT TESTED |
+| init_force_overwrites | --force flag | Existing .ngram/ replaced | NOT TESTED |
 | init_rejects_existing | no --force, existing protocol | Error message, exit 1 | NOT TESTED |
 
 ### Validate Command
@@ -50,7 +50,7 @@ The CLI module currently lacks automated tests. Testing is performed manually th
 | Test | Input | Expected | Status |
 |------|-------|----------|--------|
 | validate_passes_healthy | complete protocol | All checks pass, exit 0 | NOT TESTED |
-| validate_fails_missing_protocol | no .add-framework/ | V6 fails | NOT TESTED |
+| validate_fails_missing_protocol | no .ngram/ | V6 fails | NOT TESTED |
 | validate_fails_missing_views | incomplete views/ | V7 fails | NOT TESTED |
 | validate_fails_missing_patterns | module without PATTERNS | V2 fails | NOT TESTED |
 | validate_detects_broken_chain | invalid CHAIN link | V3 fails | NOT TESTED |
@@ -84,7 +84,7 @@ The CLI module currently lacks automated tests. Testing is performed manually th
 
 ```
 GIVEN:  Empty project directory
-WHEN:   add-framework init && add-framework validate
+WHEN:   ngram init && ngram validate
 THEN:   All validation checks pass
 STATUS: NOT TESTED
 ```
@@ -93,7 +93,7 @@ STATUS: NOT TESTED
 
 ```
 GIVEN:  Project with known issues
-WHEN:   add-framework doctor && add-framework repair
+WHEN:   ngram doctor && ngram repair
 THEN:   Health score improves
 STATUS: NOT TESTED
 ```
@@ -102,7 +102,7 @@ STATUS: NOT TESTED
 
 ```
 GIVEN:  Source file with DOCS: reference
-WHEN:   add-framework context <file>
+WHEN:   ngram context <file>
 THEN:   Documentation chain is displayed
 STATUS: NOT TESTED
 ```
@@ -146,17 +146,17 @@ STATUS: NOT TESTED
 # Manual testing commands:
 
 # Test init
-add-framework init --dir /tmp/test-project
-add-framework validate --dir /tmp/test-project
+ngram init --dir /tmp/test-project
+ngram validate --dir /tmp/test-project
 
 # Test doctor
-add-framework doctor --no-github
+ngram doctor --no-github
 
 # Test repair (dry run)
-add-framework repair --dry-run --max 3
+ngram repair --dry-run --max 3
 
 # Test context
-add-framework context src/add_framework/cli.py
+ngram context src/ngram/cli.py
 ```
 
 ---

@@ -126,7 +126,7 @@ This is not "AI magic" — it's structured task delegation. Each agent gets:
 
 ## GAPS / IDEAS / QUESTIONS
 
-- [ ] Consider adding `add-framework watch` for continuous health monitoring
+- [ ] Consider adding `ngram watch` for continuous health monitoring
 - [ ] The `repair --parallel` flag is useful but output can be messy
 - IDEA: MCP server integration for richer tool access during repairs
 - QUESTION: Should `doctor` auto-run before `repair`, or stay separate?

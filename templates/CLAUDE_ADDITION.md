@@ -22,7 +22,7 @@ Following it means your work compounds instead of getting lost.
 
 **Check project state:**
 ```
-.add-framework/state/SYNC_Project_State.md
+.ngram/state/SYNC_Project_State.md
 ```
 
 What's happening? What changed recently? Any handoffs for you?
@@ -92,7 +92,7 @@ VIEWs are ordered by the product development lifecycle. Pick the one that matche
 
 Update state so the next agent (or your future self) knows what happened:
 ```
-.add-framework/state/SYNC_Project_State.md
+.ngram/state/SYNC_Project_State.md
 ```
 
 If you changed a specific module, also update its SYNC:
@@ -131,7 +131,7 @@ docs/
 
 When creating new documentation, use templates from:
 ```
-.add-framework/templates/
+.ngram/templates/
 ```
 
 **Remember the architecture principle:** Before creating, check if it already exists.
@@ -140,16 +140,16 @@ When creating new documentation, use templates from:
 
 ## CLI Commands
 
-The `add-framework` command is available for project management:
+The `ngram` command is available for project management:
 
 ```bash
-add-framework init [--force]    # Initialize/re-sync protocol files
-add-framework validate          # Check protocol invariants
-add-framework doctor            # Health checks (auto-archives large SYNCs)
-add-framework sync              # Show SYNC status (auto-archives large SYNCs)
-add-framework repair [--max N]  # Auto-fix issues using Claude Code agents
-add-framework context <file>    # Get doc context for a file
-add-framework prompt            # Generate bootstrap prompt for LLM
+ngram init [--force]    # Initialize/re-sync protocol files
+ngram validate          # Check protocol invariants
+ngram doctor            # Health checks (auto-archives large SYNCs)
+ngram sync              # Show SYNC status (auto-archives large SYNCs)
+ngram repair [--max N]  # Auto-fix issues using Claude Code agents
+ngram context <file>    # Get doc context for a file
+ngram prompt            # Generate bootstrap prompt for LLM
 ```
 
 ### Repair Command
@@ -157,10 +157,10 @@ add-framework prompt            # Generate bootstrap prompt for LLM
 The `repair` command automatically fixes project health issues:
 
 ```bash
-add-framework repair              # Fix all issues
-add-framework repair --max 5      # Limit to 5 issues
-add-framework repair --type MONOLITH --type STALE_SYNC  # Fix specific types
-add-framework repair --dry-run    # Preview what would be fixed
+ngram repair              # Fix all issues
+ngram repair --max 5      # Limit to 5 issues
+ngram repair --type MONOLITH --type STALE_SYNC  # Fix specific types
+ngram repair --dry-run    # Preview what would be fixed
 ```
 
 Each repair spawns a Claude Code agent that:

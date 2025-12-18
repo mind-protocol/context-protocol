@@ -26,7 +26,7 @@ Emerged from Blood Ledger planning. Building UI-first with LLM faking backend is
 - Replaces the idea of a scaffolding command (which would create empty templates)
 
 **Why:**
-`add-framework new-module` would create bad docs (generic names, empty content). A VIEW guides the thinking process instead.
+`ngram new-module` would create bad docs (generic names, empty content). A VIEW guides the thinking process instead.
 
 ### 2024-12-16: Added maturity tracking and documentation process
 
@@ -49,7 +49,7 @@ Need to prevent scope creep and know what's stable vs experimental. Also clarifi
 - For each issue: What's wrong, Why it matters, How to fix, References
 - Designed to be fed to an LLM to guide fixing
 
-### 2024-12-16: Added `add-framework context` command
+### 2024-12-16: Added `ngram context` command
 
 **What:**
 - Added `context` command to get full documentation context for a file
@@ -58,11 +58,11 @@ Need to prevent scope creep and know what's stable vs experimental. Also clarifi
 
 **Usage:**
 ```bash
-add-framework context src/module/file.py --dir /path/to/project
+ngram context src/module/file.py --dir /path/to/project
 # Returns all linked docs for that file's module
 ```
 
-### 2024-12-16: Added `add-framework prompt` command
+### 2024-12-16: Added `ngram prompt` command
 
 **What:**
 - Added `prompt` command to generate bootstrap prompt for LLMs
@@ -72,11 +72,11 @@ add-framework context src/module/file.py --dir /path/to/project
 
 **Usage:**
 ```bash
-add-framework prompt --dir /path/to/project
+ngram prompt --dir /path/to/project
 # Copy output to LLM to bootstrap it into using the protocol
 ```
 
-### 2024-12-16: Added `add-framework validate` command
+### 2024-12-16: Added `ngram validate` command
 
 **What:**
 - Added validate command to CLI
@@ -85,8 +85,8 @@ add-framework prompt --dir /path/to/project
 
 **Usage:**
 ```bash
-add-framework validate --dir /path/to/project
-add-framework validate --verbose  # show all details
+ngram validate --dir /path/to/project
+ngram validate --verbose  # show all details
 ```
 
 ### 2024-12-16: Added VIEW_Ingest
@@ -123,7 +123,7 @@ Nicolas shared foundational working principles (architecture, verification, comm
 ### 2024-12-15: V1 Package Implementation
 
 **What:**
-- Created `src/add_framework/` package
+- Created `src/ngram/` package
 - CLI with `init` command
 - pyproject.toml for pip installation
 
@@ -144,7 +144,7 @@ Nicolas shared foundational working principles (architecture, verification, comm
 - [x] Test: `pip install -e .` and run init
 - [x] Verify PRINCIPLES.md is copied correctly
 - [x] Test on Blood Ledger or other real project
-- [x] `add-framework validate` command
+- [x] `ngram validate` command
 
 ### Later
 

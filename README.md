@@ -1,24 +1,23 @@
-# ADD Framework
+# ngram
 
-**A context management protocol for AI agents working on code.**
+**Memory for AI agents.** Protocol for context, state, and handoffs across sessions.
 
 ---
 
 ## The Problem
 
-AI agents have limited context windows. They can't load everything. They need:
-- The RIGHT context for THIS task
-- To know what to update after changes  
-- To not lose information across sessions
-- To navigate codebases without hallucinating structure
+AI agents are stateless. Every session starts from zero. They:
+- Can't load everything (limited context window)
+- Lose state between sessions
+- Hallucinate structure they haven't seen
+- Can't hand off to the next agent
 
 ## The Solution
 
-A protocol that tells agents:
-1. **What to load** for their current task
-2. **What to focus on** vs ignore
-3. **What to update** when done
-4. **Where to find things** they need
+A protocol that makes sessions compound instead of restart:
+1. **VIEWs** tell agents what to load for their current task
+2. **SYNC** files track state so agents remember
+3. **Handoffs** let agents communicate across sessions
 
 ---
 
@@ -26,33 +25,36 @@ A protocol that tells agents:
 
 ```bash
 # Install
-pip install add-framework
+pip install ngram
 
 # Initialize in your project
-add-framework init
+ngram init
 
 # Check protocol health
-add-framework validate
+ngram validate
 
 # Check project health (monoliths, stale docs, etc.)
-add-framework doctor
+ngram doctor
+
+# Auto-fix issues with agents
+ngram repair
 
 # Get documentation context for a file
-add-framework context src/your_file.py
+ngram context src/your_file.py
 
 # Generate bootstrap prompt for LLM
-add-framework prompt
+ngram prompt
 ```
 
-After installation, your project will have:
+After initialization:
 
 ```
 your-project/
 ├── CLAUDE.md                    # Updated with protocol bootstrap
-└── .add-framework/
+└── .ngram/
     ├── PROTOCOL.md              # Core rules (agents read this)
-    ├── PRINCIPLES.md            # Working principles (how to work well)
-    ├── views/                   # Task-specific context instructions (11 VIEWs)
+    ├── PRINCIPLES.md            # Working principles
+    ├── views/                   # Task-specific context instructions
     ├── templates/               # Templates for documentation
     └── state/
         └── SYNC_Project_State.md  # Current project state
@@ -64,20 +66,20 @@ your-project/
 
 | Command | Description |
 |---------|-------------|
-| `add-framework init` | Initialize protocol in project |
-| `add-framework validate` | Check protocol invariants |
-| `add-framework doctor` | Project health check (monoliths, stale docs) |
-| `add-framework context <file>` | Get doc context for a file |
-| `add-framework prompt` | Generate LLM bootstrap prompt |
+| `ngram init` | Initialize protocol in project |
+| `ngram validate` | Check protocol invariants |
+| `ngram doctor` | Project health check |
+| `ngram repair` | Auto-fix issues with agents |
+| `ngram context <file>` | Get doc context for a file |
+| `ngram sync` | Show SYNC file status |
+| `ngram prompt` | Generate LLM bootstrap prompt |
 
 ### Doctor Command
 
-The doctor command checks project health:
-
 ```bash
-add-framework doctor              # Full report
-add-framework doctor --level critical  # Only critical issues
-add-framework doctor --format json     # JSON output
+ngram doctor              # Full report
+ngram doctor --level critical  # Only critical issues
+ngram doctor --format json     # JSON output
 ```
 
 Checks for:
@@ -86,7 +88,16 @@ Checks for:
 - **Stale SYNC files** (>14 days old)
 - **Placeholder docs** (unfilled templates)
 - **Incomplete doc chains**
-- **Missing DOCS: references**
+
+### Repair Command
+
+```bash
+ngram repair              # Fix all issues
+ngram repair --max 3      # Limit to 3 agents
+ngram repair --dry-run    # Preview what would be fixed
+```
+
+Spawns Claude Code agents to autonomously fix issues found by doctor.
 
 ---
 
@@ -94,32 +105,24 @@ Checks for:
 
 ### 1. Bootstrap (CLAUDE.md)
 
-Your CLAUDE.md points agents to the protocol:
+Points agents to the protocol:
 
 ```markdown
-## ADD Framework
+# ngram
 
-Before any task, read: .add-framework/PROTOCOL.md
-For task-specific context: .add-framework/views/
+Before any task, read: .ngram/PROTOCOL.md
+For task-specific context: .ngram/views/
 ```
 
-### 2. Protocol (PROTOCOL.md)
+### 2. Views (Task Instructions)
 
-Tiny set of rules every agent follows:
-- Load the right VIEW for your task
-- Read relevant docs before changing code
-- Update SYNC.md after changes
-- Create docs if they don't exist
-
-### 3. Views (Task Instructions)
-
-Each VIEW tells the agent exactly what to load:
+Each VIEW tells agents what to load for a specific task type:
 
 ```markdown
 # VIEW: Implement
 
 ## LOAD FIRST
-1. .add-framework/state/SYNC.md
+1. .ngram/state/SYNC_Project_State.md
 2. docs/{area}/{module}/PATTERNS_*.md
 3. docs/{area}/{module}/SYNC_*.md
 
@@ -127,27 +130,30 @@ Each VIEW tells the agent exactly what to load:
 Update: docs/{area}/{module}/SYNC_*.md
 ```
 
-### 4. State (SYNC.md)
+Available views: Implement, Debug, Test, Review, Refactor, Document, Onboard, and more.
 
-Living document tracking current state:
+### 3. State (SYNC files)
+
+Living documents tracking current state:
 - What's working
 - What's in progress
 - Handoffs for next session
-- TODOs
+
+This is how agents "remember" across sessions.
 
 ---
 
 ## Documentation Chain
 
-The protocol encourages a documentation chain for each module:
+For each module:
 
 ```
 docs/{area}/{module}/
-├── PATTERNS_{Design_Philosophy}.md      # WHY this shape
-├── BEHAVIORS_{Observable_Effects}.md    # WHAT it should do
-├── ALGORITHM_{Procedures_Logic}.md      # HOW it works
-├── VALIDATION_{Invariants_Tests}.md     # HOW to verify
-└── SYNC_{Current_State}.md              # WHERE we are now
+├── PATTERNS_*.md    # WHY this design
+├── BEHAVIORS_*.md   # WHAT it should do
+├── ALGORITHM_*.md   # HOW it works
+├── VALIDATION_*.md  # HOW to verify
+└── SYNC_*.md        # WHERE we are now
 ```
 
 Agents navigate: Code ↔ Docs bidirectionally.
@@ -156,39 +162,22 @@ Agents navigate: Code ↔ Docs bidirectionally.
 
 ## Key Concepts
 
-### Module
-A coherent responsibility with clear interface. May be one file or several.
-
-### Area  
-A cluster of related modules. Organizational grouping.
-
-### View
-Task-specific context loading instructions. Agent loads ONE view for their task.
-
-### Sync
-Current state document. Updated after every change. Enables handoffs.
-
-### Concept
-Cross-cutting idea that spans modules. Documented separately with TOUCHES index.
+| Concept | Description |
+|---------|-------------|
+| **View** | Task-specific context loading instructions |
+| **Sync** | State document updated after every change |
+| **Module** | Coherent responsibility with clear interface |
+| **Area** | Cluster of related modules |
+| **Concept** | Cross-cutting idea spanning modules |
 
 ---
 
 ## Design Principles
 
 1. **Agents don't load everything** — They load ONE view for their task
-2. **Docs before code** — Understand before changing
-3. **State is explicit** — SYNC.md tracks what's happening
-4. **Names are descriptive** — File names tell agents what's inside
-5. **Protocol is substrate-agnostic** — Works with Claude, Cursor, Aider, any agent
-
----
-
-## Full Documentation
-
-See `docs/` for:
-- Protocol specification (using the protocol itself)
-- Templates for all file types
-- Concepts explained
+2. **State is explicit** — SYNC files track what's happening
+3. **Sessions compound** — Work accumulates instead of restarting
+4. **Protocol over intelligence** — Structure enables capability
 
 ---
 
@@ -200,6 +189,4 @@ MIT
 
 ## Contributing
 
-This protocol is being developed by Mind Protocol as part of AI-human symbiosis infrastructure.
-
-Issues and PRs welcome.
+Developed by Mind Protocol. Issues and PRs welcome.

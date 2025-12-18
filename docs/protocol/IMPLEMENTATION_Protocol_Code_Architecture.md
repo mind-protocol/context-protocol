@@ -37,10 +37,10 @@ This document describes:
 
 ### Template Directory (Source of Truth)
 
-The source templates live in `templates/add-framework/`:
+The source templates live in `templates/ngram/`:
 
 ```
-templates/add-framework/
+templates/ngram/
 ├── PROTOCOL                       # Navigation rules for agents
 ├── PRINCIPLES                     # Working stance (how to think)
 ├── views/                         # Task-specific context instructions (11 VIEWs)
@@ -52,17 +52,17 @@ templates/add-framework/
 
 | Category | Files |
 |----------|-------|
-| Core | `templates/add-framework/PROTOCOL.md`, `templates/add-framework/PRINCIPLES.md` |
-| VIEWs | `templates/add-framework/views/VIEW_Implement_Write_Or_Modify_Code.md`, `templates/add-framework/views/VIEW_Debug_Investigate_And_Fix_Issues.md`, `templates/add-framework/views/VIEW_Review_Evaluate_Changes.md`, `templates/add-framework/views/VIEW_Extend_Add_Features_To_Existing.md`, `templates/add-framework/views/VIEW_Refactor_Improve_Code_Structure.md`, `templates/add-framework/views/VIEW_Test_Write_Tests_And_Verify.md`, `templates/add-framework/views/VIEW_Document_Create_Module_Documentation.md`, `templates/add-framework/views/VIEW_Onboard_Understand_Existing_Codebase.md`, `templates/add-framework/views/VIEW_Ingest_Process_Raw_Data_Sources.md`, `templates/add-framework/views/VIEW_Specify_Design_Vision_And_Architecture.md`, `templates/add-framework/views/VIEW_Collaborate_Pair_Program_With_Human.md` |
-| Templates | `templates/add-framework/templates/PATTERNS_TEMPLATE.md`, `templates/add-framework/templates/BEHAVIORS_TEMPLATE.md`, `templates/add-framework/templates/ALGORITHM_TEMPLATE.md`, `templates/add-framework/templates/VALIDATION_TEMPLATE.md`, `templates/add-framework/templates/IMPLEMENTATION_TEMPLATE.md`, `templates/add-framework/templates/TEST_TEMPLATE.md`, `templates/add-framework/templates/SYNC_TEMPLATE.md`, `templates/add-framework/templates/CONCEPT_TEMPLATE.md`, `templates/add-framework/templates/TOUCHES_TEMPLATE.md` |
-| State | `templates/add-framework/state/SYNC_Project_State.md` |
+| Core | `templates/ngram/PROTOCOL.md`, `templates/ngram/PRINCIPLES.md` |
+| VIEWs | `templates/ngram/views/VIEW_Implement_Write_Or_Modify_Code.md`, `templates/ngram/views/VIEW_Debug_Investigate_And_Fix_Issues.md`, `templates/ngram/views/VIEW_Review_Evaluate_Changes.md`, `templates/ngram/views/VIEW_Extend_Add_Features_To_Existing.md`, `templates/ngram/views/VIEW_Refactor_Improve_Code_Structure.md`, `templates/ngram/views/VIEW_Test_Write_Tests_And_Verify.md`, `templates/ngram/views/VIEW_Document_Create_Module_Documentation.md`, `templates/ngram/views/VIEW_Onboard_Understand_Existing_Codebase.md`, `templates/ngram/views/VIEW_Ingest_Process_Raw_Data_Sources.md`, `templates/ngram/views/VIEW_Specify_Design_Vision_And_Architecture.md`, `templates/ngram/views/VIEW_Collaborate_Pair_Program_With_Human.md` |
+| Templates | `templates/ngram/templates/PATTERNS_TEMPLATE.md`, `templates/ngram/templates/BEHAVIORS_TEMPLATE.md`, `templates/ngram/templates/ALGORITHM_TEMPLATE.md`, `templates/ngram/templates/VALIDATION_TEMPLATE.md`, `templates/ngram/templates/IMPLEMENTATION_TEMPLATE.md`, `templates/ngram/templates/TEST_TEMPLATE.md`, `templates/ngram/templates/SYNC_TEMPLATE.md`, `templates/ngram/templates/CONCEPT_TEMPLATE.md`, `templates/ngram/templates/TOUCHES_TEMPLATE.md` |
+| State | `templates/ngram/state/SYNC_Project_State.md` |
 
 ### Installed Directory (In Target Project)
 
-When installed in a target project, files are copied to `.add-framework/`:
+When installed in a target project, files are copied to `.ngram/`:
 
 ```
-.add-framework/
+.ngram/
 ├── PROTOCOL                       # Copied from templates
 ├── PRINCIPLES                     # Copied from templates
 ├── views/                         # Copied from templates
@@ -74,7 +74,7 @@ When installed in a target project, files are copied to `.add-framework/`:
 └── traces/                        # Agent activity logs (optional)
 ```
 
-**Installed files in this project** (all under the hidden `.add-framework/` directory):
+**Installed files in this project** (all under the hidden `.ngram/` directory):
 
 | Category | Location |
 |----------|----------|
@@ -89,8 +89,8 @@ The `CLAUDE.md` file includes protocol files via `@` directives:
 ```
 CLAUDE.md
 ├── @templates/CLAUDE_ADDITION     # Include directive
-├── @templates/add-framework/PRINCIPLES
-└── @templates/add-framework/PROTOCOL
+├── @templates/ngram/PRINCIPLES
+└── @templates/ngram/PROTOCOL
 ```
 
 ---
@@ -167,9 +167,9 @@ VIEW:
 | Entry Point | File | Triggered By |
 |-------------|------|--------------|
 | Bootstrap | CLAUDE.md | Agent session start |
-| Navigation | .add-framework/PROTOCOL.md | After bootstrap |
-| Task Selection | .add-framework/views/VIEW_*.md | Based on task type |
-| State Check | .add-framework/state/SYNC_Project_State.md | Before any work |
+| Navigation | .ngram/PROTOCOL.md | After bootstrap |
+| Task Selection | .ngram/views/VIEW_*.md | Based on task type |
+| State Check | .ngram/state/SYNC_Project_State.md | Before any work |
 | Module Context | docs/{area}/{module}/PATTERNS_*.md | When modifying code |
 
 ---
@@ -266,7 +266,7 @@ SYNC_*.md (WHERE we are now)
          │
          ▼
 ┌─────────────────┐
-│ Copy to target  │ ← .add-framework/
+│ Copy to target  │ ← .ngram/
 │ .context-proto- │
 │ col/            │
 └────────┬────────┘
@@ -370,11 +370,11 @@ The protocol files themselves have no external dependencies. The CLI that manage
 
 | State | Location | Scope | Updated When |
 |-------|----------|-------|--------------|
-| Project state | .add-framework/state/SYNC_Project_State.md | Global | After any change |
+| Project state | .ngram/state/SYNC_Project_State.md | Global | After any change |
 | Module state | docs/{area}/{module}/SYNC_*.md | Module | After module change |
-| Health state | .add-framework/state/SYNC_Project_Health.md | Global | After `doctor` run |
-| Agent traces | .add-framework/traces/{date}.jsonl | Global | During agent execution |
-| Module mapping | .add-framework/modules.yaml | Global | When modules added/changed |
+| Health state | .ngram/state/SYNC_Project_Health.md | Global | After `doctor` run |
+| Agent traces | .ngram/traces/{date}.jsonl | Global | During agent execution |
+| Module mapping | .ngram/modules.yaml | Global | When modules added/changed |
 
 ### State Lifecycle
 
@@ -396,7 +396,7 @@ Source files reference documentation via header comment:
 # DOCS: docs/backend/auth/PATTERNS_Why_JWT_With_Refresh_Tokens.md
 ```
 
-This enables `add-framework context {file}` to find the documentation chain.
+This enables `ngram context {file}` to find the documentation chain.
 
 ### Docs → Code
 
@@ -421,10 +421,10 @@ The doc types are: PATTERNS, BEHAVIORS, ALGORITHM, VALIDATION, IMPLEMENTATION, T
 
 | Config | Location | Default | Description |
 |--------|----------|---------|-------------|
-| Ignore patterns | .add-framework/config.yaml | Common patterns | Paths to skip in doctor |
-| Monolith threshold | .add-framework/config.yaml | 500 lines | SYNC archive trigger |
-| Stale days | .add-framework/config.yaml | 14 days | When SYNC is stale |
-| Disabled checks | .add-framework/config.yaml | [] | Doctor checks to skip |
+| Ignore patterns | .ngram/config.yaml | Common patterns | Paths to skip in doctor |
+| Monolith threshold | .ngram/config.yaml | 500 lines | SYNC archive trigger |
+| Stale days | .ngram/config.yaml | 14 days | When SYNC is stale |
+| Disabled checks | .ngram/config.yaml | [] | Doctor checks to skip |
 
 ---
 

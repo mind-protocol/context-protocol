@@ -11,7 +11,7 @@
 # - Changing module maturity → update status
 #
 # VALIDATION:
-# `add-framework validate` warns about unmapped code directories.
+# `ngram validate` warns about unmapped code directories.
 #
 # =============================================================================
 
@@ -52,8 +52,8 @@ modules:
 # =============================================================================
 
   # The core ADD Framework CLI implementation
-  add-framework-cli:
-    code: "src/add_framework/**"
+  ngram-cli:
+    code: "src/ngram/**"
     docs: "docs/cli/"
     maturity: DESIGNING
     owner: agent

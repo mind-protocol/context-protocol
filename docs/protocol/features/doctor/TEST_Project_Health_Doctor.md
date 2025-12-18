@@ -196,7 +196,7 @@ class TestDoctorIntegration:
 
 ```
 clean_project/
-├── .add-framework/
+├── .ngram/
 │   ├── modules.yaml        # All code mapped
 │   └── state/
 │       └── SYNC_Project_State.md  # Recently updated
@@ -217,7 +217,7 @@ clean_project/
 
 ```
 monolith_project/
-├── .add-framework/
+├── .ngram/
 └── src/
     └── everything.ts       # 1000+ lines
 ```
@@ -226,7 +226,7 @@ monolith_project/
 
 ```
 undocumented_project/
-├── .add-framework/
+├── .ngram/
 │   └── modules.yaml        # Empty mappings
 └── src/
     ├── api/
@@ -238,7 +238,7 @@ undocumented_project/
 
 ```
 stale_project/
-├── .add-framework/
+├── .ngram/
 │   └── state/
 │       └── SYNC_Project_State.md  # LAST_UPDATED: 60 days ago
 └── src/
@@ -265,7 +265,7 @@ stale_project/
 pytest tests/doctor/
 
 # With coverage
-pytest tests/doctor/ --cov=add_framework.doctor
+pytest tests/doctor/ --cov=ngram.doctor
 
 # Specific check
 pytest tests/doctor/test_checks.py::TestMonolithCheck

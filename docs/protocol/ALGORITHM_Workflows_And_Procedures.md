@@ -33,13 +33,13 @@ It covers installation, daily workflows, and maintenance.
 ### Step 1: Copy Protocol Files
 
 ```
-COPY: templates/add-framework/ → {project}/.add-framework/
+COPY: templates/ngram/ → {project}/.ngram/
 ```
 
 Result:
 ```
 {project}/
-└── .add-framework/
+└── .ngram/
     ├── PROTOCOL.md
     ├── views/
     │   ├── VIEW_Implement.md
@@ -66,7 +66,7 @@ If CLAUDE.md doesn't exist, create it with the addition content.
 
 ### Step 3: Initialize Project SYNC
 
-Edit `.add-framework/state/SYNC_Project_State.md`:
+Edit `.ngram/state/SYNC_Project_State.md`:
 - Fill in current project state
 - Note what exists
 - Note what's in progress
@@ -87,7 +87,7 @@ For existing modules, create docs using templates.
 
 ```
 READ: CLAUDE.md → find protocol section
-READ: .add-framework/PROTOCOL.md
+READ: .ngram/PROTOCOL.md
 ```
 
 ### Step 2: Identify Task Type
@@ -103,7 +103,7 @@ ELSE → Use closest VIEW or ask for clarification
 ### Step 3: Load View
 
 ```
-READ: .add-framework/views/VIEW_{TaskType}.md
+READ: .ngram/views/VIEW_{TaskType}.md
 FOLLOW: Instructions in the VIEW
 ```
 
@@ -112,7 +112,7 @@ FOLLOW: Instructions in the VIEW
 Follow the VIEW's instructions for what to load.
 Typically:
 ```
-READ: .add-framework/state/SYNC_Project_State.md
+READ: .ngram/state/SYNC_Project_State.md
 READ: docs/{area}/{module}/PATTERNS_*.md (if working on specific module)
 READ: docs/{area}/{module}/SYNC_*.md (if working on specific module)
 ```
@@ -124,7 +124,7 @@ Execute the task according to VIEW instructions.
 ### Step 6: Update State
 
 ```
-UPDATE: .add-framework/state/SYNC_Project_State.md
+UPDATE: .ngram/state/SYNC_Project_State.md
 UPDATE: docs/{area}/{module}/SYNC_*.md (if module was changed)
 UPDATE: Other docs as needed (if behavior/algorithm changed)
 ```
@@ -142,7 +142,7 @@ CREATE: docs/{area}/{module}/
 ### Step 2: Write PATTERNS First
 
 ```
-COPY: .add-framework/templates/PATTERNS_TEMPLATE.md
+COPY: .ngram/templates/PATTERNS_TEMPLATE.md
    → docs/{area}/{module}/PATTERNS_{Descriptive_Name}.md
 
 FILL IN:
@@ -155,7 +155,7 @@ FILL IN:
 ### Step 3: Write SYNC
 
 ```
-COPY: .add-framework/templates/SYNC_TEMPLATE.md
+COPY: .ngram/templates/SYNC_TEMPLATE.md
    → docs/{area}/{module}/SYNC_{Module}_Current_State.md
 
 FILL IN:
@@ -186,7 +186,7 @@ After implementation, add:
 ### Step 6: Update Project SYNC
 
 ```
-UPDATE: .add-framework/state/SYNC_Project_State.md
+UPDATE: .ngram/state/SYNC_Project_State.md
 - Note new module created
 - Note area affected
 ```
@@ -232,7 +232,7 @@ ALWAYS → UPDATE: SYNC_*.md
 ### Step 5: Update Project SYNC
 
 ```
-UPDATE: .add-framework/state/SYNC_Project_State.md
+UPDATE: .ngram/state/SYNC_Project_State.md
 - Note what was changed
 - Note why
 ```
@@ -250,7 +250,7 @@ CREATE: docs/concepts/{concept}/
 ### Step 2: Write CONCEPT
 
 ```
-COPY: .add-framework/templates/CONCEPT_TEMPLATE.md
+COPY: .ngram/templates/CONCEPT_TEMPLATE.md
    → docs/concepts/{concept}/CONCEPT_{What_It_Is}.md
 
 FILL IN:
@@ -263,7 +263,7 @@ FILL IN:
 ### Step 3: Write TOUCHES
 
 ```
-COPY: .add-framework/templates/TOUCHES_TEMPLATE.md
+COPY: .ngram/templates/TOUCHES_TEMPLATE.md
    → docs/concepts/{concept}/TOUCHES_{Where_It_Appears}.md
 
 FILL IN:

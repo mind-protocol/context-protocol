@@ -43,7 +43,7 @@ Original file: SYNC_CLI_State.md
   - Updated Code Patterns, Anti-Patterns, Boundaries tables to use module names
   - Updated External Dependencies table to use module names
   - Clarified GAPS section to mark proposed files as "(planned)"
-- **Result:** All file references now resolve to existing files in `src/add_framework/`
+- **Result:** All file references now resolve to existing files in `src/ngram/`
 
 ### 2025-12-18: Full Documentation Chain Complete
 

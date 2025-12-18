@@ -28,7 +28,7 @@ SYNC:            ./SYNC_Protocol_Current_State.md
 ```
 GIVEN:  An AI agent is assigned a task (implement, debug, review, extend)
 WHEN:   The agent starts working
-THEN:   The agent loads .add-framework/PROTOCOL.md first
+THEN:   The agent loads .ngram/PROTOCOL.md first
 AND:    The agent identifies the task type
 AND:    The agent loads the appropriate VIEW file
 AND:    The agent follows the VIEW instructions
@@ -49,7 +49,7 @@ AND:    Only then does the agent modify code
 ```
 GIVEN:  An agent has made changes to code or docs
 WHEN:   The agent completes their work
-THEN:   The agent updates .add-framework/state/SYNC_Project_State.md
+THEN:   The agent updates .ngram/state/SYNC_Project_State.md
 AND:    The agent updates relevant module SYNC files
 AND:    The SYNC includes: what changed, why, what's next
 ```
@@ -61,7 +61,7 @@ GIVEN:  An agent needs to create a new module
 WHEN:   The module doesn't have documentation
 THEN:   The agent creates docs BEFORE implementation
 AND:    At minimum: PATTERNS_*.md and SYNC_*.md
-AND:    Templates are used from .add-framework/templates/
+AND:    Templates are used from .ngram/templates/
 ```
 
 ### B5: Navigation Works Bidirectionally
@@ -119,10 +119,10 @@ AND:    TOUCHES_*.md shows where it appears in code
 **Input:** A project without context protocol
 
 **Output:** Project with:
-- `.add-framework/PROTOCOL.md`
-- `.add-framework/views/VIEW_*.md`
-- `.add-framework/templates/*.md`
-- `.add-framework/state/SYNC_Project_State.md`
+- `.ngram/PROTOCOL.md`
+- `.ngram/views/VIEW_*.md`
+- `.ngram/templates/*.md`
+- `.ngram/state/SYNC_Project_State.md`
 - Updated CLAUDE.md with protocol bootstrap
 
 ### Agent Task Execution

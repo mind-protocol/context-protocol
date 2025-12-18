@@ -11,7 +11,7 @@ STATUS: CANONICAL
 ## MATURITY
 
 **What's canonical (v1):**
-- CLI command: `add-framework doctor`
+- CLI command: `ngram doctor`
 - Output formats: text, JSON
 - Level filtering: --level critical/warning/all
 - Configuration via config.yaml

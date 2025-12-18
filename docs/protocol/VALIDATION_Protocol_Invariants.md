@@ -76,7 +76,7 @@ FOR EACH implementation file:
 ### V6: Project SYNC Exists and Is Current
 
 ```
-ASSERT EXISTS: .add-framework/state/SYNC_Project_State.md
+ASSERT EXISTS: .ngram/state/SYNC_Project_State.md
 ASSERT: LAST_UPDATED is recent
 ```
 
@@ -200,7 +200,7 @@ For a given module:
 For project:
 
 ```
-[ ] .add-framework/ folder exists
+[ ] .ngram/ folder exists
 [ ] PROTOCOL.md is present
 [ ] All VIEW files are present
 [ ] Project SYNC is current

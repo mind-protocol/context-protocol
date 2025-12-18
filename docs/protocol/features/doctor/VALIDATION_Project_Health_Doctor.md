@@ -19,7 +19,7 @@
 
 **A project following all conventions should score 100.**
 
-- Empty project with just `.add-framework/` = 100
+- Empty project with just `.ngram/` = 100
 - Project with all docs complete = 100
 - All checks have clear pass criteria
 
@@ -149,7 +149,7 @@ Must be readable in terminal:
 ### Empty Project
 
 ```
-.add-framework/
+.ngram/
 └── (default files)
 ```
 
@@ -205,16 +205,16 @@ Checks should be O(n) in file count, not O(n²).
 
 ```bash
 # Verify determinism
-diff <(add-framework doctor) <(add-framework doctor)
+diff <(ngram doctor) <(ngram doctor)
 
 # Verify exit codes
-add-framework doctor && echo "Clean" || echo "Issues found"
+ngram doctor && echo "Clean" || echo "Issues found"
 
 # Verify JSON validity
-add-framework doctor --format json | python -m json.tool
+ngram doctor --format json | python -m json.tool
 
 # Verify ignore patterns
-add-framework doctor --format json | jq '.issues[][] | .path' | grep -v vendor/
+ngram doctor --format json | jq '.issues[][] | .path' | grep -v vendor/
 ```
 
 ---

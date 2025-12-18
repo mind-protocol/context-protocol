@@ -23,12 +23,12 @@ SYNC:            ./SYNC_Agent_Trace_Logging.md
 
 ## COMMANDS
 
-### `add-framework trace`
+### `ngram trace`
 
 Show trace summary for current project.
 
 ```bash
-$ add-framework trace
+$ ngram trace
 
 Trace Summary (last 7 days)
 ===========================
@@ -55,26 +55,26 @@ Potentially stale:
   - docs/engine/ALGORITHM_*.md: loaded 2x, never updated, code changed 5x
 ```
 
-### `add-framework trace --detail`
+### `ngram trace --detail`
 
 Show individual trace entries.
 
 ```bash
-$ add-framework trace --detail --limit 10
+$ ngram trace --detail --limit 10
 
-2024-12-16 14:32:01 | READ    | .add-framework/state/SYNC_Project_State.md
-2024-12-16 14:32:05 | READ    | .add-framework/views/VIEW_Implement_*.md
+2024-12-16 14:32:01 | READ    | .ngram/state/SYNC_Project_State.md
+2024-12-16 14:32:05 | READ    | .ngram/views/VIEW_Implement_*.md
 2024-12-16 14:32:15 | READ    | docs/engine/graph/PATTERNS_*.md
 2024-12-16 14:33:01 | CONTEXT | src/engine/graph.py → docs/engine/graph/ (4 docs)
 ...
 ```
 
-### `add-framework trace clear`
+### `ngram trace clear`
 
 Clear trace history.
 
 ```bash
-$ add-framework trace clear --before 30d
+$ ngram trace clear --before 30d
 Cleared 156 trace entries older than 30 days.
 ```
 
@@ -84,28 +84,28 @@ Cleared 156 trace entries older than 30 days.
 
 ### From CLI commands
 
-When `add-framework context <file>` is run, it logs:
+When `ngram context <file>` is run, it logs:
 - The file requested
 - All docs returned in the chain
 - Timestamp
 
 ### From file reads (if watching)
 
-When `add-framework watch` is running:
-- Detects reads of `.add-framework/` and `docs/` files
+When `ngram watch` is running:
+- Detects reads of `.ngram/` and `docs/` files
 - Logs each read with timestamp and file path
 
 ---
 
 ## TRACE FILE FORMAT
 
-Location: `.add-framework/traces/YYYY-MM-DD.jsonl`
+Location: `.ngram/traces/YYYY-MM-DD.jsonl`
 
 Each line is a JSON object:
 
 ```json
 {"ts": "2024-12-16T14:32:01Z", "action": "read", "file": "docs/engine/graph/PATTERNS_Graph.md", "via": "context-cmd", "session": "abc123"}
-{"ts": "2024-12-16T14:32:05Z", "action": "read", "file": ".add-framework/views/VIEW_Implement.md", "via": "direct", "session": "abc123"}
+{"ts": "2024-12-16T14:32:05Z", "action": "read", "file": ".ngram/views/VIEW_Implement.md", "via": "direct", "session": "abc123"}
 ```
 
 Fields:
@@ -121,7 +121,7 @@ Fields:
 
 ### With validate
 
-`add-framework validate` can use traces to enhance warnings:
+`ngram validate` can use traces to enhance warnings:
 
 ```
 ✗ [DR] Drift detected
@@ -146,9 +146,9 @@ Last loaded: 2024-12-16 by session xyz
 
 | Action | Traced? | Notes |
 |--------|---------|-------|
-| `add-framework context` | Yes | Logs file + all chain docs |
-| `add-framework validate` | Yes | Logs which checks ran |
-| `add-framework prompt` | Yes | Logs prompt generation |
+| `ngram context` | Yes | Logs file + all chain docs |
+| `ngram validate` | Yes | Logs which checks ran |
+| `ngram prompt` | Yes | Logs prompt generation |
 | Direct file read by agent | Only if watching | Requires `trace watch` |
 | Agent self-report | Yes | Via `trace log` command |
 

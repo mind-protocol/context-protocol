@@ -74,7 +74,7 @@ Don't just report problems — guide solutions.
 
 ### Thresholds
 
-Configurable in `.add-framework/config.yaml`:
+Configurable in `.ngram/config.yaml`:
 
 ```yaml
 doctor:

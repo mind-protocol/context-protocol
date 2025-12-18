@@ -2,11 +2,11 @@
 
 ---
 
-@templates/add-framework/PRINCIPLES.md
+@templates/ngram/PRINCIPLES.md
 
 ---
 
-@templates/add-framework/PROTOCOL.md
+@templates/ngram/PROTOCOL.md
 
 # ADD Framework
 
@@ -32,13 +32,13 @@ Following it means your work compounds instead of getting lost.
 
 **Understand the system:**
 ```
-.add-framework/PROTOCOL.md     # How to navigate — what to load, where to update
-.add-framework/PRINCIPLES.md   # How to work — the stance to hold
+.ngram/PROTOCOL.md     # How to navigate — what to load, where to update
+.ngram/PRINCIPLES.md   # How to work — the stance to hold
 ```
 
 **Check project state:**
 ```
-.add-framework/state/SYNC_Project_State.md
+.ngram/state/SYNC_Project_State.md
 ```
 
 What's happening? What changed recently? Any handoffs for you?
@@ -105,7 +105,7 @@ VIEWs are ordered by the product development lifecycle. Pick the one that matche
 
 Update state so the next agent (or your future self) knows what happened:
 ```
-.add-framework/state/SYNC_Project_State.md
+.ngram/state/SYNC_Project_State.md
 ```
 
 If you changed a specific module, also update its SYNC:
@@ -142,7 +142,7 @@ docs/
 
 When creating new documentation, use templates from:
 ```
-.add-framework/templates/
+.ngram/templates/
 ```
 
 **Remember the architecture principle:** Before creating, check if it already exists.
@@ -150,11 +150,11 @@ When creating new documentation, use templates from:
 
 # ADD Framework
 
-@.add-framework/PRINCIPLES.md
+@.ngram/PRINCIPLES.md
 
 ---
 
-@.add-framework/PROTOCOL.md
+@.ngram/PROTOCOL.md
 
 ---
 
@@ -162,14 +162,14 @@ When creating new documentation, use templates from:
 
 Check project state:
 ```
-.add-framework/state/SYNC_Project_State.md
+.ngram/state/SYNC_Project_State.md
 ```
 
 What's happening? What changed recently? Any handoffs for you?
 
 ## Choose Your VIEW
 
-Based on your task, load ONE view from `.add-framework/views/`:
+Based on your task, load ONE view from `.ngram/views/`:
 
 | Task | VIEW |
 |------|------|
@@ -186,5 +186,5 @@ Based on your task, load ONE view from `.add-framework/views/`:
 
 ## After Any Change
 
-Update `.add-framework/state/SYNC_Project_State.md` with what you did.
+Update `.ngram/state/SYNC_Project_State.md` with what you did.
 If you changed a module, update its `docs/{area}/{module}/SYNC_*.md` too.

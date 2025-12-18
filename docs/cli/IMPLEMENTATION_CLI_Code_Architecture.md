@@ -24,7 +24,7 @@ SYNC:            ./SYNC_CLI_State.md
 ## CODE STRUCTURE
 
 ```
-src/add_framework/
+src/ngram/
 ├── __init__.py             # Package init
 ├── cli.py                  # Entry point, argparse routing
 ├── init_cmd.py             # Init command implementation
@@ -45,7 +45,7 @@ src/add_framework/
 └── utils.py                # Shared utilities
 ```
 
-**Logical Groupings** (all in `src/add_framework/`):
+**Logical Groupings** (all in `src/ngram/`):
 - **Doctor subsystem:** doctor, doctor_checks, doctor_types, doctor_report, doctor_files
 - **Repair subsystem:** repair, repair_instructions
 - **Project map:** project_map, project_map_html
@@ -54,23 +54,23 @@ src/add_framework/
 
 | File | Purpose | Key Functions/Classes | Lines | Status |
 |------|---------|----------------------|-------|--------|
-| `src/add_framework/cli.py` | Entry point, argument parsing | `main()` | ~290 | OK |
-| `src/add_framework/init_cmd.py` | Protocol initialization | `init_protocol()` | ~168 | OK |
-| `src/add_framework/validate.py` | Protocol invariant checking | `validate_protocol()`, `ValidationResult` | ~712 | SPLIT |
-| `src/add_framework/doctor.py` | Health check orchestration | `run_doctor()`, `doctor_command()` | ~211 | OK |
-| `src/add_framework/doctor_checks.py` | Health check functions | `doctor_check_*()` (23 functions) | ~1732 | SPLIT |
-| `src/add_framework/doctor_types.py` | Type definitions | `DoctorIssue`, `DoctorConfig` | ~41 | OK |
-| `src/add_framework/doctor_report.py` | Report generation | `generate_health_markdown()`, `calculate_health_score()` | ~465 | WATCH |
-| `src/add_framework/doctor_files.py` | File discovery | `find_source_files()`, `find_code_directories()` | ~321 | OK |
-| `src/add_framework/repair.py` | Repair orchestration | `repair_command()`, `spawn_repair_agent()` | ~1333 | SPLIT |
-| `src/add_framework/repair_instructions.py` | Repair prompts | `get_issue_instructions()` | ~813 | SPLIT |
-| `src/add_framework/sync.py` | SYNC file management | `sync_command()`, `archive_all_syncs()` | ~346 | OK |
-| `src/add_framework/context.py` | Documentation discovery | `print_module_context()`, `get_module_context()` | ~553 | WATCH |
-| `src/add_framework/prompt.py` | LLM prompt generation | `print_bootstrap_prompt()` | ~89 | OK |
-| `src/add_framework/project_map.py` | Terminal dependency map | `print_project_map()` | ~359 | OK |
-| `src/add_framework/project_map_html.py` | HTML export | `generate_html_map()` | ~315 | OK |
-| `src/add_framework/github.py` | GitHub API integration | `create_issues_for_findings()` | ~288 | OK |
-| `src/add_framework/utils.py` | Shared helpers | `get_templates_path()`, `find_module_directories()` | ~103 | OK |
+| `src/ngram/cli.py` | Entry point, argument parsing | `main()` | ~290 | OK |
+| `src/ngram/init_cmd.py` | Protocol initialization | `init_protocol()` | ~168 | OK |
+| `src/ngram/validate.py` | Protocol invariant checking | `validate_protocol()`, `ValidationResult` | ~712 | SPLIT |
+| `src/ngram/doctor.py` | Health check orchestration | `run_doctor()`, `doctor_command()` | ~211 | OK |
+| `src/ngram/doctor_checks.py` | Health check functions | `doctor_check_*()` (23 functions) | ~1732 | SPLIT |
+| `src/ngram/doctor_types.py` | Type definitions | `DoctorIssue`, `DoctorConfig` | ~41 | OK |
+| `src/ngram/doctor_report.py` | Report generation | `generate_health_markdown()`, `calculate_health_score()` | ~465 | WATCH |
+| `src/ngram/doctor_files.py` | File discovery | `find_source_files()`, `find_code_directories()` | ~321 | OK |
+| `src/ngram/repair.py` | Repair orchestration | `repair_command()`, `spawn_repair_agent()` | ~1333 | SPLIT |
+| `src/ngram/repair_instructions.py` | Repair prompts | `get_issue_instructions()` | ~813 | SPLIT |
+| `src/ngram/sync.py` | SYNC file management | `sync_command()`, `archive_all_syncs()` | ~346 | OK |
+| `src/ngram/context.py` | Documentation discovery | `print_module_context()`, `get_module_context()` | ~553 | WATCH |
+| `src/ngram/prompt.py` | LLM prompt generation | `print_bootstrap_prompt()` | ~89 | OK |
+| `src/ngram/project_map.py` | Terminal dependency map | `print_project_map()` | ~359 | OK |
+| `src/ngram/project_map_html.py` | HTML export | `generate_html_map()` | ~315 | OK |
+| `src/ngram/github.py` | GitHub API integration | `create_issues_for_findings()` | ~288 | OK |
+| `src/ngram/utils.py` | Shared helpers | `get_templates_path()`, `find_module_directories()` | ~103 | OK |
 
 **Size Thresholds:**
 - **OK** (<400 lines): Healthy size
@@ -160,15 +160,15 @@ RepairResult:
 
 | Entry Point | File:Line | Triggered By |
 |-------------|-----------|--------------|
-| main | src/add_framework/cli.py:43 | add-framework command |
-| init_protocol | src/add_framework/init_cmd.py:15 | add-framework init |
-| validate_protocol | src/add_framework/validate.py:667 | add-framework validate |
-| doctor_command | src/add_framework/doctor.py:127 | add-framework doctor |
-| repair_command | src/add_framework/repair.py:970 | add-framework repair |
-| sync_command | src/add_framework/sync.py | add-framework sync |
-| print_module_context | src/add_framework/context.py:442 | add-framework context |
-| print_bootstrap_prompt | src/add_framework/prompt.py | add-framework prompt |
-| print_project_map | src/add_framework/project_map.py | add-framework map |
+| main | src/ngram/cli.py:43 | ngram command |
+| init_protocol | src/ngram/init_cmd.py:15 | ngram init |
+| validate_protocol | src/ngram/validate.py:667 | ngram validate |
+| doctor_command | src/ngram/doctor.py:127 | ngram doctor |
+| repair_command | src/ngram/repair.py:970 | ngram repair |
+| sync_command | src/ngram/sync.py | ngram sync |
+| print_module_context | src/ngram/context.py:442 | ngram context |
+| print_bootstrap_prompt | src/ngram/prompt.py | ngram prompt |
+| print_project_map | src/ngram/project_map.py | ngram map |
 
 ---
 
@@ -191,7 +191,7 @@ RepairResult:
          ▼
 ┌─────────────────┐
 │ shutil.copytree │ ← Copy protocol files to
-│ (.context-...)  │   .add-framework/
+│ (.context-...)  │   .ngram/
 └────────┬────────┘
          │
          ▼
@@ -388,8 +388,8 @@ validate.py
 | Doctor config | `DoctorConfig` instance | Function call | Per-command |
 | Validation results | `List[ValidationResult]` | Function call | Per-command |
 | Repair results | `List[RepairResult]` | Function call | Per-command |
-| Trace logs | `.add-framework/traces/` | Persistent | Daily files |
-| Health report | .add-framework/state/SYNC_Project_Health.md | Persistent | Overwritten each run |
+| Trace logs | `.ngram/traces/` | Persistent | Daily files |
+| Health report | .ngram/state/SYNC_Project_Health.md | Persistent | Overwritten each run |
 
 ### State Transitions
 
@@ -447,10 +447,10 @@ Project → init → Protocol Installed → validate → Validated → doctor �
 
 | Config | Location | Default | Description |
 |--------|----------|---------|-------------|
-| monolith_lines | .add-framework/config.yaml (optional) | 500 | Lines threshold for monolith detection |
-| stale_sync_days | .add-framework/config.yaml (optional) | 14 | Days before SYNC is stale |
-| ignore | .add-framework/config.yaml + .gitignore | common patterns | Paths to ignore |
-| disabled_checks | .add-framework/config.yaml (optional) | [] | Checks to skip |
+| monolith_lines | .ngram/config.yaml (optional) | 500 | Lines threshold for monolith detection |
+| stale_sync_days | .ngram/config.yaml (optional) | 14 | Days before SYNC is stale |
+| ignore | .ngram/config.yaml + .gitignore | common patterns | Paths to ignore |
+| disabled_checks | .ngram/config.yaml (optional) | [] | Checks to skip |
 
 ---
 
@@ -462,17 +462,17 @@ Files that reference this documentation:
 
 | File | Line | Reference |
 |------|------|-----------|
-| src/add_framework/cli.py | 4 | DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md |
+| src/ngram/cli.py | 4 | DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md |
 
 ### Docs → Code
 
 | Doc Section | Implemented In |
 |-------------|----------------|
-| ALGORITHM: Validate | src/add_framework/validate.py:667 |
-| ALGORITHM: Doctor | src/add_framework/doctor.py:1160 |
-| ALGORITHM: Repair | src/add_framework/repair.py:970 |
-| BEHAVIOR B1: Init | src/add_framework/init_cmd.py:15 |
-| VALIDATION V1 | src/add_framework/validate.py:33 |
+| ALGORITHM: Validate | src/ngram/validate.py:667 |
+| ALGORITHM: Doctor | src/ngram/doctor.py:1160 |
+| ALGORITHM: Repair | src/ngram/repair.py:970 |
+| BEHAVIOR B1: Init | src/ngram/init_cmd.py:15 |
+| VALIDATION V1 | src/ngram/validate.py:33 |
 
 ---
 

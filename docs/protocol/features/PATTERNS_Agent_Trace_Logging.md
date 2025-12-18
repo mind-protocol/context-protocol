@@ -57,7 +57,7 @@ Agents shouldn't need to explicitly "check in" when reading docs. The protocol s
 Traces are stored as append-only JSONL files. One file per day.
 
 ```
-.add-framework/traces/
+.ngram/traces/
 └── 2024-12-16.jsonl
 ```
 
@@ -80,7 +80,7 @@ Each trace entry captures:
 
 ### 4. Analysis via CLI
 
-`add-framework trace` shows usage patterns:
+`ngram trace` shows usage patterns:
 - Most/least loaded docs
 - Common navigation paths
 - Docs loaded but possibly not useful (loaded then immediately abandoned)

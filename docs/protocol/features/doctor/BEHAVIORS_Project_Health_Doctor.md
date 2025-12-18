@@ -8,25 +8,25 @@
 
 ```bash
 # Basic health check
-add-framework doctor
+ngram doctor
 
 # With specific directory
-add-framework doctor --dir /path/to/project
+ngram doctor --dir /path/to/project
 
 # Output formats
-add-framework doctor --format text     # Human readable (default)
-add-framework doctor --format json     # Machine readable
-add-framework doctor --format markdown # For reports
+ngram doctor --format text     # Human readable (default)
+ngram doctor --format json     # Machine readable
+ngram doctor --format markdown # For reports
 
 # Filter by severity
-add-framework doctor --level critical  # Only critical issues
-add-framework doctor --level warning   # Critical + warnings
-add-framework doctor --level all       # Everything (default)
+ngram doctor --level critical  # Only critical issues
+ngram doctor --level warning   # Critical + warnings
+ngram doctor --level all       # Everything (default)
 
 # Specific checks
-add-framework doctor --check monolith
-add-framework doctor --check stale
-add-framework doctor --check undocumented
+ngram doctor --check monolith
+ngram doctor --check stale
+ngram doctor --check undocumented
 ```
 
 ---
@@ -47,7 +47,7 @@ add-framework doctor --check undocumented
 
   ✗ UNDOCUMENTED: src/api/
     No documentation exists for this code directory
-    → Run: add-framework doctor --guide src/api/
+    → Run: ngram doctor --guide src/api/
     → See: VIEW_Document_Create_Module_Documentation.md
 
 ## Warnings (3 issues)
@@ -66,7 +66,7 @@ add-framework doctor --check undocumented
 
 ## Info (3 issues)
 
-  ℹ ACTIVITY_GAP: .add-framework/
+  ℹ ACTIVITY_GAP: .ngram/
     No SYNC updates in 18 days
     → Review project state and update relevant SYNC files
 
@@ -90,7 +90,7 @@ Critical: 2 | Warnings: 3 | Info: 3
 3. [ ] Update docs/vision/SYNC_Vision_State.md (Warning)
 4. [ ] Add DOCS: ref to src/types/game.ts (Warning)
 
-Run `add-framework doctor --guide <path>` for detailed remediation.
+Run `ngram doctor --guide <path>` for detailed remediation.
 ```
 
 ### JSON Format
@@ -128,7 +128,7 @@ Run `add-framework doctor --guide <path>` for detailed remediation.
 ## GUIDED REMEDIATION
 
 ```bash
-add-framework doctor --guide src/api/
+ngram doctor --guide src/api/
 ```
 
 Outputs detailed steps for fixing a specific issue:
@@ -164,15 +164,15 @@ This code directory has no documentation.
      maturity: DESIGNING
 
 5. Run validation:
-   add-framework validate
+   ngram validate
 
 ## Template Commands
 
 # Generate PATTERNS from template
-add-framework doctor --scaffold PATTERNS docs/api/
+ngram doctor --scaffold PATTERNS docs/api/
 
 ## Reference
-- VIEW: .add-framework/views/VIEW_Document_Create_Module_Documentation.md
+- VIEW: .ngram/views/VIEW_Document_Create_Module_Documentation.md
 ```
 
 ---
@@ -187,14 +187,14 @@ add-framework doctor --scaffold PATTERNS docs/api/
 
 Allows CI integration:
 ```bash
-add-framework doctor --level critical || exit 1
+ngram doctor --level critical || exit 1
 ```
 
 ---
 
 ## CONFIGURATION
 
-`.add-framework/config.yaml`:
+`.ngram/config.yaml`:
 
 ```yaml
 doctor:

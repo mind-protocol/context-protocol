@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "add-framework"
+name = "ngram"
 version = "0.1.0"
-description = "AI-Driven Development Framework - Autonomous agents for code health, repair, and documentation"
+description = "Memory for AI agents - Protocol for context, state, and handoffs across sessions"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
@@ -14,11 +14,13 @@ authors = [
 ]
 keywords = [
     "ai",
-    "agents", 
+    "agents",
     "context",
     "documentation",
     "llm",
-    "claude"
+    "claude",
+    "memory",
+    "handoff"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -32,18 +34,18 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/mind-protocol/ADD-framework"
-Repository = "https://github.com/mind-protocol/ADD-framework"
+Homepage = "https://github.com/mind-protocol/ngram"
+Repository = "https://github.com/mind-protocol/ngram"
 
 [project.scripts]
-add-framework = "add_framework.cli:main"
+ngram = "ngram.cli:main"
 
 # Include templates in the package
 [tool.hatch.build.targets.wheel]
-packages = ["src/add_framework"]
+packages = ["src/ngram"]
 
 [tool.hatch.build.targets.wheel.force-include]
-"templates" = "add_framework/templates"
+"templates" = "ngram/templates"
 
 [tool.hatch.build.targets.sdist]
 include = [

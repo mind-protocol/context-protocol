@@ -11,7 +11,7 @@
 # - Changing module maturity → update status
 #
 # VALIDATION:
-# `add-framework validate` warns about unmapped code directories.
+# `ngram validate` warns about unmapped code directories.
 #
 # =============================================================================
 

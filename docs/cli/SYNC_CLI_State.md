@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-18
-UPDATED_BY: repair-agent (NO_DOCS_REF fix)
+UPDATED_BY: repair-agent (BROKEN_IMPL_LINK fix)
 STATUS: CANONICAL
 ```
 
@@ -51,6 +51,16 @@ No active development at this time.
 ---
 
 ## RECENT CHANGES
+
+### 2025-12-18: Fixed BROKEN_IMPL_LINK for ALGORITHM reference
+
+**What changed:**
+- Updated `IMPLEMENTATION_CLI_Code_Architecture.md` line 181 reference from `` `ALGORITHM_CLI_Logic.md` `` to `` `docs/cli/ALGORITHM_CLI_Logic.md` ``
+- The doctor check extracts backtick references and looks in `target_dir/`, `src/`, etc. but not relative to the doc file
+- Using the full path from project root resolves the broken link check
+
+**Files modified:**
+- `docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md`
 
 ### 2025-12-18: Added DOCS reference to context.py
 

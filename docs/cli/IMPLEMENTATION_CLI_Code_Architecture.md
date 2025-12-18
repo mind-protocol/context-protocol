@@ -178,7 +178,7 @@ RepairResult:
 
 ## DATA FLOW
 
-For detailed algorithmic steps, see `ALGORITHM_CLI_Logic.md`.
+For detailed algorithmic steps, see `docs/cli/ALGORITHM_CLI_Logic.md`.
 
 **Summary:**
 - **Init:** `get_templates_path()` → `shutil.copytree()` → update CLAUDE.md

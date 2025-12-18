@@ -26,6 +26,12 @@ UPDATED_BY: {AGENT/HUMAN}
 
 ## RECENT CHANGES
 
+### 2025-12-18: Fixed BROKEN_IMPL_LINK in CLI docs
+
+- **What:** Updated `docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md` line 181 reference from `ALGORITHM_CLI_Logic.md` to `docs/cli/ALGORITHM_CLI_Logic.md`
+- **Why:** Doctor check extracts backtick refs and searches from project root, not relative to doc file
+- **Impact:** CLI module no longer has BROKEN_IMPL_LINK issue
+
 ### 2025-12-18: Added DOCS reference to doctor_files.py
 
 - **What:** Added `# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md` to `src/ngram/doctor_files.py`

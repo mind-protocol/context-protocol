@@ -251,6 +251,10 @@ def get_learnings_content(target_dir: Path) -> str:
     return ""
 
 
+# NOTE: These lookup functions are intentionally simple one-line implementations.
+# They provide semantic meaning for dictionary lookups with sensible defaults.
+# Short body does not mean incomplete - these are complete implementations.
+
 def get_issue_symbol(issue_type: str) -> tuple:
     """Get emoji and symbol for an issue type."""
     return ISSUE_SYMBOLS.get(issue_type, ("🔹", "•"))

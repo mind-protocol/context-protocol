@@ -116,7 +116,9 @@ src/ngram/
 
 ## KNOWN ISSUES
 
-None yet — implementation not started.
+| Issue | Notes |
+|-------|-------|
+| BROKEN_IMPL_LINK | IMPLEMENTATION doc references planned files that don't exist yet. This is expected for DESIGNING status - will resolve when code is implemented. |
 
 ---
 

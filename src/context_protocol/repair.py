@@ -60,6 +60,22 @@ ISSUE_SYMBOLS = {
     "YAML_DRIFT": ("🗺️", "≋"),
 }
 
+# Human-readable descriptions for issue types
+ISSUE_DESCRIPTIONS = {
+    "MONOLITH": "split large file into smaller modules",
+    "UNDOCUMENTED": "create documentation for",
+    "STALE_SYNC": "update outdated SYNC file for",
+    "PLACEHOLDER": "fill in placeholder content in",
+    "INCOMPLETE_CHAIN": "complete missing docs in",
+    "NO_DOCS_REF": "add DOCS: reference to",
+    "BROKEN_IMPL_LINK": "fix broken links in",
+    "STUB_IMPL": "implement stub functions in",
+    "INCOMPLETE_IMPL": "complete empty functions in",
+    "UNDOC_IMPL": "document implementation file",
+    "LARGE_DOC_MODULE": "reduce doc size for",
+    "YAML_DRIFT": "fix modules.yaml mapping for",
+}
+
 # Agent symbols for parallel execution (memorable characters!)
 AGENT_SYMBOLS = ["🥷", "🧚", "🤖", "🦊", "🐙", "🦄", "🧙", "🐲", "🦅", "🐺"]
 
@@ -715,6 +731,7 @@ def spawn_repair_agent(
 
     start_time = time.time()
     output_lines = []
+    text_output = []  # Human-readable text only
 
     try:
         # Run claude with streaming output
@@ -727,17 +744,52 @@ def spawn_repair_agent(
             bufsize=1,  # Line buffered
         )
 
-        # Stream output in real-time
-        print()  # Newline before agent output
+        # Stream output - parse JSON and extract text
         for line in process.stdout:
             output_lines.append(line)
-            # Print streamed output with indent
-            sys.stdout.write(f"    {line}")
-            sys.stdout.flush()
+            line = line.strip()
+            if not line:
+                continue
+
+            # Try to parse JSON and extract readable content
+            try:
+                data = json.loads(line)
+                msg_type = data.get("type", "")
+
+                # Extract assistant text messages
+                if msg_type == "assistant":
+                    message = data.get("message", {})
+                    for content in message.get("content", []):
+                        if content.get("type") == "text":
+                            text = content.get("text", "")
+                            if text:
+                                text_output.append(text)
+                                # Show concise progress (first 100 chars)
+                                preview = text[:100].replace('\n', ' ')
+                                if len(text) > 100:
+                                    preview += "..."
+                                sys.stdout.write(f"    → {preview}\n")
+                                sys.stdout.flush()
+
+                # Show tool usage (condensed)
+                elif msg_type == "assistant":
+                    message = data.get("message", {})
+                    for content in message.get("content", []):
+                        if content.get("type") == "tool_use":
+                            tool = content.get("name", "unknown")
+                            sys.stdout.write(f"    📎 Using {tool}...\n")
+                            sys.stdout.flush()
+
+            except json.JSONDecodeError:
+                # Not JSON, might be plain text
+                if line and not line.startswith("{"):
+                    sys.stdout.write(f"    {line}\n")
+                    sys.stdout.flush()
 
         process.wait(timeout=600)
         duration = time.time() - start_time
         output = "".join(output_lines)
+        readable_output = "\n".join(text_output)
 
         # Check for success markers in output
         success = "REPAIR COMPLETE" in output and "REPAIR FAILED" not in output
@@ -960,26 +1012,23 @@ def repair_command(
     print(f"📝 Step 2: Repair Plan")
     print()
 
-    # Group by type for display
-    from collections import Counter
-    type_counts = Counter(i.issue_type for i in issues_to_fix)
-
-    print(f"  Issues to fix: {color(str(len(issues_to_fix)), Colors.BOLD)}")
+    print(f"  {color(str(len(issues_to_fix)), Colors.BOLD)} issues to fix:")
     if max_issues is not None and len(all_issues) > max_issues:
-        print(f"  {color(f'(Limited to {max_issues}, {len(all_issues) - max_issues} remaining)', Colors.DIM)}")
+        print(f"  {color(f'(showing first {max_issues} of {len(all_issues)})', Colors.DIM)}")
     print()
-    print("  By type:")
-    for issue_type, count in sorted(type_counts.items()):
-        emoji, sym = get_issue_symbol(issue_type)
-        print(f"    {emoji} {issue_type}: {count}")
-    print()
-    print("  Files:")
-    # Show first 10 files
-    for i, issue in enumerate(issues_to_fix[:10]):
+
+    # Show each issue with natural language description
+    for i, issue in enumerate(issues_to_fix[:15]):
         emoji, sym = get_issue_symbol(issue.issue_type)
-        print(f"    {i+1}. {emoji} {color(issue.issue_type, Colors.INFO)} {issue.path}")
-    if len(issues_to_fix) > 10:
-        print(f"    {color(f'... and {len(issues_to_fix) - 10} more', Colors.DIM)}")
+        desc = ISSUE_DESCRIPTIONS.get(issue.issue_type, "fix")
+        agent_sym = get_agent_symbol(i)
+        agent_clr = get_agent_color(i)
+
+        # Natural language: "🥷 will create documentation for src/"
+        print(f"    {i+1}. {color(agent_sym, agent_clr)} will {desc} {color(issue.path, Colors.INFO)}")
+
+    if len(issues_to_fix) > 15:
+        print(f"    {color(f'   ... and {len(issues_to_fix) - 15} more', Colors.DIM)}")
     print()
 
     if dry_run:
@@ -1010,14 +1059,15 @@ def repair_command(
         github_issue_num = github_mapping.get(issue.path)
 
         # Get agent and issue visual identifiers
-        agent_color = get_agent_color(idx - 1)
+        agent_clr = get_agent_color(idx - 1)
         agent_sym = get_agent_symbol(idx - 1)
-        issue_emoji, issue_sym = get_issue_symbol(issue.issue_type)
+        issue_emoji, _ = get_issue_symbol(issue.issue_type)
+        desc = ISSUE_DESCRIPTIONS.get(issue.issue_type, "fix")
 
         with print_lock:
-            agent_tag = color(f"{agent_sym}", agent_color)
-            type_tag = f"{issue_emoji} {issue.issue_type}"
-            print(f"  {agent_tag} {color('Starting', Colors.INFO)} [{idx}/{len(issues_to_fix)}] {type_tag}: {issue.path[:45]}...")
+            agent_tag = color(agent_sym, agent_clr)
+            # Natural language: "🥷 will create documentation for src/"
+            print(f"  {agent_tag} will {desc} {color(issue.path, Colors.INFO)}")
 
         result = spawn_repair_agent(
             issue,
@@ -1028,12 +1078,11 @@ def repair_command(
 
         with print_lock:
             completed_count[0] += 1
+            agent_tag = color(agent_sym, agent_clr)
             if result.success:
-                status = color("✓ Done", Colors.SUCCESS)
+                print(f"  {agent_tag} {color('✓', Colors.SUCCESS)} finished {issue.path} ({result.duration_seconds:.0f}s)")
             else:
-                status = color("✗ Failed", Colors.FAILURE)
-            agent_tag = color(f"{agent_sym}", agent_color)
-            print(f"  {agent_tag} {status} [{completed_count[0]}/{len(issues_to_fix)}] {issue_emoji} {issue.path[:35]}... ({result.duration_seconds:.1f}s)")
+                print(f"  {agent_tag} {color('✗', Colors.FAILURE)} failed on {issue.path}: {result.error or 'unknown'}")
 
         return result
 

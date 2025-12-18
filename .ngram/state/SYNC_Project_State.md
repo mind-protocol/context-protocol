@@ -1,137 +1,42 @@
 # Project — Sync: Current State
 
 ```
-LAST_UPDATED: 2025-12-18
-UPDATED_BY: repair agent (LARGE_DOC_MODULE fix for docs/cli)
+LAST_UPDATED: {DATE}
+UPDATED_BY: {AGENT/HUMAN}
 ```
 
 ---
 
 ## CURRENT STATE
 
-The ADD Framework project is functional and in active use. The CLI provides commands for initializing, validating, diagnosing, and repairing protocol compliance in any project.
-
-**NEW: TUI Feature in Progress**
-
-A Claude Code-style TUI is being developed. Entry point: `ngram` (no subcommand). Features manager + worker agent columns, input bar, /commands, white theme.
-
-- Full documentation chain complete: PATTERNS, BEHAVIORS, ALGORITHM, VALIDATION, IMPLEMENTATION, TEST, SYNC
-- Module mapped: `ngram-tui` in `modules.yaml`
-- Core extraction done: `repair_core.py` with shared logic for CLI and TUI
-
-### Recent Changes
-
-**2025-12-18:** Fixed LARGE_DOC_MODULE for docs/cli (53K → 48K chars):
-- Removed duplicate data structures from ALGORITHM (now references IMPLEMENTATION#SCHEMA)
-- Removed duplicate check reference tables from VALIDATION (now references ALGORITHM)
-- Simplified verbose DATA FLOW diagrams in IMPLEMENTATION (now references ALGORITHM)
-- Consolidated TEST_CLI_Coverage.md verbose "NOT TESTED" tables into compact lists
-- Result: Module now under 50K threshold with no content loss (just deduplication)
-
-**2025-12-18:** Fixed HARDCODED_CONFIG false positive in doctor_checks.py:
-- The flagged value `[:2000]` was an array slice for character limit, not a port number
-- Added `docs_ref_search_chars: int = 2000` to `DoctorConfig` in doctor_types.py
-- Updated doctor_checks.py to use `config.docs_ref_search_chars` instead of hardcoded value
-- This externalizes the configuration and fixes the false positive detection
-
-**2025-12-18:** Extracted content analysis checks from doctor_checks.py:
-- Created `doctor_checks_content.py` with 3 content-analysis check functions (~410 lines)
-- Moved: `doctor_check_doc_duplication`, `doctor_check_new_undoc_code`, `doctor_check_long_strings`
-- `doctor_checks.py` reduced from 1738L → 1364L (374 lines extracted, still SPLIT status)
-- Updated: `doctor.py` imports, IMPLEMENTATION doc, modules.yaml
-- File still needs further splitting by check category (doc checks, code checks, config checks)
-
-**2025-12-18:** Completed TUI documentation chain (INCOMPLETE_CHAIN fix):
-- Created: BEHAVIORS_TUI_Interactions.md, ALGORITHM_TUI_Flow.md, VALIDATION_TUI_Invariants.md
-- Created: IMPLEMENTATION_TUI_Code_Architecture.md, TEST_TUI_Coverage.md
-- Updated CHAIN sections in PATTERNS and SYNC docs (removed "(planned)" markers)
-- All 7 doc types now present in `docs/tui/`
-
-**2025-12-18:** Extracted report generation from repair.py to repair_report.py:
-- Created `repair_report.py` with `generate_llm_report()`, `generate_final_report()`, and `REPORT_PROMPT` (~305 lines)
-- `repair.py` reduced from 1273L → 1013L (260 lines extracted)
-- `repair.py` still at SPLIT status (1013L > 800L threshold)
-- Updated: `docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md`, `modules.yaml`
-- Next extraction target: Interactive UI functions (resolve_arbitrage_interactive, manager agent functions)
-
-**2025-12-18:** Fixed HARDCODED_CONFIG false positive in project_map_html.py:
-- The flagged URL `http://www.w3.org/2000/svg` is the W3C standard SVG namespace URI
-- This is a fixed specification constant, not configurable - required for SVG DOM operations
-- Added suppression entry to `.ngram/doctor-ignore.yaml` explaining it's a false positive
-
-**2025-12-18:** Fixed INCOMPLETE_IMPL false positive in repair_core.py:
-- Functions `get_issue_symbol`, `get_issue_action_parts` are intentionally simple one-liner dictionary lookup functions
-- Added suppression entry to `.ngram/doctor-ignore.yaml` with detailed reason
-- These functions return tuples from ISSUE_SYMBOLS and ISSUE_DESCRIPTIONS dictionaries with sensible defaults
-- Used throughout repair.py for display formatting (imported and called at multiple locations)
-
-**2025-12-18:** Fixed INCOMPLETE_IMPL false positive in repair.py:
-- Functions `get_agent_color`, `get_agent_symbol`, `color` are intentionally simple one-line utility functions
-- Added block comment explaining they're complete implementations, not stubs
-- Added suppression entry to `.ngram/doctor-ignore.yaml` with detailed reason
-- These functions provide semantic meaning to CLI operations (color cycling, symbol cycling, ANSI wrapping)
-
-**2025-12-18:** Fixed YAML_DRIFT for ngram-tui module:
-- Commented out `code: "src/ngram/tui/**"` in modules.yaml (path doesn't exist yet)
-- Removed `entry_points:` section (no code to point to)
-- Updated notes to clarify this is DOCS ONLY until implementation
-- Module entry preserved for documentation tracking; code path will be uncommented when TUI is implemented
-
-**2025-12-18:** TUI Feature Design and Core Extraction:
-- Created `repair_core.py` with shared repair logic (dataclasses, constants, async spawn)
-- Refactored `repair.py` to import from `repair_core.py` (1674 -> 1055 lines)
-- Created TUI documentation: PATTERNS and SYNC docs
-- Added `ngram-tui` module to `modules.yaml`
-- Implementation pending: package structure, widgets, cli.py integration
-
-**2025-12-18:** Fixed DOC_DUPLICATION false positive for archive files in doctor_checks.py:
-- Added `_archive_` filename exclusion in Check 3 (doc type tracking by folder)
-- Archive files created by auto-archiving system are now skipped before being added to `docs_by_topic`
-- This prevents `SYNC_*.md` and `SYNC_*_archive_*.md` pairs from being flagged as duplicates
-- Modified: `src/ngram/doctor_checks.py:1337-1341`
-
-**2025-12-18:** Extracted check functions from doctor.py to doctor_checks.py:
-- Created `doctor_checks.py` with all 23 `doctor_check_*()` functions (~1732 lines)
-- `doctor.py` reduced from 1900 → 211 lines (now OK status)
-- `doctor_checks.py` still needs further splitting by category (SPLIT status)
-- Updated IMPLEMENTATION doc, modules.yaml, and SYNC_CLI_State.md
-
-**2025-12-18:** Fixed BROKEN_IMPL_LINK in CLI IMPLEMENTATION doc:
-- Fixed 22 broken file references in `docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md`
-- Root cause: File reference extraction pattern matched bare filenames (e.g., `cli.py`) that couldn't be resolved
-- Flattened CODE STRUCTURE tree, updated tables to use module names without `.py` extension
-- Clarified GAPS section to mark proposed files as "(planned)"
-
-**2025-12-18:** Fixed DOC_DUPLICATION false positive bug in `doctor.py`:
-- Fixed regex capture group bug in `doctor_check_documentation_duplication()` that was returning empty strings instead of file paths
-- Changed file reference tracking from `List[str]` to `Set[str]` to avoid flagging the same doc that mentions a file multiple times
-- The original issue was detecting "`\`\`` documented in 15 places" due to regex `(/?)` returning only the capture group contents
-
-**2025-12-18:** Refactored `repair.py` to reduce monolith size:
-- Created `repair_instructions.py` module with issue instruction dictionary (~885 lines)
-- Moved: `get_issue_instructions()` function (725+ lines) containing all issue type prompts
-- `repair.py` reduced from 1907 → 1613 lines (294 lines extracted, still above 800 threshold)
-- Module hierarchy: `repair.py` → imports `get_issue_instructions` from `repair_instructions.py`
-
-**2025-12-18 (earlier):** Refactored `doctor.py` to reduce monolith size:
-- Created `doctor_files.py` module with file/path utilities (~280 lines extracted)
-- Moved: `parse_gitignore`, `load_doctor_config`, `should_ignore_path`, `is_binary_file`, `find_source_files`, `find_code_directories`, `count_lines`, `find_long_sections`
-- `doctor.py` reduced from 1337 → 1217 non-empty lines (still needs further splitting)
-- Module hierarchy: `doctor.py` → imports from `doctor_types.py`, `doctor_report.py`, `doctor_files.py`
+{Narrative of the project's current state. Not a feature list — the story of where things are.}
 
 ---
 
 ## ACTIVE WORK
 
-**TUI Implementation** (Priority):
-- ~~YAML_DRIFT: `ngram-tui` mapped but `src/ngram/tui/` doesn't exist yet~~ FIXED: Code path commented out
-- ~~INCOMPLETE_CHAIN: `docs/tui/` needs BEHAVIORS, ALGORITHM, VALIDATION, IMPLEMENTATION, TEST~~ FIXED: All 5 docs created
-- Next steps: Create package structure, implement widgets, update cli.py, then uncomment code path in modules.yaml
+### {Work Stream}
 
-**MONOLITH Cleanup** (Ongoing):
-- `doctor_checks.py` (1364L) - reduced from 1738L via doctor_checks_content.py extraction, needs further splitting
-- `repair.py` (1013L) - reduced from 1273L via repair_report.py extraction, still above threshold
-- `repair_instructions.py` (813L) - needs further splitting
+- **Area:** `{area}/`
+- **Status:** {in progress / blocked}
+- **Owner:** {agent/human}
+- **Context:** {what's happening, why it matters}
+
+---
+
+## RECENT CHANGES
+
+### 2025-12-18: Added DOCS reference to doctor_files.py
+
+- **What:** Added `# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md` to `src/ngram/doctor_files.py`
+- **Why:** NO_DOCS_REF issue - file lacked bidirectional link to documentation
+- **Impact:** Enables `ngram context` to find doc chain for this file
+
+### {DATE}: {Summary}
+
+- **What:** {description}
+- **Why:** {motivation}
+- **Impact:** {what this affects}
 
 ---
 
@@ -139,40 +44,37 @@ A Claude Code-style TUI is being developed. Entry point: `ngram` (no subcommand)
 
 | Issue | Severity | Area | Notes |
 |-------|----------|------|-------|
-| ~~Circular import doctor/doctor_report~~ | ~~high~~ | ~~doctor.py~~ | **RESOLVED** - Moved DoctorIssue to doctor_types.py |
-| Parallel output interleaving | low | repair.py | Agent outputs can mix when running parallel repairs |
+| {description} | {level} | `{area}/` | {context} |
 
 ---
 
 ## HANDOFF: FOR AGENTS
 
-**Likely VIEW for continuing:** `VIEW_Extend_Add_Features_To_Existing.md`
+**Likely VIEW for continuing:** {which VIEW}
 
-**Current focus:** Project health and documentation coverage
+**Current focus:** {what the project is working toward right now}
 
 **Key context:**
-The CLI is the main deliverable. Understanding `repair.py` is important for working on automated fixes. Each CLI command lives in its own file under `src/ngram/`.
+{The things an agent needs to know that aren't obvious from the code/docs}
 
 **Watch out for:**
-- Templates live in `templates/` at repo root (development) OR inside the package (installed)
-- YAML is optional — code handles missing yaml library gracefully
+{Project-level gotchas}
 
 ---
 
 ## HANDOFF: FOR HUMAN
 
 **Executive summary:**
-The src/ directory is now documented. Created module mapping and minimum viable docs (PATTERNS + SYNC). CLI health issue resolved.
+{2-3 sentences on project state}
 
 **Decisions made recently:**
-- Named module `ngram-cli` in modules.yaml
-- Put docs in flat `docs/cli/` structure (no area nesting)
+{Key choices with rationale}
 
 **Needs your input:**
-- None currently
+{Blocked items, strategic questions}
 
 **Concerns:**
-- None
+{Things that might be problems, flagged for awareness}
 
 ---
 
@@ -180,14 +82,25 @@ The src/ directory is now documented. Created module mapping and minimum viable 
 
 ### High Priority
 
-- [x] Document src/ module (UNDOCUMENTED issue)
-- [x] Complete CLI documentation chain (INCOMPLETE_CHAIN issue)
+- [ ] {Must do}
 
 ### Backlog
 
-- [ ] Add automated tests for CLI (currently 0% coverage)
-- [ ] Set up CI/CD test pipeline
-- IDEA: Add watch mode for continuous health monitoring
+- [ ] {Should do}
+- IDEA: {Possibility}
+
+---
+
+## CONSCIOUSNESS TRACE
+
+**Project momentum:**
+{Is the project moving well? Stuck? What's the energy like?}
+
+**Architectural concerns:**
+{Things that feel like they might become problems}
+
+**Opportunities noticed:**
+{Ideas that came up during work}
 
 ---
 
@@ -195,29 +108,21 @@ The src/ directory is now documented. Created module mapping and minimum viable 
 
 | Area | Status | SYNC |
 |------|--------|------|
-| `docs/cli/` | documented | `docs/cli/SYNC_CLI_State.md` |
-| `docs/protocol/` | documented | `docs/protocol/SYNC_Protocol_Current_State.md` |
+| `{area}/` | {status} | `docs/{area}/SYNC_*.md` |
 
 ---
 
 ## MODULE COVERAGE
 
-Check `modules.yaml` for full manifest.
+Check `modules.yaml` (project root) for full manifest.
 
 **Mapped modules:**
 | Module | Code | Docs | Maturity |
 |--------|------|------|----------|
-| ngram-cli | `src/ngram/**` | `docs/cli/` | CANONICAL |
-| ngram-tui | (not yet implemented) | `docs/tui/` | DESIGNING |
+| {module} | `{code_path}` | `{docs_path}` | {status} |
 
-**Unmapped code:** None
+**Unmapped code:** (run `ngram validate` to check)
+- {List any code directories without module mappings}
 
 **Coverage notes:**
-The CLI module is the main code in this project. Templates are not mapped as they're static resources, not code.
-
-
----
-
-## ARCHIVE
-
-Older content archived to: `SYNC_Project_State_archive_2025-12.md`
+{Any notes about why certain code isn't mapped, or plans to add mappings}

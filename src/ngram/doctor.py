@@ -38,7 +38,6 @@ from .doctor_checks import (
     doctor_check_stub_impl,
     doctor_check_incomplete_impl,
     doctor_check_undoc_impl,
-    doctor_check_new_undoc_code,
     doctor_check_yaml_drift,
     doctor_check_large_doc_module,
     doctor_check_incomplete_chain,
@@ -47,10 +46,13 @@ from .doctor_checks import (
     doctor_check_conflicts,
     doctor_check_doc_gaps,
     doctor_check_suggestions,
-    doctor_check_doc_duplication,
     doctor_check_stale_impl,
     doctor_check_magic_values,
     doctor_check_hardcoded_secrets,
+)
+from .doctor_checks_content import (
+    doctor_check_new_undoc_code,
+    doctor_check_doc_duplication,
     doctor_check_long_strings,
 )
 

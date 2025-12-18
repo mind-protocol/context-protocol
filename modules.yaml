@@ -64,11 +64,12 @@ modules:
     # Subsystems with their extracted helper modules
     subsystems:
       doctor:
-        - doctor.py           # Health check orchestration (OK - 211L)
-        - doctor_checks.py    # All health check functions (SPLIT - 1732L, needs further split)
-        - doctor_types.py     # DoctorIssue, DoctorConfig types
-        - doctor_report.py    # Report generation, scoring (WATCH)
-        - doctor_files.py     # File discovery utilities
+        - doctor.py               # Health check orchestration (OK - 211L)
+        - doctor_checks.py        # Core health check functions (SPLIT - 1364L, needs further split)
+        - doctor_checks_content.py # Content analysis checks (OK - 410L)
+        - doctor_types.py         # DoctorIssue, DoctorConfig types
+        - doctor_report.py        # Report generation, scoring (WATCH)
+        - doctor_files.py         # File discovery utilities
       repair:
         - repair.py           # Repair orchestration (SPLIT - 1013L, needs more extraction)
         - repair_core.py      # Shared repair logic, data structures (OK - 465L)

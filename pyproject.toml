@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "context-protocol"
+name = "add-framework"
 version = "0.1.0"
-description = "A context management protocol for AI agents working on code"
+description = "AI-Driven Development Framework - Autonomous agents for code health, repair, and documentation"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
@@ -32,18 +32,18 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/mind-protocol/context-protocol"
-Repository = "https://github.com/mind-protocol/context-protocol"
+Homepage = "https://github.com/mind-protocol/ADD-framework"
+Repository = "https://github.com/mind-protocol/ADD-framework"
 
 [project.scripts]
-context-protocol = "context_protocol.cli:main"
+add-framework = "add_framework.cli:main"
 
 # Include templates in the package
 [tool.hatch.build.targets.wheel]
-packages = ["src/context_protocol"]
+packages = ["src/add_framework"]
 
 [tool.hatch.build.targets.wheel.force-include]
-"templates" = "context_protocol/templates"
+"templates" = "add_framework/templates"
 
 [tool.hatch.build.targets.sdist]
 include = [

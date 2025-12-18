@@ -1,4 +1,4 @@
-# Context Protocol
+# ADD Framework
 
 **A context management protocol for AI agents working on code.**
 
@@ -26,22 +26,22 @@ A protocol that tells agents:
 
 ```bash
 # Install
-pip install context-protocol
+pip install add-framework
 
 # Initialize in your project
-context-protocol init
+add-framework init
 
 # Check protocol health
-context-protocol validate
+add-framework validate
 
 # Check project health (monoliths, stale docs, etc.)
-context-protocol doctor
+add-framework doctor
 
 # Get documentation context for a file
-context-protocol context src/your_file.py
+add-framework context src/your_file.py
 
 # Generate bootstrap prompt for LLM
-context-protocol prompt
+add-framework prompt
 ```
 
 After installation, your project will have:
@@ -49,7 +49,7 @@ After installation, your project will have:
 ```
 your-project/
 ├── CLAUDE.md                    # Updated with protocol bootstrap
-└── .context-protocol/
+└── .add-framework/
     ├── PROTOCOL.md              # Core rules (agents read this)
     ├── PRINCIPLES.md            # Working principles (how to work well)
     ├── views/                   # Task-specific context instructions (11 VIEWs)
@@ -64,20 +64,20 @@ your-project/
 
 | Command | Description |
 |---------|-------------|
-| `context-protocol init` | Initialize protocol in project |
-| `context-protocol validate` | Check protocol invariants |
-| `context-protocol doctor` | Project health check (monoliths, stale docs) |
-| `context-protocol context <file>` | Get doc context for a file |
-| `context-protocol prompt` | Generate LLM bootstrap prompt |
+| `add-framework init` | Initialize protocol in project |
+| `add-framework validate` | Check protocol invariants |
+| `add-framework doctor` | Project health check (monoliths, stale docs) |
+| `add-framework context <file>` | Get doc context for a file |
+| `add-framework prompt` | Generate LLM bootstrap prompt |
 
 ### Doctor Command
 
 The doctor command checks project health:
 
 ```bash
-context-protocol doctor              # Full report
-context-protocol doctor --level critical  # Only critical issues
-context-protocol doctor --format json     # JSON output
+add-framework doctor              # Full report
+add-framework doctor --level critical  # Only critical issues
+add-framework doctor --format json     # JSON output
 ```
 
 Checks for:
@@ -97,10 +97,10 @@ Checks for:
 Your CLAUDE.md points agents to the protocol:
 
 ```markdown
-## Context Protocol
+## ADD Framework
 
-Before any task, read: .context-protocol/PROTOCOL.md
-For task-specific context: .context-protocol/views/
+Before any task, read: .add-framework/PROTOCOL.md
+For task-specific context: .add-framework/views/
 ```
 
 ### 2. Protocol (PROTOCOL.md)
@@ -119,7 +119,7 @@ Each VIEW tells the agent exactly what to load:
 # VIEW: Implement
 
 ## LOAD FIRST
-1. .context-protocol/state/SYNC.md
+1. .add-framework/state/SYNC.md
 2. docs/{area}/{module}/PATTERNS_*.md
 3. docs/{area}/{module}/SYNC_*.md
 

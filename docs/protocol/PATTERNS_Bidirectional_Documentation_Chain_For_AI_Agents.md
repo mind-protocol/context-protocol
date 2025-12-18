@@ -1,4 +1,4 @@
-# Context Protocol — Patterns: Bidirectional Documentation Chain for AI Agent Workflows
+# ADD Framework — Patterns: Bidirectional Documentation Chain for AI Agent Workflows
 
 ```
 STATUS: STABLE
@@ -38,7 +38,7 @@ Current failure modes:
 
 ## THE PATTERN
 
-**A Context Protocol for AI Agents Working on Code**
+**A ADD Framework for AI Agents Working on Code**
 
 The protocol specifies:
 1. **What to load** for each task type (VIEWS)

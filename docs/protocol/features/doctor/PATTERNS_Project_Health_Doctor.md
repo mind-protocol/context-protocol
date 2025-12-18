@@ -74,7 +74,7 @@ Don't just report problems — guide solutions.
 
 ### Thresholds
 
-Configurable in `.context-protocol/config.yaml`:
+Configurable in `.add-framework/config.yaml`:
 
 ```yaml
 doctor:

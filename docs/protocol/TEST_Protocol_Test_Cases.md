@@ -1,4 +1,4 @@
-# Context Protocol — Test: Test Cases and Coverage
+# ADD Framework — Test: Test Cases and Coverage
 
 ```
 STATUS: STABLE
@@ -24,7 +24,7 @@ SYNC:            ./SYNC_Protocol_Current_State.md
 ## TEST STRATEGY
 
 The protocol is tested through:
-1. **CLI validation** — `context-protocol validate` checks invariants
+1. **CLI validation** — `add-framework validate` checks invariants
 2. **Dogfooding** — The protocol uses itself
 3. **Real-world usage** — Testing on actual projects (blood-ledger)
 
@@ -32,19 +32,19 @@ The protocol is tested through:
 
 ## CLI TESTS
 
-### `context-protocol init`
+### `add-framework init`
 
 | Test | Input | Expected | Status |
 |------|-------|----------|--------|
-| Fresh install | Empty directory | Creates .context-protocol/, CLAUDE.md | pass |
-| Already exists | Directory with .context-protocol/ | Error unless --force | pass |
+| Fresh install | Empty directory | Creates .add-framework/, CLAUDE.md | pass |
+| Already exists | Directory with .add-framework/ | Error unless --force | pass |
 | Force overwrite | --force flag | Overwrites existing | pass |
 
-### `context-protocol validate`
+### `add-framework validate`
 
 | Test | Input | Expected | Status |
 |------|-------|----------|--------|
-| No protocol | Directory without .context-protocol/ | Fails V6 | pass |
+| No protocol | Directory without .add-framework/ | Fails V6 | pass |
 | Uninitialized SYNC | Template placeholders | Fails V6 | pass |
 | Missing VIEWs | Incomplete views/ | Fails V7 | pass |
 | Broken CHAIN links | Dead references | Fails V3 | pass |
@@ -52,13 +52,13 @@ The protocol is tested through:
 | Incomplete chain | Missing doc types | Fails FC | pass |
 | All valid | Complete protocol | All pass | pass |
 
-### `context-protocol prompt`
+### `add-framework prompt`
 
 | Test | Input | Expected | Status |
 |------|-------|----------|--------|
 | Generate prompt | Valid directory | Bootstrap prompt with paths | pass |
 
-### `context-protocol context`
+### `add-framework context`
 
 | Test | Input | Expected | Status |
 |------|-------|----------|--------|
@@ -73,9 +73,9 @@ The protocol is tested through:
 
 ```
 GIVEN:  Protocol repo exists
-WHEN:   Run `context-protocol init` on itself
-THEN:   .context-protocol/ created
-AND:    `context-protocol validate` passes
+WHEN:   Run `add-framework init` on itself
+THEN:   .add-framework/ created
+AND:    `add-framework validate` passes
 STATUS: pass
 ```
 
@@ -83,7 +83,7 @@ STATUS: pass
 
 ```
 GIVEN:  blood-ledger project exists
-WHEN:   Run `context-protocol init --dir ~/the-blood-ledger`
+WHEN:   Run `add-framework init --dir ~/the-blood-ledger`
 THEN:   Protocol installed
 AND:    CLAUDE.md updated
 AND:    Validate shows gaps to fix
@@ -119,12 +119,12 @@ STATUS: pass
 
 ```bash
 # Manual testing via CLI
-context-protocol validate --dir /path/to/project
-context-protocol context file.py --dir /path/to/project
+add-framework validate --dir /path/to/project
+add-framework context file.py --dir /path/to/project
 
 # Dogfood test
-context-protocol init --dir /home/mind-protocol/context-protocol --force
-context-protocol validate --dir /home/mind-protocol/context-protocol
+add-framework init --dir /home/mind-protocol/add-framework --force
+add-framework validate --dir /home/mind-protocol/add-framework
 ```
 
 ---
@@ -142,5 +142,5 @@ context-protocol validate --dir /home/mind-protocol/context-protocol
 
 - [ ] Add pytest test suite
 - [ ] Add GitHub Actions CI
-- IDEA: `context-protocol test` command to run self-tests
+- IDEA: `add-framework test` command to run self-tests
 - QUESTION: Should validate be strict (fail) or lenient (warn)?

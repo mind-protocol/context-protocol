@@ -11,7 +11,7 @@
 # - Changing module maturity → update status
 #
 # VALIDATION:
-# `context-protocol validate` warns about unmapped code directories.
+# `add-framework validate` warns about unmapped code directories.
 #
 # =============================================================================
 

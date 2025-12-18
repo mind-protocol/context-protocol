@@ -40,10 +40,10 @@ Docs created:
 
 ### Phase 1: Basic tracing (MVP)
 
-1. Add trace logging to `context-protocol context` command
-2. Create `.context-protocol/traces/` directory on first trace
+1. Add trace logging to `add-framework context` command
+2. Create `.add-framework/traces/` directory on first trace
 3. Write JSONL trace entries
-4. Add `context-protocol trace` command for basic summary
+4. Add `add-framework trace` command for basic summary
 
 ### Phase 2: Analysis
 
@@ -66,12 +66,12 @@ Docs created:
 **Start here:**
 1. Read BEHAVIORS to understand the interface
 2. Implement Phase 1 in cli.py
-3. Test with `context-protocol context` on a file
+3. Test with `add-framework context` on a file
 4. Verify trace file created
 
 **Key files:**
-- `src/context_protocol/cli.py` — add trace functions
-- `.context-protocol/traces/` — output location
+- `src/add_framework/cli.py` — add trace functions
+- `.add-framework/traces/` — output location
 
 ---
 

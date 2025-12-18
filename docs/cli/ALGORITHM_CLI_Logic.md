@@ -1,4 +1,4 @@
-# Context Protocol CLI — Algorithm: Command Processing Logic
+# ADD Framework CLI — Algorithm: Command Processing Logic
 
 ```
 STATUS: STABLE
@@ -156,7 +156,7 @@ score = max(0, score)
 
 ```
 markdown = generate_health_markdown(results)
-write to .context-protocol/state/SYNC_Project_Health.md
+write to .add-framework/state/SYNC_Project_Health.md
 ```
 
 ---
@@ -220,7 +220,7 @@ check for "REPAIR COMPLETE" or "REPAIR FAILED"
 run doctor again to get after_results
 compare before/after scores
 list successful and failed repairs
-save to .context-protocol/state/REPAIR_REPORT.md
+save to .add-framework/state/REPAIR_REPORT.md
 ```
 
 ---

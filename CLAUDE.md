@@ -2,15 +2,15 @@
 
 ---
 
-@templates/context-protocol/PRINCIPLES.md
+@templates/add-framework/PRINCIPLES.md
 
 ---
 
-@templates/context-protocol/PROTOCOL.md
+@templates/add-framework/PROTOCOL.md
 
-# Context Protocol
+# ADD Framework
 
-This project follows the Context Protocol — a system that ensures you load the right context for your task and leave useful state for the next agent.
+This project follows the ADD Framework — a system that ensures you load the right context for your task and leave useful state for the next agent.
 
 ---
 
@@ -32,13 +32,13 @@ Following it means your work compounds instead of getting lost.
 
 **Understand the system:**
 ```
-.context-protocol/PROTOCOL.md     # How to navigate — what to load, where to update
-.context-protocol/PRINCIPLES.md   # How to work — the stance to hold
+.add-framework/PROTOCOL.md     # How to navigate — what to load, where to update
+.add-framework/PRINCIPLES.md   # How to work — the stance to hold
 ```
 
 **Check project state:**
 ```
-.context-protocol/state/SYNC_Project_State.md
+.add-framework/state/SYNC_Project_State.md
 ```
 
 What's happening? What changed recently? Any handoffs for you?
@@ -105,7 +105,7 @@ VIEWs are ordered by the product development lifecycle. Pick the one that matche
 
 Update state so the next agent (or your future self) knows what happened:
 ```
-.context-protocol/state/SYNC_Project_State.md
+.add-framework/state/SYNC_Project_State.md
 ```
 
 If you changed a specific module, also update its SYNC:
@@ -142,19 +142,19 @@ docs/
 
 When creating new documentation, use templates from:
 ```
-.context-protocol/templates/
+.add-framework/templates/
 ```
 
 **Remember the architecture principle:** Before creating, check if it already exists.
 
 
-# Context Protocol
+# ADD Framework
 
-@.context-protocol/PRINCIPLES.md
+@.add-framework/PRINCIPLES.md
 
 ---
 
-@.context-protocol/PROTOCOL.md
+@.add-framework/PROTOCOL.md
 
 ---
 
@@ -162,14 +162,14 @@ When creating new documentation, use templates from:
 
 Check project state:
 ```
-.context-protocol/state/SYNC_Project_State.md
+.add-framework/state/SYNC_Project_State.md
 ```
 
 What's happening? What changed recently? Any handoffs for you?
 
 ## Choose Your VIEW
 
-Based on your task, load ONE view from `.context-protocol/views/`:
+Based on your task, load ONE view from `.add-framework/views/`:
 
 | Task | VIEW |
 |------|------|
@@ -186,5 +186,5 @@ Based on your task, load ONE view from `.context-protocol/views/`:
 
 ## After Any Change
 
-Update `.context-protocol/state/SYNC_Project_State.md` with what you did.
+Update `.add-framework/state/SYNC_Project_State.md` with what you did.
 If you changed a module, update its `docs/{area}/{module}/SYNC_*.md` too.

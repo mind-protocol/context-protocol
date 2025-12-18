@@ -1,6 +1,6 @@
-# Context Protocol
+# ADD Framework
 
-This project follows the Context Protocol — a system that ensures you load the right context for your task and leave useful state for the next agent.
+This project follows the ADD Framework — a system that ensures you load the right context for your task and leave useful state for the next agent.
 
 ---
 
@@ -22,7 +22,7 @@ Following it means your work compounds instead of getting lost.
 
 **Check project state:**
 ```
-.context-protocol/state/SYNC_Project_State.md
+.add-framework/state/SYNC_Project_State.md
 ```
 
 What's happening? What changed recently? Any handoffs for you?
@@ -92,7 +92,7 @@ VIEWs are ordered by the product development lifecycle. Pick the one that matche
 
 Update state so the next agent (or your future self) knows what happened:
 ```
-.context-protocol/state/SYNC_Project_State.md
+.add-framework/state/SYNC_Project_State.md
 ```
 
 If you changed a specific module, also update its SYNC:
@@ -131,7 +131,7 @@ docs/
 
 When creating new documentation, use templates from:
 ```
-.context-protocol/templates/
+.add-framework/templates/
 ```
 
 **Remember the architecture principle:** Before creating, check if it already exists.
@@ -140,16 +140,16 @@ When creating new documentation, use templates from:
 
 ## CLI Commands
 
-The `context-protocol` command is available for project management:
+The `add-framework` command is available for project management:
 
 ```bash
-context-protocol init [--force]    # Initialize/re-sync protocol files
-context-protocol validate          # Check protocol invariants
-context-protocol doctor            # Health checks (auto-archives large SYNCs)
-context-protocol sync              # Show SYNC status (auto-archives large SYNCs)
-context-protocol repair [--max N]  # Auto-fix issues using Claude Code agents
-context-protocol context <file>    # Get doc context for a file
-context-protocol prompt            # Generate bootstrap prompt for LLM
+add-framework init [--force]    # Initialize/re-sync protocol files
+add-framework validate          # Check protocol invariants
+add-framework doctor            # Health checks (auto-archives large SYNCs)
+add-framework sync              # Show SYNC status (auto-archives large SYNCs)
+add-framework repair [--max N]  # Auto-fix issues using Claude Code agents
+add-framework context <file>    # Get doc context for a file
+add-framework prompt            # Generate bootstrap prompt for LLM
 ```
 
 ### Repair Command
@@ -157,10 +157,10 @@ context-protocol prompt            # Generate bootstrap prompt for LLM
 The `repair` command automatically fixes project health issues:
 
 ```bash
-context-protocol repair              # Fix all issues
-context-protocol repair --max 5      # Limit to 5 issues
-context-protocol repair --type MONOLITH --type STALE_SYNC  # Fix specific types
-context-protocol repair --dry-run    # Preview what would be fixed
+add-framework repair              # Fix all issues
+add-framework repair --max 5      # Limit to 5 issues
+add-framework repair --type MONOLITH --type STALE_SYNC  # Fix specific types
+add-framework repair --dry-run    # Preview what would be fixed
 ```
 
 Each repair spawns a Claude Code agent that:

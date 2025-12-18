@@ -1,4 +1,4 @@
-# Context Protocol — Sync: Current State
+# ADD Framework — Sync: Current State
 
 ```
 LAST_UPDATED: 2025-12-18
@@ -46,7 +46,7 @@ Protocol V1 complete and in use. Dogfooding on itself + Blood Ledger.
 - Documents file structure, data flows, and how agents traverse the protocol system
 - Fixed broken implementation links in IMPLEMENTATION_Protocol_Code_Architecture.md:
   - Updated tree diagrams to use full project-relative paths in tables
-  - Converted bare filename references to resolvable paths (e.g., `templates/context-protocol/PROTOCOL.md`)
+  - Converted bare filename references to resolvable paths (e.g., `templates/add-framework/PROTOCOL.md`)
   - Removed backticked paths that started with `.` (caused issues with validator path resolution)
 
 ---
@@ -57,8 +57,8 @@ Protocol V1 complete and in use. Dogfooding on itself + Blood Ledger.
 
 **What needs testing:**
 1. `pip install -e .` from repo root
-2. `context-protocol init --dir /tmp/test-project`
-3. Verify `.context-protocol/` created with:
+2. `add-framework init --dir /tmp/test-project`
+3. Verify `.add-framework/` created with:
    - PROTOCOL.md
    - PRINCIPLES.md (new!)
    - 9 VIEWs in views/
@@ -108,7 +108,7 @@ Whether agents will actually read PRINCIPLES.md or skip it. The summary in CLAUD
 ## STRUCTURE
 
 ```
-.context-protocol/
+.add-framework/
 ├── PROTOCOL.md              # Navigation — what to load
 ├── PRINCIPLES.md            # Stance — how to work
 ├── views/                   # 9 task-specific VIEWs
@@ -123,11 +123,11 @@ Whether agents will actually read PRINCIPLES.md or skip it. The summary in CLAUD
 
 | What | Where |
 |------|-------|
-| Protocol (navigation) | `templates/context-protocol/PROTOCOL.md` |
-| Principles (stance) | `templates/context-protocol/PRINCIPLES.md` |
-| CLI code | `src/context_protocol/cli.py` |
+| Protocol (navigation) | `templates/add-framework/PROTOCOL.md` |
+| Principles (stance) | `templates/add-framework/PRINCIPLES.md` |
+| CLI code | `src/add_framework/cli.py` |
 | CLAUDE addition | `templates/CLAUDE_ADDITION.md` |
-| VIEWs | `templates/context-protocol/views/` |
+| VIEWs | `templates/add-framework/views/` |
 
 
 ---

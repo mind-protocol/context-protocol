@@ -11,7 +11,7 @@
 # - Changing module maturity → update status
 #
 # VALIDATION:
-# `context-protocol validate` warns about unmapped code directories.
+# `add-framework validate` warns about unmapped code directories.
 #
 # =============================================================================
 
@@ -51,9 +51,9 @@ modules:
 # YOUR MODULES
 # =============================================================================
 
-  # The core Context Protocol CLI implementation
-  context-protocol-cli:
-    code: "src/context_protocol/**"
+  # The core ADD Framework CLI implementation
+  add-framework-cli:
+    code: "src/add_framework/**"
     docs: "docs/cli/"
     maturity: DESIGNING
     owner: agent
@@ -87,7 +87,7 @@ modules:
       - "Factory pattern for repair prompts"
 
     notes: |
-      The core Context Protocol CLI implementation.
+      The core ADD Framework CLI implementation.
       Provides commands: init, validate, doctor, repair, sync, context, prompt, map.
       Uses subprocess to spawn Claude Code agents for automated repairs.
 

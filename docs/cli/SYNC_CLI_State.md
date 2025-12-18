@@ -1,4 +1,4 @@
-# Context Protocol CLI — Sync: Current State
+# ADD Framework CLI — Sync: Current State
 
 ```
 LAST_UPDATED: 2025-12-18
@@ -26,7 +26,7 @@ THIS:            SYNC_CLI_State.md (you are here)
 
 The CLI is functional and in active use. All core commands work:
 
-**init**: Copies `.context-protocol/` directory and updates CLAUDE.md. Supports `--force` for re-initialization.
+**init**: Copies `.add-framework/` directory and updates CLAUDE.md. Supports `--force` for re-initialization.
 
 **validate**: Runs 8 validation checks including protocol installation, VIEW existence, module docs minimum, chain completeness, naming conventions, CHAIN link validity, and module manifest configuration.
 
@@ -60,10 +60,10 @@ No active development at this time.
 - `doctor_checks.py`: New file, 1732L (SPLIT status - needs further splitting)
 
 **Files created:**
-- `src/context_protocol/doctor_checks.py`
+- `src/add_framework/doctor_checks.py`
 
 **Files modified:**
-- `src/context_protocol/doctor.py`
+- `src/add_framework/doctor.py`
 - `docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md`
 - `modules.yaml`
 
@@ -91,7 +91,7 @@ No active development at this time.
 **Where I stopped:** Documentation complete. No pending work.
 
 **What you need to understand:**
-- Each command is in its own file under `src/context_protocol/`
+- Each command is in its own file under `src/add_framework/`
 - `cli.py` is the entry point that wires up argparse
 - `utils.py` has shared utilities (template paths, module discovery)
 - The repair system spawns `claude` subprocess with specific prompts
@@ -103,7 +103,7 @@ No active development at this time.
 
 **Open questions I had:**
 - Should repair depth default to "links" instead of "docs" for safer defaults?
-- Is there value in a `context-protocol status` that combines doctor + sync output?
+- Is there value in a `add-framework status` that combines doctor + sync output?
 
 ---
 
@@ -113,7 +113,7 @@ No active development at this time.
 CLI module now has documentation. All 8 commands work and are documented. Module mapping added to `modules.yaml`. The codebase health issue (UNDOCUMENTED for src/) is resolved.
 
 **Decisions made:**
-- Named module `context-protocol-cli` in modules.yaml (vs just `cli`)
+- Named module `add-framework-cli` in modules.yaml (vs just `cli`)
 - Put docs in `docs/cli/` (flat, not nested under an area)
 - PATTERNS focuses on "why CLI over copy" as the core design question
 
@@ -126,11 +126,11 @@ CLI module now has documentation. All 8 commands work and are documented. Module
 
 | What | Where |
 |------|-------|
-| CLI entry point | `src/context_protocol/cli.py` |
-| Validation logic | `src/context_protocol/validate.py` |
-| Health check orchestration | `src/context_protocol/doctor.py` |
-| Health check functions | `src/context_protocol/doctor_checks.py` |
-| Repair agents | `src/context_protocol/repair.py` |
+| CLI entry point | `src/add_framework/cli.py` |
+| Validation logic | `src/add_framework/validate.py` |
+| Health check orchestration | `src/add_framework/doctor.py` |
+| Health check functions | `src/add_framework/doctor_checks.py` |
+| Repair agents | `src/add_framework/repair.py` |
 | Module manifest | `modules.yaml` |
 | Design rationale | `docs/cli/PATTERNS_Why_CLI_Over_Copy.md` |
 

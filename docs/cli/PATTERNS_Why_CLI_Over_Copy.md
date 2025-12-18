@@ -1,4 +1,4 @@
-# Context Protocol CLI — Patterns: Why CLI Over Copy
+# ADD Framework CLI — Patterns: Why CLI Over Copy
 
 ```
 STATUS: STABLE
@@ -24,7 +24,7 @@ SYNC:            ./SYNC_CLI_State.md
 
 ## THE PROBLEM
 
-The Context Protocol is fundamentally just markdown files. You could copy them manually. So why have a CLI at all?
+The ADD Framework is fundamentally just markdown files. You could copy them manually. So why have a CLI at all?
 
 Without tooling:
 - Version discovery is manual (which version of the protocol?)
@@ -126,7 +126,7 @@ This is not "AI magic" — it's structured task delegation. Each agent gets:
 
 ## GAPS / IDEAS / QUESTIONS
 
-- [ ] Consider adding `context-protocol watch` for continuous health monitoring
+- [ ] Consider adding `add-framework watch` for continuous health monitoring
 - [ ] The `repair --parallel` flag is useful but output can be messy
 - IDEA: MCP server integration for richer tool access during repairs
 - QUESTION: Should `doctor` auto-run before `repair`, or stay separate?

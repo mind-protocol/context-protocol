@@ -19,7 +19,7 @@
 
 **A project following all conventions should score 100.**
 
-- Empty project with just `.context-protocol/` = 100
+- Empty project with just `.add-framework/` = 100
 - Project with all docs complete = 100
 - All checks have clear pass criteria
 
@@ -149,7 +149,7 @@ Must be readable in terminal:
 ### Empty Project
 
 ```
-.context-protocol/
+.add-framework/
 └── (default files)
 ```
 
@@ -205,16 +205,16 @@ Checks should be O(n) in file count, not O(n²).
 
 ```bash
 # Verify determinism
-diff <(context-protocol doctor) <(context-protocol doctor)
+diff <(add-framework doctor) <(add-framework doctor)
 
 # Verify exit codes
-context-protocol doctor && echo "Clean" || echo "Issues found"
+add-framework doctor && echo "Clean" || echo "Issues found"
 
 # Verify JSON validity
-context-protocol doctor --format json | python -m json.tool
+add-framework doctor --format json | python -m json.tool
 
 # Verify ignore patterns
-context-protocol doctor --format json | jq '.issues[][] | .path' | grep -v vendor/
+add-framework doctor --format json | jq '.issues[][] | .path' | grep -v vendor/
 ```
 
 ---

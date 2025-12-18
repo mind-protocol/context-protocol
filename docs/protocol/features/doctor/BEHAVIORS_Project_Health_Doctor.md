@@ -8,25 +8,25 @@
 
 ```bash
 # Basic health check
-context-protocol doctor
+add-framework doctor
 
 # With specific directory
-context-protocol doctor --dir /path/to/project
+add-framework doctor --dir /path/to/project
 
 # Output formats
-context-protocol doctor --format text     # Human readable (default)
-context-protocol doctor --format json     # Machine readable
-context-protocol doctor --format markdown # For reports
+add-framework doctor --format text     # Human readable (default)
+add-framework doctor --format json     # Machine readable
+add-framework doctor --format markdown # For reports
 
 # Filter by severity
-context-protocol doctor --level critical  # Only critical issues
-context-protocol doctor --level warning   # Critical + warnings
-context-protocol doctor --level all       # Everything (default)
+add-framework doctor --level critical  # Only critical issues
+add-framework doctor --level warning   # Critical + warnings
+add-framework doctor --level all       # Everything (default)
 
 # Specific checks
-context-protocol doctor --check monolith
-context-protocol doctor --check stale
-context-protocol doctor --check undocumented
+add-framework doctor --check monolith
+add-framework doctor --check stale
+add-framework doctor --check undocumented
 ```
 
 ---
@@ -47,7 +47,7 @@ context-protocol doctor --check undocumented
 
   ✗ UNDOCUMENTED: src/api/
     No documentation exists for this code directory
-    → Run: context-protocol doctor --guide src/api/
+    → Run: add-framework doctor --guide src/api/
     → See: VIEW_Document_Create_Module_Documentation.md
 
 ## Warnings (3 issues)
@@ -66,7 +66,7 @@ context-protocol doctor --check undocumented
 
 ## Info (3 issues)
 
-  ℹ ACTIVITY_GAP: .context-protocol/
+  ℹ ACTIVITY_GAP: .add-framework/
     No SYNC updates in 18 days
     → Review project state and update relevant SYNC files
 
@@ -90,7 +90,7 @@ Critical: 2 | Warnings: 3 | Info: 3
 3. [ ] Update docs/vision/SYNC_Vision_State.md (Warning)
 4. [ ] Add DOCS: ref to src/types/game.ts (Warning)
 
-Run `context-protocol doctor --guide <path>` for detailed remediation.
+Run `add-framework doctor --guide <path>` for detailed remediation.
 ```
 
 ### JSON Format
@@ -128,7 +128,7 @@ Run `context-protocol doctor --guide <path>` for detailed remediation.
 ## GUIDED REMEDIATION
 
 ```bash
-context-protocol doctor --guide src/api/
+add-framework doctor --guide src/api/
 ```
 
 Outputs detailed steps for fixing a specific issue:
@@ -164,15 +164,15 @@ This code directory has no documentation.
      maturity: DESIGNING
 
 5. Run validation:
-   context-protocol validate
+   add-framework validate
 
 ## Template Commands
 
 # Generate PATTERNS from template
-context-protocol doctor --scaffold PATTERNS docs/api/
+add-framework doctor --scaffold PATTERNS docs/api/
 
 ## Reference
-- VIEW: .context-protocol/views/VIEW_Document_Create_Module_Documentation.md
+- VIEW: .add-framework/views/VIEW_Document_Create_Module_Documentation.md
 ```
 
 ---
@@ -187,14 +187,14 @@ context-protocol doctor --scaffold PATTERNS docs/api/
 
 Allows CI integration:
 ```bash
-context-protocol doctor --level critical || exit 1
+add-framework doctor --level critical || exit 1
 ```
 
 ---
 
 ## CONFIGURATION
 
-`.context-protocol/config.yaml`:
+`.add-framework/config.yaml`:
 
 ```yaml
 doctor:

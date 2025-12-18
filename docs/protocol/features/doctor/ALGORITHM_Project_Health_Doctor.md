@@ -23,7 +23,7 @@ doctor(project_dir, options):
 
 ```python
 def load_config(project_dir: Path) -> DoctorConfig:
-    config_path = project_dir / ".context-protocol" / "config.yaml"
+    config_path = project_dir / ".add-framework" / "config.yaml"
 
     defaults = {
         "monolith_lines": 500,
@@ -281,7 +281,7 @@ def check_activity_gaps(project: ProjectStructure, config: DoctorConfig) -> List
         issues.append(Issue(
             type="ACTIVITY_GAP",
             severity="warning",
-            path=".context-protocol/",
+            path=".add-framework/",
             message=f"No SYNC updates in {days_silent} days",
             details={"days_silent": days_silent, "last_activity": str(most_recent.date())},
             suggestion="Review project state and update relevant SYNC files"

@@ -1,4 +1,4 @@
-# Context Protocol CLI — Validation: Invariants and Correctness Checks
+# ADD Framework CLI — Validation: Invariants and Correctness Checks
 
 ```
 STATUS: STABLE
@@ -30,10 +30,10 @@ These must ALWAYS be true:
 
 ```
 After successful init:
-  .context-protocol/PROTOCOL.md exists
-  .context-protocol/PRINCIPLES.md exists
-  .context-protocol/views/ contains all 11 VIEW files
-  .context-protocol/templates/ contains all template files
+  .add-framework/PROTOCOL.md exists
+  .add-framework/PRINCIPLES.md exists
+  .add-framework/views/ contains all 11 VIEW files
+  .add-framework/templates/ contains all template files
 ```
 
 **Checked by:** `validate` command (check_protocol_installed, check_views_exist)
@@ -187,10 +187,10 @@ SYMPTOM: Module manifest checks skipped/failed gracefully
 
 ```bash
 # Run CLI commands manually for now
-context-protocol init --force
-context-protocol validate
-context-protocol doctor --no-github
-context-protocol context src/context_protocol/cli.py
+add-framework init --force
+add-framework validate
+add-framework doctor --no-github
+add-framework context src/add_framework/cli.py
 
 # No automated test suite yet
 # TODO: Add pytest tests
@@ -204,7 +204,7 @@ The `validate` command runs these checks:
 
 | Check ID | Name | What It Verifies |
 |----------|------|------------------|
-| V6 | Protocol installed | .context-protocol/ exists with core files |
+| V6 | Protocol installed | .add-framework/ exists with core files |
 | V7 | VIEWs exist | All 11 VIEW files present |
 | V6 | Project SYNC exists | SYNC_Project_State.md exists and initialized |
 | V2 | Module docs minimum | Every doc module has PATTERNS + SYNC |

@@ -11,7 +11,7 @@ STATUS: CANONICAL
 ## MATURITY
 
 **What's canonical (v1):**
-- CLI command: `context-protocol doctor`
+- CLI command: `add-framework doctor`
 - Output formats: text, JSON
 - Level filtering: --level critical/warning/all
 - Configuration via config.yaml

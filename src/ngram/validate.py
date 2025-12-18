@@ -1,3 +1,4 @@
+# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
 """
 Validation command for ngram CLI.
 

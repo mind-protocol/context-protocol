@@ -26,6 +26,12 @@ UPDATED_BY: repair-agent (NO_DOCS_REF fix for repair.py)
 
 ## RECENT CHANGES
 
+### 2025-12-18: Added DOCS reference to repair_instructions.py
+
+- **What:** Added `# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md` to `src/ngram/repair_instructions.py`
+- **Why:** NO_DOCS_REF issue - file lacked bidirectional link to documentation
+- **Impact:** Enables `ngram context` to find doc chain for repair_instructions.py
+
 ### 2025-12-18: Added DOCS reference to repair.py
 
 - **What:** Added `# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md` to `src/ngram/repair.py`

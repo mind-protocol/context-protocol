@@ -62,6 +62,25 @@ Add to SYNC:
 
 This helps if the fix doesn't work or creates new issues.
 
+### Before Testing: Doc Verification
+
+**After implementing fix, before verifying it works:**
+
+Compare your fix against the documentation chain:
+
+| Doc Type | Verify |
+|----------|--------|
+| `PATTERNS_*.md` | Fix follows design philosophy |
+| `BEHAVIORS_*.md` | Fix restores documented behavior |
+| `ALGORITHM_*.md` | Fix aligns with documented procedures |
+| `VALIDATION_*.md` | Fix maintains all invariants |
+| `IMPLEMENTATION_*.md` | Fix matches documented code structure |
+
+**If fix differs from docs:**
+1. Was doc wrong? → Update it, add DECISION to SYNC
+2. Is fix wrong? → Revise before testing
+3. Is it an improvement? → Update doc with reasoning
+
 ### After Fixing
 
 - Verify the symptom is gone
@@ -78,8 +97,43 @@ This helps if the fix doesn't work or creates new issues.
 
 ---
 
+## OBSERVATIONS (Living Documentation)
+
+**At the end of your work, add observations to SYNC AND relevant docs.**
+
+### Remarks
+What did you notice? Fragile areas, unclear logic, missing error handling.
+→ Add to SYNC and relevant PATTERNS/IMPLEMENTATION docs
+
+### Suggestions
+What should be improved? Error handling, logging, defensive coding, test coverage.
+→ Add to SYNC with `[ ]` checkbox - these become actionable items
+
+### Propositions
+What related issues might exist? Similar bugs, systemic problems, preventive measures.
+→ Add to SYNC and relevant docs
+
+**Format in SYNC:**
+```markdown
+## Agent Observations
+
+### Remarks
+- [What you noticed]
+
+### Suggestions
+- [ ] [Actionable improvement] <!-- Repair will prompt user -->
+
+### Propositions
+- [What future agents could investigate]
+```
+
+**IMPORTANT:** Suggestions with `[ ]` checkboxes will be offered interactively during `context-protocol repair`.
+
+---
+
 ## VERIFICATION
 
 - Does the fix address root cause (not just symptom)?
 - Is the bug documented in SYNC?
 - Is there a test preventing regression?
+- Are observations documented?

@@ -92,6 +92,19 @@ STATUS: {DESIGNING | CANONICAL | PROPOSED | DEPRECATED}
 
 ## TODO
 
+### Doc/Impl Drift
+
+{Track when docs and implementation are out of sync. Remove items as they're resolved.}
+
+- [ ] DOCS→IMPL: {doc changed, implementation needs updating}
+- [ ] IMPL→DOCS: {implementation changed, docs need updating}
+
+### Tests to Run
+
+```bash
+{test command for this module}
+```
+
 ### Immediate
 
 - [ ] {Next concrete step}

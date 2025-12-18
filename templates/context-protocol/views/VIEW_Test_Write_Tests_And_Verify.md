@@ -95,8 +95,50 @@ Document in SYNC. Decide: fix now or file for later?
 
 ---
 
+## OBSERVATIONS (Living Documentation)
+
+**At the end of your work, add observations to SYNC AND relevant docs.**
+
+### Remarks
+What did you notice? Untestable code, missing edge cases, unclear behavior.
+→ Add to SYNC and relevant VALIDATION/BEHAVIORS docs
+
+### Suggestions
+What should be improved? Testability issues, missing coverage, flaky tests.
+→ Add to SYNC with `[ ]` checkbox - these become actionable items
+
+### Propositions
+What tests should be added? Integration tests, property tests, performance tests.
+→ Add to SYNC and VALIDATION docs
+
+**Format in SYNC:**
+```markdown
+## Agent Observations
+
+### Remarks
+- [What you noticed]
+
+### Suggestions
+- [ ] [Actionable improvement] <!-- Repair will prompt user -->
+
+### Propositions
+- [Future test improvements]
+```
+
+---
+
 ## HANDOFF
 
 **For next agent:** What's tested now, what still needs tests, any tricky areas.
 
 **For human:** Test coverage summary, any concerns about testability.
+
+---
+
+## VERIFICATION
+
+- Tests pass
+- Coverage improved
+- VALIDATION updated
+- SYNC updated
+- Observations documented

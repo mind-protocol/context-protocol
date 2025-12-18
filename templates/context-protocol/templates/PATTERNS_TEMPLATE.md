@@ -18,7 +18,25 @@ VALIDATION:      ./VALIDATION_*.md
 IMPLEMENTATION:  ./IMPLEMENTATION_*.md
 TEST:            ./TEST_*.md
 SYNC:            ./SYNC_*.md
+
+IMPL:            {path/to/main/source/file.py}
 ```
+
+### Bidirectional Contract
+
+**Before modifying this doc or the code:**
+1. Read ALL docs in this chain first
+2. Read the linked IMPL source file
+
+**After modifying this doc:**
+1. Update the IMPL source file to match, OR
+2. Add a TODO in SYNC_*.md: "Docs updated, implementation needs: {what}"
+3. Run tests: `{test command}`
+
+**After modifying the code:**
+1. Update this doc chain to match, OR
+2. Add a TODO in SYNC_*.md: "Implementation changed, docs need: {what}"
+3. Run tests: `{test command}`
 
 ---
 

@@ -62,6 +62,25 @@ Add to SYNC:
 
 This helps if the fix doesn't work or creates new issues.
 
+### Before Testing: Doc Verification
+
+**After implementing fix, before verifying it works:**
+
+Compare your fix against the documentation chain:
+
+| Doc Type | Verify |
+|----------|--------|
+| `PATTERNS_*.md` | Fix follows design philosophy |
+| `BEHAVIORS_*.md` | Fix restores documented behavior |
+| `ALGORITHM_*.md` | Fix aligns with documented procedures |
+| `VALIDATION_*.md` | Fix maintains all invariants |
+| `IMPLEMENTATION_*.md` | Fix matches documented code structure |
+
+**If fix differs from docs:**
+1. Was doc wrong? → Update it, add DECISION to SYNC
+2. Is fix wrong? → Revise before testing
+3. Is it an improvement? → Update doc with reasoning
+
 ### After Fixing
 
 - Verify the symptom is gone

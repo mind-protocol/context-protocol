@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-18
-UPDATED_BY: repair-agent (DOC_DUPLICATION archive fix)
+UPDATED_BY: repair-agent (doctor.py monolith extraction)
 ```
 
 ---
@@ -14,6 +14,12 @@ The Context Protocol project is functional and in active use. The CLI provides c
 Documentation coverage is complete. The `src/` directory containing the CLI implementation has proper module documentation mapped in `modules.yaml`.
 
 ### Recent Changes
+
+**2025-12-18:** Extracted check functions from doctor.py to doctor_checks.py:
+- Created `doctor_checks.py` with all 23 `doctor_check_*()` functions (~1732 lines)
+- `doctor.py` reduced from 1900 → 211 lines (now OK status)
+- `doctor_checks.py` still needs further splitting by category (SPLIT status)
+- Updated IMPLEMENTATION doc, modules.yaml, and SYNC_CLI_State.md
 
 **2025-12-18:** Fixed DOC_DUPLICATION false positive for archive files:
 - Added `_archive_` filename exclusion in `doctor_check_doc_duplication()` (doctor.py:1320-1322)
@@ -47,8 +53,11 @@ Documentation coverage is complete. The `src/` directory containing the CLI impl
 
 ## ACTIVE WORK
 
-- MONOLITH issues remain: `doctor.py` (1217 lines) and `repair.py` (1613 lines) still above 800 threshold
-- Next extraction candidates for `repair.py`: `repair_command()` (439L), report generation functions
+- MONOLITH issues remain: `doctor_checks.py` (1732L), `repair.py` (1384L), `repair_instructions.py` (1001L)
+- `doctor.py` is now OK (211L) after extraction
+- Next extraction candidates:
+  - `doctor_checks.py`: Split by check category (doc checks, code checks, config checks)
+  - `repair.py`: `spawn_repair_agent()`, agent streaming logic
 
 ---
 

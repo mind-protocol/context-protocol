@@ -67,10 +67,43 @@ Are documented behaviors preserved? If they changed:
 
 ---
 
+## OBSERVATIONS (Living Documentation)
+
+**At the end of your review, add observations to SYNC AND relevant docs.**
+
+### Remarks
+What did you notice? Design concerns, missing documentation, inconsistencies.
+→ Add to SYNC and relevant docs
+
+### Suggestions
+What should be improved? Code quality, documentation, testing.
+→ Add to SYNC with `[ ]` checkbox - these become actionable items
+
+### Propositions
+What follow-up work is needed? Related changes, cleanup, documentation.
+→ Add to SYNC
+
+**Format in SYNC:**
+```markdown
+## Review Observations
+
+### Remarks
+- [What you noticed]
+
+### Suggestions
+- [ ] [Actionable improvement] <!-- Repair will prompt user -->
+
+### Propositions
+- [Follow-up work]
+```
+
+---
+
 ## VERIFICATION
 
 - Code aligns with PATTERNS (or PATTERNS updated)
-- Behaviors preserved or correctly updated  
+- Behaviors preserved or correctly updated
 - SYNC files updated
 - No dead links or orphan files
 - Tests pass
+- Observations documented

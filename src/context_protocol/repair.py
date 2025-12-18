@@ -46,6 +46,12 @@ class Colors:
     WARNING = "\033[38;5;208m"  # Orange
     INFO = "\033[38;5;39m"      # Blue
 
+    # Special colors
+    VIOLET = "\033[38;5;183m"   # Light violet for user messages
+    HEALTH = "\033[38;5;87m"    # Cyan for health score
+    CRITICAL = "\033[38;5;196m" # Red for critical count
+    WARN_COUNT = "\033[38;5;214m"  # Orange-yellow for warning count
+
 
 # Symbols and emojis per issue type
 ISSUE_SYMBOLS = {
@@ -71,6 +77,11 @@ ISSUE_SYMBOLS = {
     "COMPONENT_NO_STORIES": ("📖", "◇"),
     "HOOK_UNDOC": ("🪝", "⌒"),
     "DOC_DUPLICATION": ("📋", "≡"),
+    "MAGIC_VALUES": ("🔢", "#"),
+    "HARDCODED_CONFIG": ("⚙️", "∞"),
+    "HARDCODED_SECRET": ("🔐", "!"),
+    "LONG_PROMPT": ("📜", "¶"),
+    "LONG_SQL": ("🗃️", "§"),
 }
 
 # Human-readable descriptions for issue types
@@ -97,6 +108,11 @@ ISSUE_DESCRIPTIONS = {
     "COMPONENT_NO_STORIES": ("add stories for", ""),
     "HOOK_UNDOC": ("document hook", ""),
     "DOC_DUPLICATION": ("consolidate duplicate docs in", ""),
+    "MAGIC_VALUES": ("extract magic numbers from", "to constants"),
+    "HARDCODED_CONFIG": ("externalize config in", ""),
+    "HARDCODED_SECRET": ("remove secret from", ""),
+    "LONG_PROMPT": ("externalize prompts in", "to prompts/"),
+    "LONG_SQL": ("externalize SQL in", "to .sql files"),
 }
 
 
@@ -192,6 +208,13 @@ ISSUE_PRIORITY = {
     "COMPONENT_NO_STORIES": 16,  # FE component without stories (low priority)
     "HOOK_UNDOC": 16,         # Hook without docs (low priority)
     "DOC_DUPLICATION": 6,     # Consolidate duplicate docs (after docs created)
+
+    # Code quality issues
+    "HARDCODED_SECRET": 0,    # CRITICAL: Security issue - fix immediately
+    "HARDCODED_CONFIG": 12,   # Should externalize config
+    "MAGIC_VALUES": 17,       # Low priority - code smell
+    "LONG_PROMPT": 17,        # Low priority - refactoring opportunity
+    "LONG_SQL": 17,           # Low priority - refactoring opportunity
 }
 
 
@@ -271,6 +294,12 @@ DEPTH_FULL = DEPTH_DOCS | {
     "STUB_IMPL",          # Implement stub functions
     "INCOMPLETE_IMPL",    # Complete empty functions
     "MISSING_TESTS",      # Write tests for module
+    # Code quality
+    "HARDCODED_SECRET",   # Remove secrets from code
+    "HARDCODED_CONFIG",   # Externalize configuration
+    "MAGIC_VALUES",       # Extract to constants
+    "LONG_PROMPT",        # Move to prompts directory
+    "LONG_SQL",           # Move to .sql files
 }
 
 
@@ -296,6 +325,8 @@ CRITICAL RULES:
 4. Keep changes minimal and focused on the specific issue
 5. Do NOT make unrelated changes or "improvements"
 6. Report completion status clearly at the end
+7. NEVER create git branches - always work on the current branch
+8. NEVER use git stash - other agents are working in parallel
 
 CLI COMMANDS (use these!):
 - `context-protocol context {file}` - Get full doc chain for any source file
@@ -1021,19 +1052,46 @@ Keep your response concise - repairs are in progress.
         print(f"{Colors.BOLD}🎛️  Manager Agent{Colors.RESET}")
         print(f"{'─'*40}")
 
-        result = subprocess.run(
+        # Stream output instead of capturing (faster feedback)
+        process = subprocess.Popen(
             cmd,
             cwd=manager_dir,
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
-            timeout=120,
         )
 
-        if result.returncode == 0 and result.stdout.strip():
-            response = result.stdout.strip()
-            print(response)
-            print(f"{'─'*40}")
-            return response
+        response_lines = []
+        try:
+            # Read output line by line with timeout
+            import select
+            while True:
+                # Check if process finished
+                if process.poll() is not None:
+                    break
+
+                # Check for output with short timeout
+                readable, _, _ = select.select([process.stdout], [], [], 0.1)
+                if readable:
+                    line = process.stdout.readline()
+                    if line:
+                        print(line, end='', flush=True)
+                        response_lines.append(line)
+
+            # Get any remaining output
+            remaining = process.stdout.read()
+            if remaining:
+                print(remaining, end='', flush=True)
+                response_lines.append(remaining)
+
+            process.wait(timeout=30)  # Wait for process to finish
+
+        except subprocess.TimeoutExpired:
+            process.kill()
+            print(f"  {Colors.DIM}(Manager timed out){Colors.RESET}")
+
+        print(f"{'─'*40}")
+        return ''.join(response_lines).strip() if response_lines else None
 
     except Exception as e:
         print(f"  {Colors.DIM}(Manager error: {e}){Colors.RESET}")
@@ -1048,6 +1106,8 @@ def check_for_manager_input(recent_logs: List[str], target_dir: Path) -> Optiona
     with manager_input_lock:
         if manager_input_queue:
             user_input = manager_input_queue.pop(0)
+            # Echo user input in violet
+            print(f"\n{Colors.VIOLET}💬 You: {user_input}{Colors.RESET}")
             return spawn_manager_agent(user_input, recent_logs, target_dir)
 
     return None
@@ -1201,9 +1261,9 @@ def repair_command(
     config = load_doctor_config(target_dir)
     before_results = run_doctor(target_dir, config)
 
-    print(f"  Health Score: {before_results['score']}/100")
-    print(f"  Critical: {before_results['summary']['critical']}")
-    print(f"  Warnings: {before_results['summary']['warning']}")
+    print(f"  {Colors.HEALTH}Health Score: {before_results['score']}/100{Colors.RESET}")
+    print(f"  {Colors.CRITICAL}Critical: {before_results['summary']['critical']}{Colors.RESET}")
+    print(f"  {Colors.WARN_COUNT}Warnings: {before_results['summary']['warning']}{Colors.RESET}")
     print()
 
     # Collect issues to fix
@@ -1562,9 +1622,9 @@ def repair_command(
     else:
         change_str = f" {Colors.DIM}(±0){Colors.RESET}"
 
-    print(f"  Health Score: {after_results['score']}/100{change_str}")
-    print(f"  Critical: {after_results['summary']['critical']}")
-    print(f"  Warnings: {after_results['summary']['warning']}")
+    print(f"  {Colors.HEALTH}Health Score: {after_results['score']}/100{Colors.RESET}{change_str}")
+    print(f"  {Colors.CRITICAL}Critical: {after_results['summary']['critical']}{Colors.RESET}")
+    print(f"  {Colors.WARN_COUNT}Warnings: {after_results['summary']['warning']}{Colors.RESET}")
     print()
 
     # Step 5: Generate report
@@ -1606,7 +1666,7 @@ def repair_command(
 
     print(f"{'='*60}")
     print(f"✅ Repair Complete: {successful}/{len(repair_results)} successful")
-    print(f"📈 Health Score: {score_before} → {score_after} {score_change_fmt}")
+    print(f"📈 {Colors.HEALTH}Health Score: {score_before} → {score_after}{Colors.RESET} {score_change_fmt}")
     print(f"{'='*60}")
 
     # Return exit code

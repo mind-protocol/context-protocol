@@ -22,6 +22,7 @@ def get_issue_instructions(issue: DoctorIssue, target_dir: Path) -> Dict[str, An
             "docs_to_read": [
                 ".context-protocol/views/VIEW_Refactor_Improve_Code_Structure.md",
                 ".context-protocol/PRINCIPLES.md",
+                "modules.yaml",
             ],
             "prompt": f"""## Task: Split Monolith File
 
@@ -33,18 +34,42 @@ def get_issue_instructions(issue: DoctorIssue, target_dir: Path) -> Dict[str, An
 
 1. Read the VIEW and PRINCIPLES docs listed above
 2. Read the target file to understand its structure
-3. Identify the largest function/class mentioned in the suggestion
-4. Create a new file for the extracted code (e.g., `{Path(issue.path).stem}_utils.py`)
-5. Move the function/class to the new file
-6. Update imports in the original file
-7. Run any existing tests to verify nothing broke
-8. Update SYNC with what you changed
+3. Find the IMPLEMENTATION doc for this module (check modules.yaml for docs path)
+4. Identify the largest function/class mentioned in the suggestion
+5. Create a new file for the extracted code (e.g., `{Path(issue.path).stem}_utils.py`)
+6. Move the function/class to the new file
+7. Update imports in the original file
+8. Run any existing tests to verify nothing broke
+
+## MANDATORY: Update Documentation
+
+**Refactoring is NOT complete without documentation updates.**
+
+9. Update IMPLEMENTATION doc:
+   - Add new file to CODE STRUCTURE tree
+   - Add new file to File Responsibilities table
+   - Count lines: `wc -l` for both original and new file
+   - Update Status column (OK/WATCH/SPLIT) for both files
+   - Update internal dependencies diagram
+
+10. Update modules.yaml:
+    - Add new file to appropriate section (subsystems or internal)
+    - Add note about extraction if file still needs splitting
+
+11. Update SYNC with:
+    - Files extracted and their new names
+    - Line counts before/after
+    - What still needs extraction (if any)
 
 ## Success Criteria:
 - Original file is shorter
+- New file created with extracted code
 - Code still works (tests pass if they exist)
 - Imports are correct
-- SYNC is updated
+- **IMPLEMENTATION doc updated with new file**
+- **modules.yaml updated with new file**
+- **Line counts recorded in File Responsibilities**
+- SYNC updated with extraction summary
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
 """,
@@ -192,8 +217,22 @@ Before creating any missing doc type:
 ## IMPLEMENTATION doc guidance
 
 One IMPLEMENTATION doc per module that documents ALL files in that module.
+
+**File Responsibilities table MUST include:**
+- Line count for each file (approximate)
+- Status: OK (<400L), WATCH (400-700L), or SPLIT (>700L)
+- Any WATCH/SPLIT files need extraction candidates in GAPS section
+
+**DESIGN PATTERNS section MUST include:**
+- Architecture pattern (MVC, Layered, Pipeline, etc.) and WHY
+- Code patterns in use (Factory, Strategy, etc.) and WHERE
+- Anti-patterns to avoid in this module
+- Boundary definitions (what's inside vs outside)
+
+**Structure:**
 - List all files in CODE STRUCTURE section
 - Document each file's purpose in File Responsibilities table
+- Define design patterns and boundaries
 - Show data flows between files
 
 If the IMPLEMENTATION doc exceeds ~300 lines, split into folder:
@@ -378,6 +417,15 @@ One IMPLEMENTATION doc per module documents ALL files in that module.
 - Add this file to the existing module's IMPLEMENTATION doc
 - Do NOT create a separate IMPLEMENTATION doc per file
 
+**When adding a file, include:**
+- Line count (approximate) - use `wc -l` to check
+- Status: OK (<400L), WATCH (400-700L), or SPLIT (>700L)
+- If WATCH/SPLIT: add extraction candidates to GAPS section
+
+**Also update DESIGN PATTERNS if needed:**
+- Does this file introduce new patterns?
+- Does it affect module boundaries?
+
 If adding makes the doc exceed ~300 lines, consider splitting into folder:
 ```
 IMPLEMENTATION/
@@ -390,11 +438,14 @@ IMPLEMENTATION/
 
 1. Search for existing documentation of this file
 2. Find which module owns this code (check modules.yaml)
-3. Find that module's IMPLEMENTATION doc
-4. Add the file with:
+3. Count the file's lines: `wc -l {issue.path}`
+4. Find that module's IMPLEMENTATION doc
+5. Add the file with:
    - File path and brief description
    - Key functions/classes it contains
-5. Update SYNC
+   - Line count and OK/WATCH/SPLIT status
+6. If file is WATCH/SPLIT: add extraction candidates to GAPS
+7. Update SYNC
 
 ## Success Criteria:
 - File is referenced in the module's IMPLEMENTATION doc
@@ -736,21 +787,26 @@ The source code has been modified more recently than its documentation.
 ## Steps:
 
 1. Read the source file to understand what changed
-2. Read the IMPLEMENTATION doc to see what's documented
-3. Compare and identify gaps:
+2. Count lines: `wc -l {issue.path}` - check if size status changed
+3. Read the IMPLEMENTATION doc to see what's documented
+4. Compare and identify gaps:
    - New functions/classes not documented
    - Changed signatures not reflected
    - Removed code still documented
-4. Update the IMPLEMENTATION doc:
+   - File size changed (update Lines/Status columns)
+5. Update the IMPLEMENTATION doc:
    - Add new code to FILE RESPONSIBILITIES
    - Update function signatures
+   - Update line count and OK/WATCH/SPLIT status
    - Remove references to deleted code
    - Update data flow if changed
-5. Update SYNC with what was updated
+6. If file is now WATCH/SPLIT: add extraction candidates to GAPS
+7. Update SYNC with what was updated
 
 ## Success Criteria:
 - IMPLEMENTATION doc reflects current code
 - New functions/classes are documented
+- Line count and status are current
 - No stale references to deleted code
 - SYNC updated
 
@@ -919,6 +975,235 @@ Documentation duplication wastes context and creates inconsistency risk.
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
 """,
             "docs_to_update": [issue.path],
+        },
+
+        "HARDCODED_SECRET": {
+            "view": "VIEW_Implement_Write_Or_Modify_Code.md",
+            "description": "Remove hardcoded secret from code",
+            "docs_to_read": [
+                ".context-protocol/views/VIEW_Implement_Write_Or_Modify_Code.md",
+                ".context-protocol/PRINCIPLES.md",
+            ],
+            "prompt": f"""## Task: Remove Hardcoded Secret (SECURITY CRITICAL)
+
+**Target:** `{issue.path}`
+**Problem:** {issue.message}
+**Details:** {issue.details}
+
+This is a CRITICAL security issue. Secrets must never be in source code.
+
+## Steps:
+
+1. Read the file and locate the secret
+2. Determine where the secret should come from:
+   - Environment variable (most common)
+   - Secrets manager (AWS Secrets Manager, Vault, etc.)
+   - Config file that's in .gitignore
+3. Replace the hardcoded value with environment variable lookup:
+   - Python: `os.environ.get('SECRET_NAME')` or `os.getenv('SECRET_NAME')`
+   - Node.js: `process.env.SECRET_NAME`
+4. Add the secret name to a `.env.example` file with placeholder value
+5. Ensure `.env` is in `.gitignore`
+6. Update any documentation about required environment variables
+7. Update SYNC with security fix
+
+## Success Criteria:
+- No hardcoded secret in code
+- Secret loaded from environment variable
+- `.env.example` updated
+- `.gitignore` includes `.env`
+- SYNC updated
+
+Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+""",
+            "docs_to_update": [".context-protocol/state/SYNC_Project_State.md"],
+        },
+
+        "HARDCODED_CONFIG": {
+            "view": "VIEW_Implement_Write_Or_Modify_Code.md",
+            "description": "Externalize hardcoded configuration",
+            "docs_to_read": [
+                ".context-protocol/views/VIEW_Implement_Write_Or_Modify_Code.md",
+            ],
+            "prompt": f"""## Task: Externalize Hardcoded Configuration
+
+**Target:** `{issue.path}`
+**Problem:** {issue.message}
+**Details:** {issue.details}
+
+Configuration values like URLs, ports, and IPs should not be hardcoded.
+
+## Steps:
+
+1. Read the file and identify the hardcoded config value
+2. Determine the appropriate configuration method:
+   - Environment variable for runtime config
+   - Config file (config.yaml, settings.py) for app config
+   - Constants file for truly static values
+3. Extract the value:
+   - Create or update config file if needed
+   - Replace hardcoded value with config lookup
+4. Add default value handling for development
+5. Update SYNC with changes
+
+## Success Criteria:
+- Hardcoded value replaced with config lookup
+- Config file or env var documented
+- Default values for development
+- SYNC updated
+
+Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+""",
+            "docs_to_update": [],
+        },
+
+        "MAGIC_VALUES": {
+            "view": "VIEW_Refactor_Improve_Code_Structure.md",
+            "description": "Extract magic numbers to constants",
+            "docs_to_read": [
+                ".context-protocol/views/VIEW_Refactor_Improve_Code_Structure.md",
+            ],
+            "prompt": f"""## Task: Extract Magic Numbers to Constants
+
+**Target:** `{issue.path}`
+**Problem:** {issue.message}
+**Examples:** {issue.details.get('examples', [])}
+
+Magic numbers make code hard to understand and maintain.
+
+## Steps:
+
+1. Read the file and identify magic numbers
+2. For each magic number:
+   - Determine what it represents
+   - Create a named constant with descriptive name
+   - Replace the number with the constant
+3. Place constants appropriately:
+   - Module-level constants at top of file
+   - Or in a dedicated constants.py if shared across files
+4. Use UPPER_CASE naming convention
+5. Add brief comment explaining each constant if not obvious
+
+## Example:
+```python
+# Before
+if timeout > 300:
+    raise TimeoutError()
+
+# After
+REQUEST_TIMEOUT_SECONDS = 300  # Maximum time to wait for API response
+
+if timeout > REQUEST_TIMEOUT_SECONDS:
+    raise TimeoutError()
+```
+
+## Success Criteria:
+- Magic numbers replaced with named constants
+- Constants have descriptive names
+- Code behavior unchanged
+- SYNC updated
+
+Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+""",
+            "docs_to_update": [],
+        },
+
+        "LONG_PROMPT": {
+            "view": "VIEW_Refactor_Improve_Code_Structure.md",
+            "description": "Move prompts to prompts/ directory",
+            "docs_to_read": [
+                ".context-protocol/views/VIEW_Refactor_Improve_Code_Structure.md",
+            ],
+            "prompt": f"""## Task: Externalize Long Prompts
+
+**Target:** `{issue.path}`
+**Problem:** {issue.message}
+**Details:** {issue.details}
+
+Long prompt strings embedded in code are hard to edit and review.
+
+## Steps:
+
+1. Read the file and identify the long prompt string(s)
+2. Create prompts/ directory if it doesn't exist
+3. For each prompt:
+   - Create a new file: `prompts/{{purpose}}.md` or `prompts/{{purpose}}.txt`
+   - Move the prompt content to the file
+   - Replace inline string with file read:
+     ```python
+     from pathlib import Path
+     prompt = (Path(__file__).parent / "prompts" / "my_prompt.md").read_text()
+     ```
+4. If prompt has variables, use string formatting or templating
+5. Update SYNC with what was externalized
+
+## Benefits:
+- Easier to edit prompts in markdown
+- Better version control diffs
+- Can review prompts separately from code
+
+## Success Criteria:
+- Prompts moved to prompts/ directory
+- Code loads prompts from files
+- Functionality unchanged
+- SYNC updated
+
+Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+""",
+            "docs_to_update": [],
+        },
+
+        "LONG_SQL": {
+            "view": "VIEW_Refactor_Improve_Code_Structure.md",
+            "description": "Move SQL queries to .sql files",
+            "docs_to_read": [
+                ".context-protocol/views/VIEW_Refactor_Improve_Code_Structure.md",
+            ],
+            "prompt": f"""## Task: Externalize Long SQL Queries
+
+**Target:** `{issue.path}`
+**Problem:** {issue.message}
+**Details:** {issue.details}
+
+Long SQL queries embedded in code are hard to maintain and test.
+
+## Steps:
+
+1. Read the file and identify the long SQL query/queries
+2. Create sql/ directory if it doesn't exist
+3. For each query:
+   - Create a new file: `sql/{{purpose}}.sql`
+   - Move the SQL to the file
+   - Replace inline string with file read
+4. For queries with parameters, use SQL placeholders
+5. Update SYNC with what was externalized
+
+## Example:
+```python
+# Before
+query = \"\"\"
+SELECT u.id, u.name, COUNT(o.id) as order_count
+FROM users u
+LEFT JOIN orders o ON u.id = o.user_id
+WHERE u.status = 'active'
+GROUP BY u.id, u.name
+HAVING COUNT(o.id) > 5
+\"\"\"
+
+# After
+# sql/active_users_with_orders.sql contains the query
+query = (Path(__file__).parent / "sql" / "active_users_with_orders.sql").read_text()
+```
+
+## Success Criteria:
+- SQL queries moved to .sql files
+- Code loads SQL from files
+- Parameters handled correctly
+- SYNC updated
+
+Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+""",
+            "docs_to_update": [],
         },
     }
 

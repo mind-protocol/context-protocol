@@ -25,7 +25,7 @@ This view ensures you understand before you build.
    - What's happening in the project
    - Recent changes that might affect your work
 
-2. **Module manifest:** `.context-protocol/modules.yaml`
+2. **Module manifest:** `modules.yaml` (project root)
    - Find which module your code belongs to
    - Check dependencies, patterns, ownership
 
@@ -59,6 +59,32 @@ Your implementation should reflect the PATTERNS. If you find yourself fighting t
 
 ---
 
+## BEFORE TESTING: DOC VERIFICATION
+
+**After implementing, before running tests, verify against docs:**
+
+Compare your implementation to the documentation chain:
+
+| Doc Type | Check |
+|----------|-------|
+| `PATTERNS_*.md` | Does code follow the design philosophy? |
+| `BEHAVIORS_*.md` | Does code produce the documented behaviors? |
+| `ALGORITHM_*.md` | Does code follow the documented procedures? |
+| `VALIDATION_*.md` | Are invariants maintained? |
+| `IMPLEMENTATION_*.md` | Does code structure match what's documented? |
+
+**If implementation differs from docs:**
+1. Is the doc outdated? → Update the doc, add DECISION to SYNC
+2. Is your code wrong? → Fix the code
+3. Is it a design improvement? → Update doc with reasoning, add DECISION to SYNC
+
+**This step prevents:**
+- Implementing something that contradicts documented design
+- Tests passing but behavior being wrong
+- Silent drift between docs and code
+
+---
+
 ## AFTER IMPLEMENTATION
 
 ### Update State
@@ -74,7 +100,7 @@ Update SYNC files with:
 If you created new code directories or changed structure:
 
 ```yaml
-# .context-protocol/modules.yaml
+# modules.yaml (project root)
 modules:
   your_module:
     code: "src/path/to/code/**"

@@ -69,6 +69,32 @@ Write your plan in SYNC before starting.
 
 ---
 
+## BEFORE TESTING: DOC VERIFICATION
+
+**After implementing your extension, before running tests:**
+
+Re-read the documentation chain and verify:
+
+| Doc Type | Verify |
+|----------|--------|
+| `PATTERNS_*.md` | Extension follows design philosophy |
+| `BEHAVIORS_*.md` | Existing behaviors still work, new ones match intent |
+| `ALGORITHM_*.md` | New logic integrates with existing procedures |
+| `VALIDATION_*.md` | All invariants (old and new) are maintained |
+| `IMPLEMENTATION_*.md` | Code structure matches documented architecture |
+
+**If your extension differs from docs:**
+1. Doc outdated? → Update it, add DECISION to SYNC
+2. Extension wrong? → Fix it before testing
+3. Design improvement? → Update doc with reasoning, add DECISION to SYNC
+
+**This prevents:**
+- Extensions that silently break documented contracts
+- Tests passing but behavior contradicting docs
+- Future agents confused by doc/code mismatch
+
+---
+
 ## AFTER EXTENDING
 
 ### Update All Affected Docs
@@ -110,6 +136,40 @@ New behavior needs tests. Reference VALIDATION.
 
 ---
 
+## OBSERVATIONS (Living Documentation)
+
+**At the end of your work, add observations to SYNC AND relevant docs.**
+
+### Remarks
+What did you notice? Design tensions, integration challenges, unclear boundaries.
+→ Add to SYNC and relevant PATTERNS/IMPLEMENTATION docs
+
+### Suggestions
+What should be improved? Refactoring, abstraction needs, documentation gaps.
+→ Add to SYNC with `[ ]` checkbox - these become actionable items
+
+### Propositions
+What would you do next? Related extensions, optimizations, architectural improvements.
+→ Add to SYNC and relevant PATTERNS docs (proposed section)
+
+**Format in SYNC:**
+```markdown
+## Agent Observations
+
+### Remarks
+- [What you noticed]
+
+### Suggestions
+- [ ] [Actionable improvement] <!-- Repair will prompt user -->
+
+### Propositions
+- [What future agents could tackle]
+```
+
+**IMPORTANT:** Suggestions with `[ ]` checkboxes will be offered interactively during `context-protocol repair`.
+
+---
+
 ## VERIFICATION
 
 - Extension fits existing PATTERNS
@@ -118,3 +178,4 @@ New behavior needs tests. Reference VALIDATION.
 - New invariants documented
 - Tests added
 - SYNC updated
+- Observations documented

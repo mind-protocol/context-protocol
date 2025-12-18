@@ -18,8 +18,9 @@ import re
 from pathlib import Path
 from typing import List, Dict, Any
 
+from datetime import datetime
 from .utils import IGNORED_EXTENSIONS, HAS_YAML, find_module_directories
-from .doctor_types import DoctorConfig
+from .doctor_types import DoctorConfig, IgnoreEntry, DoctorIssue
 
 if HAS_YAML:
     import yaml
@@ -51,13 +52,18 @@ def parse_gitignore(gitignore_path: Path) -> List[str]:
 
 
 def load_doctor_config(target_dir: Path) -> DoctorConfig:
-    """Load doctor configuration from config.yaml and .gitignore if they exist."""
+    """Load doctor configuration from config.yaml, .gitignore, and .context-protocolignore."""
     config_path = target_dir / ".context-protocol" / "config.yaml"
     gitignore_path = target_dir / ".gitignore"
+    protocol_ignore_path = target_dir / ".context-protocolignore"
 
     config = DoctorConfig()
 
-    # Add patterns from .gitignore
+    # Add patterns from .context-protocolignore (primary ignore file)
+    protocol_ignore_patterns = parse_gitignore(protocol_ignore_path)
+    config.ignore.extend(protocol_ignore_patterns)
+
+    # Add patterns from .gitignore (secondary)
     gitignore_patterns = parse_gitignore(gitignore_path)
     config.ignore.extend(gitignore_patterns)
 
@@ -87,6 +93,155 @@ def load_doctor_config(target_dir: Path) -> DoctorConfig:
         pass  # Use defaults on error
 
     return config
+
+
+def load_doctor_ignore(target_dir: Path) -> List[IgnoreEntry]:
+    """Load suppressed issues from .context-protocol/doctor-ignore.yaml.
+
+    Returns a list of IgnoreEntry objects that should be filtered from doctor results.
+    """
+    ignore_path = target_dir / ".context-protocol" / "doctor-ignore.yaml"
+
+    if not ignore_path.exists():
+        return []
+
+    if not HAS_YAML:
+        return []
+
+    try:
+        with open(ignore_path) as f:
+            data = yaml.safe_load(f) or {}
+
+        ignores = []
+        for entry in data.get("ignores", []):
+            if not isinstance(entry, dict):
+                continue
+            if "issue_type" not in entry:
+                continue
+
+            ignores.append(IgnoreEntry(
+                issue_type=entry.get("issue_type", ""),
+                path=entry.get("path", "*"),  # Default to all paths
+                reason=entry.get("reason", ""),
+                added_by=entry.get("added_by", ""),
+                added_date=entry.get("added_date", ""),
+            ))
+
+        return ignores
+
+    except Exception:
+        return []
+
+
+def is_issue_ignored(issue: DoctorIssue, ignores: List[IgnoreEntry]) -> bool:
+    """Check if a DoctorIssue should be suppressed based on ignore rules.
+
+    Matching logic:
+    - issue_type must match exactly
+    - path can be: exact match, glob pattern, or "*" for all
+    """
+    for ignore in ignores:
+        # Issue type must match
+        if ignore.issue_type != issue.issue_type:
+            continue
+
+        # Check path matching
+        if ignore.path == "*":
+            # Wildcard: ignore all issues of this type
+            return True
+
+        # Normalize paths
+        issue_path = issue.path.replace("\\", "/")
+        ignore_path = ignore.path.replace("\\", "/")
+
+        # Exact match
+        if issue_path == ignore_path:
+            return True
+
+        # Glob pattern match
+        if "*" in ignore_path or "?" in ignore_path:
+            if fnmatch.fnmatch(issue_path, ignore_path):
+                return True
+
+        # Prefix match for directories
+        if ignore_path.endswith("/"):
+            if issue_path.startswith(ignore_path):
+                return True
+
+    return False
+
+
+def filter_ignored_issues(issues: List[DoctorIssue], ignores: List[IgnoreEntry]) -> tuple:
+    """Filter out ignored issues from a list.
+
+    Returns: (filtered_issues, ignored_count)
+    """
+    if not ignores:
+        return issues, 0
+
+    filtered = []
+    ignored_count = 0
+
+    for issue in issues:
+        if is_issue_ignored(issue, ignores):
+            ignored_count += 1
+        else:
+            filtered.append(issue)
+
+    return filtered, ignored_count
+
+
+def add_doctor_ignore(
+    target_dir: Path,
+    issue_type: str,
+    path: str,
+    reason: str,
+    added_by: str = "agent"
+) -> bool:
+    """Add an entry to doctor-ignore.yaml.
+
+    Creates the file if it doesn't exist.
+    Returns True if successful.
+    """
+    ignore_path = target_dir / ".context-protocol" / "doctor-ignore.yaml"
+
+    if not HAS_YAML:
+        return False
+
+    try:
+        # Load existing or create new
+        if ignore_path.exists():
+            with open(ignore_path) as f:
+                data = yaml.safe_load(f) or {}
+        else:
+            data = {"ignores": []}
+
+        if "ignores" not in data:
+            data["ignores"] = []
+
+        # Check for duplicate
+        for entry in data["ignores"]:
+            if entry.get("issue_type") == issue_type and entry.get("path") == path:
+                return True  # Already exists
+
+        # Add new entry
+        data["ignores"].append({
+            "issue_type": issue_type,
+            "path": path,
+            "reason": reason,
+            "added_by": added_by,
+            "added_date": datetime.now().strftime("%Y-%m-%d"),
+        })
+
+        # Write back
+        ignore_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(ignore_path, "w") as f:
+            yaml.dump(data, f, default_flow_style=False, sort_keys=False)
+
+        return True
+
+    except Exception:
+        return False
 
 
 def should_ignore_path(path: Path, ignore_patterns: List[str], target_dir: Path) -> bool:

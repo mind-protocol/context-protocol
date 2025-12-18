@@ -17,7 +17,11 @@ VALIDATION:      ./VALIDATION_{name}.md
 IMPLEMENTATION:  ./IMPLEMENTATION_{name}.md
 THIS:            TEST_{name}.md
 SYNC:            ./SYNC_{name}.md
+
+IMPL:            {path/to/test/file.py}
 ```
+
+> **Contract:** Read docs before modifying. After changes: update IMPL or add TODO to SYNC. Run tests.
 
 ---
 

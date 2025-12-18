@@ -35,6 +35,7 @@ from .validate import validate_protocol
 from .prompt import print_bootstrap_prompt
 from .context import print_module_context
 from .doctor import doctor_command
+from .doctor_files import add_doctor_ignore, load_doctor_ignore
 from .project_map import print_project_map
 from .sync import sync_command
 from .repair import repair_command
@@ -235,6 +236,39 @@ def main():
         help="Number of parallel agents (default: 5, use 1 for sequential)"
     )
 
+    # ignore command
+    ignore_parser = subparsers.add_parser(
+        "ignore",
+        help="Add or list suppressed doctor issues"
+    )
+    ignore_parser.add_argument(
+        "--dir", "-d",
+        type=Path,
+        default=Path.cwd(),
+        help="Project directory (default: current directory)"
+    )
+    ignore_parser.add_argument(
+        "--list", "-l",
+        action="store_true",
+        help="List current ignores"
+    )
+    ignore_parser.add_argument(
+        "--type", "-t",
+        type=str,
+        help="Issue type to ignore (e.g., MONOLITH, HARDCODED_SECRET)"
+    )
+    ignore_parser.add_argument(
+        "--path", "-p",
+        type=str,
+        help="Path or glob pattern to ignore (e.g., src/legacy/*, tests/**)"
+    )
+    ignore_parser.add_argument(
+        "--reason", "-r",
+        type=str,
+        default="",
+        help="Reason for ignoring (for audit trail)"
+    )
+
     # version
     parser.add_argument(
         "--version",
@@ -278,6 +312,48 @@ def main():
             parallel=args.parallel,
         )
         sys.exit(exit_code)
+    elif args.command == "ignore":
+        if args.list:
+            # List current ignores
+            ignores = load_doctor_ignore(args.dir)
+            if not ignores:
+                print("No ignores configured.")
+                print(f"Add ignores with: context-protocol ignore --type TYPE --path PATH --reason REASON")
+            else:
+                print(f"Doctor Ignores ({len(ignores)} entries):")
+                print("-" * 50)
+                for ig in ignores:
+                    print(f"  {ig.issue_type}: {ig.path}")
+                    if ig.reason:
+                        print(f"    Reason: {ig.reason}")
+                    if ig.added_by or ig.added_date:
+                        print(f"    Added: {ig.added_by or 'unknown'} on {ig.added_date or 'unknown'}")
+                    print()
+            sys.exit(0)
+        elif args.type and args.path:
+            # Add new ignore
+            success = add_doctor_ignore(
+                args.dir,
+                issue_type=args.type.upper(),
+                path=args.path,
+                reason=args.reason,
+                added_by="human"
+            )
+            if success:
+                print(f"Added ignore: {args.type.upper()} on {args.path}")
+            else:
+                print("Failed to add ignore (check PyYAML is installed)")
+                sys.exit(1)
+            sys.exit(0)
+        else:
+            print("Usage:")
+            print("  List ignores: context-protocol ignore --list")
+            print("  Add ignore:   context-protocol ignore --type TYPE --path PATH [--reason REASON]")
+            print()
+            print("Examples:")
+            print("  context-protocol ignore --type MONOLITH --path src/legacy.py --reason 'Legacy code, too risky to split'")
+            print("  context-protocol ignore --type MAGIC_VALUES --path tests/** --reason 'Test fixtures'")
+            sys.exit(1)
     elif args.command is None:
         parser.print_help()
         sys.exit(0)

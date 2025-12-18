@@ -3,22 +3,22 @@
 ```
 LAST_UPDATED: 2025-12-18
 UPDATED_BY: context-protocol doctor
-STATUS: NEEDS_ATTENTION
+STATUS: CRITICAL
 ```
 
 ---
 
 ## CURRENT STATE
 
-**Health Score:** 50/100
+**Health Score:** 32/100
 
-The project needs attention. Some documentation is stale or incomplete, which may slow down agents.
+The project has critical issues that will significantly impact agent effectiveness. Address these before starting new work.
 
 | Severity | Count |
 |----------|-------|
 | Critical | 2 |
-| Warning | 1 |
-| Info | 27 |
+| Warning | 0 |
+| Info | 0 |
 
 ---
 
@@ -34,40 +34,10 @@ The project needs attention. Some documentation is stale or incomplete, which ma
 
 **Files:**
 
-- `src/context_protocol/doctor.py` - 1217 lines (threshold: 800)
-  - Split: def doctor_check_new_undoc_code() (127L, :671), def doctor_command() (86L, :1405), def doctor_check_conflicts() (77L, :1077)
-- `src/context_protocol/repair.py` - 1918 lines (threshold: 800)
-  - Split: def get_issue_instructions() (725L, :398), def repair_command() (439L, :1893), def run_repair() (291L, :2041)
-
-### INCOMPLETE_IMPL (1 files)
-
-**What's wrong:** Empty functions indicate incomplete implementation. The interface exists but the behavior doesn't.
-
-**How to fix:** Fill in the empty functions with actual implementation.
-
-**Protocol:** Load `VIEW_Implement_Write_Or_Modify_Code.md` before starting.
-
-**Files:**
-
-- `src/context_protocol/repair.py` - Contains 5 empty/incomplete function(s)
-
----
-
-## LATER
-
-These are minor issues that don't block work but would improve project health:
-
-- [ ] `src/context_protocol/context.py` - No DOCS: reference in file header
-- [ ] `src/context_protocol/doctor.py` - No DOCS: reference in file header
-- [ ] `src/context_protocol/doctor_files.py` - No DOCS: reference in file header
-- [ ] `src/context_protocol/github.py` - No DOCS: reference in file header
-- [ ] `src/context_protocol/init_cmd.py` - No DOCS: reference in file header
-- [ ] `src/context_protocol/project_map.py` - No DOCS: reference in file header
-- [ ] `src/context_protocol/prompt.py` - No DOCS: reference in file header
-- [ ] `src/context_protocol/repair.py` - No DOCS: reference in file header
-- [ ] `src/context_protocol/repair_instructions.py` - No DOCS: reference in file header
-- [ ] `src/context_protocol/sync.py` - No DOCS: reference in file header
-- ... and 17 more
+- `src/context_protocol/doctor_checks.py` - 1407 lines (threshold: 800)
+  - Split: def doctor_check_doc_duplication() (155L, :1273), def doctor_check_new_undoc_code() (127L, :655), def doctor_check_long_strings() (94L, :1640)
+- `src/context_protocol/repair.py` - 1386 lines (threshold: 800)
+  - Split: def repair_command() (439L, :1236), def run_repair() (291L, :1384), def spawn_repair_agent() (224L, :514)
 
 ---
 

@@ -36,10 +36,12 @@ def init_protocol(target_dir: Path, force: bool = False, claude_md_dir: Path = N
     protocol_source = templates_path / "context-protocol"
     claude_addition = templates_path / "CLAUDE_ADDITION.md"
     modules_yaml_source = templates_path / "modules.yaml"
+    ignore_source = templates_path / "context-protocolignore"
 
     # Destination paths
     protocol_dest = target_dir / ".context-protocol"
     modules_yaml_dest = target_dir / "modules.yaml"
+    ignore_dest = target_dir / ".context-protocolignore"
 
     # CLAUDE.md location - can be customized
     if claude_md_dir:
@@ -55,12 +57,39 @@ def init_protocol(target_dir: Path, force: bool = False, claude_md_dir: Path = N
         print("Use --force to overwrite.")
         return False
 
+    # Preserve LEARNINGS files before reinitialization
+    preserved_learnings = {}
+    if protocol_dest.exists():
+        views_dir = protocol_dest / "views"
+        if views_dir.exists():
+            for learnings_file in views_dir.glob("*_LEARNINGS.md"):
+                content = learnings_file.read_text()
+                # Only preserve if it has actual learnings (not just template)
+                if "## Learnings" in content and content.count("\n") > 10:
+                    preserved_learnings[learnings_file.name] = content
+                    print(f"  ○ Preserving: {learnings_file.name}")
+            # Also check GLOBAL_LEARNINGS.md
+            global_learnings = views_dir / "GLOBAL_LEARNINGS.md"
+            if global_learnings.exists():
+                content = global_learnings.read_text()
+                if "## Learnings" in content and content.count("\n") > 10:
+                    preserved_learnings["GLOBAL_LEARNINGS.md"] = content
+                    print(f"  ○ Preserving: GLOBAL_LEARNINGS.md")
+
     # Copy protocol files
     if protocol_dest.exists():
         shutil.rmtree(protocol_dest)
 
     shutil.copytree(protocol_source, protocol_dest)
     print(f"✓ Created: {protocol_dest}/")
+
+    # Restore preserved LEARNINGS files
+    if preserved_learnings:
+        views_dir = protocol_dest / "views"
+        for filename, content in preserved_learnings.items():
+            learnings_path = views_dir / filename
+            learnings_path.write_text(content)
+            print(f"  ✓ Restored: {filename}")
 
     # Copy modules.yaml to project root (if not exists or force)
     if not modules_yaml_dest.exists() or force:
@@ -69,6 +98,14 @@ def init_protocol(target_dir: Path, force: bool = False, claude_md_dir: Path = N
             print(f"✓ Created: {modules_yaml_dest}")
     else:
         print(f"○ {modules_yaml_dest} already exists")
+
+    # Copy .context-protocolignore to project root (if not exists or force)
+    if not ignore_dest.exists() or force:
+        if ignore_source.exists():
+            shutil.copy2(ignore_source, ignore_dest)
+            print(f"✓ Created: {ignore_dest}")
+    else:
+        print(f"○ {ignore_dest} already exists")
 
     # Create/update CLAUDE.md with @ includes for system prompt
     # This loads PRINCIPLES and PROTOCOL directly into context

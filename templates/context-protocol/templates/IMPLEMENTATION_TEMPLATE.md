@@ -17,7 +17,11 @@ VALIDATION:     ./VALIDATION_{name}.md
 THIS:           IMPLEMENTATION_{name}.md
 TEST:           ./TEST_{name}.md
 SYNC:           ./SYNC_{name}.md
+
+IMPL:           {path/to/main/source/file.py}
 ```
+
+> **Contract:** Read docs before modifying. After changes: update IMPL or add TODO to SYNC. Run tests.
 
 ---
 
@@ -35,10 +39,48 @@ SYNC:           ./SYNC_{name}.md
 
 ### File Responsibilities
 
-| File | Purpose | Key Functions/Classes |
-|------|---------|----------------------|
-| `{path}` | {what it does} | `{func}`, `{class}` |
-| `{path}` | {what it does} | `{func}`, `{class}` |
+| File | Purpose | Key Functions/Classes | Lines | Status |
+|------|---------|----------------------|-------|--------|
+| `{path}` | {what it does} | `{func}`, `{class}` | ~{n} | {OK/WATCH/SPLIT} |
+| `{path}` | {what it does} | `{func}`, `{class}` | ~{n} | {OK/WATCH/SPLIT} |
+
+**Size Thresholds:**
+- **OK** (<400 lines): Healthy size, easy to understand
+- **WATCH** (400-700 lines): Getting large, consider extraction opportunities
+- **SPLIT** (>700 lines): Too large, must split before adding more code
+
+> When a file reaches WATCH status, identify extraction candidates in the GAPS section below.
+> When a file reaches SPLIT status, splitting becomes the next task before any feature work.
+
+---
+
+## DESIGN PATTERNS
+
+### Architecture Pattern
+
+**Pattern:** {MVC | Layered | Event-Driven | Pipeline | Repository | etc.}
+
+**Why this pattern:** {rationale for choosing this architecture}
+
+### Code Patterns in Use
+
+| Pattern | Applied To | Purpose |
+|---------|------------|---------|
+| {Factory} | `{file}:{class}` | {why this pattern here} |
+| {Strategy} | `{file}:{class}` | {why this pattern here} |
+| {Observer} | `{file}:{class}` | {why this pattern here} |
+
+### Anti-Patterns to Avoid
+
+- **{Anti-pattern}**: {why it's tempting here} → {what to do instead}
+- **God Object**: Don't let any single class/file handle too many responsibilities
+- **Premature Abstraction**: Don't create helpers until you have 3+ uses
+
+### Boundaries
+
+| Boundary | Inside | Outside | Interface |
+|----------|--------|---------|-----------|
+| {boundary name} | {what's encapsulated} | {what can't see inside} | `{public API}` |
 
 ---
 
@@ -247,7 +289,25 @@ Files that reference this documentation:
 
 ## GAPS / IDEAS / QUESTIONS
 
-- [ ] {Missing implementation}
+### Extraction Candidates
+
+Files approaching WATCH/SPLIT status - identify what can be extracted:
+
+| File | Current | Target | Extract To | What to Move |
+|------|---------|--------|------------|--------------|
+| `{file}` | ~{n}L | <400L | `{new_file}` | {functions/classes to extract} |
+
+### Missing Implementation
+
+- [ ] {Missing feature}
 - [ ] {Technical debt}
+
+### Ideas
+
 - IDEA: {Architecture improvement}
+- IDEA: {Pattern to apply}
+
+### Questions
+
 - QUESTION: {Design uncertainty}
+- QUESTION: {Pattern choice}

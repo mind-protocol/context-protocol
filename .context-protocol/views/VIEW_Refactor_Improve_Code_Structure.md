@@ -79,16 +79,72 @@ Understand who depends on you.
 
 Run all tests. They should pass without changes (if you only refactored).
 
-### Update Docs If Needed
+### Update Documentation (MANDATORY)
 
+**CRITICAL: Refactoring is NOT complete until documentation is updated.**
+
+When you extract/split files:
+
+1. **Update IMPLEMENTATION doc:**
+   - Add new files to CODE STRUCTURE tree
+   - Add new files to File Responsibilities table with line counts
+   - Update Status column (OK/WATCH/SPLIT) for all affected files
+   - Update internal dependencies diagram
+   - Add extraction candidates to GAPS if files still need splitting
+
+2. **Update modules.yaml:**
+   - Add new files to appropriate section (entry_points, subsystems, internal)
+   - Update patterns if new patterns were introduced
+   - Add notes about extraction if work remains
+
+3. **Update imports in docs:**
+   - If extracted module has new public interface, document it
+   - Update any ALGORITHM or BEHAVIORS that reference the old structure
+
+**Documentation updates:**
 - If algorithm changed: update ALGORITHM_*.md
-- If internal structure changed: update IMPLEMENTATION_*.md
+- If internal structure changed: update IMPLEMENTATION_*.md (ALWAYS when splitting)
 - If internal structure changed significantly: note in SYNC
 - PATTERNS and BEHAVIORS should NOT change (behavior didn't change)
 
 ### Update SYNC
 
-What you refactored, why, what's cleaner now.
+What you refactored, why, what's cleaner now. Include:
+- Files extracted and their new names
+- Line counts before/after
+- What still needs extraction (if any)
+
+---
+
+## OBSERVATIONS (Living Documentation)
+
+**At the end of your work, add observations to SYNC AND relevant docs.**
+
+### Remarks
+What did you notice? Hidden complexity, implicit dependencies, unclear abstractions.
+→ Add to SYNC and relevant PATTERNS/IMPLEMENTATION docs
+
+### Suggestions
+What else should be refactored? Related cleanup opportunities, abstraction needs.
+→ Add to SYNC with `[ ]` checkbox - these become actionable items
+
+### Propositions
+What architectural improvements would help? Design patterns, module boundaries.
+→ Add to SYNC and relevant PATTERNS docs
+
+**Format in SYNC:**
+```markdown
+## Agent Observations
+
+### Remarks
+- [What you noticed]
+
+### Suggestions
+- [ ] [Actionable improvement] <!-- Repair will prompt user -->
+
+### Propositions
+- [Architectural improvements]
+```
 
 ---
 
@@ -97,3 +153,16 @@ What you refactored, why, what's cleaner now.
 **For next agent:** What was restructured, what's cleaner, any areas that still need work.
 
 **For human:** Summary of improvements, any risks or areas to watch.
+
+---
+
+## VERIFICATION
+
+- Tests still pass
+- Behavior unchanged
+- Code is clearer
+- **IMPLEMENTATION doc updated with new file structure**
+- **modules.yaml updated with new files**
+- **Line counts and Status updated in File Responsibilities table**
+- SYNC updated with extraction summary
+- Observations documented

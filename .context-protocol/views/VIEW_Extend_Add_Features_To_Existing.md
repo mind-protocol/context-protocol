@@ -21,7 +21,7 @@ Extensions require more context than new implementations because you're working 
 
 ### Module Manifest First
 
-Check `.context-protocol/modules.yaml`:
+Check `modules.yaml` (project root):
 - Find the target module's mapping
 - Check its dependencies (what else to load?)
 - Check its patterns (conventions to follow)
@@ -69,6 +69,32 @@ Write your plan in SYNC before starting.
 
 ---
 
+## BEFORE TESTING: DOC VERIFICATION
+
+**After implementing your extension, before running tests:**
+
+Re-read the documentation chain and verify:
+
+| Doc Type | Verify |
+|----------|--------|
+| `PATTERNS_*.md` | Extension follows design philosophy |
+| `BEHAVIORS_*.md` | Existing behaviors still work, new ones match intent |
+| `ALGORITHM_*.md` | New logic integrates with existing procedures |
+| `VALIDATION_*.md` | All invariants (old and new) are maintained |
+| `IMPLEMENTATION_*.md` | Code structure matches documented architecture |
+
+**If your extension differs from docs:**
+1. Doc outdated? → Update it, add DECISION to SYNC
+2. Extension wrong? → Fix it before testing
+3. Design improvement? → Update doc with reasoning, add DECISION to SYNC
+
+**This prevents:**
+- Extensions that silently break documented contracts
+- Tests passing but behavior contradicting docs
+- Future agents confused by doc/code mismatch
+
+---
+
 ## AFTER EXTENDING
 
 ### Update All Affected Docs
@@ -84,7 +110,7 @@ Write your plan in SYNC before starting.
 If your extension adds new code directories or changes dependencies:
 
 ```yaml
-# .context-protocol/modules.yaml
+# modules.yaml (project root)
 modules:
   your_module:
     depends_on:

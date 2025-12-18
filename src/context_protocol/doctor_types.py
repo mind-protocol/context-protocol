@@ -39,3 +39,19 @@ class DoctorConfig:
         "venv/**",
     ])
     disabled_checks: List[str] = field(default_factory=list)
+
+
+@dataclass
+class IgnoreEntry:
+    """A suppressed issue in doctor-ignore.yaml.
+
+    Issues can be ignored by:
+    - issue_type + path: Exact match (e.g., MONOLITH on src/big_file.py)
+    - issue_type + path pattern: Glob match (e.g., MAGIC_VALUES on tests/**)
+    - issue_type only: Suppress all issues of that type (rarely used)
+    """
+    issue_type: str       # MONOLITH, HARDCODED_SECRET, etc.
+    path: str             # File/dir path or glob pattern
+    reason: str = ""      # Why this is being ignored (required for audit)
+    added_by: str = ""    # Who/what added this ignore
+    added_date: str = ""  # When added (YYYY-MM-DD)

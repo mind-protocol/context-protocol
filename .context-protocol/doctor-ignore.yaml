@@ -1,0 +1,6 @@
+ignores:
+- issue_type: MONOLITH
+  path: src/context_protocol/repair_instructions.py
+  reason: Intentionally large - contains all repair prompts
+  added_by: human
+  added_date: '2025-12-18'

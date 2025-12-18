@@ -59,6 +59,32 @@ Your implementation should reflect the PATTERNS. If you find yourself fighting t
 
 ---
 
+## BEFORE TESTING: DOC VERIFICATION
+
+**After implementing, before running tests, verify against docs:**
+
+Compare your implementation to the documentation chain:
+
+| Doc Type | Check |
+|----------|-------|
+| `PATTERNS_*.md` | Does code follow the design philosophy? |
+| `BEHAVIORS_*.md` | Does code produce the documented behaviors? |
+| `ALGORITHM_*.md` | Does code follow the documented procedures? |
+| `VALIDATION_*.md` | Are invariants maintained? |
+| `IMPLEMENTATION_*.md` | Does code structure match what's documented? |
+
+**If implementation differs from docs:**
+1. Is the doc outdated? → Update the doc, add DECISION to SYNC
+2. Is your code wrong? → Fix the code
+3. Is it a design improvement? → Update doc with reasoning, add DECISION to SYNC
+
+**This step prevents:**
+- Implementing something that contradicts documented design
+- Tests passing but behavior being wrong
+- Silent drift between docs and code
+
+---
+
 ## AFTER IMPLEMENTATION
 
 ### Update State
@@ -95,9 +121,47 @@ Update `BEHAVIORS_*.md` to reflect new observable behavior.
 
 ---
 
+## OBSERVATIONS (Living Documentation)
+
+**At the end of your work, add observations to SYNC AND relevant docs.**
+
+Documentation is living - update it with what you learned.
+
+### Remarks
+What did you notice? Code smells, unclear areas, inconsistencies.
+→ Add to SYNC and relevant PATTERNS/IMPLEMENTATION docs
+
+### Suggestions
+What should be improved? Technical debt, refactoring, missing tests.
+→ Add to SYNC with `[ ]` checkbox - these become actionable items
+
+### Propositions
+What would you do next? Future features, optimizations, cleanups.
+→ Add to SYNC and relevant PATTERNS docs (proposed section)
+
+**Format in SYNC:**
+```markdown
+## Agent Observations
+
+### Remarks
+- [What you noticed]
+
+### Suggestions
+- [ ] [Actionable improvement] <!-- Repair will prompt user -->
+- [ ] [Another suggestion]
+
+### Propositions
+- [What future agents could tackle]
+```
+
+**IMPORTANT:** Suggestions with `[ ]` checkboxes will be detected by `context-protocol repair` and offered to the user interactively. If accepted, an agent will be spawned to implement the suggestion.
+
+---
+
 ## VERIFICATION
 
 - Does code reflect PATTERNS?
 - Do tests pass (if they exist)?
 - Is SYNC updated?
+- Are observations documented?
 - Could another agent continue your work with what you've written?

@@ -404,7 +404,11 @@ def print_doctor_report(results: Dict[str, Any], output_format: str = "text"):
     # Summary
     print("-" * 50)
     print(f"Health Score: {results['score']}/100")
-    print(f"Critical: {results['summary']['critical']} | Warnings: {results['summary']['warning']} | Info: {results['summary']['info']}")
+    ignored_count = results.get('ignored_count', 0)
+    summary_line = f"Critical: {results['summary']['critical']} | Warnings: {results['summary']['warning']} | Info: {results['summary']['info']}"
+    if ignored_count > 0:
+        summary_line += f" | Suppressed: {ignored_count}"
+    print(summary_line)
     print("-" * 50)
 
     # Suggested actions

@@ -43,17 +43,17 @@ src/context_protocol/
 
 | File | Purpose | Key Functions/Classes |
 |------|---------|----------------------|
-| `cli.py` | Entry point, argument parsing | `main()` |
-| `init_cmd.py` | Protocol initialization | `init_protocol()` |
-| `validate.py` | Protocol invariant checking | `validate_protocol()`, `ValidationResult` |
-| `doctor.py` | Project health analysis | `doctor_command()`, `DoctorIssue`, `DoctorConfig` |
-| `repair.py` | Automated issue fixing | `repair_command()`, `RepairResult`, `spawn_repair_agent()` |
-| `sync.py` | SYNC file status and archiving | `sync_command()`, `archive_all_syncs()` |
-| `context.py` | Documentation discovery | `print_module_context()`, `get_module_context()` |
-| `prompt.py` | LLM prompt generation | `print_bootstrap_prompt()` |
-| `project_map.py` | Visual dependency map | `print_project_map()` |
-| `github.py` | GitHub API integration | `create_issues_for_findings()` |
-| `utils.py` | Shared helpers | `get_templates_path()`, `find_module_directories()` |
+| `src/context_protocol/cli.py` | Entry point, argument parsing | `main()` |
+| `src/context_protocol/init_cmd.py` | Protocol initialization | `init_protocol()` |
+| `src/context_protocol/validate.py` | Protocol invariant checking | `validate_protocol()`, `ValidationResult` |
+| `src/context_protocol/doctor.py` | Project health analysis | `doctor_command()`, `DoctorIssue`, `DoctorConfig` |
+| `src/context_protocol/repair.py` | Automated issue fixing | `repair_command()`, `RepairResult`, `spawn_repair_agent()` |
+| `src/context_protocol/sync.py` | SYNC file status and archiving | `sync_command()`, `archive_all_syncs()` |
+| `src/context_protocol/context.py` | Documentation discovery | `print_module_context()`, `get_module_context()` |
+| `src/context_protocol/prompt.py` | LLM prompt generation | `print_bootstrap_prompt()` |
+| `src/context_protocol/project_map.py` | Visual dependency map | `print_project_map()` |
+| `src/context_protocol/github.py` | GitHub API integration | `create_issues_for_findings()` |
+| `src/context_protocol/utils.py` | Shared helpers | `get_templates_path()`, `find_module_directories()` |
 
 ---
 
@@ -105,15 +105,15 @@ RepairResult:
 
 | Entry Point | File:Line | Triggered By |
 |-------------|-----------|--------------|
-| `main()` | `cli.py:43` | `context-protocol` command |
-| `init_protocol()` | `init_cmd.py:15` | `context-protocol init` |
-| `validate_protocol()` | `validate.py:667` | `context-protocol validate` |
-| `doctor_command()` | `doctor.py:1629` | `context-protocol doctor` |
-| `repair_command()` | `repair.py:970` | `context-protocol repair` |
-| `sync_command()` | `sync.py` | `context-protocol sync` |
-| `print_module_context()` | `context.py:442` | `context-protocol context` |
-| `print_bootstrap_prompt()` | `prompt.py` | `context-protocol prompt` |
-| `print_project_map()` | `project_map.py` | `context-protocol map` |
+| main | src/context_protocol/cli.py:43 | context-protocol command |
+| init_protocol | src/context_protocol/init_cmd.py:15 | context-protocol init |
+| validate_protocol | src/context_protocol/validate.py:667 | context-protocol validate |
+| doctor_command | src/context_protocol/doctor.py:1629 | context-protocol doctor |
+| repair_command | src/context_protocol/repair.py:970 | context-protocol repair |
+| sync_command | src/context_protocol/sync.py | context-protocol sync |
+| print_module_context | src/context_protocol/context.py:442 | context-protocol context |
+| print_bootstrap_prompt | src/context_protocol/prompt.py | context-protocol prompt |
+| print_project_map | src/context_protocol/project_map.py | context-protocol map |
 
 ---
 
@@ -301,14 +301,14 @@ validate.py
 
 | Package | Used For | Imported By |
 |---------|----------|-------------|
-| `argparse` | CLI parsing | `cli.py` |
-| `pathlib` | File paths | All files |
-| `subprocess` | Agent spawning | `repair.py` |
-| `concurrent.futures` | Parallel execution | `repair.py` |
-| `yaml` (optional) | modules.yaml parsing | `utils.py`, `doctor.py` |
-| `json` | JSON output, traces | `doctor.py`, `context.py` |
-| `shutil` | File copying | `init_cmd.py` |
-| `re` | Regex patterns | `validate.py`, `doctor.py` |
+| argparse | CLI parsing | cli.py |
+| pathlib | File paths | All files |
+| subprocess | Agent spawning | repair.py |
+| concurrent.futures | Parallel execution | repair.py |
+| yaml (optional) | modules.yaml parsing | utils.py, doctor.py |
+| json | JSON output, traces | doctor.py, context.py |
+| shutil | File copying | init_cmd.py |
+| re | Regex patterns | validate.py, doctor.py |
 
 ---
 
@@ -322,7 +322,7 @@ validate.py
 | Validation results | `List[ValidationResult]` | Function call | Per-command |
 | Repair results | `List[RepairResult]` | Function call | Per-command |
 | Trace logs | `.context-protocol/traces/` | Persistent | Daily files |
-| Health report | `SYNC_Project_Health.md` | Persistent | Overwritten each run |
+| Health report | .context-protocol/state/SYNC_Project_Health.md | Persistent | Overwritten each run |
 
 ### State Transitions
 
@@ -380,10 +380,10 @@ Project → init → Protocol Installed → validate → Validated → doctor �
 
 | Config | Location | Default | Description |
 |--------|----------|---------|-------------|
-| `monolith_lines` | `config.yaml` | 500 | Lines threshold for monolith detection |
-| `stale_sync_days` | `config.yaml` | 14 | Days before SYNC is stale |
-| `ignore` | `config.yaml` + `.gitignore` | common patterns | Paths to ignore |
-| `disabled_checks` | `config.yaml` | [] | Checks to skip |
+| monolith_lines | .context-protocol/config.yaml (optional) | 500 | Lines threshold for monolith detection |
+| stale_sync_days | .context-protocol/config.yaml (optional) | 14 | Days before SYNC is stale |
+| ignore | .context-protocol/config.yaml + .gitignore | common patterns | Paths to ignore |
+| disabled_checks | .context-protocol/config.yaml (optional) | [] | Checks to skip |
 
 ---
 
@@ -395,17 +395,17 @@ Files that reference this documentation:
 
 | File | Line | Reference |
 |------|------|-----------|
-| `cli.py` | 4 | `# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md` |
+| src/context_protocol/cli.py | 4 | DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md |
 
 ### Docs → Code
 
 | Doc Section | Implemented In |
 |-------------|----------------|
-| ALGORITHM: Validate | `validate.py:667:validate_protocol()` |
-| ALGORITHM: Doctor | `doctor.py:1160:run_doctor()` |
-| ALGORITHM: Repair | `repair.py:970:repair_command()` |
-| BEHAVIOR B1: Init | `init_cmd.py:15:init_protocol()` |
-| VALIDATION V1 | `validate.py:33:check_protocol_installed()` |
+| ALGORITHM: Validate | src/context_protocol/validate.py:667 |
+| ALGORITHM: Doctor | src/context_protocol/doctor.py:1160 |
+| ALGORITHM: Repair | src/context_protocol/repair.py:970 |
+| BEHAVIOR B1: Init | src/context_protocol/init_cmd.py:15 |
+| VALIDATION V1 | src/context_protocol/validate.py:33 |
 
 ---
 

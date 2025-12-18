@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-18
-UPDATED_BY: repair-agent (BROKEN_IMPL_LINK fix)
+UPDATED_BY: repair-agent (DOC_DUPLICATION archive fix)
 ```
 
 ---
@@ -14,6 +14,11 @@ The Context Protocol project is functional and in active use. The CLI provides c
 Documentation coverage is complete. The `src/` directory containing the CLI implementation has proper module documentation mapped in `modules.yaml`.
 
 ### Recent Changes
+
+**2025-12-18:** Fixed DOC_DUPLICATION false positive for archive files:
+- Added `_archive_` filename exclusion in `doctor_check_doc_duplication()` (doctor.py:1320-1322)
+- Archive files are intentionally created by the auto-archiving system and should not be flagged as duplicates
+- Files like `SYNC_*_archive_2025-12.md` are now skipped during duplication checks
 
 **2025-12-18:** Fixed BROKEN_IMPL_LINK in CLI IMPLEMENTATION doc:
 - Fixed 22 broken file references in `docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md`

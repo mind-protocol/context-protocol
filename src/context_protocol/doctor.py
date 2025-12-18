@@ -1317,6 +1317,10 @@ def doctor_check_doc_duplication(target_dir: Path, config: DoctorConfig) -> List
         if should_ignore_path(doc_file, config.ignore, target_dir):
             continue
 
+        # Skip archive files - these are intentional backups, not duplicates
+        if '_archive_' in doc_file.name:
+            continue
+
         try:
             content = doc_file.read_text(errors="ignore")
             rel_path = str(doc_file.relative_to(target_dir))

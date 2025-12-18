@@ -1,0 +1,159 @@
+# Context Protocol — Patterns: Bidirectional Documentation Chain for AI Agent Workflows
+
+```
+STATUS: STABLE
+CREATED: 2024-12-15
+```
+
+---
+
+## CHAIN
+
+```
+THIS:            PATTERNS_Bidirectional_Documentation_Chain_For_AI_Agents.md
+BEHAVIORS:       ./BEHAVIORS_Observable_Protocol_Effects.md
+ALGORITHM:       ./ALGORITHM_Workflows_And_Procedures.md
+VALIDATION:      ./VALIDATION_Protocol_Invariants.md
+IMPLEMENTATION:  ./IMPLEMENTATION_Protocol_Code_Architecture.md
+TEST:            ./TEST_Protocol_Test_Cases.md
+SYNC:            ./SYNC_Protocol_Current_State.md
+```
+
+---
+
+## THE PROBLEM
+
+AI agents have limited context windows. They can't load everything.
+
+Current failure modes:
+1. **Context overload** — Loading too much, missing what matters
+2. **Context starvation** — Loading too little, hallucinating the rest
+3. **State loss** — Each session starts fresh, work is repeated
+4. **Navigation failure** — Not knowing where things are, inventing structure
+5. **Update neglect** — Making changes without updating docs, drift accumulates
+
+**Root cause:** No protocol telling agents what to load, when, and what to update.
+
+---
+
+## THE PATTERN
+
+**A Context Protocol for AI Agents Working on Code**
+
+The protocol specifies:
+1. **What to load** for each task type (VIEWS)
+2. **What must exist** for each module (documentation chain)
+3. **What to update** after changes (SYNC files)
+4. **Where to find things** (consistent structure)
+
+**Key insight:** Agents shouldn't understand the whole system. They should receive:
+- A tiny bootstrap (CLAUDE.md)
+- One VIEW for their current task
+- Tools to navigate when needed
+
+The VIEW tells them everything. Load this. Focus on this. Update this when done.
+
+---
+
+## PRINCIPLES
+
+### 1. Agents Load Views, Not Everything
+
+An agent working on implementation loads VIEW_Implement.md.
+That view tells them exactly what files to read.
+They don't need to understand the whole protocol.
+
+```
+Task → View → Specific files → Work → Update SYNC
+```
+
+### 2. Documentation Is Navigation, Not Archive
+
+Docs exist so agents can find what they need.
+File names are long and descriptive — agents read them.
+Structure is consistent — agents can predict where things are.
+
+```
+# Descriptive names
+PATTERNS_Narrative_Tension_As_Structural_Pressure.md
+
+# Not
+patterns.md
+```
+
+### 3. State Is Explicit
+
+Every change updates SYNC files.
+Next session reads SYNC to understand current state.
+Handoffs are documented, not lost.
+
+```
+SYNC answers:
+- What exists?
+- What's in progress?
+- What needs to happen next?
+```
+
+### 4. Chain Links Code and Docs
+
+Every module has a documentation chain:
+- PATTERNS (why this shape)
+- BEHAVIORS (what it does)
+- ALGORITHM (how it works)
+- VALIDATION (how to verify)
+- SYNC (current state)
+
+Implementation files reference their docs.
+Docs reference their implementation.
+Navigation works both directions.
+
+### 5. Concepts Span Modules
+
+Cross-cutting ideas get their own documentation:
+- CONCEPT (what it means)
+- TOUCHES (where it appears)
+
+Agents working on any module can understand the concept.
+
+---
+
+## DEPENDENCIES
+
+None. The protocol is self-contained markdown files.
+
+---
+
+## INSPIRATIONS
+
+**Literate Programming (Knuth)**
+Code and docs woven together. We adapt: docs and code in separate files, but tightly linked.
+
+**Design by Contract (Meyer)**
+Preconditions, postconditions, invariants. We capture these in VALIDATION files.
+
+**Zettlekasten**
+Atomic notes with links. We use: modules as atoms, chains as links, TOUCHES as indexes.
+
+**Context Window Management (practical LLM work)**
+The hard constraint that forces all of this. Can't load everything. Must choose wisely.
+
+---
+
+## WHAT THIS DOES NOT SOLVE
+
+- **Doesn't prevent bad design** — but makes design visible
+- **Doesn't write tests** — but tells you what to test
+- **Doesn't guarantee sync** — but makes drift detectable
+- **Doesn't replace thinking** — but structures it
+- **Doesn't work magic** — agents must actually follow the protocol
+
+---
+
+## GAPS / IDEAS / QUESTIONS
+
+- [ ] MCP tools for navigation (load_view, find_docs, update_sync)
+- [ ] Automated SYNC verification
+- [ ] Integration with different agent frameworks
+- IDEA: Generate module index from doc structure
+- IDEA: Lint for missing chain links
+- QUESTION: How to handle very large projects with many areas?

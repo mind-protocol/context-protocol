@@ -1,0 +1,153 @@
+# {Module Name} — Algorithm: {Brief Description of Procedures and Logic}
+
+```
+STATUS: DRAFT | REVIEW | STABLE
+CREATED: {DATE}
+VERIFIED: {DATE} against {COMMIT}
+```
+
+---
+
+## CHAIN
+
+```
+PATTERNS:        ./PATTERNS_*.md
+BEHAVIORS:       ./BEHAVIORS_*.md
+THIS:            ALGORITHM_*.md (you are here)
+VALIDATION:      ./VALIDATION_*.md
+IMPLEMENTATION:  ./IMPLEMENTATION_*.md
+TEST:            ./TEST_*.md
+SYNC:            ./SYNC_*.md
+```
+
+---
+
+## OVERVIEW
+
+{High-level description of what this algorithm does}
+{One paragraph summary of the approach}
+
+---
+
+## DATA STRUCTURES
+
+### {Structure Name}
+
+```
+{Description of the data structure}
+{Fields, types, constraints}
+```
+
+### {Structure Name}
+
+```
+{Description}
+```
+
+---
+
+## ALGORITHM: {Primary Function Name}
+
+### Step 1: {Step Name}
+
+{What happens in this step}
+{Why this step exists}
+
+```
+{pseudocode if helpful}
+```
+
+### Step 2: {Step Name}
+
+{What happens}
+{Key decisions or branches}
+
+### Step 3: {Step Name}
+
+{What happens}
+{How results are assembled}
+
+---
+
+## KEY DECISIONS
+
+### D1: {Decision Point}
+
+```
+IF {condition}:
+    {what happens — path A}
+    {why this path}
+ELSE:
+    {what happens — path B}
+    {why this path}
+```
+
+### D2: {Decision Point}
+
+```
+IF {condition}:
+    {path A}
+ELSE:
+    {path B}
+```
+
+---
+
+## DATA FLOW
+
+```
+{input}
+    ↓
+{transformation 1}
+    ↓
+{transformation 2}
+    ↓
+{output}
+```
+
+---
+
+## COMPLEXITY
+
+**Time:** O({complexity}) — {explanation}
+
+**Space:** O({complexity}) — {explanation}
+
+**Bottlenecks:**
+- {Where might this be slow?}
+- {What could cause performance issues?}
+
+---
+
+## HELPER FUNCTIONS
+
+### `{helper_name}()`
+
+**Purpose:** {what it does}
+
+**Logic:** {brief description}
+
+### `{helper_name}()`
+
+**Purpose:** {what it does}
+
+**Logic:** {brief description}
+
+---
+
+## INTERACTIONS
+
+| Module | What We Call | What We Get |
+|--------|--------------|-------------|
+| {path} | {function} | {result} |
+| {path} | {function} | {result} |
+
+---
+
+## GAPS / IDEAS / QUESTIONS
+
+- [ ] {Algorithm improvement to consider}
+- [ ] {Unclear step that needs work}
+- IDEA: {Optimization opportunity}
+- IDEA: {Alternative approach}
+- QUESTION: {Design question}

@@ -62,19 +62,28 @@ ISSUE_SYMBOLS = {
 
 # Human-readable descriptions for issue types
 ISSUE_DESCRIPTIONS = {
-    "MONOLITH": "split large file into smaller modules",
-    "UNDOCUMENTED": "create documentation for",
-    "STALE_SYNC": "update outdated SYNC file for",
-    "PLACEHOLDER": "fill in placeholder content in",
-    "INCOMPLETE_CHAIN": "complete missing docs in",
-    "NO_DOCS_REF": "add DOCS: reference to",
-    "BROKEN_IMPL_LINK": "fix broken links in",
-    "STUB_IMPL": "implement stub functions in",
-    "INCOMPLETE_IMPL": "complete empty functions in",
-    "UNDOC_IMPL": "document implementation file",
-    "LARGE_DOC_MODULE": "reduce doc size for",
-    "YAML_DRIFT": "fix modules.yaml mapping for",
+    "MONOLITH": ("split", "into smaller modules"),
+    "UNDOCUMENTED": ("add module mapping + docs for", ""),
+    "STALE_SYNC": ("update outdated SYNC for", ""),
+    "PLACEHOLDER": ("fill in placeholders in", ""),
+    "INCOMPLETE_CHAIN": ("add missing docs to", ""),
+    "NO_DOCS_REF": ("add DOCS: comment to", ""),
+    "BROKEN_IMPL_LINK": ("fix broken links in", ""),
+    "STUB_IMPL": ("implement stubs in", ""),
+    "INCOMPLETE_IMPL": ("complete functions in", ""),
+    "UNDOC_IMPL": ("add to IMPLEMENTATION docs:", ""),
+    "LARGE_DOC_MODULE": ("reduce size of", "docs"),
+    "YAML_DRIFT": ("fix modules.yaml entry for", ""),
 }
+
+
+def get_issue_action(issue_type: str, path: str) -> str:
+    """Get human-readable action for an issue."""
+    desc = ISSUE_DESCRIPTIONS.get(issue_type, ("fix", ""))
+    prefix, suffix = desc
+    if suffix:
+        return f"{prefix} {path} {suffix}"
+    return f"{prefix} {path}"
 
 # Agent symbols for parallel execution (memorable characters!)
 AGENT_SYMBOLS = ["🥷", "🧚", "🤖", "🦊", "🐙", "🦄", "🧙", "🐲", "🦅", "🐺"]
@@ -1019,13 +1028,12 @@ def repair_command(
 
     # Show each issue with natural language description
     for i, issue in enumerate(issues_to_fix[:15]):
-        emoji, sym = get_issue_symbol(issue.issue_type)
-        desc = ISSUE_DESCRIPTIONS.get(issue.issue_type, "fix")
         agent_sym = get_agent_symbol(i)
         agent_clr = get_agent_color(i)
+        action = get_issue_action(issue.issue_type, issue.path)
 
-        # Natural language: "🥷 will create documentation for src/"
-        print(f"    {i+1}. {color(agent_sym, agent_clr)} will {desc} {color(issue.path, Colors.INFO)}")
+        # Natural language: "🥷 will add module mapping + docs for src/"
+        print(f"    {i+1}. {color(agent_sym, agent_clr)} will {action}")
 
     if len(issues_to_fix) > 15:
         print(f"    {color(f'   ... and {len(issues_to_fix) - 15} more', Colors.DIM)}")
@@ -1061,13 +1069,11 @@ def repair_command(
         # Get agent and issue visual identifiers
         agent_clr = get_agent_color(idx - 1)
         agent_sym = get_agent_symbol(idx - 1)
-        issue_emoji, _ = get_issue_symbol(issue.issue_type)
-        desc = ISSUE_DESCRIPTIONS.get(issue.issue_type, "fix")
+        action = get_issue_action(issue.issue_type, issue.path)
 
         with print_lock:
             agent_tag = color(agent_sym, agent_clr)
-            # Natural language: "🥷 will create documentation for src/"
-            print(f"  {agent_tag} will {desc} {color(issue.path, Colors.INFO)}")
+            print(f"  {agent_tag} will {action}")
 
         result = spawn_repair_agent(
             issue,

@@ -15,16 +15,17 @@ Documentation coverage is complete. The `src/` directory containing the CLI impl
 
 ### Recent Changes
 
+**2025-12-18:** Fixed DOC_DUPLICATION false positive for archive files in doctor_checks.py:
+- Added `_archive_` filename exclusion in Check 3 (doc type tracking by folder)
+- Archive files created by auto-archiving system are now skipped before being added to `docs_by_topic`
+- This prevents `SYNC_*.md` and `SYNC_*_archive_*.md` pairs from being flagged as duplicates
+- Modified: `src/ngram/doctor_checks.py:1337-1341`
+
 **2025-12-18:** Extracted check functions from doctor.py to doctor_checks.py:
 - Created `doctor_checks.py` with all 23 `doctor_check_*()` functions (~1732 lines)
 - `doctor.py` reduced from 1900 → 211 lines (now OK status)
 - `doctor_checks.py` still needs further splitting by category (SPLIT status)
 - Updated IMPLEMENTATION doc, modules.yaml, and SYNC_CLI_State.md
-
-**2025-12-18:** Fixed DOC_DUPLICATION false positive for archive files:
-- Added `_archive_` filename exclusion in `doctor_check_doc_duplication()` (doctor.py:1320-1322)
-- Archive files are intentionally created by the auto-archiving system and should not be flagged as duplicates
-- Files like `SYNC_*_archive_2025-12.md` are now skipped during duplication checks
 
 **2025-12-18:** Fixed BROKEN_IMPL_LINK in CLI IMPLEMENTATION doc:
 - Fixed 22 broken file references in `docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md`

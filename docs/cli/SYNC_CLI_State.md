@@ -52,6 +52,16 @@ No active development at this time.
 
 ## RECENT CHANGES
 
+### 2025-12-18: Fixed DOC_DUPLICATION false positive for archive files
+
+**What changed:**
+- Added `_archive_` filename exclusion in `doctor_check_doc_duplication()` Check 3
+- Archive files are now skipped before being added to `docs_by_topic` tracking
+- This prevents SYNC archive files from being flagged as duplicates of main SYNC files
+
+**Files modified:**
+- `src/ngram/doctor_checks.py:1337-1341`
+
 ### 2025-12-18: Extracted doctor_checks.py
 
 **What changed:**

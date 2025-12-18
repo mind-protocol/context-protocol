@@ -48,6 +48,13 @@ ngram CLI project with doctor/repair functionality for maintaining project healt
 - **Why:** MONOLITH issue - file was 983 lines (threshold: 800)
 - **Impact:** repair.py reduced from 983 lines to 712 lines. Code now properly uses imports from repair_interactive.py instead of shadowing them with local duplicates.
 
+### 2025-12-18: Verified repair_core.py functions as complete (false positive)
+
+- **What:** Verified that `get_issue_symbol` and `get_issue_action_parts` in `repair_core.py` are already implemented correctly.
+- **Why:** INCOMPLETE_IMPL issue flagged these as empty, but they are complete one-liner dictionary lookups with sensible defaults.
+- **Impact:** No code changes needed. Functions return correct tuples used throughout the codebase.
+- **Note:** Doctor's empty function detection may flag single-line implementations as incomplete.
+
 ---
 
 ## KNOWN ISSUES

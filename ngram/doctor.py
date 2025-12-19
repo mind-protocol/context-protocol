@@ -61,7 +61,7 @@ from .doctor_checks_content import (
     doctor_check_doc_duplication,
     doctor_check_long_strings,
     doctor_check_recent_log_errors,
-    doctor_check_resolve_escalation_markers,
+    doctor_check_special_markers,
 )
 
 
@@ -106,7 +106,7 @@ def run_doctor(target_dir: Path, config: DoctorConfig) -> Dict[str, Any]:
     all_issues.extend(doctor_check_suggestions(target_dir, config))
     all_issues.extend(doctor_check_doc_duplication(target_dir, config))
     all_issues.extend(doctor_check_recent_log_errors(target_dir, config))
-    all_issues.extend(doctor_check_resolve_escalation_markers(target_dir, config))
+    all_issues.extend(doctor_check_special_markers(target_dir, config))
     # Code quality checks
     all_issues.extend(doctor_check_magic_values(target_dir, config))
     all_issues.extend(doctor_check_hardcoded_secrets(target_dir, config))

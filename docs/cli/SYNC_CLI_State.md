@@ -36,6 +36,13 @@ No active development at this time.
 
 ## RECENT CHANGES
 
+### 2025-12-19: Implementation of @ngram:proposition and solve-markers
+
+- Added support for `@ngram:proposition` marker to allow agents to submit ideas/improvements.
+- Renamed `ngram solve-escalations` to `ngram solve-markers` to support both escalations and propositions.
+- Updated `doctor` to detect both `@ngram:escalation` and `@ngram:proposition` markers via `doctor_check_special_markers`.
+- Updated `VIEW_Escalation` and `ALGORITHM_CLI_Logic` documentation to include proposition flow.
+
 ### 2025-12-19: Log error health check
 
 - Added a doctor check for recent .log files with error lines (last hour), surfaced as LOG_ERROR issues.

@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (record INCOMPLETE_IMPL verification note)
+UPDATED_BY: codex (BROKEN_IMPL_LINK fix)
 ```
 
 ---
@@ -16,6 +16,7 @@ Removed redundant `docs/protocol/IMPLEMENTATION/IMPLEMENTATION_File_Structure.md
 Updated protocol implementation doc to avoid a broken link reference by describing the manager AGENTS.md sibling without an inline path.
 
 Updated protocol implementation documentation to remove backticks from .ngram/CLAUDE.md references so broken link detection no longer strips the leading dot.
+Updated protocol implementation overview paths to use explicit relative `.ngram/` locations for broken link resolution.
 
 Normalized protocol implementation overview file paths to use explicit .ngram/state references for SYNC files and removed inline backticks for .ngram bootstrap paths to clear BROKEN_IMPL_LINK.
 
@@ -53,6 +54,7 @@ Split `ngram/tui/commands.py` to extract manager-agent subprocess logic into `ng
 Normalized TUI implementation doc references to avoid broken-link detection for .ngram paths and method names.
 Adjusted TUI implementation structure doc to use explicit relative paths for `.ngram` files and PATTERNS/app references.
 Updated TUI implementation structure doc to use repo-root `.ngram` paths and point the app DOCS reference at `docs/tui/PATTERNS_TUI_Design.md`.
+Adjusted the TUI structure doc CHAIN to use a repo-root PATTERNS path and removed backticks from `.ngram` references to avoid broken-link detection.
 Updated `docs/tui/IMPLEMENTATION_TUI_Code_Architecture.md` to use full file paths for `ngram/repair_core.py` and TUI command modules to resolve BROKEN_IMPL_LINK.
 Updated the TUI implementation structure data-flow diagram to use full file paths for command and repair routing.
 

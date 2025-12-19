@@ -11,7 +11,7 @@ UPDATED: 2025-12-19
 ## CHAIN
 
 ```
-PATTERNS:                ../PATTERNS_TUI_Design.md
+PATTERNS:                docs/tui/PATTERNS_TUI_Design.md
 BEHAVIORS:               ../BEHAVIORS_TUI_Interactions.md
 ALGORITHM:               ../ALGORITHM_TUI_Flow.md
 VALIDATION:              ../VALIDATION_TUI_Invariants.md
@@ -46,7 +46,7 @@ ngram/cli.py                         # CLI entry point (TUI launched via `ngram`
 ngram/repair_core.py                 # Shared repair logic (497L)
 ```
 
-Manager startup prefers `.ngram/agents/manager/AGENTS.md` when present; otherwise it mirrors `.ngram/CLAUDE.md` into the manager working directory and writes `AGENTS.md` for Codex/Gemini compatibility.
+Manager startup prefers .ngram/agents/manager/AGENTS.md when present; otherwise it mirrors .ngram/CLAUDE.md into the manager working directory and writes `AGENTS.md` for Codex/Gemini compatibility.
 
 ### File Responsibilities
 

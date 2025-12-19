@@ -47,7 +47,7 @@ The protocol specifies:
 4. **Where to find things** (consistent structure)
 
 **Key insight:** Agents shouldn't understand the whole system. They should receive:
-- A tiny bootstrap (.ngram/CLAUDE.md + root AGENTS.md with Codex guidance, including protocol-first reading)
+- A tiny bootstrap (.ngram/CLAUDE.md + root AGENTS.md with Codex guidance, including protocol-first reading and “don’t run the TUI yourself”)
 - One VIEW for their current task
 - Tools to navigate when needed
 

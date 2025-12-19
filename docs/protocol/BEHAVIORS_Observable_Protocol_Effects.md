@@ -124,7 +124,7 @@ AND:    TOUCHES_*.md shows where it appears in code
 - `.ngram/templates/*.md`
 - `.ngram/state/SYNC_Project_State.md`
 - Updated .ngram/CLAUDE.md with protocol bootstrap
-- Updated AGENTS.md with the bootstrap plus Codex guidance (protocol-first reading)
+- Updated AGENTS.md with the bootstrap plus Codex guidance (protocol-first reading, no self-run TUI)
 
 ### Agent Task Execution
 

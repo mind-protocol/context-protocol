@@ -588,6 +588,7 @@ Options: `--dir PATH`, `--format {md,yaml,json}`
 
 - Start by reading the docs as required by the protocol
 - Read `.ngram/PROTOCOL.md`, then follow the CHAIN to the relevant VIEW before acting
+- Do not launch the TUI yourself; ask the user to run it
 
 ## 5. Communication Principles
 

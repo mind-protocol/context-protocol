@@ -7,8 +7,8 @@
 
 ## 5. Parallel Work Awareness
 
-- Repository changes by other agents are expected; do not stop solely because files changed
-- Continue working unless the user explicitly requests a stop
+- Treat concurrent edits as normal; do not stop because files changed
+- Keep working unless the user explicitly tells you to stop
 
 ## 5. Communication Principles
 

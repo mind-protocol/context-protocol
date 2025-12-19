@@ -335,7 +335,7 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
                         manager.add_message(f"  [cyan]{i}.[/] {cmd}")
                     manager.add_message("[dim]Type a number to run, or continue chatting[/]")
             else:
-                await self._show_static_overview()
+                await self._show_static_overview(manager)
 
         except Exception as e:
             animation_task.cancel()

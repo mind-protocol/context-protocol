@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (verified tui/state.py implementations)
+UPDATED_BY: codex (manager drift checks)
 STATUS: IMPLEMENTED
 ```
 
@@ -33,6 +33,12 @@ The TUI provides an agent-style persistent chat interface for ngram. Entry point
 - Conversation history now handles non-positive limits and returns copies.
 - Agent activity checks consider subprocess returncode.
 - Session state de-duplicates agent handles by id and ignores empty manager messages.
+
+### 2025-12-19: Manager drift detection hardening
+
+- Drift parsing now recognizes non-markdown file updates beyond Python.
+- Extracted paths are normalized to avoid punctuation artifacts.
+- Claude PTY running state reflects subprocess exit.
 
 ### Completed Features
 

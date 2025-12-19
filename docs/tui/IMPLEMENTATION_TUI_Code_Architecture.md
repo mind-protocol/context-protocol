@@ -61,6 +61,11 @@ Manager startup mirrors `.ngram/CLAUDE.md` into the manager working directory an
 | `ngram/cli.py` | - | EXISTS | CLI entry point | TUI launched via `ngram` (no subcommand) |
 | `ngram/repair_core.py` | 497L | EXISTS | Shared logic | `spawn_repair_agent_async()` |
 
+### Manager Supervisor Details
+
+- Drift detection parses agent output for change verbs and categorizes code updates vs markdown docs.
+- ClaudePTY running state reflects subprocess exit to avoid stale "running" flags.
+
 ---
 
 ## DESIGN PATTERNS

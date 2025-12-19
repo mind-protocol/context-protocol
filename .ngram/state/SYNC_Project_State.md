@@ -2,14 +2,14 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (tui/state.py INCOMPLETE_IMPL verification)
+UPDATED_BY: codex (tui manager drift detection)
 ```
 
 ---
 
 ## CURRENT STATE
 
-TUI implementations are complete, but doctor was flagging short delegating methods as incomplete. This update aligns doctor-ignore with actual TUI behavior and records the change in TUI sync.
+TUI implementations are complete, and the manager drift detection now parses code/doc updates more reliably while reflecting PTY subprocess state.
 
 ---
 
@@ -37,6 +37,12 @@ TUI implementations are complete, but doctor was flagging short delegating metho
 - **What:** Checked `ngram/tui/state.py` for reported empty functions; confirmed all listed methods already have implementations.
 - **Why:** Repair task flagged INCOMPLETE_IMPL, but code includes session, agent, and history helpers.
 - **Impact:** No code changes required; recorded as false-positive repair.
+
+### 2025-12-19: Hardened TUI manager drift detection
+
+- **What:** Expanded drift parsing for non-markdown file updates, normalized extracted paths, and checked Claude PTY subprocess state in `is_running`.
+- **Why:** Ensure drift warnings reflect actual file changes and avoid stale running state.
+- **Impact:** Manager warnings are more accurate for code/doc updates.
 
 ### 2025-12-19: Implemented TUI state helpers
 

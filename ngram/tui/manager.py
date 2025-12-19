@@ -163,7 +163,12 @@ class ClaudePTY:
 
     @property
     def is_running(self) -> bool:
-        return self._running
+        if not self._running:
+            return False
+        if self._process and self._process.returncode is not None:
+            self._running = False
+            return False
+        return self._master_fd is not None
 
 
 class ManagerSupervisor:
@@ -184,6 +189,10 @@ class ManagerSupervisor:
             on_warning: Async callback to report warnings to TUI
         """
         self.on_warning = on_warning
+        self._change_patterns = re.compile(
+            r'(?:Created|Modified|Edited|Updated|Wrote|Deleted)\s+[`"]?([^`"\n]+)[`"]?',
+            re.IGNORECASE
+        )
         self._file_patterns = re.compile(
             r'(?:Created|Modified|Edited|Updated|Wrote|Deleted)\s+[`"]?([^`"\n]+\.py)[`"]?',
             re.IGNORECASE
@@ -193,15 +202,34 @@ class ManagerSupervisor:
             re.IGNORECASE
         )
 
+    @staticmethod
+    def _normalize_path(raw_path: str) -> str:
+        """Normalize extracted paths for comparison."""
+        cleaned = raw_path.strip().strip("`'\"")
+        return cleaned.rstrip(".,;:")
+
     def extract_changed_files(self, output: str) -> List[str]:
         """Extract Python files mentioned as changed in output."""
-        matches = self._file_patterns.findall(output)
-        return list(set(matches))
+        matches = {self._normalize_path(p) for p in self._file_patterns.findall(output)}
+        for path in self._change_patterns.findall(output):
+            cleaned = self._normalize_path(path)
+            if not cleaned:
+                continue
+            suffix = Path(cleaned).suffix.lower()
+            if suffix and suffix not in {".md", ".mdx", ".rst", ".txt"}:
+                matches.add(cleaned)
+        return sorted(p for p in matches if p)
 
     def extract_doc_updates(self, output: str) -> List[str]:
         """Extract markdown files mentioned as updated in output."""
-        matches = self._doc_patterns.findall(output)
-        return list(set(matches))
+        matches = {self._normalize_path(p) for p in self._doc_patterns.findall(output)}
+        for path in self._change_patterns.findall(output):
+            cleaned = self._normalize_path(path)
+            if not cleaned:
+                continue
+            if Path(cleaned).suffix.lower() in {".md", ".mdx"}:
+                matches.add(cleaned)
+        return sorted(p for p in matches if p)
 
     async def check_agent_output(self, agent: AgentHandle) -> Optional[DriftWarning]:
         """
@@ -243,8 +271,13 @@ class ManagerSupervisor:
 
     async def on_agent_complete(self, agent: AgentHandle) -> None:
         """Handle agent completion - final drift check."""
-        # Final check when agent finishes
-        await self.monitor_agent(agent)
+        output = agent.get_output()
+        if not output.strip():
+            return
+
+        warning = await self.check_agent_output(agent)
+        if warning:
+            await self.on_warning(warning)
 
 
 # Guidance injection for PostToolUse hook pattern

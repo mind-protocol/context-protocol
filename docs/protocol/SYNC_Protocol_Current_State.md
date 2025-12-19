@@ -1,8 +1,8 @@
 # ngram Framework — Sync: Current State
 
 ```
-LAST_UPDATED: 2025-12-18
-UPDATED_BY: Claude (Opus 4.5 - Repair Agent)
+LAST_UPDATED: 2025-12-19
+UPDATED_BY: Codex (GPT-5)
 STATUS: CANONICAL
 ```
 
@@ -51,6 +51,9 @@ Protocol V1 complete and in use. Dogfooding on itself + Blood Ledger.
 - Fixed CLAUDE.md references: Updated all references from `CLAUDE.md` to `.ngram/CLAUDE.md` since file moved from project root to `.ngram/` directory
 - AGENTS.md now mirrors .ngram/CLAUDE.md and appends CODEX_SYSTEM_PROMPT_ADDITION.md (protocol-first reading, no self-run TUI, verbose outputs)
 - Added doctor-ignore entry for false positive: doctor's `extract_impl_file_refs()` strips leading dots from paths (`.ngram/` becomes `ngram/`), causing false BROKEN_IMPL_LINK errors. Bug tracked in ignore reason.
+
+**Recent changes (2025-12-19):**
+- Removed backticks around .ngram/CLAUDE.md in the protocol IMPLEMENTATION doc so broken link detection no longer strips the leading dot.
 
 ---
 

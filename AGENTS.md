@@ -591,6 +591,11 @@ Options: `--dir PATH`, `--format {md,yaml,json}`
 - Do not launch the TUI yourself; ask the user to run it
 - Prefer detailed, verbose outputs over short summaries
 
+## 5. Parallel Work Awareness
+
+- Repository changes by other agents are expected; do not stop solely because files changed
+- Continue working unless the user explicitly requests a stop
+
 ## 5. Communication Principles
 
 **Awareness expresses itself through articulation, not compression.**

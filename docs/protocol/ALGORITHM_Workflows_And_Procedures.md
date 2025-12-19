@@ -64,7 +64,7 @@ Append content from `templates/CLAUDE_ADDITION.md` to `.ngram/CLAUDE.md`.
 
 If `.ngram/CLAUDE.md` doesn't exist, create it with the addition content.
 Write the same content to root `AGENTS.md` (create or overwrite), then append
-`templates/CODEX_SYSTEM_PROMPT_ADDITION.md` (protocol-first reading, no self-run TUI, verbose outputs).
+`templates/CODEX_SYSTEM_PROMPT_ADDITION.md` (protocol-first reading, no self-run TUI, verbose outputs, parallel-work awareness).
 
 ### Step 3: Initialize Project SYNC
 

@@ -2,18 +2,21 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (tui doc size reduction)
+UPDATED_BY: codex (protocol docs resize)
 ```
 
 ---
 
 ## CURRENT STATE
 
+Reduced `docs/protocol` size by splitting ALGORITHM/IMPLEMENTATION into folders, trimming SYNC detail, and adding a condensed archive file.
+
 Updated protocol implementation doc to avoid a broken link reference by describing the manager AGENTS.md sibling without an inline path.
 
 Updated protocol implementation documentation to remove backticks from .ngram/CLAUDE.md references so broken link detection no longer strips the leading dot.
 
 Externalized the SVG namespace used by project map HTML to `NGRAM_SVG_NAMESPACE` with a default fallback and documented it in the CLI implementation docs.
+Moved project map SVG namespace defaults into `.ngram/config.yaml` and kept `NGRAM_SVG_NAMESPACE` as an override.
 
 Repo overview now uses DoctorConfig for DOCS header scan length, configurable via `.ngram/config.yaml`.
 
@@ -33,7 +36,7 @@ Split `ngram/tui/commands.py` to extract manager-agent subprocess logic into `ng
 
 Normalized TUI implementation doc references to avoid broken-link detection for .ngram paths and method names.
 
-Reduced `docs/tui` size by archiving historical detail and trimming `IMPLEMENTATION_TUI_Code_Architecture.md` and `SYNC_TUI_State.md`. Added `docs/tui/archive/SYNC_archive_2024-12.md` and `docs/tui/archive/IMPLEMENTATION_archive_2024-12.md`.
+Reduced `docs/tui` size by archiving historical detail and splitting `IMPLEMENTATION_TUI_Code_Architecture.md` into an overview plus detail files. Added `docs/tui/archive/SYNC_archive_2024-12.md` and updated `docs/tui/SYNC_TUI_State.md` to keep current state concise.
 
 ---
 

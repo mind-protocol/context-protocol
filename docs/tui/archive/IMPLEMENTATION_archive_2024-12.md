@@ -1,7 +1,7 @@
 # Archive: TUI Implementation Details (2024-12)
 
 Archived on: 2025-12-19
-Source: ../IMPLEMENTATION_TUI_Code_Architecture.md
+Source: ../IMPLEMENTATION_TUI_Code_Architecture.md (overview now; details split into folder)
 
 ---
 
@@ -73,7 +73,7 @@ Source: ../IMPLEMENTATION_TUI_Code_Architecture.md
 
 ### Code → Docs
 - `ngram/tui/app.py` references PATTERNS_TUI_Design.md
-- `ngram/tui/state.py` references IMPLEMENTATION_TUI_Code_Architecture.md
+- `ngram/tui/state.py` references IMPLEMENTATION_TUI_Code_Architecture.md (overview)
 
 ### Docs → Code
 - ALGORITHM main loop → `ngram/tui/app.py:NgramApp.run()`

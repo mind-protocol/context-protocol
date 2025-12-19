@@ -15,6 +15,8 @@ Externalized the SVG namespace used by project map HTML to `NGRAM_SVG_NAMESPACE`
 
 Repo overview now uses DoctorConfig for DOCS header scan length, configurable via `.ngram/config.yaml`.
 
+Verified `ngram/tui/state.py` has no empty stubs for `ConversationMessage.to_dict` or `AgentHandle.duration`; documentation updated to reflect confirmation.
+
 ---
 
 ## ACTIVE WORK

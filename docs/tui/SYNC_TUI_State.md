@@ -44,6 +44,10 @@ The TUI provides an agent-style persistent chat interface for ngram. Entry point
 
 - `modules.yaml` now nests the `tui` entry under `modules` so widgets map to this doc chain.
 
+### 2025-12-19: TUI state functions verified
+
+- Confirmed `ConversationMessage.to_dict` and `AgentHandle.duration` in `ngram/tui/state.py` are fully implemented; no code changes needed.
+
 ### 2025-12-19: Implementation doc link corrected
 
 - Fixed the manager startup reference to point to `../../.ngram/CLAUDE.md`.
@@ -239,6 +243,7 @@ TUI is functional with Claude integration, repair agent spawning, and conversati
 - State helper methods in `ngram/tui/state.py` now include guardrails (copying history slices, de-dup agent ids).
 - Verified `ngram/tui/state.py` functions are fully implemented; no empty stubs remain.
 - Manager drift detection now normalizes file paths and checks PTY subprocess state.
+ - Re-verified `ConversationMessage.to_dict` and `AgentHandle.duration` are implemented; no changes required.
 
 ### Suggestions
 - [ ] Keep doctor-ignore and SYNC notes updated together to avoid drift.

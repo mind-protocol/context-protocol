@@ -389,9 +389,9 @@ Keep it concise and actionable (2-3 paragraphs max)."""
             while True:
                 await asyncio.sleep(0.3)
                 if prefix:
-                    widget.update(f"{prefix}[dim]{dots[i % len(dots)]}[/]")
+                    await widget.update(f"{prefix}[dim]{dots[i % len(dots)]}[/]")
                 else:
-                    widget.update(f"[dim]{dots[i % len(dots)]}[/]")
+                    await widget.update(f"[dim]{dots[i % len(dots)]}[/]")
                 i += 1
         except asyncio.CancelledError:
             pass  # Animation cancelled, exit cleanly

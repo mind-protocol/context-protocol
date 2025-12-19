@@ -10,13 +10,13 @@ STATUS: CRITICAL
 
 ## CURRENT STATE
 
-**Health Score:** 30/100
+**Health Score:** 40/100
 
 The project has critical issues that will significantly impact agent effectiveness. Address these before starting new work.
 
 | Severity | Count |
 |----------|-------|
-| Critical | 2 |
+| Critical | 1 |
 | Warning | 5 |
 | Info | 35 |
 
@@ -24,7 +24,7 @@ The project has critical issues that will significantly impact agent effectivene
 
 ## ISSUES
 
-### BROKEN_IMPL_LINK (2 files)
+### BROKEN_IMPL_LINK (1 files)
 
 **What's wrong:** IMPLEMENTATION docs reference files that don't exist. Agents following these docs will waste time looking for non-existent code.
 
@@ -34,10 +34,8 @@ The project has critical issues that will significantly impact agent effectivene
 
 **Files:**
 
-- `docs/protocol/IMPLEMENTATION/IMPLEMENTATION_Overview.md` - References 4 non-existent file(s)
-  - Update or remove references: ngram/CLAUDE.md, SYNC_Project_Health.md, SYNC_Project_State.md
-- `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/IMPLEMENTATION_TUI_Code_Architecture_Structure.md` - References 3 non-existent file(s)
-  - Update or remove references: ngram/CLAUDE.md, ngram/agents/manager/AGENTS.md, PATTERNS_TUI_Design.md
+- `docs/protocol/IMPLEMENTATION/IMPLEMENTATION_Overview.md` - References 2 non-existent file(s)
+  - Update or remove references: ngram/state/SYNC_Project_Health.md, ngram/state/SYNC_Project_State.md
 
 ### INCOMPLETE_IMPL (4 files)
 
@@ -50,8 +48,8 @@ The project has critical issues that will significantly impact agent effectivene
 **Files:**
 
 - `ngram/repair_core.py` - Contains 2 empty/incomplete function(s)
-- `ngram/tui/commands.py` - Contains 2 empty/incomplete function(s)
 - `ngram/tui/state.py` - Contains 2 empty/incomplete function(s)
+- `ngram/tui/widgets/agent_container.py` - Contains 4 empty/incomplete function(s)
 - `ngram/tui/widgets/status_bar.py` - Contains 6 empty/incomplete function(s)
 
 ### HARDCODED_CONFIG (1 files)

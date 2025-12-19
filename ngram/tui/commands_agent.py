@@ -155,11 +155,11 @@ async def _run_agent_message(app: "NgramApp", message: str, response_widget, sto
         last_update_time = [0.0]  # Use list for mutability in nested func
 
         def throttled_update():
-            """Update widget, throttled to avoid Textual selection bugs."""
+            """Update widget, throttled to avoid overwhelming UI."""
             import time
             now = time.time()
-            # Only update every 50ms to avoid overwhelming Textual
-            if now - last_update_time[0] > 0.05:
+            # Only update every 200ms to keep UI responsive
+            if now - last_update_time[0] > 0.2:
                 content = "".join(response_parts)
                 # Stop animation on first content update
                 stop_animation["flag"] = True
@@ -167,10 +167,9 @@ async def _run_agent_message(app: "NgramApp", message: str, response_widget, sto
                     result = response_widget.update(content)
                     if inspect.isawaitable(result):
                         asyncio.create_task(result)
-                    response_widget.refresh()  # Force visual refresh
                     last_update_time[0] = now
                 except Exception as e:
-                    app.log_error(f"Widget update failed: {e}, content_len={len(content)}")
+                    app.log_error(f"Widget update failed: {e}")
 
         # Drain stderr in background to prevent buffer deadlock
         async def drain_stderr():
@@ -347,3 +346,69 @@ async def _run_agent_message(app: "NgramApp", message: str, response_widget, sto
         stop_animation["flag"] = True  # Stop animation on error too
         response_widget.remove()
         app.log_error(f"LLM failed: {e}")
+
+
+def _build_review_prompt(agent, result, output_tail: str) -> str:
+    """Build prompt for manager to review completed agent."""
+    status = "SUCCESS" if result.success else f"FAILED: {result.error or 'unknown'}"
+    return f"""Agent {agent.symbol} completed repair task.
+
+Issue: {agent.issue_type}
+Target: {agent.target_path}
+Duration: {result.duration_seconds:.1f}s
+Status: {status}
+
+Please review this repair:
+1. Identify commits made by this agent - check `git log --oneline -10` and look for recent commits related to {agent.issue_type} or {agent.target_path}
+2. For each relevant commit, run `git show <commit> --stat` to see the changes
+3. If no commits were made, check `git diff` for uncommitted changes
+4. Summarize what was changed and why
+5. Assess the quality of the fix
+
+Agent output (last 2000 chars):
+```
+{output_tail}
+```"""
+
+
+async def _run_manager_review(app: "NgramApp", prompt: str, agent_info: dict = None) -> None:
+    """Run manager review in background, display result and save to log."""
+    from datetime import datetime
+
+    manager = app.query_one("#manager-panel")
+
+    # Add separator and review header
+    manager.add_message("")
+    manager.add_message("[dim]--- Agent Review ---[/]")
+
+    # Create response widget for streaming
+    response_widget = manager.add_message("[dim]Reviewing...[/]")
+    stop_animation = {"flag": False}
+
+    # Run with --continue to maintain session
+    await _run_agent_message(app, prompt, response_widget, stop_animation)
+
+    # Save review to repair log
+    try:
+        review_content = response_widget.renderable if hasattr(response_widget, 'renderable') else str(response_widget)
+        # Clean up rich markup for plain text
+        clean_review = str(review_content).replace("[dim italic]", "").replace("[/]", "").replace("[dim]", "")
+
+        log_dir = app.target_dir / ".ngram" / "repairs"
+        log_dir.mkdir(parents=True, exist_ok=True)
+
+        # Use session date for log file
+        today = datetime.now().strftime("%Y-%m-%d")
+        log_file = log_dir / f"reviews_{today}.md"
+
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        agent_symbol = agent_info.get("symbol", "?") if agent_info else "?"
+        issue_type = agent_info.get("issue_type", "unknown") if agent_info else "unknown"
+        target = agent_info.get("target", "") if agent_info else ""
+
+        entry = f"\n## {timestamp} - {agent_symbol} {issue_type}\n\n**Target:** {target}\n\n{clean_review}\n\n---\n"
+
+        with open(log_file, "a") as f:
+            f.write(entry)
+    except Exception:
+        pass  # Don't fail on logging errors

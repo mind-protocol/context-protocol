@@ -143,6 +143,7 @@ for check in [
     doctor_check_undoc_impl,
     doctor_check_large_doc_module,
     doctor_check_yaml_drift,
+    doctor_check_recent_log_errors,  # Recent .log errors (last hour)
 ]:
     all_issues.extend(check(target_dir, config))
 ```
@@ -183,6 +184,7 @@ sort by priority (YAML_DRIFT first, NO_DOCS_REF last)
 ```
 for issue in issues:
     instructions = get_issue_instructions(issue)
+    existing_docs, missing_docs = split_docs_to_read(instructions.docs_to_read)
     prompt = build_agent_prompt(
         issue=issue,
         view=instructions.view,
@@ -191,6 +193,8 @@ for issue in issues:
     )
     # AGENTS.md = .ngram/CLAUDE.md + templates/CODEX_SYSTEM_PROMPT_ADDITION.md
 ```
+
+**Docs preflight:** Missing docs are listed in a `Missing Docs at Prompt Time` section so agents can resolve paths before edits.
 
 ### Step 3: Spawn Agents (Parallel)
 

@@ -57,6 +57,7 @@ Before writing anything, answer these questions:
 - Why does this module exist? What problem does it solve?
 - What design approach was chosen? Why this over alternatives?
 - What are the key invariants that must hold?
+- What's in scope? What's explicitly out of scope (and where does that live instead)?
 
 **Behavior (for BEHAVIORS):**
 - What are the observable effects of this module?

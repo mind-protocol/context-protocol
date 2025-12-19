@@ -1,4 +1,4 @@
-# ADD Framework
+# ngram Framework
 
 **You are an AI agent working on code. This document explains the protocol and why it exists.**
 
@@ -100,7 +100,7 @@ After changes, update SYNC files:
 
 | Pattern | Purpose | When to Load |
 |---------|---------|--------------|
-| `PATTERNS_*.md` | Design philosophy — WHY this shape | Before modifying module |
+| `PATTERNS_*.md` | Design philosophy & scope — WHY this shape, WHAT's in/out | Before modifying module |
 | `BEHAVIORS_*.md` | Observable effects — WHAT it should do | When behavior unclear |
 | `ALGORITHM_*.md` | Procedures — HOW it works (pseudocode) | When logic unclear |
 | `VALIDATION_*.md` | Invariants — WHAT must be true | Before implementing |

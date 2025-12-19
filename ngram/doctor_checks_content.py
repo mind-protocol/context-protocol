@@ -5,11 +5,13 @@ Health checks that analyze file content for issues:
 - Long strings (prompts, SQL, templates)
 - Documentation duplication
 - New undocumented code (code fresher than docs)
+- Recent log errors
 
 DOCS: docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md
 """
 
 import re
+import time
 from pathlib import Path
 from typing import List, Dict, Any
 
@@ -311,6 +313,66 @@ def doctor_check_doc_duplication(target_dir: Path, config: DoctorConfig) -> List
                     },
                     suggestion="Review for duplicate content, consolidate if redundant"
                 ))
+
+    return issues
+
+
+def doctor_check_recent_log_errors(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
+    """Check recent .log files for error lines within the last hour."""
+    if "log_errors" in config.disabled_checks:
+        return []
+
+    issues = []
+    seen = set()
+    per_file_counts: Dict[str, int] = {}
+    cutoff = time.time() - 3600
+    error_re = re.compile(r"error", re.IGNORECASE)
+
+    for log_file in target_dir.rglob("*.log"):
+        if should_ignore_path(log_file, config.ignore, target_dir):
+            continue
+
+        try:
+            if log_file.stat().st_mtime < cutoff:
+                continue
+        except Exception:
+            continue
+
+        try:
+            rel_path = str(log_file.relative_to(target_dir))
+            content = log_file.read_text(errors="ignore")
+        except Exception:
+            continue
+
+        per_file_counts.setdefault(rel_path, 0)
+        lines = content.splitlines()
+        if len(lines) > 2000:
+            start_line = len(lines) - 2000 + 1
+            lines = lines[-2000:]
+        else:
+            start_line = 1
+
+        for idx, line in enumerate(lines, start_line):
+            if not error_re.search(line):
+                continue
+            snippet = line.strip()
+            if not snippet:
+                continue
+            key = (rel_path, snippet)
+            if key in seen:
+                continue
+            seen.add(key)
+            per_file_counts[rel_path] += 1
+            if per_file_counts[rel_path] > 10:
+                continue
+            issues.append(DoctorIssue(
+                issue_type="LOG_ERROR",
+                severity="warning",
+                path=rel_path,
+                message=f"Log error: {snippet[:200]}",
+                details={"line": idx, "error": snippet},
+                suggestion="Inspect recent log errors"
+            ))
 
     return issues
 

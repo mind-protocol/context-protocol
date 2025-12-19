@@ -192,7 +192,7 @@ SYMPTOM: Module manifest checks skipped/failed gracefully
 # Run CLI commands manually for now
 ngram init --force
 ngram validate
-ngram doctor --no-github
+ngram doctor
 ngram context ngram/cli.py
 
 # No automated test suite yet
@@ -205,7 +205,7 @@ ngram context ngram/cli.py
 
 For detailed check definitions, see `ALGORITHM_CLI_Logic.md`:
 - **Validate checks:** V6, V7, V2, FC, NC, V3, MM (8 total)
-- **Doctor checks:** MONOLITH, UNDOCUMENTED, STALE_SYNC, PLACEHOLDER, INCOMPLETE_CHAIN, NO_DOCS_REF, BROKEN_IMPL_LINK, STUB_IMPL, INCOMPLETE_IMPL, UNDOC_IMPL, LARGE_DOC_MODULE, YAML_DRIFT (12 total)
+- **Doctor checks:** MONOLITH, UNDOCUMENTED, STALE_SYNC, PLACEHOLDER, INCOMPLETE_CHAIN, NO_DOCS_REF, BROKEN_IMPL_LINK, STUB_IMPL, INCOMPLETE_IMPL, UNDOC_IMPL, LARGE_DOC_MODULE, YAML_DRIFT, LOG_ERROR (13 total)
 
 ---
 

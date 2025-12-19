@@ -122,9 +122,25 @@ def load_doctor_ignore(target_dir: Path) -> List[IgnoreEntry]:
             if "issue_type" not in entry:
                 continue
 
+            path_value = entry.get("path", "*")
+            # Handle case where path is a list (convert to first item or skip)
+            if isinstance(path_value, list):
+                if not path_value:
+                    path_value = "*"
+                else:
+                    # Create separate entries for each path in the list
+                    for p in path_value:
+                        ignores.append(IgnoreEntry(
+                            issue_type=entry.get("issue_type", ""),
+                            path=str(p),
+                            reason=entry.get("reason", ""),
+                            added_by=entry.get("added_by", ""),
+                            added_date=entry.get("added_date", ""),
+                        ))
+                    continue
             ignores.append(IgnoreEntry(
                 issue_type=entry.get("issue_type", ""),
-                path=entry.get("path", "*"),  # Default to all paths
+                path=str(path_value),  # Ensure string
                 reason=entry.get("reason", ""),
                 added_by=entry.get("added_by", ""),
                 added_date=entry.get("added_date", ""),
@@ -153,9 +169,12 @@ def is_issue_ignored(issue: DoctorIssue, ignores: List[IgnoreEntry]) -> bool:
             # Wildcard: ignore all issues of this type
             return True
 
-        # Normalize paths
-        issue_path = issue.path.replace("\\", "/")
-        ignore_path = ignore.path.replace("\\", "/")
+        # Normalize paths (handle case where path might be a list)
+        issue_path_raw = issue.path
+        if isinstance(issue_path_raw, list):
+            issue_path_raw = issue_path_raw[0] if issue_path_raw else ""
+        issue_path = str(issue_path_raw).replace("\\", "/")
+        ignore_path = str(ignore.path).replace("\\", "/")
 
         # Exact match
         if issue_path == ignore_path:

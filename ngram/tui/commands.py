@@ -300,18 +300,22 @@ async def handle_repair(app: "NgramApp", args: str) -> None:
     status_bar.set_repair_progress(len(all_issues), 0, 0)
 
     manager.add_message(f"Found {len(all_issues)} issues to repair.")
-    # Show all issues
+    # Show all issues in a single block to avoid extra spacing between items
     from ..repair_core import AGENT_SYMBOLS
+    issue_lines = []
     for i, issue in enumerate(all_issues):
         symbol = AGENT_SYMBOLS[i % len(AGENT_SYMBOLS)]
-        manager.add_message(f"[dim]{symbol} {issue.issue_type}: {issue.path}[/]")
+        issue_lines.append(f"[dim]{symbol} {issue.issue_type}: {issue.path}[/]")
+    manager.add_message("\n".join(issue_lines))
     # Log repair start
     issue_list = "\n".join(f"  - {i.issue_type}: {i.path}" for i in all_issues[:10])
     app.conversation.add_message("system", f"/repair\nFound {len(all_issues)} issues:\n{issue_list}")
 
-    # Switch to agents tab and clear existing agent panels
+    # Switch to agents tab and clear summary log
     agent_container.switch_to_tab("agents-tab")
-    agent_container._agent_panels.clear()
+    agent_container.clear_summary()
+    agent_container.add_summary(f"[bold cyan]═══ REPAIR SESSION ═══[/]")
+    agent_container.add_summary(f"[dim]Issues to fix:[/] [bold]{len(all_issues)}[/]")
 
     # Store issue queue on app for agent completion to pull from
     from ..repair_instructions import get_issue_instructions
@@ -326,6 +330,106 @@ async def handle_repair(app: "NgramApp", args: str) -> None:
 
     for i, issue in enumerate(all_issues[:max_agents]):
         await _spawn_agent(app, issue, i)
+
+    # Start periodic summary updater (lightweight, no streaming)
+    asyncio.create_task(_periodic_agent_summary(app))
+
+
+def _get_last_messages(output: str, n: int = 5) -> str:
+    """Get last N meaningful lines from agent output."""
+    lines = [l.strip() for l in output.split('\n') if l.strip()]
+    # Filter out noise (empty, just symbols, very short)
+    meaningful = [l for l in lines if len(l) > 10]
+    return "\n".join(meaningful[-n:])
+
+
+async def _periodic_agent_summary(app: "NgramApp") -> None:
+    """Periodically summarize agent progress and file changes to summary log."""
+    import asyncio
+    from datetime import datetime
+    from .commands_agent import _run_agent_message
+
+    agent_container = app.query_one("#agent-container")
+    manager = app.query_one("#manager-panel")
+
+    async def _run_git_command(args: list[str], timeout: float = 5.0) -> str:
+        """Run a git command asynchronously with timeout."""
+        try:
+            proc = await asyncio.create_subprocess_exec(
+                "git",
+                *args,
+                cwd=app.target_dir,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=timeout)
+            return stdout.decode().strip() if proc.returncode == 0 else ""
+        except Exception:
+            return ""
+
+    while True:
+        await asyncio.sleep(120)  # Update every 2 minutes
+
+        # Check if any agents still running
+        running = [a for a in app.state.active_agents if a.status == "running"]
+        if not running:
+            break
+
+        timestamp = datetime.now().strftime("%H:%M:%S")
+
+        agent_container.add_summary(f"[dim]───────── {timestamp} ─────────[/]")
+
+        # Show uncommitted file changes inline: filepath +N -N
+        try:
+            output = await _run_git_command(["diff", "--numstat"])
+            if output.strip():
+                for line in output.strip().split('\n')[:5]:
+                    parts = line.split('\t')
+                    if len(parts) >= 3:
+                        added, removed, filepath = parts[0], parts[1], parts[2]
+                        if added.isdigit() and removed.isdigit():
+                            agent_container.add_summary(
+                                f"[dim]{filepath}[/] [green]+{added}[/] [red]-{removed}[/]"
+                            )
+        except Exception:
+            pass
+
+        # Show new commits as they appear (no header)
+        try:
+            output = await _run_git_command(["log", "--oneline", "-5", "--since=1.hour.ago"])
+            if output.strip():
+                for line in output.strip().split('\n'):
+                    if line.strip():
+                        agent_container.add_summary(f"[cyan]📦 {line[:60]}[/]")
+        except Exception:
+            pass
+
+        # Build summary request for all running agents
+        summaries = []
+        for agent in running:
+            output = agent.get_output()
+            if output:
+                last_msgs = _get_last_messages(output, 5)
+                summaries.append(f"Agent {agent.symbol} ({agent.issue_type}):\n{last_msgs}")
+
+        if not summaries:
+            continue
+
+        # Ask manager to summarize
+        prompt = f"""Summarize each agent's current progress in ONE short line each (max 10 words per agent). Be concise. No markdown.
+
+{chr(10).join(summaries)}
+
+Format exactly: SYMBOL: summary"""
+
+        # Create a response widget and run manager
+        response_widget = manager.add_message("[dim]...[/]")
+        stop_animation = {"flag": False}
+
+        try:
+            await _run_agent_message(app, prompt, response_widget, stop_animation)
+        except Exception:
+            response_widget.update("[dim]Summary unavailable[/]")
 
 
 async def _spawn_agent(app: "NgramApp", issue, agent_index: int) -> None:
@@ -354,25 +458,19 @@ async def _spawn_agent(app: "NgramApp", issue, agent_index: int) -> None:
         symbol=symbol,
     )
     app.state.add_agent(agent)
-
-    # Create agent panel
     agent_container.add_agent(agent)
+
+    # Log agent start to summary
+    agent_container.add_summary(f"[yellow]▶[/] {symbol} [bold]{issue.issue_type}[/] [dim]{issue.path}[/]")
 
     # Get instructions
     instructions = get_issue_instructions(issue, app.target_dir)
 
-    # Simple output callback - buffer and update the agent panel
+    # Simple output callback - just buffer for summary mode
     async def on_output(text: str, agent_ref=agent) -> None:
-        """Buffer agent output and update the agent panel."""
-        if not text or not text.strip():
-            return
-        agent_ref.append_output(text)
-        panel = agent_container._agent_panels.get(agent_ref.id)
-        if panel is None:
-            agent_container.add_agent(agent_ref)
-            panel = agent_container._agent_panels.get(agent_ref.id)
-        if panel:
-            panel.append_output(text)
+        """Buffer agent output (summary mode - no UI updates)."""
+        if text and text.strip():
+            agent_ref.append_output(text)
 
     manager.add_message(f"{symbol} {issue.issue_type}: {issue.path}")
 
@@ -406,8 +504,24 @@ async def _run_agent(app: "NgramApp", agent, issue, instructions: dict, on_outpu
         agent.status = "completed" if result.success else "failed"
         agent.error = result.error
 
-        # Update panel status
-        agent_container.set_agent_status(agent.id, agent.status)
+        # Check for rate limit errors - stop repair loop if detected
+        rate_limit_markers = ["usage_limit_reached", "rate_limit", "429", "Too Many Requests", "quota exceeded"]
+        output_lower = result.agent_output.lower() if result.agent_output else ""
+        is_rate_limited = any(marker.lower() in output_lower for marker in rate_limit_markers)
+
+        if is_rate_limited:
+            agent_container.add_summary(f"[red]⛔ RATE LIMIT - stopping repair[/]")
+            manager.add_message("[red]Rate limit hit - repair stopped. Wait or switch agents.[/]")
+            # Clear the queue to stop further agents
+            if hasattr(app, '_repair_queue'):
+                app._repair_queue.clear()
+            return
+
+        # Log to summary
+        if result.success:
+            agent_container.add_summary(f"[green]✓[/] {agent.symbol} [green]Done[/] [dim]{agent.issue_type}[/]")
+        else:
+            agent_container.add_summary(f"[red]✗[/] {agent.symbol} [red]Failed[/] [dim]{result.error or 'unknown'}[/]")
 
         # Supervisor check
         await app.supervisor.on_agent_complete(agent)
@@ -445,9 +559,14 @@ async def _run_agent(app: "NgramApp", agent, issue, instructions: dict, on_outpu
     except Exception as e:
         agent.status = "failed"
         agent.error = str(e)
-        agent_container.set_agent_status(agent.id, "failed")
+        result = None  # No result on exception
+        agent_container.add_summary(f"[red]✗[/] {agent.symbol} [red]Error[/] [dim]{e}[/]")
         manager.add_message(f"[red]{agent.symbol} Error: {e}[/]")
         app.conversation.add_message("system", f"Repair {agent.symbol} error: {e}")
+
+    # Spawn background manager review (non-blocking)
+    if result is not None:
+        asyncio.create_task(_manager_review_agent(app, agent, result))
 
     # Spawn next agent from queue if available
     await _spawn_next_from_queue(app)
@@ -481,6 +600,26 @@ async def _spawn_next_from_queue(app: "NgramApp") -> None:
 
     # Spawn the new agent
     await _spawn_agent(app, next_issue, agent_index)
+
+
+async def _manager_review_agent(app: "NgramApp", agent, result) -> None:
+    """Background task to have manager review agent completion."""
+    from .commands_agent import _build_review_prompt, _run_manager_review
+
+    try:
+        # Get last 2000 chars of output
+        full_output = agent.get_output()
+        output_tail = full_output[-2000:] if len(full_output) > 2000 else full_output
+
+        prompt = _build_review_prompt(agent, result, output_tail)
+        agent_info = {
+            "symbol": agent.symbol,
+            "issue_type": agent.issue_type,
+            "target": agent.target_path,
+        }
+        await _run_manager_review(app, prompt, agent_info)
+    except Exception as e:
+        app.log_error(f"Manager review failed: {e}")
 
 
 async def handle_doctor(app: "NgramApp", args: str) -> None:
@@ -569,9 +708,7 @@ async def handle_issues(app: "NgramApp", args: str) -> None:
 
 
 async def handle_logs(app: "NgramApp", args: str) -> None:
-    """Display completed agent logs in collapsible panels."""
-    from textual.widgets import Static, Markdown, Collapsible
-
+    """Display completed agent logs in summary."""
     manager = app.query_one("#manager-panel")
     agent_container = app.query_one("#agent-container")
 
@@ -590,38 +727,26 @@ async def handle_logs(app: "NgramApp", args: str) -> None:
 
     manager.add_message(f"Showing logs for {len(completed_agents)} completed agents.")
 
-    # Switch to agents tab and use its columns container
+    # Switch to agents tab
     agent_container.switch_to_tab("agents-tab")
 
-    try:
-        from textual.containers import Horizontal
-        columns = app.query_one("#agents-columns", Horizontal)
-        # Clear existing content
-        for child in list(columns.children):
-            child.remove()
-        agent_container._agent_panels.clear()
+    # Add log summaries to the summary log
+    agent_container.add_summary("[dim]─────── Agent Logs ───────[/]")
+    for agent in completed_agents:
+        status_color = "green" if agent.status == "completed" else "red"
+        agent_container.add_summary(
+            f"{agent.symbol} [{status_color}]{agent.status.upper()}[/] {agent.issue_type}: [dim]{agent.target_path}[/]"
+        )
 
-        # Add collapsible for each completed agent
-        for agent in completed_agents:
-            status_color = "green" if agent.status == "completed" else "red"
-            title = f"{agent.symbol} [{status_color}]{agent.status.upper()}[/] - {agent.issue_type}: {agent.target_path}"
-
-            # Get output (last 100 lines to avoid huge logs)
-            output = agent.get_output()
-            lines = output.split('\n')
-            if len(lines) > 100:
-                output = '\n'.join(lines[-100:])
-                output = f"[dim]... ({len(lines) - 100} lines truncated) ...[/]\n\n{output}"
-
-            # Create collapsible with markdown output
-            collapsible = Collapsible(
-                Markdown(output if output else "[dim](no output)[/]"),
-                title=title,
-                collapsed=True,
-            )
-            await columns.mount(collapsible)
-    except Exception as e:
-        manager.add_message(f"[red]Logs error: {e}[/]")
+        # Get output (last 20 lines to show in summary)
+        output = agent.get_output()
+        lines = output.split('\n')
+        if len(lines) > 20:
+            lines = lines[-20:]
+        for line in lines[-10:]:
+            if line.strip():
+                agent_container.add_summary(f"  [dim]{line[:80]}[/]")
+        agent_container.add_summary("")
 
 
 async def handle_reset_manager(app: "NgramApp", args: str) -> None:

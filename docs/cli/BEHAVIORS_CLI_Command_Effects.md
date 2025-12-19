@@ -63,11 +63,12 @@ AND:    Fix guidance is printed for failures
 ```
 GIVEN:  A project with ngram Framework installed
 WHEN:   `ngram doctor` is executed
-THEN:   12 health checks are run
+THEN:   13 health checks are run
 AND:    Issues are grouped by severity (critical, warning, info)
 AND:    Health score (0-100) is calculated
 AND:    Results saved to .ngram/state/SYNC_Project_Health.md
 AND:    Exit code is 0 even when issues are found
+AND:    GitHub issues are created only when `--github` is provided
 ```
 
 ### B5: Repair Command
@@ -142,120 +143,10 @@ AND:    The agent's output is streamed to the terminal
 ```
 
 **Agents:**
-- `gemini` — Google Gemini (Note: `--system-prompt` is combined with `--prompt` due to CLI limitations)
-- `claude` — Anthropic Claude
-- `codex` — OpenAI Codex
+- `gemini`, `claude`, `codex` (provider options)
 
 ---
 
-## INPUTS / OUTPUTS
+## NOTES
 
-### Primary Function: `main()`
-
-**Inputs:**
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| command | str | Subcommand name (init, validate, doctor, etc.) |
-| --dir | Path | Target directory (default: cwd) |
-| command-specific args | various | See each command |
-
-**Outputs:**
-
-| Return | Type | Description |
-|--------|------|-------------|
-| exit_code | int | 0 for success, 1 for failure |
-
-**Side Effects:**
-
-- Creates/modifies files in target directory
-- Spawns subprocesses (repair command)
-- Writes to stdout/stderr
-
----
-
-## EDGE CASES
-
-### E1: Protocol Not Installed
-
-```
-GIVEN:  validate/doctor run on project without .ngram/
-THEN:   Returns failure with clear message
-AND:    Suggests running `ngram init`
-```
-
-### E2: No Issues Found
-
-```
-GIVEN:  doctor run on healthy project
-THEN:   Score is 100/100
-AND:    No critical/warning issues listed
-AND:    Exit code is 0
-```
-
-### E3: Empty Project
-
-```
-GIVEN:  init run on empty directory
-THEN:   Protocol files are created
-AND:    .ngram/CLAUDE.md is created from scratch
-```
-
-### E4: Context for Non-Existent File
-
-```
-GIVEN:  context command with non-existent file path
-THEN:   Returns failure
-AND:    Suggests checking path
-```
-
----
-
-## ANTI-BEHAVIORS
-
-What should NOT happen:
-
-### A1: No Duplicate Bootstrap Content
-
-```
-GIVEN:   .ngram/CLAUDE.md and AGENTS.md already have ngram Framework section
-WHEN:    init is run
-MUST NOT: Add duplicate protocol section
-INSTEAD:  Skip update with message "already has ngram Framework section"
-```
-
-### A2: No Silent Failures
-
-```
-GIVEN:   Any command encounters an error
-WHEN:    Processing fails
-MUST NOT: Exit silently with code 0
-INSTEAD:  Print error message and exit with code 1
-```
-
-### A3: No Destructive Init Without Force
-
-```
-GIVEN:   .ngram/ already exists
-WHEN:    init is run without --force
-MUST NOT: Overwrite existing files
-INSTEAD:  Exit with error suggesting --force
-```
-
-### A4: Repair Must Not Skip SYNC Update
-
-```
-GIVEN:   Repair agent completes a fix
-WHEN:    Changes are made
-MUST NOT: Skip SYNC file update
-INSTEAD:  Agent must update relevant SYNC with what changed
-```
-
----
-
-## GAPS / IDEAS / QUESTIONS
-
-- [ ] Should `init` offer interactive mode to customize what gets installed?
-- [ ] Consider adding `ngram status` combining doctor + sync
-- IDEA: Watch mode for continuous health monitoring
-- QUESTION: Should doctor auto-run before repair, or stay separate commands?
+Inputs/outputs, edge cases, and anti-behaviors are captured in `docs/cli/VALIDATION_CLI_Invariants.md` and `docs/cli/ALGORITHM_CLI_Logic.md` to avoid duplication.

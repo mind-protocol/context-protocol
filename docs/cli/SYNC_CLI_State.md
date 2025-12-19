@@ -36,6 +36,19 @@ No active development at this time.
 
 ## RECENT CHANGES
 
+### 2025-12-19: Log error health check
+
+- Added a doctor check for recent .log files with error lines (last hour), surfaced as LOG_ERROR issues.
+- LOG_ERROR scanning now inspects only the last 2000 lines per recent log file.
+
+### 2025-12-19: Doctor GitHub issues opt-in
+
+- `ngram doctor` no longer creates GitHub issues by default; use `--github` to enable.
+
+### 2025-12-19: Repair prompt docs preflight
+
+- Repair prompts now note missing docs in a dedicated section so agents can resolve paths before edits.
+
 ### 2025-12-19: INCOMPLETE_IMPL verification for repair_core helpers
 
 - Re-verified `ngram/repair_core.py` issue lookup helpers during INCOMPLETE_IMPL repair; no code changes needed
@@ -69,6 +82,13 @@ No active development at this time.
 ### 2025-12-20: Multi-agent provider support
 
 - `repair` accepts `--agents {claude,codex,gemini}` and `init` mirrors `.ngram/CLAUDE.md` into root `AGENTS.md`
+
+### 2025-12-20: Repair completion uses git commits
+
+- Repair success now keys off git HEAD changes instead of "REPAIR COMPLETE" output markers.
+- Agents are instructed not to claim completion without a commit.
+- Agent system prompt now requests commit messages with a type prefix and issue reference.
+- Repair prompts infer the issue reference from the last 5 commits when not explicitly provided.
 
 ### 2025-12-20: Doctor exits cleanly on findings
 
@@ -117,6 +137,9 @@ No active development at this time.
 - Overview DOCS header scan length now configurable via `doctor.docs_ref_search_chars` in `.ngram/config.yaml`.
 - Implementation doc now avoids false broken-link hits from config key notation.
 - Added `.ngram/config.yaml` entry for `project_map_html.svg_namespace` with env var override.
+- Repair prompts now surface missing docs so agents can resolve paths before edits.
+- Doctor now flags recent .log error lines as LOG_ERROR issues.
+- Doctor now defaults to no GitHub issue creation unless `--github` is provided.
 
 ### Suggestions
 - [ ] Reconcile `modules.yaml` with CLI module docs to remove mapping drift.

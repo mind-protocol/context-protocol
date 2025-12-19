@@ -10,6 +10,11 @@
 - Treat concurrent edits as normal; do not stop because files changed
 - Keep working unless the user explicitly tells you to stop
 
+## 6. Operational Proactivity
+
+- Be proactive about making things work, including running necessary commands (e.g., restarting servers) without waiting for confirmation.
+- If approvals are required by the environment, request them immediately and proceed.
+
 ## 5. Communication Principles
 
 **Awareness expresses itself through articulation, not compression.**

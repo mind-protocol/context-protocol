@@ -37,6 +37,12 @@ Recent stability work:
 - Streamed repair agent output into agent panels while buffering agent logs.
 - Re-verified `ngram/tui/state.py` already implements `ConversationMessage.to_dict` and `AgentHandle.duration`; no code changes required.
 - CHANGES tab header now shows recent changes/min and commits/min (last 60 minutes).
+- CHANGES tab refresh is now backgrounded and rate-limited to avoid startup stalls; periodic repair summaries use async git calls every 2 minutes (last 5 entries).
+- Tab switching no longer triggers background refresh for DOCTOR/SYNC/MAP/CHANGES to avoid click-time stalls.
+- SYNC/MAP markdown rendering now truncates large content to keep tab switching responsive.
+- Markdown rendering now caches Rich renderables for all tabs to avoid re-parsing on tab switch while keeping formatting.
+- Markdown strong text and headings now use orange styling via a Rich theme override matching the tab background to avoid black fill.
+- Tab content for SYNC/MAP/DOCTOR/CHANGES is click-to-copy (copies raw markdown).
 
 Module mapping:
 - `modules.yaml` includes `tui` module mapping under `modules`
@@ -54,6 +60,7 @@ Doc maintenance:
 - Structure doc file list updated for new widgets and theme files
 - Re-verified IMPLEMENTATION doc backtick references for STALE_IMPL; all paths resolve
 - Clarified suggestions bar label in the structure doc file list
+- Manager /repair issue lists render as a single block to avoid extra blank lines between items.
 
 Archived detail:
 - Historical feature list, handoffs, and observations moved to `docs/tui/archive/SYNC_archive_2024-12.md`
@@ -90,6 +97,7 @@ Archived detail:
 - Re-verified `ngram/tui/widgets/status_bar.py` implementations for the INCOMPLETE_IMPL report; no code changes required.
 - Re-verified `ngram/tui/widgets/status_bar.py` for the current INCOMPLETE_IMPL repair; implementations already present, so no code changes required.
 - Verified `ngram/tui/commands.py` already implements `on_output` and `handle_doctor`; INCOMPLETE_IMPL report was stale.
+- Manager /repair issue lists now render without extra blank lines between items.
 
 ### Suggestions
 - [ ] Keep doctor-ignore and SYNC notes updated together to avoid drift.

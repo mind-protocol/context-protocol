@@ -92,11 +92,19 @@ IMPL:            {path/to/main/source/file.py}
 
 ---
 
-## WHAT THIS DOES NOT SOLVE
+## SCOPE
 
-{What is explicitly out of scope?}
-{What might someone expect that this doesn't do?}
-{What limitations are inherent?}
+### In Scope
+
+- {Core responsibility 1}
+- {Core responsibility 2}
+- {What this module owns}
+
+### Out of Scope
+
+- {What this explicitly does NOT handle} → see: {other-module}
+- {Common misconception about what belongs here}
+- {Limitation that's by design, not oversight}
 
 ---
 

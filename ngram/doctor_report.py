@@ -91,6 +91,11 @@ def get_issue_guidance(issue_type: str) -> Dict[str, str]:
             "file": "The SYNC file with CONFLICTS section",
             "tip": "Make a design decision, update conflicting docs/code to be consistent"
         },
+        "LOG_ERROR": {
+            "view": "VIEW_Debug_Investigate_And_Fix_Issues.md",
+            "file": "Recent .log file",
+            "tip": "Inspect the error line and trace the root cause"
+        },
     }
     return guidance.get(issue_type, {"view": "VIEW_Implement_Write_Or_Modify_Code.md", "file": "", "tip": ""})
 
@@ -153,6 +158,10 @@ def get_issue_explanation(issue_type: str) -> Dict[str, str]:
         "ARBITRAGE": {
             "risk": "Documentation or code contradicts itself. Agents found conflicts they couldn't resolve - either docs say different things, or docs don't match implementation. This causes confusion and inconsistent behavior.",
             "action": "Review the CONFLICTS section, make a design decision for each ARBITRAGE item, update all conflicting sources to be consistent, then convert ARBITRAGE to DECISION (resolved).",
+        },
+        "LOG_ERROR": {
+            "risk": "Recent log errors may indicate runtime failures or misconfigurations that are not captured by code-only checks.",
+            "action": "Review the error line in the log, identify the failing component, and address the underlying issue.",
         },
     }
     return explanations.get(issue_type, {"risk": "This issue may cause problems.", "action": "Review and fix."})

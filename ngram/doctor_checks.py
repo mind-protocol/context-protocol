@@ -110,8 +110,11 @@ def doctor_check_undocumented(target_dir: Path, config: DoctorConfig) -> List[Do
             modules = data.get("modules", {})
             for module_data in modules.values():
                 if isinstance(module_data, dict) and "code" in module_data:
-                    # Extract base path from glob pattern
-                    code_path = module_data["code"].replace("/**", "").replace("/*", "")
+                    # Extract base path from glob pattern (handle list or string)
+                    code_val = module_data["code"]
+                    if isinstance(code_val, list):
+                        code_val = code_val[0] if code_val else ""
+                    code_path = str(code_val).replace("/**", "").replace("/*", "")
                     mapped_paths.add(code_path)
         except Exception:
             pass
@@ -626,25 +629,31 @@ def doctor_check_yaml_drift(target_dir: Path, config: DoctorConfig) -> List[Doct
 
         drift_issues = []
 
-        # Check code path exists
+        # Check code path exists (handle list or string)
         code_path = module_data.get("code", "")
+        if isinstance(code_path, list):
+            code_path = code_path[0] if code_path else ""
         if code_path:
             # Remove glob patterns
-            base_path = code_path.replace("/**", "").replace("/*", "").rstrip("/")
+            base_path = str(code_path).replace("/**", "").replace("/*", "").rstrip("/")
             if base_path and not (target_dir / base_path).exists():
                 drift_issues.append(f"code path '{base_path}' not found")
 
-        # Check docs path exists
+        # Check docs path exists (handle list or string)
         docs_path = module_data.get("docs", "")
+        if isinstance(docs_path, list):
+            docs_path = docs_path[0] if docs_path else ""
         if docs_path:
-            docs_path = docs_path.rstrip("/")
+            docs_path = str(docs_path).rstrip("/")
             if docs_path and not (target_dir / docs_path).exists():
                 drift_issues.append(f"docs path '{docs_path}' not found")
 
-        # Check tests path exists (if specified)
+        # Check tests path exists (handle list or string)
         tests_path = module_data.get("tests", "")
+        if isinstance(tests_path, list):
+            tests_path = tests_path[0] if tests_path else ""
         if tests_path:
-            base_tests = tests_path.replace("/**", "").replace("/*", "").rstrip("/")
+            base_tests = str(tests_path).replace("/**", "").replace("/*", "").rstrip("/")
             if base_tests and not (target_dir / base_tests).exists():
                 drift_issues.append(f"tests path '{base_tests}' not found")
 

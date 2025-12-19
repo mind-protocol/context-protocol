@@ -50,6 +50,7 @@ ISSUE_SYMBOLS = {
     "HARDCODED_SECRET": ("🔐", "!"),
     "LONG_PROMPT": ("📜", "¶"),
     "LONG_SQL": ("🗃️", "§"),
+    "LOG_ERROR": ("🧯", "×"),
 }
 
 # Human-readable descriptions for issue types
@@ -81,6 +82,7 @@ ISSUE_DESCRIPTIONS = {
     "HARDCODED_SECRET": ("remove secret from", ""),
     "LONG_PROMPT": ("externalize prompts in", "to prompts/"),
     "LONG_SQL": ("externalize SQL in", "to .sql files"),
+    "LOG_ERROR": ("review log errors in", ""),
 }
 
 # Agent symbols for parallel execution (20 symbols for variety)
@@ -197,6 +199,7 @@ ISSUE_PRIORITY = {
     "MAGIC_VALUES": 23,
     "LONG_PROMPT": 24,
     "LONG_SQL": 25,
+    "LOG_ERROR": 90,
     "HARDCODED_CONFIG": 99,  # Often false positive, last
 }
 
@@ -282,7 +285,7 @@ Don't leave upstream docs stale when you change downstream artifacts.
 CLI COMMANDS (use these!):
 - `ngram context {file}` - Get full doc chain for any source file
 - `ngram validate` - Check protocol invariants after changes
-- `ngram doctor --no-github` - Re-check project health
+- `ngram doctor` - Re-check project health
 
 BIDIRECTIONAL LINKS:
 - When creating new docs, add CHAIN section linking to related docs
@@ -292,14 +295,14 @@ BIDIRECTIONAL LINKS:
 AFTER CHANGES:
 - Run `ngram validate` to verify links are correct
 - Update SYNC file with what changed
-- Commit with descriptive message (include "Closes #NUMBER" if GitHub issue provided)
+- Commit with descriptive message using a type prefix (e.g., "fix:", "docs:", "refactor:") and include the issue reference ("Closes #NUMBER" if provided or inferred from recent commits)
 
 IF YOU CAN'T COMPLETE THE FULL FIX:
-- Still report "REPAIR COMPLETE" for what you DID finish
 - Add a "## GAPS" section to the relevant SYNC file listing:
   - What was completed
   - What remains to be done
   - Why you couldn't finish (missing info, too complex, needs human decision, etc.)
+Do NOT claim completion without a git commit.
 
 IF YOU FIND CONTRADICTIONS (docs vs code, or doc vs doc):
 - Add a "## CONFLICTS" section to the relevant SYNC file
@@ -336,6 +339,25 @@ def get_learnings_content(target_dir: Path) -> str:
     return ""
 
 
+def _get_git_head(target_dir: Path) -> Optional[str]:
+    """Return current git HEAD hash, or None if unavailable."""
+    import subprocess
+
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=target_dir,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        if result.returncode != 0:
+            return None
+        return result.stdout.strip() or None
+    except Exception:
+        return None
+
+
 # NOTE: These lookup functions are intentionally simple one-line implementations.
 # They provide semantic meaning for dictionary lookups with sensible defaults.
 # Short body does not mean incomplete - these are complete implementations.
@@ -368,6 +390,46 @@ def get_depth_types(depth: str) -> set:
         return DEPTH_FULL
 
 
+def split_docs_to_read(docs_to_read: List[str], target_dir: Path) -> tuple[List[str], List[str]]:
+    """Split docs into existing and missing paths relative to target_dir."""
+    existing = []
+    missing = []
+    for doc in docs_to_read:
+        if not doc:
+            continue
+        doc_path = Path(doc)
+        candidate = doc_path if doc_path.is_absolute() else (target_dir / doc_path)
+        if candidate.exists():
+            existing.append(doc)
+        else:
+            missing.append(doc)
+    return existing, missing
+
+
+def _detect_recent_issue_number(target_dir: Path, max_commits: int = 5) -> Optional[int]:
+    """Detect a recent issue number from the last few commit messages."""
+    import subprocess
+    import re
+
+    try:
+        result = subprocess.run(
+            ["git", "log", f"-{max_commits}", "--pretty=%s"],
+            cwd=target_dir,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        if result.returncode != 0:
+            return None
+        for line in result.stdout.splitlines():
+            match = re.search(r"#(\d+)", line)
+            if match:
+                return int(match.group(1))
+    except Exception:
+        return None
+    return None
+
+
 def build_agent_prompt(
     issue: Any,  # DoctorIssue
     instructions: Dict[str, Any],
@@ -375,7 +437,20 @@ def build_agent_prompt(
     github_issue_number: Optional[int] = None,
 ) -> str:
     """Build the full prompt for the repair agent."""
-    docs_list = "\n".join(f"- {d}" for d in instructions["docs_to_read"])
+    existing_docs, missing_docs = split_docs_to_read(instructions["docs_to_read"], target_dir)
+    docs_list = "\n".join(f"- {d}" for d in existing_docs) or "- (no docs found)"
+    missing_section = ""
+    if missing_docs:
+        missing_list = "\n".join(f"- {d}" for d in missing_docs)
+        missing_section = f"""
+## Missing Docs at Prompt Time
+{missing_list}
+
+If any missing docs should exist, locate the correct paths before proceeding.
+"""
+
+    if github_issue_number is None:
+        github_issue_number = _detect_recent_issue_number(target_dir)
 
     github_section = ""
     if github_issue_number:
@@ -395,11 +470,12 @@ Load and follow: `.ngram/views/{instructions['view']}`
 
 ## Docs to Read FIRST (before any changes)
 {docs_list}
+{missing_section}
 
 {instructions['prompt']}
 
 ## After Completion
-1. Commit your changes with a descriptive message{f' (include "Closes #{github_issue_number}")' if github_issue_number else ''}
+1. Commit your changes with a descriptive message using a type prefix (e.g., "fix:", "docs:", "refactor:"){f' and include "Closes #{github_issue_number}"' if github_issue_number else ''}
 2. Update `.ngram/state/SYNC_Project_State.md` with:
    - What you fixed
    - Files created/modified
@@ -594,60 +670,61 @@ async def spawn_repair_agent_async(
 {chr(10).join('- ' + d for d in instructions.get('docs_to_read', []))}
 """)
 
-        process = await asyncio.create_subprocess_exec(
-            *agent_cmd.cmd,
-            cwd=agent_dir,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.STDOUT,
-            stdin=asyncio.subprocess.PIPE if agent_cmd.stdin else None,
-        )
-        if agent_cmd.stdin and process.stdin:
-            process.stdin.write((agent_cmd.stdin + "\n").encode())
-            await process.stdin.drain()
-            process.stdin.close()
+        head_before = _get_git_head(target_dir)
 
-        buffer = ""
-        lines_since_yield = 0
-        while True:
-            # Read chunks from process
-            chunk = await process.stdout.read(32768)  # 32KB chunks
-            if not chunk:
-                break
-            buffer += chunk.decode(errors='replace')
+        # Run subprocess in thread pool to keep UI responsive
+        import subprocess as sync_subprocess
+        import concurrent.futures
 
-            # Process complete lines
-            batch_output = []
-            while '\n' in buffer:
-                raw_line, buffer = buffer.split('\n', 1)
-                line_str = raw_line.strip()
-                if not line_str:
-                    continue
+        def run_agent_sync():
+            """Run agent synchronously in thread, return output lines."""
+            output_lines = []
+            try:
+                proc = sync_subprocess.Popen(
+                    agent_cmd.cmd,
+                    cwd=agent_dir,
+                    stdout=sync_subprocess.PIPE,
+                    stderr=sync_subprocess.STDOUT,
+                    stdin=sync_subprocess.PIPE if agent_cmd.stdin else None,
+                    text=False,
+                )
+                if agent_cmd.stdin:
+                    proc.stdin.write((agent_cmd.stdin + "\n").encode())
+                    proc.stdin.close()
 
-                # Parse JSON and extract text
-                parsed = parse_stream_json_line(line_str)
-                if parsed:
-                    text_output.append(parsed)
-                    batch_output.append(parsed)
-                    lines_since_yield += 1
-                elif not line_str.startswith("{"):
-                    text_output.append(raw_line)
-                    batch_output.append(raw_line + "\n")
-                    lines_since_yield += 1
+                for line in proc.stdout:
+                    line_str = line.decode(errors='replace').strip()
+                    if not line_str:
+                        continue
+                    parsed = parse_stream_json_line(line_str)
+                    if parsed:
+                        output_lines.append(parsed)
+                    elif not line_str.startswith("{"):
+                        output_lines.append(line_str)
 
-            # Send batched output to callback (reduces await overhead)
-            if batch_output:
-                await on_output("".join(batch_output))
+                proc.wait()
+                return output_lines, proc.returncode
+            except Exception as e:
+                output_lines.append(f"ERROR: {e}")
+                return output_lines, -1
 
-            # Yield to event loop periodically to keep UI responsive
-            if lines_since_yield >= 20:
-                lines_since_yield = 0
-                await asyncio.sleep(0)
+        loop = asyncio.get_event_loop()
+        with concurrent.futures.ThreadPoolExecutor() as pool:
+            future = loop.run_in_executor(pool, run_agent_sync)
+            last_callback = time.time()
+            while not future.done():
+                await asyncio.sleep(0.5)  # Yield to UI every 500ms
+                now = time.time()
+                if (now - last_callback) > 5.0:
+                    await on_output("")  # Heartbeat
+                    last_callback = now
 
-        await process.wait()
+            text_output, returncode = await asyncio.wrap_future(future)
         duration = time.time() - start_time
 
+        head_after = _get_git_head(target_dir)
         readable_output = "\n".join(text_output)
-        success = "REPAIR COMPLETE" in readable_output and "REPAIR FAILED" not in readable_output
+        success = bool(head_before and head_after and head_before != head_after)
         decisions = parse_decisions_from_output(readable_output)
 
         # Workaround: Delete GEMINI.md created by gemini CLI in agent's directory
@@ -658,10 +735,10 @@ async def spawn_repair_agent_async(
                 print(f"Cleaned up: Deleted {gemini_md_path}")
 
         error = None
-        if process.returncode != 0:
-            error = f"Exit code: {process.returncode}"
+        if returncode != 0:
+            error = f"Exit code: {returncode}"
         elif not success:
-            error = "Missing completion marker"
+            error = "No git commit detected"
 
         return RepairResult(
             issue_type=issue.issue_type,

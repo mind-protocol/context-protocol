@@ -90,6 +90,18 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
         self._running_process: Optional[asyncio.subprocess.Process] = None  # Track agent subprocess
         self._manager_wakeup_animation_task: Optional[asyncio.Task] = None
         self._manager_force_new_session: bool = False
+        self._changes_last_refresh = 0.0
+        self._changes_refresh_interval = 300.0
+        self._changes_refresh_inflight = False
+        self._sync_last_refresh = 0.0
+        self._sync_refresh_interval = 120.0
+        self._sync_refresh_inflight = False
+        self._map_last_refresh = 0.0
+        self._map_refresh_interval = 120.0
+        self._map_refresh_inflight = False
+        self._doctor_last_refresh = 0.0
+        self._doctor_refresh_interval = 120.0
+        self._doctor_refresh_inflight = False
 
     def compose(self) -> ComposeResult:
         """Compose the TUI layout."""
@@ -112,6 +124,29 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
 
     async def on_mount(self) -> None:
         """Run on app mount - initial setup."""
+        # Ensure markdown bold styling uses orange without background.
+        try:
+            from rich.theme import Theme
+
+            self.console.push_theme(
+                Theme(
+                    {
+                        "bold": "bold #D2691E on #FAF6ED",
+                        "markdown.strong": "bold #D2691E on #FAF6ED",
+                        "markdown.h1": "bold #D2691E on #FAF6ED",
+                        "markdown.h2": "bold #D2691E on #FAF6ED",
+                        "markdown.h3": "bold #D2691E on #FAF6ED",
+                        "markdown.h4": "bold #D2691E on #FAF6ED",
+                        "markdown.h5": "bold #D2691E on #FAF6ED",
+                        "markdown.h6": "bold #D2691E on #FAF6ED",
+                        "markdown.h1.border": "#D2691E on #FAF6ED",
+                    }
+                ),
+                inherit=True,
+            )
+        except Exception:
+            pass
+
         # Focus input bar
         input_bar = self.query_one("#input-bar")
         input_bar.focus()
@@ -242,6 +277,9 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
 
         allowed_tools = "Bash(*) Read(*) Edit(*) Write(*) Glob(*) Grep(*) WebFetch(*) WebSearch(*) NotebookEdit(*) Task(*) TodoWrite(*)"
         continue_session = not self._manager_force_new_session
+        # If there's no conversation history, do not attempt to resume a session.
+        if not self.conversation.messages:
+            continue_session = False
         agent_cmd = build_agent_command(
             self.agent_provider,
             prompt=initial_prompt,
@@ -258,27 +296,64 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
         animation_task = asyncio.create_task(self._animate_loading(thinking_msg))
 
         try:
-            process = await asyncio.create_subprocess_exec(
-                *agent_cmd.cmd,
-                cwd=cwd,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE,
-                stdin=asyncio.subprocess.PIPE if agent_cmd.stdin else None,
-            )
-            self._running_process = process
-
-            stdin_data = (agent_cmd.stdin + "\n").encode() if agent_cmd.stdin else None
-            try:
-                stdout_data, stderr_data = await asyncio.wait_for(
-                    process.communicate(input=stdin_data),
-                    timeout=180.0,
+            # Attempt to run with --resume first
+            # If it fails, retry without --resume
+            tried_with_resume = False
+            while True:
+                agent_cmd = build_agent_command(
+                    self.agent_provider,
+                    prompt=initial_prompt,
+                    system_prompt=system_prompt,
+                    stream_json=True, # Always request stream-json
+                    continue_session=continue_session,
+                    add_dir=self.target_dir,
+                    allowed_tools=allowed_tools if self.agent_provider == "claude" else None,
                 )
-            except asyncio.TimeoutError:
-                process.kill()
-                await process.wait()
-                raise RuntimeError("Manager startup timed out")
-            finally:
-                self._running_process = None
+
+                process = await asyncio.create_subprocess_exec(
+                    *agent_cmd.cmd,
+                    cwd=cwd,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE,
+                    stdin=asyncio.subprocess.PIPE if agent_cmd.stdin else None,
+                )
+                self._running_process = process
+
+                stdin_data = (agent_cmd.stdin + "\\n").encode() if agent_cmd.stdin else None
+                try:
+                    stdout_data, stderr_data = await asyncio.wait_for(
+                        process.communicate(input=stdin_data),
+                        timeout=180.0,
+                    )
+                    # If successful, break the loop
+                    break
+                except asyncio.TimeoutError as timeout_exc:
+                    process.kill()
+                    await process.wait()
+                    self.log_error(f"Manager startup with --resume timed out. Retrying without --resume (Error: {timeout_exc}).")
+                    # Re-raise the timeout to be caught by the generic Exception handler for retry logic
+                    raise timeout_exc
+                except Exception as e:
+                    # Capture stderr before logging/raising
+                    process.kill() # Ensure process is terminated before trying to get output if it's still running
+                    await process.wait()
+                    _, stderr_data_on_exception = await process.communicate() # Get remaining output if any
+                    stderr_output_on_exception = stderr_data_on_exception.decode(errors="replace").strip() if stderr_data_on_exception else "(empty stderr)"
+
+                    # If it failed and we tried with resume, retry without it
+                    if continue_session and not tried_with_resume:
+                        error_message = f"Manager startup with --resume failed (Python Error: {e}, CLI stderr: {stderr_output_on_exception}). Retrying without --resume."
+                        self.log_error(error_message)
+                        continue_session = False # Disable resume for the next attempt
+                        tried_with_resume = True
+                        # Loop will continue to retry without resume
+                    else:
+                        # If already tried without resume, or if continue_session was false, re-raise the exception
+                        final_error_message = f"Manager startup failed after retry (Python Error: {e}, CLI stderr: {stderr_output_on_exception}). Final attempt failed."
+                        self.log_error(final_error_message)
+                        raise RuntimeError(final_error_message) from e
+                finally:
+                    self._running_process = None
 
             # Stop animation and remove loading indicator
             animation_task.cancel()
@@ -462,69 +537,11 @@ Keep it concise and actionable (2-3 paragraphs max)."""
         try:
             manager.add_message("[dim]Loading tabs...[/]")
 
-            # Run all data loading operations in parallel
-            doctor_task = self._load_doctor_data()
-            sync_task = self._load_sync_data()
-            map_task = self._load_map_data()
-            git_task = self._load_git_data()
-
-            # Wait for all to complete
-            doctor_result, sync_content, map_content, git_data = await asyncio.gather(
-                doctor_task, sync_task, map_task, git_task,
-                return_exceptions=True
-            )
-
-            # Process doctor results
-            if isinstance(doctor_result, Exception):
-                manager.add_message(f"[red]Doctor error: {doctor_result}[/]")
-                score, all_issues = 50, []
-            else:
-                score, all_issues = doctor_result
-
-            # Update health score and status bar
-            self.state.health_score = score
-            status_bar = self.query_one("#status-bar")
-            status_bar.update_health(score)
-
-            repair_issues = [i for i in all_issues if i.severity in ("critical", "warning")]
-            if repair_issues:
-                status_bar.set_repair_progress(len(repair_issues), 0, 0)
-
-            # Update DOCTOR tab
-            try:
-                agent_container.update_doctor_content(all_issues, score)
-            except Exception as e:
-                manager.add_message(f"[red]DOCTOR tab error: {e}[/]")
-
-            # Update SYNC tab
-            if isinstance(sync_content, Exception):
-                manager.add_message(f"[red]SYNC error: {sync_content}[/]")
-            elif sync_content:
-                try:
-                    agent_container.update_sync_content(sync_content)
-                except Exception as e:
-                    manager.add_message(f"[red]SYNC tab error: {e}[/]")
-
-            # Update MAP tab
-            if isinstance(map_content, Exception):
-                manager.add_message(f"[red]MAP error: {map_content}[/]")
-            elif map_content:
-                try:
-                    agent_container.update_map_content(map_content)
-                except Exception as e:
-                    manager.add_message(f"[red]MAP tab error: {e}[/]")
-
-            # Update CHANGES tab
-            if isinstance(git_data, Exception):
-                manager.add_message(f"[red]CHANGES error: {git_data}[/]")
-            else:
-                file_changes, commits, updated_at, change_rate, commit_rate = git_data
-                try:
-                    agent_container.update_changes_content(
-                        file_changes, commits, updated_at, change_rate, commit_rate
-                    )
-                except Exception as e:
-                    manager.add_message(f"[red]CHANGES tab error: {e}[/]")
+            # Update tabs in background to avoid blocking startup
+            asyncio.create_task(self._refresh_doctor_tab(force=True))
+            asyncio.create_task(self._refresh_sync_tab(force=True))
+            asyncio.create_task(self._refresh_map_tab(force=True))
+            asyncio.create_task(self._refresh_changes_tab(force=True))
 
             # Default to CHANGES tab on startup
             agent_container.switch_to_tab("changes-tab")
@@ -595,7 +612,7 @@ Keep it concise and actionable (2-3 paragraphs max)."""
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE,
                 )
-                stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=5)
+                stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=3)
                 return stdout.decode().strip() if proc.returncode == 0 else ""
             except Exception:
                 return "(unable to get git status)"
@@ -608,7 +625,7 @@ Keep it concise and actionable (2-3 paragraphs max)."""
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE,
                 )
-                stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=5)
+                stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=3)
                 return stdout.decode().strip() if proc.returncode == 0 else ""
             except Exception:
                 return "(unable to get git log)"
@@ -621,7 +638,7 @@ Keep it concise and actionable (2-3 paragraphs max)."""
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE,
                 )
-                stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=5)
+                stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=3)
                 lines = stdout.decode().splitlines()
                 count = len([line for line in lines if line.strip()])
                 return count / window_minutes
@@ -636,7 +653,7 @@ Keep it concise and actionable (2-3 paragraphs max)."""
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE,
                 )
-                stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=5)
+                stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=3)
                 files = {line for line in stdout.decode().splitlines() if line.strip()}
                 return len(files) / window_minutes
             except Exception:
@@ -646,6 +663,110 @@ Keep it concise and actionable (2-3 paragraphs max)."""
             get_status(), get_log(), get_recent_change_rate(), get_recent_commit_rate()
         )
         return file_changes, commits, updated_at, change_rate, commit_rate
+
+    async def _refresh_changes_tab(self, force: bool = False) -> None:
+        """Refresh CHANGES tab data with a minimum interval."""
+        import time
+        from .widgets.agent_container import AgentContainer
+
+        now = time.monotonic()
+        if not force and (now - self._changes_last_refresh) < self._changes_refresh_interval:
+            return
+        if self._changes_refresh_inflight:
+            return
+
+        self._changes_refresh_inflight = True
+        try:
+            git_data = await self._load_git_data()
+            agent_container = self.query_one("#agent-container", AgentContainer)
+            file_changes, commits, updated_at, change_rate, commit_rate = git_data
+            agent_container.update_changes_content(
+                file_changes, commits, updated_at, change_rate, commit_rate
+            )
+            self._changes_last_refresh = time.monotonic()
+        except Exception as e:
+            manager = self.query_one("#manager-panel")
+            manager.add_message(f"[red]CHANGES tab error: {e}[/]")
+        finally:
+            self._changes_refresh_inflight = False
+
+    async def _refresh_sync_tab(self, force: bool = False) -> None:
+        """Refresh SYNC tab data with a minimum interval."""
+        import time
+        from .widgets.agent_container import AgentContainer
+
+        now = time.monotonic()
+        if not force and (now - self._sync_last_refresh) < self._sync_refresh_interval:
+            return
+        if self._sync_refresh_inflight:
+            return
+
+        self._sync_refresh_inflight = True
+        try:
+            content = await self._load_sync_data()
+            if content:
+                agent_container = self.query_one("#agent-container", AgentContainer)
+                agent_container.update_sync_content(content)
+            self._sync_last_refresh = time.monotonic()
+        except Exception as e:
+            manager = self.query_one("#manager-panel")
+            manager.add_message(f"[red]SYNC tab error: {e}[/]")
+        finally:
+            self._sync_refresh_inflight = False
+
+    async def _refresh_map_tab(self, force: bool = False) -> None:
+        """Refresh MAP tab data with a minimum interval."""
+        import time
+        from .widgets.agent_container import AgentContainer
+
+        now = time.monotonic()
+        if not force and (now - self._map_last_refresh) < self._map_refresh_interval:
+            return
+        if self._map_refresh_inflight:
+            return
+
+        self._map_refresh_inflight = True
+        try:
+            content = await self._load_map_data()
+            if content:
+                agent_container = self.query_one("#agent-container", AgentContainer)
+                agent_container.update_map_content(content)
+            self._map_last_refresh = time.monotonic()
+        except Exception as e:
+            manager = self.query_one("#manager-panel")
+            manager.add_message(f"[red]MAP tab error: {e}[/]")
+        finally:
+            self._map_refresh_inflight = False
+
+    async def _refresh_doctor_tab(self, force: bool = False) -> None:
+        """Refresh DOCTOR tab data with a minimum interval."""
+        import time
+        from .widgets.agent_container import AgentContainer
+
+        now = time.monotonic()
+        if not force and (now - self._doctor_last_refresh) < self._doctor_refresh_interval:
+            return
+        if self._doctor_refresh_inflight:
+            return
+
+        self._doctor_refresh_inflight = True
+        try:
+            score, all_issues = await self._load_doctor_data()
+            self.state.health_score = score
+            status_bar = self.query_one("#status-bar")
+            status_bar.update_health(score)
+            repair_issues = [i for i in all_issues if i.severity in ("critical", "warning")]
+            if repair_issues:
+                status_bar.set_repair_progress(len(repair_issues), 0, 0)
+
+            agent_container = self.query_one("#agent-container", AgentContainer)
+            agent_container.update_doctor_content(all_issues, score)
+            self._doctor_last_refresh = time.monotonic()
+        except Exception as e:
+            manager = self.query_one("#manager-panel")
+            manager.add_message(f"[red]DOCTOR tab error: {e}[/]")
+        finally:
+            self._doctor_refresh_inflight = False
 
     async def _run_doctor_async(self) -> dict:
         """Run doctor check asynchronously."""

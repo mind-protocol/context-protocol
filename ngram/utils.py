@@ -47,8 +47,9 @@ def get_templates_path() -> Path:
         return package_templates
 
     # Location 2: Repo root (development mode)
-    # utils.py -> ngram/ -> src/ -> repo_root (3 levels)
-    repo_root = Path(__file__).parent.parent.parent
+    # utils.py is in ngram/ngram/, templates is in ngram/templates/
+    # So 2 levels up: ngram/ngram/ -> ngram/
+    repo_root = Path(__file__).parent.parent
     repo_templates = repo_root / "templates"
     if repo_templates.exists() and (repo_templates / "ngram").exists():
         return repo_templates

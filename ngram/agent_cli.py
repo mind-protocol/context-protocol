@@ -33,22 +33,22 @@ def build_agent_command(
 ) -> AgentCommand:
     agent = normalize_agent(agent)
     if agent == "gemini":
+        # Use official Gemini CLI (npm install -g @google/gemini-cli)
         cmd = ["gemini"]
+
         if continue_session:
             cmd.extend(["--resume", "latest"])
-        
-        # Combine system_prompt with prompt for Gemini, as it doesn't have a separate system-prompt flag
-        combined_prompt = prompt if not system_prompt else f"{system_prompt}\n\n{prompt}"
-        cmd.extend(["-p", combined_prompt])
-        
+        # Gemini uses positional prompt, not -p flag
+        cmd.append(prompt)
         cmd.extend(["--output-format", "stream-json" if stream_json else "text"])
-        cmd.append("--yolo") # Always include for headless operation
+        if use_dangerous:
+            cmd.extend(["--approval-mode", "yolo"])
         if allowed_tools:
-            cmd.extend(["--allowed-tools", allowed_tools])
+            cmd.extend(["--allowed-tools"] + allowed_tools.split())
         if add_dir:
             cmd.extend(["--include-directories", str(add_dir)])
-        cmd.append("--debug")
-        # The system_prompt is already combined, so no separate flag here
+        # Gemini doesn't have --append-system-prompt, prepend to prompt if needed
+        # System prompt is handled via GEMINI.md in the working directory
         return AgentCommand(cmd=cmd)
     if agent == "claude":
         cmd = ["claude"]

@@ -47,21 +47,6 @@ from .repo_overview import generate_and_save as generate_overview
 from .agent_cli import build_agent_command
 
 
-def agent_command(agent: str, prompt: str, continue_session: bool, add_dir: Optional[Path], system_prompt: str, use_dangerous: bool):
-    """Invoke an agent with a prompt."""
-    agent_cmd = build_agent_command(
-        agent=agent,
-        prompt=prompt,
-        system_prompt=system_prompt,
-        continue_session=continue_session,
-        add_dir=add_dir,
-        use_dangerous=use_dangerous,
-    )
-    # Execute the command
-    import subprocess
-    process = subprocess.run(agent_cmd.cmd, input=agent_cmd.stdin, text=True)
-    return process.returncode
-
 
 def main():
     """CLI entry point."""
@@ -69,57 +54,14 @@ def main():
         prog="ngram",
         description="ngram - Memory for AI agents. Protocol for context, state, and handoffs."
     )
-    # This is now handled by the 'agents' subcommand
-    # parser.add_argument(
-    #     "--agents",
-    #     choices=AGENT_CHOICES,
-    #     default="claude",
-    #     help="Agent provider for repair and TUI (default: claude)",
-    # )
+    parser.add_argument(
+        "--agents",
+        choices=AGENT_CHOICES,
+        default="claude",
+        help="Agent provider for repair and TUI (default: claude)",
+    )
 
     subparsers = parser.add_subparsers(dest="command", help="Commands")
-    
-    # agents command
-    agents_parser = subparsers.add_parser(
-        "agents",
-        help="Invoke an agent"
-    )
-    agents_parser.add_argument(
-        "agent",
-        nargs="?",  # Make it optional
-        choices=AGENT_CHOICES,
-        default=DEFAULT_AGENT, # Use default agent if not specified
-        help="Agent to invoke (default: claude)"
-    )
-    agents_parser.add_argument(
-        "-p", "--prompt",
-        type=str,
-        required=True,
-        help="Prompt to send to the agent"
-    )
-    agents_parser.add_argument(
-        "--continue",
-        action="store_true",
-        dest="continue_session",
-        help="Continue the last session"
-    )
-    agents_parser.add_argument(
-        "--add-dir",
-        type=Path,
-        default=None,
-        help="Directory to add to the agent's context"
-    )
-    agents_parser.add_argument(
-        "--system-prompt",
-        type=str,
-        default="",
-        help="System prompt to send to the agent"
-    )
-    agents_parser.add_argument(
-        "--use-dangerous",
-        action="store_true",
-        help="Use dangerous settings for the agent"
-    )
 
     # init command
     init_parser = subparsers.add_parser(
@@ -138,6 +80,9 @@ def main():
         default=Path.cwd(),
         help="Directory to initialize (default: current directory)"
     )
+
+    # ... (the rest of the original subparsers)
+
 
     # validate command
     validate_parser = subparsers.add_parser(
@@ -214,9 +159,14 @@ def main():
         help="Don't save to HEALTH.md"
     )
     doctor_parser.add_argument(
+        "--github",
+        action="store_true",
+        help="Create GitHub issues for findings (default: disabled)"
+    )
+    doctor_parser.add_argument(
         "--no-github",
         action="store_true",
-        help="Don't create GitHub issues for findings (default: creates issues)"
+        help="Don't create GitHub issues for findings (default: disabled)"
     )
     doctor_parser.add_argument(
         "--github-max",
@@ -385,10 +335,7 @@ def main():
 
     args = parser.parse_args()
 
-    if args.command == "agents":
-        exit_code = agent_command(args.agent, args.prompt, args.continue_session, args.add_dir, args.system_prompt, args.use_dangerous)
-        sys.exit(exit_code)
-    elif args.command == "init":
+    if args.command == "init":
         success = init_protocol(args.dir, not args.no_force)
         sys.exit(0 if success else 1)
     elif args.command == "validate":
@@ -403,7 +350,7 @@ def main():
     elif args.command == "doctor":
         exit_code = doctor_command(
             args.dir, args.format, args.level, args.no_save,
-            github=not args.no_github, github_max=args.github_max
+            github=args.github and not args.no_github, github_max=args.github_max
         )
         sys.exit(exit_code)
     elif args.command == "map":
@@ -480,7 +427,7 @@ def main():
         # Launch TUI when no subcommand is given (similar to agent CLIs)
         try:
             from .tui import NgramApp
-            app = NgramApp(target_dir=Path.cwd(), agent_provider="gemini")
+            app = NgramApp(target_dir=Path.cwd(), agent_provider=args.agents)
             app.run()
             sys.exit(0)
         except ImportError as e:

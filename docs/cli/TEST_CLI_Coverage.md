@@ -58,7 +58,7 @@ The CLI currently has no automated tests. Validation is manual through CLI usage
 ```bash
 ngram init --dir /tmp/test-project
 ngram validate --dir /tmp/test-project
-ngram doctor --no-github
+ngram doctor
 ngram repair --dry-run --max 3
 ngram context ngram/cli.py
 ```

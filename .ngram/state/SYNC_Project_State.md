@@ -47,6 +47,11 @@ Adjusted CLI module mapping to avoid YAML drift from the `ngram/*.py` pattern.
 Confirmed `ngram/repair_core.py` already implements `get_issue_symbol` and `get_issue_action_parts`; re-verified during INCOMPLETE_IMPL repair with no code changes required.
 Re-verified `ngram/repair_core.py` issue lookup helpers during this repair; no code changes needed.
 Recorded the INCOMPLETE_IMPL verification in `docs/cli/SYNC_CLI_State.md` to keep module state aligned.
+Repair prompts now surface missing docs in a dedicated section so agents can resolve paths before edits.
+Doctor now reports recent .log error lines as LOG_ERROR issues for last-hour log activity.
+Doctor now defaults to no GitHub issue creation unless `--github` is provided.
+LOG_ERROR scanning now inspects only the last 2000 lines per recent log file.
+Manager /repair issue lists now render as a single block to avoid extra blank lines between items.
 
 Verified `ngram/tui/state.py` has no empty stubs for `ConversationMessage.to_dict` or `AgentHandle.duration`; documentation updated to reflect confirmation.
 
@@ -57,6 +62,16 @@ Updated `docs/tui/SYNC_TUI_State.md` to record the verification for this repair.
 Split `ngram/tui/commands.py` to extract manager-agent subprocess logic into `ngram/tui/commands_agent.py` (972L → 637L; new file 349L), and updated `docs/tui/IMPLEMENTATION_TUI_Code_Architecture.md`, `modules.yaml`, and `docs/tui/SYNC_TUI_State.md`.
 Filled the TUI `/doctor` handler to update health status and log results, and wired repair agent output streaming to agent panels in `ngram/tui/commands.py`.
 Verified `ngram/tui/commands.py` already implements `on_output` and `handle_doctor`; the INCOMPLETE_IMPL report was stale.
+Backgrounded CHANGES tab git refresh with rate limiting and switched periodic repair summaries to async git calls every 2 minutes (last 5 entries) to avoid UI stalls.
+Tabbed content no longer refreshes on tab switch to avoid click-time stalls.
+Added operational proactivity guidance to `templates/CODEX_SYSTEM_PROMPT_ADDITION.md` to run needed commands (e.g., restarts) without waiting, while requesting approvals when required.
+Truncated large SYNC/MAP markdown content on render to keep tab switching responsive.
+Cached pre-rendered Rich markdown renderables for tab content to avoid re-parsing on tab switch while keeping formatting.
+Set Rich theme override for bold/markdown headings to render in orange on the tab background to avoid black fill.
+Enabled click-to-copy on SYNC/MAP/DOCTOR/CHANGES tab content (copies raw markdown).
+Repair completion now keys off git commits (HEAD change) instead of output markers in `ngram/repair_core.py`.
+Updated agent system prompt to request commit messages with a type prefix and issue reference.
+Repair prompts now infer issue references from the last 5 commit messages when not explicitly provided.
 
 Normalized TUI implementation doc references to avoid broken-link detection for .ngram paths and method names.
 Adjusted TUI implementation structure doc to use explicit relative paths for `.ngram` files and PATTERNS/app references.
@@ -66,7 +81,7 @@ Updated `docs/tui/IMPLEMENTATION_TUI_Code_Architecture.md` to use full file path
 Updated the TUI implementation structure data-flow diagram to use full file paths for command and repair routing.
 
 Reduced `docs/tui` size by archiving historical detail and splitting `IMPLEMENTATION_TUI_Code_Architecture.md` into an overview plus detail files under `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/`. Added `docs/tui/archive/SYNC_archive_2024-12.md` and updated `docs/tui/SYNC_TUI_State.md` to keep current state concise.
-Consolidated TUI implementation runtime details into `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/IMPLEMENTATION_TUI_Code_Architecture_Structure.md` and left a reference stub in the runtime doc to avoid duplicate IMPLEMENTATION files.
+Implemented a retry mechanism for the Gemini CLI call within `ngram/tui/app.py`. The TUI now attempts to call the Gemini CLI with the `--resume` flag first, and if that fails, it retries once without the `--resume` flag, logging any errors encountered during the process. This retry mechanism now correctly handles `asyncio.TimeoutError` by logging the timeout and then proceeding to retry without the `--resume` flag, ensuring the retry mechanism is fully engaged even after a timeout. Error reporting has been further enhanced to capture and include the `stderr` output from the external Gemini CLI in the logged error messages, providing more detailed diagnostic information in case of failure.
 Removed `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/IMPLEMENTATION_TUI_Code_Architecture_Runtime.md` so TUI implementation details live in a single canonical file.
 Clarified the TUI structure doc file list label for the suggestions bar widget to match `ngram/tui/widgets/suggestions.py`.
 Synced TUI implementation structure doc file list and responsibilities with new widgets and theme files.

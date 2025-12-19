@@ -9,6 +9,12 @@ description = "Memory for AI agents - Protocol for context, state, and handoffs 
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
+dependencies = [
+    "google-genai",
+    "rich~=14.2.0",
+    "protobuf>=3.19,<5.0",
+    "python-dotenv",
+]
 authors = [
     { name = "Mind Protocol" }
 ]
@@ -39,7 +45,7 @@ Repository = "https://github.com/mind-protocol/ngram"
 
 [project.optional-dependencies]
 tui = ["textual>=0.45.0"]
-all = ["textual>=0.45.0"]
+
 
 [project.scripts]
 ngram = "ngram.cli:main"

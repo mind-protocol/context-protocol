@@ -238,6 +238,23 @@ def init_protocol(target_dir: Path, force: bool = False) -> bool:
     else:
         print(f"○ {ignore_dest} already exists")
 
+    # Add agent working directories to .gitignore
+    gitignore_path = target_dir / ".gitignore"
+    ngram_gitignore_entries = [
+        "# ngram agent working directories",
+        ".ngram/agents/repair/",
+        ".ngram/traces/",
+    ]
+    try:
+        existing = gitignore_path.read_text() if gitignore_path.exists() else ""
+        missing_entries = [e for e in ngram_gitignore_entries if e not in existing]
+        if missing_entries:
+            with open(gitignore_path, "a") as f:
+                f.write("\n" + "\n".join(missing_entries) + "\n")
+            print(f"✓ Updated: {gitignore_path}")
+    except PermissionError:
+        print(f"  ○ Skipped (permission): {gitignore_path}")
+
     # Build CLAUDE.md content with inlined PRINCIPLES and PROTOCOL
     # (Claude doesn't expand @ references, so we inline the actual content)
     claude_content = _build_claude_addition(templates_path)

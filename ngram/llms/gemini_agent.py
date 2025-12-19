@@ -62,17 +62,7 @@ def main():
     # Create the genai client with API key
     client = genai.Client(api_key=api_key)
 
-    # --- Start Debugging: List available models ---
-    try:
-        print("Available Gemini models:", file=sys.stderr)
-        for m in client.models.list():
-            if "generateContent" in m.supported_generation_methods:
-                print(f"- {m.name} (supports generateContent)", file=sys.stderr)
-            else:
-                print(f"- {m.name}", file=sys.stderr)
-    except Exception as e:
-        print(f"Error listing models: {e}", file=sys.stderr)
-    # --- End Debugging ---
+
 
     # --- Tool Definitions ---
     # Python functions to be exposed to the Gemini model
@@ -349,8 +339,9 @@ def main():
 
     # Create the GenerativeModel with tools
     # Use gemini-2.5-flash as the default model
+    gemini_model = config.get("GEMINI_MODEL") or os.getenv("GEMINI_MODEL") or "gemini-2.5-flash"
     model = client.models.GenerativeModel(
-        model_name='gemini-2.5-flash',
+        model_name=gemini_model,
         tools=[
             run_shell_command_tool, read_file_tool, list_directory_tool,
             search_file_content_tool, glob_tool, replace_tool, write_file_tool,

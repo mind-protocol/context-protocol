@@ -1,4 +1,4 @@
-# ADD Framework
+# ngram Framework
 
 **You are an AI agent working on code. This document explains the protocol and why it exists.**
 

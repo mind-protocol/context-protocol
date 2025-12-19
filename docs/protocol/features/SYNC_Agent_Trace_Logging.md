@@ -70,7 +70,7 @@ Docs created:
 4. Verify trace file created
 
 **Key files:**
-- `src/ngram/cli.py` — add trace functions
+- `ngram/cli.py` — add trace functions
 - `.ngram/traces/` — output location
 
 ---

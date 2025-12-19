@@ -52,6 +52,7 @@ Split `ngram/tui/commands.py` to extract manager-agent subprocess logic into `ng
 
 Normalized TUI implementation doc references to avoid broken-link detection for .ngram paths and method names.
 Adjusted TUI implementation structure doc to use explicit relative paths for `.ngram` files and PATTERNS/app references.
+Updated TUI implementation structure doc to use repo-root `.ngram` paths and point the app DOCS reference at `docs/tui/PATTERNS_TUI_Design.md`.
 Updated `docs/tui/IMPLEMENTATION_TUI_Code_Architecture.md` to use full file paths for `ngram/repair_core.py` and TUI command modules to resolve BROKEN_IMPL_LINK.
 Updated the TUI implementation structure data-flow diagram to use full file paths for command and repair routing.
 

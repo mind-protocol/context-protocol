@@ -40,8 +40,8 @@ Module mapping:
 Doc maintenance:
 - Implementation doc references normalized to avoid broken-link false positives
 - Implementation overview references now point to `ngram/repair_core.py` and full TUI command paths
-- Manager startup reference uses relative paths to `.ngram/CLAUDE.md` and `.ngram/agents/manager/AGENTS.md`
-- Structure doc points to `../PATTERNS_TUI_Design.md` and `ngram/tui/app.py` for file references
+- Manager startup reference uses repo-root `.ngram/CLAUDE.md` and `.ngram/agents/manager/AGENTS.md` paths
+- Structure doc points to `docs/tui/PATTERNS_TUI_Design.md` for the `ngram/tui/app.py` DOCS reference
 - Data flow diagram uses full file paths for command and repair routing
 - Implementation details split into `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/` with an overview entry point
 - Runtime implementation content consolidated into `IMPLEMENTATION_TUI_Code_Architecture_Structure.md` to avoid duplicate docs

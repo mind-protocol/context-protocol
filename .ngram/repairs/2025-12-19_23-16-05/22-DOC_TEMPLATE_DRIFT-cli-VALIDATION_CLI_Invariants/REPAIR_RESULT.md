@@ -1,0 +1,1 @@
+REPAIR FAILED: Cannot access target file docs/cli/VALIDATION_CLI_Invariants.md because it is outside the allowed workspace directory: /home/mind-protocol/ngram/.ngram/repairs/2025-12-19_23-16-05/22-DOC_TEMPLATE_DRIFT-cli-VALIDATION_CLI_Invariants/.

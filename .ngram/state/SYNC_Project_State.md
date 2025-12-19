@@ -26,6 +26,18 @@ ngram CLI project with doctor/repair functionality for maintaining project healt
 
 ## RECENT CHANGES
 
+### 2025-12-19: Verified manager.py TUI functions as complete (false positive)
+
+- **What:** Verified 4 functions in `ngram/tui/manager.py` are implemented correctly (not empty).
+- **Why:** INCOMPLETE_IMPL flagged: is_running, extract_changed_files, extract_doc_updates, on_agent_complete.
+- **Impact:** No code changes needed. These are legitimate implementations:
+  - `is_running`: Property returning `self._running`
+  - `extract_changed_files`: Regex extraction with deduplication
+  - `extract_doc_updates`: Regex extraction with deduplication
+  - `on_agent_complete`: Delegation to `monitor_agent()`
+- **Added:** Ignore entry in `.ngram/doctor-ignore.yaml` to suppress future false positives.
+- **Note:** Doctor threshold of ≤2 lines is too aggressive for property accessors and delegation methods.
+
 ### 2025-12-19: Verified state.py TUI functions as complete (false positive)
 
 - **What:** Verified 10 functions in `ngram/tui/state.py` are implemented correctly (not empty).

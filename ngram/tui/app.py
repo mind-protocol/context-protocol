@@ -18,6 +18,7 @@ try:
     from textual.containers import Container, Horizontal, Vertical
     from textual.widgets import Footer, Static
     from textual.binding import Binding
+    from textual.widget import Widget
     TEXTUAL_AVAILABLE = True
 except ImportError:
     TEXTUAL_AVAILABLE = False
@@ -86,6 +87,7 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
         self.claude_pty: Optional[ClaudePTY] = None
         self._ctrl_c_pending = False  # Track first Ctrl+C press
         self._running_process: Optional[asyncio.subprocess.Process] = None  # Track agent subprocess
+        self._manager_wakeup_animation_task: Optional[asyncio.Task] = None
 
     def compose(self) -> ComposeResult:
         """Compose the TUI layout."""
@@ -144,9 +146,8 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
         # Mark new session start
         self.conversation.start_new_session()
 
-        # Add welcome messages in blue
+        # Add welcome message in blue
         manager.add_message("[blue]Running health check...[/]")
-        manager.add_message("[blue]Waking up ngram manager...[/]")
 
         # Run startup tasks in background so UI appears immediately
         asyncio.create_task(self._startup_sequence())
@@ -156,8 +157,15 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
         # Run initial health check and show issues
         await self._run_doctor_with_display()
 
+        manager = self.query_one("#manager-panel")
+        manager_wakeup_msg = manager.add_message("[blue]Waking up ngram manager...[/]")
+        self._manager_wakeup_animation_task = asyncio.create_task(self._animate_loading(manager_wakeup_msg))
+
         # Start manager session (also in this background task)
         await self._start_manager_with_overview()
+
+        if self._manager_wakeup_animation_task:
+            self._manager_wakeup_animation_task.cancel()
 
     async def _start_claude_pty(self) -> None:
         """Start the interactive Claude PTY session."""

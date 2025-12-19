@@ -48,13 +48,14 @@ Recorded the INCOMPLETE_IMPL verification in `docs/cli/SYNC_CLI_State.md` to kee
 Verified `ngram/tui/state.py` has no empty stubs for `ConversationMessage.to_dict` or `AgentHandle.duration`; documentation updated to reflect confirmation.
 
 Re-verified `ngram/tui/widgets/status_bar.py` includes complete implementations for the reported methods; no code changes needed.
+Re-verified `ngram/tui/state.py` already implements `ConversationMessage.to_dict` and `AgentHandle.duration`; no code changes required.
 
 Split `ngram/tui/commands.py` to extract manager-agent subprocess logic into `ngram/tui/commands_agent.py` (972L → 637L; new file 349L), and updated `docs/tui/IMPLEMENTATION_TUI_Code_Architecture.md`, `modules.yaml`, and `docs/tui/SYNC_TUI_State.md`.
 
 Normalized TUI implementation doc references to avoid broken-link detection for .ngram paths and method names.
 Adjusted TUI implementation structure doc to use explicit relative paths for `.ngram` files and PATTERNS/app references.
 Updated TUI implementation structure doc to use repo-root `.ngram` paths and point the app DOCS reference at `docs/tui/PATTERNS_TUI_Design.md`.
-Adjusted the TUI structure doc CHAIN to use a repo-root PATTERNS path and removed backticks from `.ngram` references to avoid broken-link detection.
+Adjusted the TUI structure doc CHAIN to use `../PATTERNS_TUI_Design.md` and removed backticks from `.ngram` references to avoid broken-link detection.
 Updated `docs/tui/IMPLEMENTATION_TUI_Code_Architecture.md` to use full file paths for `ngram/repair_core.py` and TUI command modules to resolve BROKEN_IMPL_LINK.
 Updated the TUI implementation structure data-flow diagram to use full file paths for command and repair routing.
 

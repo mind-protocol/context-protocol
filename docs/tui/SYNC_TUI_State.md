@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (BROKEN_IMPL_LINK fix)
+UPDATED_BY: codex (INCOMPLETE_IMPL verification)
 STATUS: IMPLEMENTED
 ```
 
@@ -33,6 +33,7 @@ Recent stability work:
 - Agent handle de-duplication and empty message suppression
 - Manager drift detection path normalization and PTY state handling
 - Verified `ngram/tui/widgets/status_bar.py` already implements reported methods; no code changes needed.
+- Re-verified `ngram/tui/state.py` already implements `ConversationMessage.to_dict` and `AgentHandle.duration`; no code changes required.
 
 Module mapping:
 - `modules.yaml` includes `tui` module mapping under `modules`
@@ -42,7 +43,7 @@ Doc maintenance:
 - Implementation overview references now point to `ngram/repair_core.py` and full TUI command paths
 - Manager startup reference uses repo-root `.ngram/CLAUDE.md` and `.ngram/agents/manager/AGENTS.md` paths
 - Structure doc points to `docs/tui/PATTERNS_TUI_Design.md` for the `ngram/tui/app.py` DOCS reference
-- Structure doc CHAIN uses repo-root `docs/tui/PATTERNS_TUI_Design.md` and plain `.ngram/...` paths to avoid broken-link detection
+- Structure doc CHAIN uses `../PATTERNS_TUI_Design.md` and plain `.ngram/...` paths to avoid broken-link detection
 - Data flow diagram uses full file paths for command and repair routing
 - Implementation details split into `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/` with an overview entry point
 - Runtime implementation content consolidated into `IMPLEMENTATION_TUI_Code_Architecture_Structure.md` to avoid duplicate docs

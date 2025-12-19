@@ -11,7 +11,7 @@ UPDATED: 2025-12-19
 ## CHAIN
 
 ```
-PATTERNS:                docs/tui/PATTERNS_TUI_Design.md
+PATTERNS:                ../PATTERNS_TUI_Design.md
 BEHAVIORS:               ../BEHAVIORS_TUI_Interactions.md
 ALGORITHM:               ../ALGORITHM_TUI_Flow.md
 VALIDATION:              ../VALIDATION_TUI_Invariants.md

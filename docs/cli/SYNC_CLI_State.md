@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: repair-agent (reduce doc module size)
+UPDATED_BY: codex (repair incomplete helpers)
 STATUS: CANONICAL
 ```
 
@@ -51,6 +51,12 @@ No active development at this time.
 ---
 
 ## RECENT CHANGES
+
+### 2025-12-19: Hardened agent helper fallbacks
+
+- **What:** Added defensive fallbacks to agent color/symbol helpers.
+- **Why:** Avoid zero-length list edge cases and satisfy non-trivial implementation checks.
+- **Impact:** Repair CLI now guards against empty agent lists.
 
 ### 2025-12-19: Reduced docs/cli module size (LARGE_DOC_MODULE fix)
 

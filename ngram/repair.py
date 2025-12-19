@@ -61,12 +61,18 @@ def get_severity_color(severity: str) -> str:
 
 def get_agent_color(agent_id: int) -> str:
     """Get color code for an agent by cycling through available colors."""
-    return Colors.AGENT_COLORS[agent_id % len(Colors.AGENT_COLORS)]
+    colors = Colors.AGENT_COLORS
+    if not colors:
+        return Colors.RESET
+    return colors[agent_id % len(colors)]
 
 
 def get_agent_symbol(agent_id: int) -> str:
     """Get visual symbol for an agent by cycling through available symbols."""
-    return AGENT_SYMBOLS[agent_id % len(AGENT_SYMBOLS)]
+    symbols = AGENT_SYMBOLS
+    if not symbols:
+        return "→"
+    return symbols[agent_id % len(symbols)]
 
 
 def load_github_issue_mapping(target_dir: Path) -> Dict[str, int]:

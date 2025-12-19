@@ -39,6 +39,7 @@ Module mapping:
 Doc maintenance:
 - Implementation doc references normalized to avoid broken-link false positives
 - Manager startup reference uses `.ngram/CLAUDE.md`
+- Implementation details split into `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/` with an overview entry point
 
 Archived detail:
 - Historical feature list, handoffs, and observations moved to `docs/tui/archive/SYNC_archive_2024-12.md`

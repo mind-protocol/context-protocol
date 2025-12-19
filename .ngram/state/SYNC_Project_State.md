@@ -38,6 +38,7 @@ Synced CLI implementation docs with current file layout (doctor check splits, re
 Adjusted CLI module mapping to avoid YAML drift from the `ngram/*.py` pattern.
 
 Confirmed `ngram/repair_core.py` already implements `get_issue_symbol` and `get_issue_action_parts`; re-verified during INCOMPLETE_IMPL repair with no code changes required.
+Re-verified `ngram/repair_core.py` issue lookup helpers during this repair; no code changes needed.
 Recorded the INCOMPLETE_IMPL verification in `docs/cli/SYNC_CLI_State.md` to keep module state aligned.
 
 Verified `ngram/tui/state.py` has no empty stubs for `ConversationMessage.to_dict` or `AgentHandle.duration`; documentation updated to reflect confirmation.
@@ -165,6 +166,7 @@ Check `modules.yaml` (project root) for full manifest.
 - doctor-ignore now reflects TUI false positives that were already documented in TUI sync.
 - `ngram validate` fails due to missing `IMPLEMENTATION_Project_Health_Doctor.md` references.
 - `ngram/tui/state.py` INCOMPLETE_IMPL report was outdated; functions already implemented.
+- Updated `docs/tui/SYNC_TUI_State.md` to note the INCOMPLETE_IMPL repair verification for `ngram/tui/state.py`.
 - `repo_overview.py` now reads DOCS header scan length from DoctorConfig instead of a hardcoded value.
 - INCOMPLETE_IMPL task for `ngram/repair_core.py` was a false positive; SYNC updated to document the check.
 - Manager-agent subprocess handling moved to `ngram/tui/commands_agent.py` to keep `ngram/tui/commands.py` under the monolith threshold.

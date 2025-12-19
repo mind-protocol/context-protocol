@@ -293,9 +293,15 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
                     continue
                 try:
                     data = json.loads(line_str)
+                    if not isinstance(data, dict):
+                        continue
                     if data.get("type") == "assistant":
                         msg_data = data.get("message", {})
+                        if not isinstance(msg_data, dict):
+                            continue
                         for content in msg_data.get("content", []):
+                            if not isinstance(content, dict):
+                                continue
                             if content.get("type") == "thinking":
                                 thinking = content.get("thinking", "")
                                 if thinking:
@@ -329,7 +335,7 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
                 self.notify_manager_response()
 
                 # Detect commands and show interactive options
-                from .commands import _detect_commands
+                from .commands_agent import _detect_commands
                 detected = _detect_commands(full_response)
                 if detected:
                     self._pending_commands = detected

@@ -12,9 +12,9 @@ CREATED: 2024-12-15
 ```
 THIS:            PATTERNS_Bidirectional_Documentation_Chain_For_AI_Agents.md
 BEHAVIORS:       ./BEHAVIORS_Observable_Protocol_Effects.md
-ALGORITHM:       ./ALGORITHM_Workflows_And_Procedures.md
+ALGORITHM:       ./ALGORITHM_Overview.md
 VALIDATION:      ./VALIDATION_Protocol_Invariants.md
-IMPLEMENTATION:  ./IMPLEMENTATION_Protocol_Code_Architecture.md
+IMPLEMENTATION:  ./IMPLEMENTATION_Overview.md
 TEST:            ./TEST_Protocol_Test_Cases.md
 SYNC:            ./SYNC_Protocol_Current_State.md
 ```

@@ -42,20 +42,12 @@ Protocol V1 complete and in use. Dogfooding on itself + Blood Ledger.
 - Full documentation chain for protocol module (PATTERNS, BEHAVIORS, ALGORITHM, VALIDATION, IMPLEMENTATION, TEST, SYNC)
 
 **Recent changes (2025-12-18):**
-- Added IMPLEMENTATION_Protocol_Code_Architecture.md to complete the documentation chain
-- Documents file structure, data flows, and how agents traverse the protocol system
-- Fixed broken implementation links in IMPLEMENTATION_Protocol_Code_Architecture.md:
-  - Updated tree diagrams to use full project-relative paths in tables
-  - Converted bare filename references to resolvable paths (e.g., `templates/ngram/PROTOCOL.md`)
-  - Removed backticked paths that started with `.` (caused issues with validator path resolution)
-- Fixed CLAUDE.md references: Updated all references from `CLAUDE.md` to `.ngram/CLAUDE.md` since file moved from project root to `.ngram/` directory
-- AGENTS.md now mirrors .ngram/CLAUDE.md and appends CODEX_SYSTEM_PROMPT_ADDITION.md (protocol-first reading, no self-run TUI, verbose outputs, parallel-work awareness)
-- Manager sessions use `.ngram/agents/manager/AGENTS.md` (manager role + Codex guidance)
-- Added doctor-ignore entry for false positive: doctor's `extract_impl_file_refs()` strips leading dots from paths (`.ngram/` becomes `ngram/`), causing false BROKEN_IMPL_LINK errors. Bug tracked in ignore reason.
+- Added protocol implementation documentation and corrected doc-link resolution issues.
 
 **Recent changes (2025-12-19):**
-- Removed backticks around .ngram/CLAUDE.md in the protocol IMPLEMENTATION doc so broken link detection no longer strips the leading dot.
-- Rephrased the manager bootstrap note in `docs/protocol/IMPLEMENTATION_Protocol_Code_Architecture.md` to avoid a broken link on the manager AGENTS.md sibling.
+- Split ALGORITHM and IMPLEMENTATION docs into folders for size control and clearer navigation.
+- Compressed legacy sync details into archive notes for long-term reference.
+- Added root overview stubs so validation still sees full chain files.
 
 ---
 
@@ -100,19 +92,6 @@ Protocol V1 complete. Added PRINCIPLES.md capturing your working principles (arc
 
 ---
 
-## CONSCIOUSNESS TRACE
-
-**Mental state:**
-Good. The principles feel right — they're what was missing. PROTOCOL.md was "here's where things are" but didn't say "here's how to be." Now it does.
-
-**Key insight:**
-The separation is important. Navigation changes often (new VIEWs, new file types). Principles change rarely (they're foundational). Keeping them separate means principles can be internalized once, protocol referenced repeatedly.
-
-**What I'm uncertain about:**
-Whether agents will actually read PRINCIPLES.md or skip it. The summary in CLAUDE_ADDITION.md helps — they see the core ideas immediately. But the full document has the depth.
-
----
-
 ## STRUCTURE
 
 ```
@@ -142,4 +121,17 @@ Whether agents will actually read PRINCIPLES.md or skip it. The summary in CLAUD
 
 ## ARCHIVE
 
-Older content archived to: `SYNC_Protocol_Current_State_archive_2025-12.md`
+Older content archived to: `archive/SYNC_archive_2024-12.md`
+
+---
+
+## Agent Observations
+
+### Remarks
+- The protocol module docs were split to keep large files under the line threshold and improve navigation.
+
+### Suggestions
+- [ ] Re-run `ngram overview` to refresh `docs/map.md` after documentation reshuffles.
+
+### Propositions
+- Consider a short "Docs Index" note in `IMPLEMENTATION_Overview.md` if more splits happen.

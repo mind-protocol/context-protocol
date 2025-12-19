@@ -32,28 +32,36 @@ ngram/
 ├── doctor.py               # Health check orchestration (slim)
 ├── doctor_checks.py        # Health check functions (core)
 ├── doctor_checks_content.py # Content analysis checks (extracted)
+├── doctor_checks_docs.py   # Documentation checks (extracted)
+├── doctor_checks_quality.py # Code quality checks (extracted)
+├── doctor_checks_sync.py   # SYNC staleness checks (extracted)
 ├── doctor_types.py         # DoctorIssue, DoctorConfig types
 ├── doctor_report.py        # Report generation, scoring
 ├── doctor_files.py         # File discovery utilities
 ├── agent_cli.py            # Agent CLI wrapper (claude/codex/gemini)
 ├── repair.py               # Agent orchestration for repairs
+├── repair_core.py          # Repair models + core helpers
 ├── repair_report.py        # Repair report generation (LLM + template)
 ├── repair_instructions.py  # Code/test/config repair prompts (main)
 ├── repair_instructions_docs.py # Doc-related repair prompts (extracted)
+├── repair_interactive.py   # Interactive arbitrage workflow helpers
 ├── sync.py                 # SYNC file management
 ├── context.py              # Code-to-docs navigation
 ├── prompt.py               # Bootstrap prompt generation
 ├── project_map.py          # Visual dependency map (terminal)
 ├── project_map_html.py     # HTML export for project map
+├── repo_overview.py         # Repo overview generation
+├── repo_overview_formatters.py # Repo overview formatting helpers
 ├── github.py               # GitHub issue integration
 └── utils.py                # Shared utilities
 ```
 
 **Logical Groupings** (all in `ngram/`):
 - **Doctor subsystem:** doctor, doctor_checks, doctor_checks_content, doctor_types, doctor_report, doctor_files
-- **Repair subsystem:** repair, repair_core, repair_report, repair_instructions, repair_instructions_docs
+- **Repair subsystem:** repair, repair_core, repair_report, repair_instructions, repair_instructions_docs, repair_interactive
 - **Agent CLI:** agent_cli (provider normalization + command building)
 - **Project map:** project_map, project_map_html
+- **Repo overview:** repo_overview, repo_overview_formatters
 
 ### File Responsibilities
 
@@ -65,19 +73,26 @@ ngram/
 | `ngram/doctor.py` | Health check orchestration | `run_doctor()`, `doctor_command()` | ~211 | OK |
 | `ngram/doctor_checks.py` | Health check functions (core) | `doctor_check_*()` (20 functions) | ~1364 | SPLIT |
 | `ngram/doctor_checks_content.py` | Content analysis checks | `doctor_check_doc_duplication()`, `doctor_check_new_undoc_code()`, `doctor_check_long_strings()` | ~410 | OK |
+| `ngram/doctor_checks_docs.py` | Documentation checks | `doctor_check_doc_module_gaps()`, `doctor_check_incomplete_chain()` | ~316 | OK |
+| `ngram/doctor_checks_quality.py` | Code quality checks | `doctor_check_hardcoded_secrets()`, `doctor_check_magic_values()` | ~172 | OK |
+| `ngram/doctor_checks_sync.py` | SYNC checks | `doctor_check_stale_sync()` | ~228 | OK |
 | `ngram/doctor_types.py` | Type definitions | `DoctorIssue`, `DoctorConfig` | ~41 | OK |
 | `ngram/doctor_report.py` | Report generation | `generate_health_markdown()`, `calculate_health_score()` | ~465 | WATCH |
 | `ngram/doctor_files.py` | File discovery | `find_source_files()`, `find_code_directories()` | ~321 | OK |
 | `ngram/agent_cli.py` | Agent CLI wrapper | `build_agent_command()`, `normalize_agent()` | ~60 | OK |
 | `ngram/repair.py` | Repair orchestration | `repair_command()`, `spawn_repair_agent()` | ~1013 | SPLIT |
+| `ngram/repair_core.py` | Repair models + helpers | `RepairResult`, `get_issue_symbol()` | ~693 | WATCH |
 | `ngram/repair_report.py` | Report generation | `generate_llm_report()`, `generate_final_report()` | ~305 | OK |
 | `ngram/repair_instructions.py` | Code/test/config repair prompts | `get_issue_instructions()` | ~765 | WATCH |
 | `ngram/repair_instructions_docs.py` | Doc-related repair prompts | `get_doc_instructions()` | ~492 | WATCH |
+| `ngram/repair_interactive.py` | Interactive repair helpers | `resolve_arbitrage_interactive()` | ~372 | OK |
 | `ngram/sync.py` | SYNC file management | `sync_command()`, `archive_all_syncs()` | ~346 | OK |
 | `ngram/context.py` | Documentation discovery | `print_module_context()`, `get_module_context()` | ~553 | WATCH |
 | `ngram/prompt.py` | LLM prompt generation | `print_bootstrap_prompt()` | ~89 | OK |
 | `ngram/project_map.py` | Terminal dependency map | `print_project_map()` | ~359 | OK |
 | `ngram/project_map_html.py` | HTML export | `generate_html_map()` | ~315 | OK |
+| `ngram/repo_overview.py` | Repo overview | `generate_repo_overview()`, `generate_and_save()` | ~754 | SPLIT |
+| `ngram/repo_overview_formatters.py` | Overview formatting | `format_text_overview()`, `format_json_overview()` | ~264 | OK |
 | `ngram/github.py` | GitHub API integration | `create_issues_for_findings()` | ~288 | OK |
 | `ngram/utils.py` | Shared helpers | `get_templates_path()`, `find_module_directories()` | ~103 | OK |
 
@@ -200,15 +215,15 @@ For detailed algorithmic steps, see `docs/cli/ALGORITHM_CLI_Logic.md`.
 **Entry point:** cli.py → imports all command modules
 
 **Doctor subsystem:**
-- doctor.py → doctor_checks, doctor_checks_content, doctor_types, doctor_report, doctor_files, sync
+- doctor.py → doctor_checks, doctor_checks_content, doctor_checks_docs, doctor_checks_quality, doctor_checks_sync, doctor_types, doctor_report, doctor_files, sync
 - doctor_checks modules → doctor_types, doctor_files, utils
 
 **Repair subsystem:**
-- repair.py → doctor, repair_core, repair_report, repair_instructions
+- repair.py → doctor, repair_core, repair_interactive, repair_report, repair_instructions
 - repair_instructions modules → doctor, repair_instructions_docs
 - repair_report.py → repair_core
 
-**Other commands:** validate.py → utils; project_map.py → project_map_html
+**Other commands:** validate.py → utils; project_map.py → project_map_html; repo_overview.py → repo_overview_formatters
 
 ### External Dependencies
 
@@ -331,8 +346,7 @@ Files at SPLIT status need continued decomposition:
 
 | Current File | Lines | Target | Proposed New File | What to Move |
 |--------------|-------|--------|-------------------|--------------|
-| doctor_checks | ~1364L | <400L | doctor_checks_docs.py | Group remaining: doc checks, code checks, config checks |
-| repair | ~1013L | <400L | repair_interactive (planned) | Interactive UI: `resolve_arbitrage_interactive()`, ngram manager functions |
+| doctor_checks | ~1364L | <400L | TBD | Remaining check categories (docs/quality/sync already extracted) |
 | validate | ~712L | <400L | validate_checks (planned) | Individual validation check functions |
 
 ### Completed Extractions

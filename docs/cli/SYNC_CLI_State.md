@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (repair broken impl link)
+UPDATED_BY: codex (sync cli impl doc with code)
 STATUS: CANONICAL
 ```
 
@@ -35,6 +35,11 @@ No active development at this time.
 ---
 
 ## RECENT CHANGES
+
+### 2025-12-19: Sync CLI implementation doc with code structure
+
+- Added newly split doctor checks, repair helpers, and repo overview files
+- Updated module dependencies and file responsibilities to match current layout
 
 ### 2025-12-19: Fixed broken implementation doc references
 

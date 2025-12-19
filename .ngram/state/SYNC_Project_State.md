@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (tui impl link fix)
+UPDATED_BY: codex (sync cli impl doc with code)
 ```
 
 ---
@@ -20,6 +20,8 @@ Repo overview now uses DoctorConfig for DOCS header scan length, configurable vi
 Adjusted CLI implementation documentation to avoid false broken-link detection and to reference `ngram/project_map_html.py` explicitly.
 
 Documented the LLM agent module (`ngram/llms`) and added module mapping + DOCS pointer.
+
+Synced CLI implementation docs with current file layout (doctor check splits, repair helpers, repo overview files).
 
 Confirmed `ngram/repair_core.py` already implements `get_issue_symbol` and `get_issue_action_parts`; no code changes required for the INCOMPLETE_IMPL repair.
 

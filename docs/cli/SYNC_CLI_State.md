@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (repair incomplete impl false positive)
+UPDATED_BY: codex (repair broken impl link)
 STATUS: CANONICAL
 ```
 
@@ -35,6 +35,11 @@ No active development at this time.
 ---
 
 ## RECENT CHANGES
+
+### 2025-12-19: Fixed broken implementation doc references
+
+- Removed inline backtick references that were misclassified as files
+- Updated SVG namespace note to reference `ngram/project_map_html.py`
 
 ### 2025-12-19: Externalized overview DOCS header scan length
 
@@ -94,6 +99,7 @@ No active development at this time.
 - Confirmed INCOMPLETE_IMPL finding was a false positive due to short helper bodies.
 - SVG namespace now configurable via `NGRAM_SVG_NAMESPACE` for project map HTML output.
 - Overview DOCS header scan length now configurable via `doctor.docs_ref_search_chars` in `.ngram/config.yaml`.
+- Implementation doc now avoids false broken-link hits from config key notation.
 
 ### Suggestions
 - [ ] Reconcile `modules.yaml` with CLI module docs to remove mapping drift.

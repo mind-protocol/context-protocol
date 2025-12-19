@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (status bar verification)
+UPDATED_BY: codex (repair broken impl link)
 ```
 
 ---
@@ -14,6 +14,8 @@ Updated protocol implementation documentation to remove backticks from .ngram/CL
 Externalized the SVG namespace used by project map HTML to `NGRAM_SVG_NAMESPACE` with a default fallback and documented it in the CLI implementation docs.
 
 Repo overview now uses DoctorConfig for DOCS header scan length, configurable via `.ngram/config.yaml`.
+
+Adjusted CLI implementation documentation to avoid false broken-link detection and to reference `ngram/project_map_html.py` explicitly.
 
 Documented the LLM agent module (`ngram/llms`) and added module mapping + DOCS pointer.
 
@@ -136,6 +138,7 @@ Check `modules.yaml` (project root) for full manifest.
 - `repo_overview.py` now reads DOCS header scan length from DoctorConfig instead of a hardcoded value.
 - INCOMPLETE_IMPL task for `ngram/repair_core.py` was a false positive; SYNC updated to document the check.
 - Manager-agent subprocess handling moved to `ngram/tui/commands_agent.py` to keep `ngram/tui/commands.py` under the monolith threshold.
+- CLI implementation doc cleaned up broken file references that tripped BROKEN_IMPL_LINK.
 
 ### Suggestions
 - [ ] Add module mappings in `modules.yaml` for `ngram/tui/**` to avoid unmapped warnings.

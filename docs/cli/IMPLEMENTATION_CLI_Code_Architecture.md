@@ -189,7 +189,7 @@ For detailed algorithmic steps, see `docs/cli/ALGORITHM_CLI_Logic.md`.
 - **Init:** `get_templates_path()` → `shutil.copytree()` → update .ngram/CLAUDE.md + root AGENTS.md (append `templates/CODEX_SYSTEM_PROMPT_ADDITION.md`); on permission errors, fall back to in-place copy with warnings
 - **Doctor:** `load_config()` → 12 health checks → `calculate_health_score()` → write report
 - **Repair:** `run_doctor()` → filter issues → parallel agents → re-check → report
-- **Overview:** `generate_repo_overview()` loads DoctorConfig and uses `docs_ref_search_chars` (from `.ngram/config.yaml` under `doctor.docs_ref_search_chars`, default 2000) to limit DOCS header scanning
+- **Overview:** `generate_repo_overview()` loads DoctorConfig and uses `docs_ref_search_chars` (from the optional config file in `.ngram/` under the `doctor` section, key `docs_ref_search_chars`, default 2000) to limit DOCS header scanning
 
 ---
 
@@ -297,7 +297,7 @@ Project → init → Protocol Installed → validate → Validated → doctor �
 | stale_sync_days | .ngram/config.yaml (optional) | 14 | Days before SYNC is stale |
 | ignore | .ngram/config.yaml + .gitignore | common patterns | Paths to ignore |
 | disabled_checks | .ngram/config.yaml (optional) | [] | Checks to skip |
-| svg_namespace | `NGRAM_SVG_NAMESPACE` env var | `http://www.w3.org/2000/svg` | SVG namespace used by `project_map_html.py` |
+| svg_namespace | `NGRAM_SVG_NAMESPACE` env var | `http://www.w3.org/2000/svg` | SVG namespace used by `ngram/project_map_html.py` |
 
 ---
 

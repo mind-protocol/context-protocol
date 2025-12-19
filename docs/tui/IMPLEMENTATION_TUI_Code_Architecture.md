@@ -17,7 +17,6 @@ ALGORITHM:       ./ALGORITHM_TUI_Flow.md
 VALIDATION:      ./VALIDATION_TUI_Invariants.md
 THIS:            IMPLEMENTATION_TUI_Code_Architecture.md (overview)
 DETAILS:         ./IMPLEMENTATION_TUI_Code_Architecture/IMPLEMENTATION_TUI_Code_Architecture_Structure.md
-DETAILS:         ./IMPLEMENTATION_TUI_Code_Architecture/IMPLEMENTATION_TUI_Code_Architecture_Runtime.md
 TEST:            ./TEST_TUI_Coverage.md
 SYNC:            ./SYNC_TUI_State.md
 ```
@@ -56,7 +55,6 @@ ngram/tui/styles/theme.tcss # Theme
 ## WHAT TO READ NEXT
 
 - Implementation structure and responsibilities: `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/IMPLEMENTATION_TUI_Code_Architecture_Structure.md`
-- Runtime behavior, flows, concurrency: `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/IMPLEMENTATION_TUI_Code_Architecture_Runtime.md`
 
 ---
 

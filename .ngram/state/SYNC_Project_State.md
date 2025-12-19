@@ -53,6 +53,7 @@ Updated the TUI implementation structure data-flow diagram to use full file path
 
 Reduced `docs/tui` size by archiving historical detail and splitting `IMPLEMENTATION_TUI_Code_Architecture.md` into an overview plus detail files under `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/`. Added `docs/tui/archive/SYNC_archive_2024-12.md` and updated `docs/tui/SYNC_TUI_State.md` to keep current state concise.
 Consolidated TUI implementation runtime details into `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/IMPLEMENTATION_TUI_Code_Architecture_Structure.md` and left a reference stub in the runtime doc to avoid duplicate IMPLEMENTATION files.
+Removed `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/IMPLEMENTATION_TUI_Code_Architecture_Runtime.md` so TUI implementation details live in a single canonical file.
 Clarified the TUI structure doc file list label for the suggestions bar widget to match `ngram/tui/widgets/suggestions.py`.
 Synced TUI implementation structure doc file list and responsibilities with new widgets and theme files.
 Re-verified TUI IMPLEMENTATION doc backtick references for STALE_IMPL; all paths resolve.

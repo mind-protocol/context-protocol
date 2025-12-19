@@ -45,6 +45,7 @@ Doc maintenance:
 - Data flow diagram uses full file paths for command and repair routing
 - Implementation details split into `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/` with an overview entry point
 - Runtime implementation content consolidated into `IMPLEMENTATION_TUI_Code_Architecture_Structure.md` to avoid duplicate docs
+- Removed `IMPLEMENTATION_TUI_Code_Architecture_Runtime.md` so the structure doc is the single IMPLEMENTATION detail file
 - Structure doc file list updated for new widgets and theme files
 - Re-verified IMPLEMENTATION doc backtick references for STALE_IMPL; all paths resolve
 - Clarified suggestions bar label in the structure doc file list

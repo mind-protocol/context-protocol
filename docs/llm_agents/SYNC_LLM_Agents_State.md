@@ -8,6 +8,20 @@ STATUS: DESIGNING
 
 ---
 
+## CHAIN
+
+```
+PATTERNS:        ./PATTERNS_Provider_Specific_LLM_Subprocesses.md
+BEHAVIORS:       ./BEHAVIORS_Gemini_Agent_Output.md
+ALGORITHM:       ./ALGORITHM_Gemini_Stream_Flow.md
+VALIDATION:      ./VALIDATION_Gemini_Agent_Invariants.md
+IMPLEMENTATION:  ./IMPLEMENTATION_LLM_Agent_Code_Architecture.md
+TEST:            ./TEST_LLM_Agent_Coverage.md
+THIS:            SYNC_LLM_Agents_State.md (you are here)
+```
+
+---
+
 ## MATURITY
 
 **What's canonical (v1):**

@@ -9,6 +9,8 @@ UPDATED_BY: codex (tui impl link fix)
 
 ## CURRENT STATE
 
+Updated protocol implementation doc to avoid a broken link reference by describing the manager AGENTS.md sibling without an inline path.
+
 Updated protocol implementation documentation to remove backticks from .ngram/CLAUDE.md references so broken link detection no longer strips the leading dot.
 
 Externalized the SVG namespace used by project map HTML to `NGRAM_SVG_NAMESPACE` with a default fallback and documented it in the CLI implementation docs.

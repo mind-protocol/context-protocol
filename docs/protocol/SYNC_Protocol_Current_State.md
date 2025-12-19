@@ -55,6 +55,7 @@ Protocol V1 complete and in use. Dogfooding on itself + Blood Ledger.
 
 **Recent changes (2025-12-19):**
 - Removed backticks around .ngram/CLAUDE.md in the protocol IMPLEMENTATION doc so broken link detection no longer strips the leading dot.
+- Rephrased the manager bootstrap note in `docs/protocol/IMPLEMENTATION_Protocol_Code_Architecture.md` to avoid a broken link on the manager AGENTS.md sibling.
 
 ---
 

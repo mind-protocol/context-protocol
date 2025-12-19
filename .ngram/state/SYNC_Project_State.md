@@ -15,11 +15,15 @@ Externalized the SVG namespace used by project map HTML to `NGRAM_SVG_NAMESPACE`
 
 Repo overview now uses DoctorConfig for DOCS header scan length, configurable via `.ngram/config.yaml`.
 
+Documented the LLM agent module (`ngram/llms`) and added module mapping + DOCS pointer.
+
 Confirmed `ngram/repair_core.py` already implements `get_issue_symbol` and `get_issue_action_parts`; no code changes required for the INCOMPLETE_IMPL repair.
 
 Verified `ngram/tui/state.py` has no empty stubs for `ConversationMessage.to_dict` or `AgentHandle.duration`; documentation updated to reflect confirmation.
 
 Re-verified `ngram/tui/widgets/status_bar.py` includes complete implementations for the reported methods; no code changes needed.
+
+Split `ngram/tui/commands.py` to extract manager-agent subprocess logic into `ngram/tui/commands_agent.py` (972L → 637L; new file 349L), and updated `docs/tui/IMPLEMENTATION_TUI_Code_Architecture.md`, `modules.yaml`, and `docs/tui/SYNC_TUI_State.md`.
 
 ---
 
@@ -113,6 +117,7 @@ Check `modules.yaml` (project root) for full manifest.
 | Module | Code | Docs | Maturity |
 |--------|------|------|----------|
 | cli | `ngram/*.py` | `docs/cli/` | CANONICAL |
+| llm_agents | `ngram/llms/**` | `docs/llm_agents/` | DESIGNING |
 | tui | `ngram/tui/**` | `docs/tui/` | CANONICAL |
 
 **Unmapped code:** (run `ngram validate` to check)
@@ -130,6 +135,7 @@ Check `modules.yaml` (project root) for full manifest.
 - `ngram/tui/state.py` INCOMPLETE_IMPL report was outdated; functions already implemented.
 - `repo_overview.py` now reads DOCS header scan length from DoctorConfig instead of a hardcoded value.
 - INCOMPLETE_IMPL task for `ngram/repair_core.py` was a false positive; SYNC updated to document the check.
+- Manager-agent subprocess handling moved to `ngram/tui/commands_agent.py` to keep `ngram/tui/commands.py` under the monolith threshold.
 
 ### Suggestions
 - [ ] Add module mappings in `modules.yaml` for `ngram/tui/**` to avoid unmapped warnings.

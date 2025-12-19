@@ -61,6 +61,17 @@ modules:
     notes: |
       Framework CLI commands (doctor, repair, validate, init, sync, context, prompt, map).
 
+  llm_agents:
+    code: "ngram/llms/**"
+    docs: "docs/llm_agents/"
+    maturity: DESIGNING
+    owner: agent
+    entry_points:
+      - gemini_agent.py
+    notes: |
+      Provider-specific CLI adapters for LLMs. The Gemini adapter handles auth,
+      prompt formatting, and streaming JSON output for the TUI.
+
   tui:
     code: "ngram/tui/**"
     docs: "docs/tui/"
@@ -68,5 +79,7 @@ modules:
     owner: agent
     entry_points:
       - app.py
+    internal:
+      - commands_agent.py
     notes: |
       Textual-based interactive UI launched by `ngram` with no subcommand.

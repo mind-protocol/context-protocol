@@ -29,7 +29,8 @@ ngram/tui/                           # TUI package root
 ngram/tui/__init__.py                # Package exports (11L)
 ngram/tui/app.py                     # Main Textual App (491L)
 ngram/tui/state.py                   # Session state management (169L)
-ngram/tui/commands.py                # Slash command handlers (443L)
+ngram/tui/commands.py                # Slash command handlers (637L)
+ngram/tui/commands_agent.py          # Manager agent subprocess helpers (349L)
 ngram/tui/manager.py                 # Manager supervisor & Claude PTY (Claude only) (275L)
 ngram/tui/widgets/__init__.py        # Widget exports (20L)
 ngram/tui/widgets/manager_panel.py   # Left column manager display (138L)
@@ -55,7 +56,8 @@ Manager startup prefers `../../.ngram/agents/manager/AGENTS.md` when present; ot
 | `ngram/tui/widgets/input_bar.py` | 133L | EXISTS | User input capture | `InputBar`, `on_submit()`, history, tab completion |
 | `ngram/tui/widgets/status_bar.py` | 74L | EXISTS | Health score display | `StatusBar`, `update_health()` |
 | `ngram/tui/state.py` | 169L | EXISTS | Session state | `SessionState`, `AgentHandle`, `ConversationHistory` |
-| `ngram/tui/commands.py` | 443L | EXISTS | Command routing | `handle_command()`, `handle_repair()`, `handle_doctor()` |
+| `ngram/tui/commands.py` | 637L | WATCH | Command routing | `handle_command()`, `handle_repair()`, `handle_doctor()` |
+| `ngram/tui/commands_agent.py` | 349L | OK | Manager agent subprocess handling | `_run_agent_message()`, `_detect_commands()` |
 | `ngram/tui/styles/theme.tcss` | 244L | EXISTS | CSS styling | Paper & Parchment theme |
 | `ngram/tui/manager.py` | 275L | EXISTS | Manager supervisor | `ManagerSupervisor`, `ClaudePTY`, `DriftWarning` |
 | `ngram/cli.py` | - | EXISTS | CLI entry point | TUI launched via `ngram` (no subcommand) |
@@ -234,6 +236,7 @@ ngram/tui/app.py
     └── imports → ngram/tui/manager.py
 
 ngram/tui/commands.py
+    └── imports → ngram/tui/commands_agent.py
     └── imports → ngram/repair_core.py
     └── imports → ngram/doctor.py
     └── imports → ngram/tui/app.py (type hint)

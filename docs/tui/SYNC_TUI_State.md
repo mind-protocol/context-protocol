@@ -56,6 +56,12 @@ The TUI provides an agent-style persistent chat interface for ngram. Entry point
 
 - Fixed the manager startup reference to point to `../../.ngram/CLAUDE.md`.
 
+### 2025-12-19: Commands split to reduce monolith
+
+- Extracted manager-agent subprocess helpers into `ngram/tui/commands_agent.py`.
+- Line counts: `ngram/tui/commands.py` 972L → 637L, new `ngram/tui/commands_agent.py` 349L.
+- No behavior changes; imports updated in `ngram/tui/commands.py`.
+
 ### Completed Features
 
 #### Two-Panel Layout
@@ -248,9 +254,11 @@ TUI is functional with Claude integration, repair agent spawning, and conversati
 - Verified `ngram/tui/state.py` functions are fully implemented; no empty stubs remain.
 - Manager drift detection now normalizes file paths and checks PTY subprocess state.
  - Re-verified `ConversationMessage.to_dict` and `AgentHandle.duration` are implemented; no changes required.
+- Manager agent subprocess logic moved to `ngram/tui/commands_agent.py` to keep `ngram/tui/commands.py` below monolith threshold.
 
 ### Suggestions
 - [ ] Keep doctor-ignore and SYNC notes updated together to avoid drift.
+- [ ] Consider further splitting `ngram/tui/commands.py` if it grows past 800L again.
 
 ### Propositions
 - If more false positives appear, consider refining the doctor heuristic for short methods.

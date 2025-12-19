@@ -87,6 +87,12 @@ if output_format == stream-json:
         if chunk.text:
             emit assistant JSON with chunk
             append chunk to response_parts
+        if chunk.tool_calls:
+            emit tool_code JSON
+            execute local tool handlers
+            emit tool_result JSON
+            send tool_result back to Gemini
+            stream follow-up assistant chunks
     emit result JSON with full response text
 else:
     response = chat.send_message(prompt)

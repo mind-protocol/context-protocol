@@ -22,6 +22,8 @@ Verified the protocol implementation overview no longer references removed sub-d
 Consolidated protocol IMPLEMENTATION docs under `docs/protocol/IMPLEMENTATION/IMPLEMENTATION_Overview.md` and removed duplicate sub-docs.
 Updated `docs/protocol/IMPLEMENTATION_Overview.md` to point to the consolidated implementation overview and note the consolidation.
 
+Implemented Gemini adapter tool handlers in `ngram/llms/gemini_agent.py` to replace placeholder tool stubs.
+
 Externalized the SVG namespace used by project map HTML to `NGRAM_SVG_NAMESPACE` with a default fallback and documented it in the CLI implementation docs.
 Moved project map SVG namespace defaults into `.ngram/config.yaml` and kept `NGRAM_SVG_NAMESPACE` as an override.
 
@@ -174,6 +176,7 @@ Check `modules.yaml` (project root) for full manifest.
 - CLI implementation doc cleaned up broken file references that tripped BROKEN_IMPL_LINK.
 - Project map SVG namespace now reads from `.ngram/config.yaml` with an env var override.
 - Re-verified `ngram/repair_core.py` issue lookups and updated CLI SYNC to reflect the check.
+- Gemini adapter tool stubs were replaced with real filesystem/web handlers and light persistence.
 
 ### Suggestions
 - [ ] Add module mappings in `modules.yaml` for `ngram/tui/**` to avoid unmapped warnings.

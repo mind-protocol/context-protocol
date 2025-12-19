@@ -3,40 +3,58 @@
 ```
 LAST_UPDATED: 2025-12-19
 UPDATED_BY: ngram doctor
-STATUS: NEEDS_ATTENTION
+STATUS: CRITICAL
 ```
 
 ---
 
 ## CURRENT STATE
 
-**Health Score:** 59/100
+**Health Score:** 30/100
 
-The project needs attention. Some documentation is stale or incomplete, which may slow down agents.
+The project has critical issues that will significantly impact agent effectiveness. Address these before starting new work.
 
 | Severity | Count |
 |----------|-------|
-| Critical | 0 |
-| Warning | 4 |
-| Info | 29 |
+| Critical | 2 |
+| Warning | 5 |
+| Info | 35 |
 
 ---
 
 ## ISSUES
 
-### LARGE_DOC_MODULE (1 files)
+### BROKEN_IMPL_LINK (2 files)
 
-**What's wrong:** Large doc modules consume significant context window when loaded. Agents may not be able to load everything they need.
+**What's wrong:** IMPLEMENTATION docs reference files that don't exist. Agents following these docs will waste time looking for non-existent code.
 
-**How to fix:** Archive old sections to dated files, split into sub-modules, or remove redundant content.
+**How to fix:** Update file paths in the IMPLEMENTATION doc to match actual locations, or remove references to deleted files.
 
-**Protocol:** Load `VIEW_Refactor_Improve_Code_Structure.md` before starting.
+**Protocol:** Load `VIEW_Document_Create_Module_Documentation.md` before starting.
 
 **Files:**
 
-- `docs/cli` - Total 50K chars (threshold: 50K)
+- `docs/protocol/IMPLEMENTATION/IMPLEMENTATION_Overview.md` - References 4 non-existent file(s)
+  - Update or remove references: ngram/CLAUDE.md, SYNC_Project_Health.md, SYNC_Project_State.md
+- `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/IMPLEMENTATION_TUI_Code_Architecture_Structure.md` - References 3 non-existent file(s)
+  - Update or remove references: ngram/CLAUDE.md, ngram/agents/manager/AGENTS.md, PATTERNS_TUI_Design.md
 
-### HARDCODED_CONFIG (2 files)
+### INCOMPLETE_IMPL (4 files)
+
+**What's wrong:** Empty functions indicate incomplete implementation. The interface exists but the behavior doesn't.
+
+**How to fix:** Fill in the empty functions with actual implementation.
+
+**Protocol:** Load `VIEW_Implement_Write_Or_Modify_Code.md` before starting.
+
+**Files:**
+
+- `ngram/repair_core.py` - Contains 2 empty/incomplete function(s)
+- `ngram/tui/commands.py` - Contains 2 empty/incomplete function(s)
+- `ngram/tui/state.py` - Contains 2 empty/incomplete function(s)
+- `ngram/tui/widgets/status_bar.py` - Contains 6 empty/incomplete function(s)
+
+### HARDCODED_CONFIG (1 files)
 
 **What's wrong:** This issue may cause problems.
 
@@ -46,13 +64,7 @@ The project needs attention. Some documentation is stale or incomplete, which ma
 
 **Files:**
 
-- `ngram/doctor_checks_content.py` - Contains hardcoded configuration values
-- `ngram/project_map_html.py` - Contains hardcoded configuration values
-
-**Resolved:**
-
-- `ngram/repo_overview.py` - False positive added to doctor-ignore.yaml (2025-12-19).
-  The value 2000 at line 121 is a character count limit for file header scanning, NOT a port number.
+- `ngram/llms/gemini_agent.py` - Contains hardcoded configuration values
 
 ---
 
@@ -60,17 +72,17 @@ The project needs attention. Some documentation is stale or incomplete, which ma
 
 These are minor issues that don't block work but would improve project health:
 
-- [ ] `ngram/doctor_checks_docs.py` - Not referenced in any IMPLEMENTATION doc
-- [ ] `ngram/doctor_checks_quality.py` - Not referenced in any IMPLEMENTATION doc
-- [ ] `ngram/doctor_checks_sync.py` - Not referenced in any IMPLEMENTATION doc
-- [ ] `ngram/repair_interactive.py` - Not referenced in any IMPLEMENTATION doc
-- [ ] `ngram/repo_overview.py` - Not referenced in any IMPLEMENTATION doc
-- [ ] `ngram/repo_overview_formatters.py` - Not referenced in any IMPLEMENTATION doc
+- [ ] `ngram/agent_cli.py` - No DOCS: reference in file header
+- [ ] `ngram/doctor_types.py` - No DOCS: reference in file header
+- [ ] `ngram/tui/styles/theme.tcss` - No DOCS: reference in file header
+- [ ] `ngram/tui/styles/theme_light.tcss` - No DOCS: reference in file header
 - [ ] `cli` - No tests for module
+- [ ] `llm_agents` - No tests for module
+- [ ] `tui` - No tests for module
 - [ ] `docs/map.md` - Doc not linked from code or modules.yaml
-- [ ] `docs/protocol/ALGORITHM_Workflows_And_Procedures.md` - Doc not linked from code or modules.yaml
-- [ ] `docs/protocol/BEHAVIORS_Observable_Protocol_Effects.md` - Doc not linked from code or modules.yaml
-- ... and 19 more
+- [ ] `docs/protocol/ALGORITHM/ALGORITHM_Overview.md` - Doc not linked from code or modules.yaml
+- [ ] `docs/protocol/ALGORITHM_Overview.md` - Doc not linked from code or modules.yaml
+- ... and 25 more
 
 ---
 
@@ -78,7 +90,9 @@ These are minor issues that don't block work but would improve project health:
 
 **For the next agent:**
 
-The project is in reasonable shape. If you have time, update any stale SYNC files related to your work area.
+Before starting your task, consider addressing critical issues - especially if your work touches affected files. Monoliths and undocumented code will slow you down.
+
+**Recommended first action:** Pick one MONOLITH file you'll be working in and split its largest function into a separate module.
 
 ---
 

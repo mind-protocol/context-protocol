@@ -39,6 +39,7 @@ ngram/llms/gemini_agent.py  # Gemini adapter CLI
 ## KEY FUNCTIONS
 
 - `main()` — CLI entry point; parses args, configures Gemini SDK, streams output.
+- Tool helpers inside `main()` handle filesystem, search, and optional web fetch actions.
 
 ---
 
@@ -67,6 +68,7 @@ ngram/llms/gemini_agent.py (python -m ngram.llms.gemini_agent)
 
 - `GEMINI_API_KEY` (CLI arg, `.env`, or environment variable)
 - `--output-format` determines JSON streaming vs plain text
+- Tool outputs may persist under .ngram/state (agent_todos.json, agent_memory.jsonl)
 
 ---
 

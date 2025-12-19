@@ -60,6 +60,15 @@ THEN:   Available model IDs are printed to stderr
 AND:    Errors in listing models are printed to stderr
 ```
 
+### B5: Tool Execution Output
+
+```
+GIVEN:  The Gemini response includes tool calls
+WHEN:   The adapter processes tool calls
+THEN:   A tool_code JSON message is emitted for each tool invocation
+AND:    A tool_result JSON message is emitted with either data or an error
+```
+
 ---
 
 ## NOTES

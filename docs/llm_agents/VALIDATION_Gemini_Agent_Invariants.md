@@ -41,6 +41,11 @@ SYNC:            ./SYNC_LLM_Agents_State.md
 
 - Model listing and related errors are written to stderr only, so stdout remains parseable for the TUI.
 
+### V5: Tool Calls Return Structured Results
+
+- Tool calls emit a `tool_code` message and a corresponding `tool_result` message on stdout.
+- Tool execution errors return a JSON object with an `error` key instead of raising.
+
 ---
 
 ## EDGE CASES

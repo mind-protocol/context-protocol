@@ -102,7 +102,7 @@ Adapters should check for required API keys early and exit with explicit error m
 
 ## WHAT THIS DOES NOT SOLVE
 
-- Tool execution or tool schema translation for Gemini
+- Full tool schema translation or advanced tool routing for Gemini (only basic local tools are implemented)
 - Model selection beyond the hard-coded default
 - Conversation state management beyond the one-shot prompt flow
 

@@ -34,6 +34,16 @@ Screen {
     color: #4A4A4A;  /* Dark grey default text */
 }
 
+/* ─── Layout ─────────────────────────────────────────────────────── */
+
+#manager-column {
+    width: 42%;
+}
+
+#agent-container {
+    width: 58%;
+}
+
 /* ─── Main Panels ─────────────────────────────────────────────────── */
 
 #manager-panel {

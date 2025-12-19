@@ -119,6 +119,7 @@ async def handle_command(app: "NgramApp", command: str) -> None:
             "/issues": handle_issues,
             "/run": handle_run,
             "/logs": handle_logs,
+            "/reset-manager": handle_reset_manager,
         }
 
         handler = handlers.get(cmd)
@@ -251,10 +252,11 @@ async def _run_agent_message(app: "NgramApp", message: str, response_widget, sto
             prompt=prompt_text,
             system_prompt=system_prompt,
             stream_json=(app.agent_provider == "claude"),
-            continue_session=True,
+            continue_session=not app._manager_force_new_session,
             add_dir=app.target_dir,
             allowed_tools=allowed_tools if app.agent_provider == "claude" else None,
         )
+        app._manager_force_new_session = False
 
         process = await asyncio.create_subprocess_exec(
             *agent_cmd.cmd,
@@ -479,6 +481,7 @@ async def handle_help(app: "NgramApp", args: str) -> None:
   /doctor  - Run health check
   /issues  - Display issues list
   /logs    - View completed agent logs (collapsible)
+  /reset-manager - Reset manager session (fresh system prompt)
   /clear   - Clear manager messages
   /quit    - Exit TUI
 
@@ -944,6 +947,14 @@ async def handle_logs(app: "NgramApp", args: str) -> None:
             await columns.mount(collapsible)
     except Exception as e:
         manager.add_message(f"[red]Logs error: {e}[/]")
+
+
+async def handle_reset_manager(app: "NgramApp", args: str) -> None:
+    """Reset the manager session to force a new system prompt load."""
+    manager = app.query_one("#manager-panel")
+    app.reset_manager_session()
+    app.conversation.clear()
+    manager.add_message("[dim]Manager session reset. Next message will start a fresh session.[/]")
 
 
 async def _refresh_map(app: "NgramApp") -> None:

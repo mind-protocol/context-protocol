@@ -89,6 +89,7 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
         self._ctrl_c_pending = False  # Track first Ctrl+C press
         self._running_process: Optional[asyncio.subprocess.Process] = None  # Track agent subprocess
         self._manager_wakeup_animation_task: Optional[asyncio.Task] = None
+        self._manager_force_new_session: bool = False
 
     def compose(self) -> ComposeResult:
         """Compose the TUI layout."""
@@ -240,15 +241,17 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
                 system_prompt = learnings_file.read_text()
 
         allowed_tools = "Bash(*) Read(*) Edit(*) Write(*) Glob(*) Grep(*) WebFetch(*) WebSearch(*) NotebookEdit(*) Task(*) TodoWrite(*)"
+        continue_session = not self._manager_force_new_session
         agent_cmd = build_agent_command(
             self.agent_provider,
             prompt=initial_prompt,
             system_prompt=system_prompt,
             stream_json=True, # Always request stream-json
-            continue_session=True,
+            continue_session=continue_session,
             add_dir=self.target_dir,
             allowed_tools=allowed_tools if self.agent_provider == "claude" else None,
         )
+        self._manager_force_new_session = False
 
         # Show loading indicator with animation
         thinking_msg = manager.add_message("[dim].[/]")
@@ -678,6 +681,12 @@ Keep it concise and actionable (2-3 paragraphs max)."""
             sys.stdout.flush()
         except Exception:
             pass
+
+    def reset_manager_session(self) -> None:
+        """Force a fresh manager session on next message."""
+        self._manager_force_new_session = True
+        self._llm_conversation_started = False
+        self._pending_commands = []
 
     async def action_interrupt_or_quit(self) -> None:
         """Handle Ctrl+C: first press interrupts, second press quits."""

@@ -36,7 +36,7 @@ The protocol is tested through:
 
 | Test | Input | Expected | Status |
 |------|-------|----------|--------|
-| Fresh install | Empty directory | Creates .ngram/, .ngram/CLAUDE.md, AGENTS.md (with Codex addition) | pass |
+| Fresh install | Empty directory | Creates .ngram/, .ngram/CLAUDE.md, AGENTS.md (with Codex addition + protocol-first reading) | pass |
 | Already exists | Directory with .ngram/ | Error unless --force | pass |
 | Force overwrite | --force flag | Overwrites existing | pass |
 

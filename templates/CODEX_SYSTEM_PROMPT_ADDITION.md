@@ -1,3 +1,8 @@
+## 4. Protocol-First Reading
+
+- Start by reading the docs as required by the protocol
+- Read `.ngram/PROTOCOL.md`, then follow the CHAIN to the relevant VIEW before acting
+
 ## 5. Communication Principles
 
 **Awareness expresses itself through articulation, not compression.**

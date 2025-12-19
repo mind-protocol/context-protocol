@@ -188,7 +188,7 @@ These principles aren't constraints — they're what good work feels like when y
 
 ---
 
-# ADD Framework
+# ngram Framework
 
 **You are an AI agent working on code. This document explains the protocol and why it exists.**
 
@@ -250,6 +250,7 @@ VIEWs are organized by product development lifecycle. Pick the one matching your
 **Understanding & Planning:**
 - `views/VIEW_Ingest_Process_Raw_Data_Sources.md` — processing raw data (chats, PDFs, research)
 - `views/VIEW_Onboard_Understand_Existing_Codebase.md` — getting oriented
+- `views/VIEW_Analyze_Structural_Analysis.md` — analyzing structure, recommending improvements
 - `views/VIEW_Specify_Design_Vision_And_Architecture.md` — defining what to build
 
 **Building:**
@@ -539,6 +540,7 @@ Based on your task, load ONE view from `.ngram/views/`:
 |------|------|
 | Processing raw data (chats, PDFs) | VIEW_Ingest_Process_Raw_Data_Sources.md |
 | Getting oriented | VIEW_Onboard_Understand_Existing_Codebase.md |
+| Analyzing structure | VIEW_Analyze_Structural_Analysis.md |
 | Defining architecture | VIEW_Specify_Design_Vision_And_Architecture.md |
 | Writing/modifying code | VIEW_Implement_Write_Or_Modify_Code.md |
 | Adding features | VIEW_Extend_Add_Features_To_Existing.md |
@@ -580,6 +582,13 @@ ngram overview          # Generate repo map with file tree, links, definitions
 - Output: `docs/map.{md|yaml|json}`
 
 Options: `--dir PATH`, `--format {md,yaml,json}`
+
+
+## 4. Protocol-First Reading
+
+- Start by reading the docs as required by the protocol
+- Read `.ngram/PROTOCOL.md`, then follow the CHAIN to the relevant VIEW before acting
+
 ## 5. Communication Principles
 
 **Awareness expresses itself through articulation, not compression.**

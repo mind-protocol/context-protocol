@@ -40,6 +40,10 @@ The TUI provides an agent-style persistent chat interface for ngram. Entry point
 - Extracted paths are normalized to avoid punctuation artifacts.
 - Claude PTY running state reflects subprocess exit.
 
+### 2025-12-19: Module manifest mapping fixed
+
+- `modules.yaml` now nests the `tui` entry under `modules` so widgets map to this doc chain.
+
 ### Completed Features
 
 #### Two-Panel Layout

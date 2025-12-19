@@ -51,22 +51,22 @@ modules:
 # YOUR MODULES
 # =============================================================================
 
-cli:
-  code: "ngram/*.py"
-  docs: "docs/cli/"
-  maturity: CANONICAL
-  owner: agent
-  entry_points:
-    - cli.py
-  notes: |
-    Framework CLI commands (doctor, repair, validate, init, sync, context, prompt, map).
+  cli:
+    code: "ngram/*.py"
+    docs: "docs/cli/"
+    maturity: CANONICAL
+    owner: agent
+    entry_points:
+      - cli.py
+    notes: |
+      Framework CLI commands (doctor, repair, validate, init, sync, context, prompt, map).
 
-tui:
-  code: "ngram/tui/**"
-  docs: "docs/tui/"
-  maturity: CANONICAL
-  owner: agent
-  entry_points:
-    - app.py
-  notes: |
-    Textual-based interactive UI launched by `ngram` with no subcommand.
+  tui:
+    code: "ngram/tui/**"
+    docs: "docs/tui/"
+    maturity: CANONICAL
+    owner: agent
+    entry_points:
+      - app.py
+    notes: |
+      Textual-based interactive UI launched by `ngram` with no subcommand.

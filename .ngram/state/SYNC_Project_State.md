@@ -26,6 +26,20 @@ ngram CLI project with doctor/repair functionality for maintaining project healt
 
 ## RECENT CHANGES
 
+### 2025-12-19: Verified status_bar.py TUI functions as complete (false positive)
+
+- **What:** Verified 6 functions in `ngram/tui/widgets/status_bar.py` are implemented correctly (not empty).
+- **Why:** INCOMPLETE_IMPL flagged: set_folder, update_health, set_repair_progress, _start_animation, _animate, _refresh_display.
+- **Impact:** No code changes needed. These are legitimate implementations:
+  - `set_folder`: Sets attribute and refreshes display
+  - `update_health`: Bounds-checks score and refreshes
+  - `set_repair_progress`: Full 14-line implementation managing progress state and animation lifecycle
+  - `_start_animation`: Starts interval timer via `set_interval()`
+  - `_animate`: Increments animation frame counter and refreshes
+  - `_refresh_display`: Calls `self.update()` with formatted content
+- **Added:** Ignore entry in `.ngram/doctor-ignore.yaml` to suppress future false positives.
+- **Note:** Doctor threshold of ≤2 lines continues to flag short but complete implementations.
+
 ### 2025-12-19: Verified manager.py TUI functions as complete (false positive)
 
 - **What:** Verified 4 functions in `ngram/tui/manager.py` are implemented correctly (not empty).

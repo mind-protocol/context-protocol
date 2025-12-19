@@ -123,3 +123,19 @@ ignores:
       regex extraction utilities, and delegation methods.
     added_by: repair-agent
     added_date: 2025-12-19
+
+  - issue_type: INCOMPLETE_IMPL
+    path: ngram/tui/widgets/status_bar.py
+    reason: |
+      False positive - all 6 flagged functions are fully implemented:
+      - set_folder: Sets _folder attribute and calls _refresh_display() (2 lines)
+      - update_health: Bounds-checks score, sets _health, refreshes display (2 lines)
+      - set_repair_progress: Full implementation (14 lines) updating progress state
+        and managing animation start/stop lifecycle
+      - _start_animation: Starts interval timer via set_interval() (2 lines)
+      - _animate: Increments animation frame and refreshes display (2 lines)
+      - _refresh_display: Calls self.update() with formatted bar content (1 line)
+      These are complete implementations. The short methods are intentionally concise
+      for maintainability. Doctor's ≤2 line threshold incorrectly flags them.
+    added_by: repair-agent
+    added_date: 2025-12-19

@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: Claude (TUI dark theme & agent improvements)
+UPDATED_BY: codex (verified tui/state.py implementations)
 STATUS: IMPLEMENTED
 ```
 
@@ -27,6 +27,12 @@ THIS:            SYNC_TUI_State.md (you are here)
 **Status: FUNCTIONAL** — TUI working with agent integration (Claude, Gemini, or Codex).
 
 The TUI provides an agent-style persistent chat interface for ngram. Entry point is `ngram` (no subcommand).
+
+### 2025-12-19: State helpers hardened
+
+- Conversation history now handles non-positive limits and returns copies.
+- Agent activity checks consider subprocess returncode.
+- Session state de-duplicates agent handles by id and ignores empty manager messages.
 
 ### Completed Features
 
@@ -163,6 +169,7 @@ None currently.
 - INCOMPLETE_IMPL false positive in `app.py` - short UI actions (`action_doctor`, `action_repair`,
   tab switching, and input focus helpers) are complete delegating implementations. Added to
   doctor-ignore.yaml.
+- INCOMPLETE_IMPL report in `tui/state.py` was outdated - all functions already implemented; no code change needed.
 
 ---
 
@@ -214,6 +221,7 @@ TUI is functional with Claude integration, repair agent spawning, and conversati
 
 ### Remarks
 - INCOMPLETE_IMPL findings for short TUI action helpers were false positives and are now suppressed.
+- Verified `ngram/tui/state.py` functions are fully implemented; no empty stubs remain.
 
 ### Suggestions
 - [ ] Keep doctor-ignore and SYNC notes updated together to avoid drift.

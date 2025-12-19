@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (repair_core INCOMPLETE_IMPL verification)
+UPDATED_BY: codex (tui/state.py INCOMPLETE_IMPL verification)
 ```
 
 ---
@@ -32,6 +32,12 @@ TUI implementations are complete, but doctor was flagging short delegating metho
 - **Why:** Repair task flagged INCOMPLETE_IMPL, but code already includes lookup logic.
 - **Impact:** No code changes required; recorded as false-positive repair.
 
+### 2025-12-19: Verified TUI state helpers already implemented
+
+- **What:** Checked `ngram/tui/state.py` for reported empty functions; confirmed all listed methods already have implementations.
+- **Why:** Repair task flagged INCOMPLETE_IMPL, but code includes session, agent, and history helpers.
+- **Impact:** No code changes required; recorded as false-positive repair.
+
 ### 2025-12-19: Suppressed false-positive TUI INCOMPLETE_IMPL
 
 - **What:** Added doctor-ignore entries for `ngram/tui/app.py`, `ngram/tui/widgets/input_bar.py`, and `ngram/tui/widgets/manager_panel.py`.
@@ -54,6 +60,12 @@ TUI implementations are complete, but doctor was flagging short delegating metho
 - Conflict: Repair task claimed `get_issue_symbol` and `get_issue_action_parts` were empty, but `ngram/repair_core.py` already implements both.
 - Resolution: Treat as false positive; no code changes required.
 - Reasoning: Implementations exist and align with CLI SYNC note about verified helpers.
+- Updated: /home/mind-protocol/ngram/.ngram/state/SYNC_Project_State.md
+
+### DECISION: tui/state.py INCOMPLETE_IMPL false positive
+- Conflict: Repair task claimed multiple methods in `ngram/tui/state.py` were empty, but implementations are present.
+- Resolution: Treat as false positive; no code changes required.
+- Reasoning: Methods already implement history, agent output, and session state helpers.
 - Updated: /home/mind-protocol/ngram/.ngram/state/SYNC_Project_State.md
 
 ---
@@ -142,6 +154,7 @@ Check `modules.yaml` (project root) for full manifest.
 ### Remarks
 - doctor-ignore now reflects TUI false positives that were already documented in TUI sync.
 - `ngram validate` fails due to missing `IMPLEMENTATION_Project_Health_Doctor.md` references.
+- `ngram/tui/state.py` INCOMPLETE_IMPL report was outdated; functions already implemented.
 
 ### Suggestions
 - [ ] Add module mappings in `modules.yaml` for `ngram/tui/**` to avoid unmapped warnings.

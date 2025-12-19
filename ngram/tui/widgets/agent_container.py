@@ -72,7 +72,11 @@ class AgentContainer(Container):
         width: 100%;
         height: auto;
         max-height: 40%;
-        padding: 1;
+        padding: 0;
+    }
+
+    AgentContainer #agents-completed .placeholder {
+        padding: 0;
     }
 
     /* Agent columns container */

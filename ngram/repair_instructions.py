@@ -74,6 +74,11 @@ def get_issue_instructions(issue: DoctorIssue, target_dir: Path) -> Dict[str, An
 - SYNC updated with extraction summary
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [".ngram/state/SYNC_Project_State.md"],
         },
@@ -109,6 +114,11 @@ Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot c
 - No outdated information
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [issue.path],
         },
@@ -143,6 +153,11 @@ Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot c
 - SYNC updated
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [issue.path],
         },
@@ -177,6 +192,11 @@ Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot c
 - SYNC updated with what was implemented
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [".ngram/state/SYNC_Project_State.md"],
         },
@@ -208,6 +228,11 @@ Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot c
 - SYNC updated
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [".ngram/state/SYNC_Project_State.md"],
         },
@@ -241,6 +266,11 @@ Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot c
 - modules.yaml reflects reality
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": ["modules.yaml"],
         },
@@ -277,6 +307,11 @@ Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot c
 - modules.yaml updated with tests path
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": ["modules.yaml"],
         },
@@ -316,6 +351,11 @@ The human has made decisions about these conflicts. Implement them.
 - No contradictions remain for resolved items
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [issue.path],
         },
@@ -354,6 +394,11 @@ A previous agent made this suggestion for improvement. The user has accepted it.
 - Any follow-up suggestions added
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [issue.path],
         },
@@ -400,6 +445,11 @@ The source code has been modified more recently than its documentation.
 - SYNC updated
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [issue.details.get('impl_doc', '')],
         },
@@ -457,6 +507,11 @@ export const Default: Story = {{
 - Stories work in Storybook
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [],
         },
@@ -507,6 +562,11 @@ Custom React hooks should have JSDoc documentation explaining their purpose and 
 - DOCS: reference if applicable
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [],
         },
@@ -549,6 +609,11 @@ This is a CRITICAL security issue. Secrets must never be in source code.
 - SYNC updated
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [".ngram/state/SYNC_Project_State.md"],
         },
@@ -587,6 +652,11 @@ Configuration values like URLs, ports, and IPs should not be hardcoded.
 - SYNC updated
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [],
         },
@@ -638,6 +708,11 @@ if timeout > REQUEST_TIMEOUT_SECONDS:
 - SYNC updated
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [],
         },
@@ -683,6 +758,11 @@ Long prompt strings embedded in code are hard to edit and review.
 - SYNC updated
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [],
         },
@@ -736,6 +816,11 @@ query = (Path(__file__).parent / "sql" / "active_users_with_orders.sql").read_te
 - SYNC updated
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [],
         },
@@ -760,6 +845,11 @@ Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot c
 Review and fix this issue following the ngram.
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
         "docs_to_update": [],
     })

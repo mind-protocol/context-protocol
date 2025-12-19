@@ -65,6 +65,11 @@ Before creating anything, search for existing documentation:
 - NO duplicate documentation created
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [
                 "modules.yaml",
@@ -99,6 +104,11 @@ Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot c
 - Document is useful for agents
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [issue.path],
         },
@@ -169,6 +179,11 @@ IMPLEMENTATION/
 - CHAIN sections link correctly
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [issue.path],
         },
@@ -197,6 +212,11 @@ Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot c
 - Reference points to existing doc file
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [issue.path],
         },
@@ -263,6 +283,11 @@ IMPLEMENTATION/
 - Bidirectional link established
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [],
         },
@@ -296,6 +321,11 @@ Orphan docs are documentation files not linked from any code or modules.yaml.
 - No orphan docs remain
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [],
         },
@@ -351,6 +381,11 @@ Documentation duplication wastes context and creates inconsistency risk.
 - SYNC updated
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [issue.path],
         },
@@ -403,6 +438,11 @@ DOC_TYPE.md (too large) -> DOC_TYPE/
 - CHAIN links still work
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [issue.path],
         },
@@ -445,6 +485,11 @@ A previous repair agent couldn't complete all work and left these tasks in a GAP
 - SYNC updated with completion summary
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [issue.path],
         },
@@ -484,6 +529,11 @@ The IMPLEMENTATION doc doesn't match the actual files in the codebase.
 - File descriptions are accurate
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.
+
+MANDATORY FINAL LINE:
+- End your response with a standalone line: `REPAIR COMPLETE`
+- If you fail, end with: `REPAIR FAILED: <reason>`
+
 """,
             "docs_to_update": [issue.path],
         },

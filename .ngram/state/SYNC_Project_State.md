@@ -27,6 +27,7 @@ Documented the LLM agent module (`ngram/llms`) and added module mapping + DOCS p
 Synced CLI implementation docs with current file layout (doctor check splits, repair helpers, repo overview files).
 
 Confirmed `ngram/repair_core.py` already implements `get_issue_symbol` and `get_issue_action_parts`; re-verified during INCOMPLETE_IMPL repair with no code changes required.
+Recorded the INCOMPLETE_IMPL verification in `docs/cli/SYNC_CLI_State.md` to keep module state aligned.
 
 Verified `ngram/tui/state.py` has no empty stubs for `ConversationMessage.to_dict` or `AgentHandle.duration`; documentation updated to reflect confirmation.
 
@@ -151,6 +152,7 @@ Check `modules.yaml` (project root) for full manifest.
 - Manager-agent subprocess handling moved to `ngram/tui/commands_agent.py` to keep `ngram/tui/commands.py` under the monolith threshold.
 - CLI implementation doc cleaned up broken file references that tripped BROKEN_IMPL_LINK.
 - Project map SVG namespace now reads from `.ngram/config.yaml` with an env var override.
+- Re-verified `ngram/repair_core.py` issue lookups and updated CLI SYNC to reflect the check.
 
 ### Suggestions
 - [ ] Add module mappings in `modules.yaml` for `ngram/tui/**` to avoid unmapped warnings.

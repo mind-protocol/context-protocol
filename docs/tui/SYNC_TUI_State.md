@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (align TUI impl data-flow paths)
+UPDATED_BY: codex (sync TUI structure doc file list)
 STATUS: IMPLEMENTED
 ```
 
@@ -45,6 +45,7 @@ Doc maintenance:
 - Data flow diagram uses full file paths for command and repair routing
 - Implementation details split into `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/` with an overview entry point
 - Runtime implementation content consolidated into `IMPLEMENTATION_TUI_Code_Architecture_Structure.md` to avoid duplicate docs
+- Structure doc file list updated for new widgets and theme files
 
 Archived detail:
 - Historical feature list, handoffs, and observations moved to `docs/tui/archive/SYNC_archive_2024-12.md`

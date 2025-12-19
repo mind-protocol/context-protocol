@@ -28,18 +28,20 @@ SYNC:                    ../SYNC_TUI_State.md
 ```
 ngram/tui/                           # TUI package root
 ngram/tui/__init__.py                # Package exports (11L)
-ngram/tui/app.py                     # Main Textual App (491L)
-ngram/tui/state.py                   # Session state management (169L)
-ngram/tui/commands.py                # Slash command handlers (637L)
-ngram/tui/commands_agent.py          # Manager agent subprocess helpers (349L)
-ngram/tui/manager.py                 # Manager supervisor & Claude PTY (275L)
+ngram/tui/app.py                     # Main Textual App (814L)
+ngram/tui/state.py                   # Session state management (198L)
+ngram/tui/commands.py                # Slash command handlers (678L)
+ngram/tui/commands_agent.py          # Manager agent subprocess helpers (388L)
+ngram/tui/manager.py                 # Manager supervisor & Claude PTY (308L)
 ngram/tui/widgets/__init__.py        # Widget exports (20L)
-ngram/tui/widgets/manager_panel.py   # Left column manager display (138L)
-ngram/tui/widgets/agent_panel.py     # Single agent output display (97L)
-ngram/tui/widgets/agent_container.py # Columns/tabs container (120L)
-ngram/tui/widgets/input_bar.py       # Bottom input widget (133L)
-ngram/tui/widgets/status_bar.py      # Top status bar (74L)
-ngram/tui/styles/theme.tcss          # Paper & Parchment theme CSS (244L)
+ngram/tui/widgets/manager_panel.py   # Left column manager display (246L)
+ngram/tui/widgets/agent_panel.py     # Single agent output display (329L)
+ngram/tui/widgets/agent_container.py # Columns/tabs container (361L)
+ngram/tui/widgets/input_bar.py       # Bottom input widget (222L)
+ngram/tui/widgets/status_bar.py      # Top status bar (190L)
+ngram/tui/widgets/suggestions.py     # Command suggestions widget (46L)
+ngram/tui/styles/theme.tcss          # Paper & Parchment theme CSS (337L)
+ngram/tui/styles/theme_light.tcss    # Light theme CSS (383L)
 ngram/cli.py                         # CLI entry point (TUI launched via `ngram`)
 ngram/repair_core.py                 # Shared repair logic (497L)
 ```
@@ -50,17 +52,19 @@ Manager startup prefers `../../../.ngram/agents/manager/AGENTS.md` when present;
 
 | File | Lines | Status | Purpose | Key Functions/Classes |
 |------|-------|--------|---------|----------------------|
-| `ngram/tui/app.py` | 491L | EXISTS | Main Textual application | `NgramApp`, `compose()`, `on_mount()`, `main()` |
-| `ngram/tui/widgets/manager_panel.py` | 138L | EXISTS | Manager message display | `ManagerPanel`, `add_message()`, `add_thinking()` |
-| `ngram/tui/widgets/agent_panel.py` | 97L | EXISTS | Single agent output | `AgentPanel`, `append_output()` |
-| `ngram/tui/widgets/agent_container.py` | 120L | EXISTS | Multi-agent layout | `AgentContainer`, `add_agent()` |
-| `ngram/tui/widgets/input_bar.py` | 133L | EXISTS | User input capture | `InputBar`, `on_submit()`, history, tab completion |
-| `ngram/tui/widgets/status_bar.py` | 74L | EXISTS | Health score display | `StatusBar`, `update_health()` |
-| `ngram/tui/state.py` | 169L | EXISTS | Session state | `SessionState`, `AgentHandle`, `ConversationHistory` |
-| `ngram/tui/commands.py` | 637L | WATCH | Command routing | `handle_command()`, `handle_repair()`, `handle_doctor()` |
-| `ngram/tui/commands_agent.py` | 349L | OK | Manager agent subprocess handling | `_run_agent_message()`, `_detect_commands()` |
-| `ngram/tui/styles/theme.tcss` | 244L | EXISTS | CSS styling | Paper & Parchment theme |
-| `ngram/tui/manager.py` | 275L | EXISTS | Manager supervisor | `ManagerSupervisor`, `ClaudePTY`, `DriftWarning` |
+| `ngram/tui/app.py` | 814L | EXISTS | Main Textual application | `NgramApp`, `compose()`, `on_mount()`, `main()` |
+| `ngram/tui/widgets/manager_panel.py` | 246L | EXISTS | Manager message display | `ManagerPanel`, `add_message()`, `add_thinking()` |
+| `ngram/tui/widgets/agent_panel.py` | 329L | EXISTS | Single agent output | `AgentPanel`, `append_output()` |
+| `ngram/tui/widgets/agent_container.py` | 361L | EXISTS | Multi-agent layout | `AgentContainer`, `add_agent()` |
+| `ngram/tui/widgets/input_bar.py` | 222L | EXISTS | User input capture | `InputBar`, `on_submit()`, history, tab completion |
+| `ngram/tui/widgets/status_bar.py` | 190L | EXISTS | Health score display | `StatusBar`, `update_health()` |
+| `ngram/tui/widgets/suggestions.py` | 46L | EXISTS | Command suggestions bar | `SuggestionsBar`, `show_suggestions()` |
+| `ngram/tui/state.py` | 198L | EXISTS | Session state | `SessionState`, `AgentHandle`, `ConversationHistory` |
+| `ngram/tui/commands.py` | 678L | WATCH | Command routing | `handle_command()`, `handle_repair()`, `handle_doctor()` |
+| `ngram/tui/commands_agent.py` | 388L | OK | Manager agent subprocess handling | `_run_agent_message()`, `_detect_commands()` |
+| `ngram/tui/styles/theme.tcss` | 337L | EXISTS | CSS styling | Paper & Parchment theme |
+| `ngram/tui/styles/theme_light.tcss` | 383L | EXISTS | CSS styling | Light theme variants |
+| `ngram/tui/manager.py` | 308L | EXISTS | Manager supervisor | `ManagerSupervisor`, `ClaudePTY`, `DriftWarning` |
 | `ngram/cli.py` | - | EXISTS | CLI entry point | TUI launched via `ngram` (no subcommand) |
 | `ngram/repair_core.py` | 497L | EXISTS | Shared logic | `spawn_repair_agent_async()` |
 

@@ -189,6 +189,7 @@ class AgentPanel(Vertical):
         self._collapsed: bool = False
         self._status: str = "running"
         self._stick_to_bottom: bool = True
+        self._user_scrolled: bool = False
         # Render throttling
         self._last_render: float = 0.0
         self._pending_render: bool = False
@@ -223,9 +224,9 @@ class AgentPanel(Vertical):
         """Track whether the user is at the bottom of the output."""
         if event.sender is self._output_scroll:
             if self._output_scroll:
-                self._stick_to_bottom = (
-                    self._output_scroll.scroll_y >= self._output_scroll.max_scroll_y - 2
-                )
+                at_bottom = self._output_scroll.scroll_y >= self._output_scroll.max_scroll_y - 2
+                self._stick_to_bottom = at_bottom
+                self._user_scrolled = not at_bottom
 
     def toggle_collapse(self) -> None:
         """Toggle between collapsed and expanded state."""
@@ -299,11 +300,16 @@ class AgentPanel(Vertical):
     def _do_render(self) -> None:
         """Actually render the output (expensive)."""
         if self._output_widget and self._output_content:
+            at_bottom = False
+            if self._output_scroll:
+                at_bottom = self._output_scroll.scroll_y >= self._output_scroll.max_scroll_y - 2
+                if at_bottom:
+                    self._user_scrolled = False
             # Show last 50 lines to prevent slowdown
             lines = self._output_content.split('\n')
             display = '\n'.join(lines[-50:])
             self._output_widget.update(display)
-            if self._output_scroll and self._stick_to_bottom:
+            if self._output_scroll and (self._stick_to_bottom or not self._user_scrolled):
                 self._output_scroll.scroll_end(animate=False)
 
     def set_status(self, status: str) -> None:

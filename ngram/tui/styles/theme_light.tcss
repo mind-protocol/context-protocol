@@ -1,0 +1,375 @@
+/*
+ * ngram TUI Theme: Wood & Paper — LIGHT
+ * "Edges are what make a self."
+ *
+ * Paper backgrounds, wood text
+ * Like working at a sunlit desk
+ */
+
+/* ══════════════════════════════════════════════════════════════════
+   COLOR REFERENCE - LIGHT THEME
+
+   Backgrounds (paper):
+   - Screen base:   #F5F0E6  (aged vellum)
+   - Panels:        #FAF6ED  (warm cream)
+   - Headers:       #E8DFD0  (parchment)
+   - Borders:       #C4B49A  (kraft)
+
+   Text (wood):
+   - Primary:       #2C1810  (ebony)
+   - Secondary:     #4A3728  (mahogany)
+   - Muted:         #8B7355  (oak)
+
+   Accents:
+   - Rust:          #A0522D  (errors, links)
+   - Copper:        #B87333  (warnings, highlights)
+   - Sage:          #5F7A4A  (success - darker for light bg)
+   - Ink:           #2F3542  (code blocks)
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ─── Base Screen ─────────────────────────────────────────────────── */
+
+Screen {
+    background: #F5F0E6;  /* Aged vellum */
+    color: #4A4A4A;  /* Dark grey default text */
+}
+
+/* ─── Main Panels ─────────────────────────────────────────────────── */
+
+#manager-panel {
+    background: #FAF6ED;  /* Warm cream */
+    border: solid #C4B49A;  /* Kraft border */
+    padding: 1;
+}
+
+#manager-panel Static {
+    color: #2C1810;  /* Ebony */
+}
+
+#agent-container {
+    background: #F5F0E6;  /* Vellum */
+}
+
+/* ─── Agent Panels ────────────────────────────────────────────────── */
+
+AgentPanel {
+    background: #FAF6ED;  /* Warm cream */
+    border: solid #C4B49A;  /* Kraft border */
+    margin: 0 1;
+}
+
+AgentPanel .agent-header {
+    background: #E8DFD0;  /* Parchment */
+    color: #2C1810;  /* Ebony */
+    text-style: bold;
+    padding: 0 1;
+}
+
+AgentPanel .agent-output {
+    color: #2C1810;  /* Ebony */
+    padding: 1;
+}
+
+AgentPanel .agent-output .thinking {
+    color: #8B7355;  /* Oak - subdued */
+    text-style: italic;
+}
+
+/* ─── Status Bar ──────────────────────────────────────────────────── */
+
+StatusBar {
+    background: #E8DFD0;  /* Parchment */
+    color: #2C1810;  /* Ebony */
+    height: 1;
+    dock: top;
+}
+
+StatusBar .project-name {
+    color: #A0522D;  /* Rust */
+    text-style: bold;
+}
+
+StatusBar .health-good {
+    color: #5F7A4A;  /* Dark sage */
+}
+
+StatusBar .health-warning {
+    color: #B87333;  /* Copper */
+}
+
+StatusBar .health-critical {
+    color: #A0522D;  /* Rust */
+}
+
+/* ─── Input Bar ───────────────────────────────────────────────────── */
+
+InputBar {
+    background: #FAF6ED;  /* Warm cream */
+    height: 3;
+    dock: bottom;
+}
+
+InputBar Input {
+    background: #F5F0E6;  /* Vellum */
+    color: #2F5496;  /* Ink blue */
+    border: solid #C4B49A;  /* Kraft */
+    padding: 0 1;
+}
+
+InputBar Input:focus {
+    border: solid #A0522D;  /* Rust when focused */
+}
+
+InputBar .prompt {
+    color: #A0522D;  /* Rust */
+    text-style: bold;
+}
+
+/* ─── Tabs ────────────────────────────────────────────────────────── */
+
+TabbedContent {
+    background: #F5F0E6;  /* Vellum */
+}
+
+Tab {
+    background: #E8DFD0;  /* Parchment */
+    color: #8B7355;  /* Oak - muted when inactive */
+    padding: 0 2;
+}
+
+Tab:hover {
+    background: #D4C4A8;  /* Tea stain */
+    color: #4A3728;  /* Mahogany */
+}
+
+Tab.-active {
+    background: #FAF6ED;  /* Warm cream - lifted */
+    color: #2C1810;  /* Ebony */
+    text-style: bold;
+}
+
+TabPane {
+    background: #FAF6ED;  /* Warm cream */
+    padding: 1;
+}
+
+/* ─── File Changes List ───────────────────────────────────────────── */
+
+.file-modified {
+    color: #B87333;  /* Copper */
+}
+
+.file-added {
+    color: #5F7A4A;  /* Dark sage */
+}
+
+.file-deleted {
+    color: #A0522D;  /* Rust */
+}
+
+.file-untracked {
+    color: #8B7355;  /* Oak */
+}
+
+.file-path {
+    color: #4A3728;  /* Mahogany */
+}
+
+/* ─── Issue Types ─────────────────────────────────────────────────── */
+
+.issue-critical {
+    color: #A0522D;  /* Rust */
+    text-style: bold;
+}
+
+.issue-warning {
+    color: #B87333;  /* Copper */
+}
+
+.issue-info {
+    color: #5F7A4A;  /* Dark sage */
+}
+
+.issue-type {
+    color: #5C4033;  /* Walnut */
+}
+
+/* ─── MONOLITH issue ─── */
+.monolith {
+    color: #A0522D;  /* Rust */
+}
+
+/* ─── UNDOCUMENTED issue ─── */
+.undocumented {
+    color: #8B7355;  /* Oak */
+}
+
+/* ─── STALE_SYNC issue ─── */
+.stale-sync {
+    color: #B87333;  /* Copper */
+}
+
+/* ─── Doctor Output ───────────────────────────────────────────────── */
+
+.doctor-header {
+    color: #2C1810;  /* Ebony */
+    text-style: bold;
+    background: #E8DFD0;  /* Parchment */
+}
+
+.doctor-score {
+    color: #5F7A4A;  /* Dark sage */
+}
+
+.doctor-score-low {
+    color: #A0522D;  /* Rust */
+}
+
+/* ─── Code Blocks ─────────────────────────────────────────────────── */
+
+.code {
+    background: #2F3542;  /* Ink - dark for contrast */
+    color: #F5F0E6;  /* Vellum */
+}
+
+.code-keyword {
+    color: #C97B5D;  /* Bright rust */
+}
+
+.code-string {
+    color: #A8C99B;  /* Bright sage */
+}
+
+.code-comment {
+    color: #8B7355;  /* Oak */
+    text-style: italic;
+}
+
+/* ─── Links ───────────────────────────────────────────────────────── */
+
+.link {
+    color: #A0522D;  /* Rust */
+    text-style: underline;
+}
+
+.link:hover {
+    color: #B87333;  /* Copper */
+}
+
+/* ─── Progress Bars ───────────────────────────────────────────────── */
+
+ProgressBar {
+    color: #5F7A4A;  /* Dark sage */
+}
+
+ProgressBar Bar {
+    color: #5F7A4A;  /* Dark sage */
+    background: #E8DFD0;  /* Parchment */
+}
+
+/* ─── Scrollbars ──────────────────────────────────────────────────── */
+
+ScrollBar {
+    background: #F5F0E6;  /* Vellum */
+    scrollbar-background: #F5F0E6;
+    scrollbar-color: #C4B49A;
+    scrollbar-color-hover: #8B7355;
+    scrollbar-color-active: #5C4033;
+}
+
+ScrollBar > .scrollbar--bar {
+    color: #C4B49A;  /* Kraft */
+    background: #F5F0E6;
+}
+
+ScrollBar > .scrollbar--bar:hover {
+    color: #8B7355;  /* Oak */
+}
+
+/* Scrollbar corner (where h/v meet) */
+ScrollBarCorner {
+    background: #F5F0E6;  /* Vellum */
+}
+
+/* Ensure all scroll containers have light background */
+VerticalScroll {
+    scrollbar-background: #F5F0E6;
+    scrollbar-color: #C4B49A;
+    scrollbar-color-hover: #8B7355;
+    background: #FAF6ED;
+}
+
+ScrollableContainer {
+    scrollbar-background: #F5F0E6;
+    scrollbar-color: #C4B49A;
+    scrollbar-color-hover: #8B7355;
+    background: #FAF6ED;
+}
+
+Horizontal {
+    background: #F5F0E6;
+}
+
+Vertical {
+    background: #FAF6ED;
+}
+
+Container {
+    background: #FAF6ED;
+}
+
+ContentSwitcher {
+    background: #FAF6ED;
+}
+
+/* ─── Manager Panel Content ───────────────────────────────────────── */
+
+ManagerPanel {
+    background: #FAF6ED;  /* Warm cream */
+}
+
+ManagerPanel .message-user {
+    color: #A0522D;  /* Rust - user stands out */
+}
+
+ManagerPanel .message-assistant {
+    color: #2C1810;  /* Ebony */
+}
+
+ManagerPanel .message-thinking {
+    color: #8B7355;  /* Oak */
+    text-style: italic;
+}
+
+ManagerPanel .message-tool {
+    color: #5F7A4A;  /* Dark sage */
+}
+
+/* ─── Emphasis & State ────────────────────────────────────────────── */
+
+.success {
+    color: #5F7A4A;  /* Dark sage */
+}
+
+.error {
+    color: #A0522D;  /* Rust */
+}
+
+.warning {
+    color: #B87333;  /* Copper */
+}
+
+.muted {
+    color: #8B7355;  /* Oak */
+}
+
+.emphasis {
+    color: #2C1810;  /* Ebony */
+    text-style: bold;
+}
+
+/* ─── Dividers ────────────────────────────────────────────────────── */
+
+Rule {
+    color: #C4B49A;  /* Kraft */
+}

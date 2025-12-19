@@ -26,7 +26,7 @@ SYNC:            ./SYNC_TUI_State.md
 
 ## SUMMARY
 
-Textual-based TUI with a component layout: `NgramApp` composes widgets, `commands.py` dispatches slash commands, and `repair_core.py` spawns agents. The UI is a presentation layer over shared CLI logic.
+Textual-based TUI with a component layout: `NgramApp` composes widgets, `ngram/tui/commands.py` dispatches slash commands, and `ngram/repair_core.py` spawns agents. The UI is a presentation layer over shared CLI logic.
 
 ---
 
@@ -70,5 +70,5 @@ ngram/tui/styles/theme.tcss # Theme
 
 ## DECISIONS MADE
 
-- Single `ngram/tui/commands.py` for command handlers, with subprocess logic extracted to `commands_agent.py`.
+- Single `ngram/tui/commands.py` for command handlers, with subprocess logic extracted to `ngram/tui/commands_agent.py`.
 - Paper & Parchment theme defined in `ngram/tui/styles/theme.tcss`.

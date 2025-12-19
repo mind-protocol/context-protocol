@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (verify tui state functions)
+UPDATED_BY: codex (normalize TUI implementation doc file paths)
 STATUS: IMPLEMENTED
 ```
 
@@ -39,6 +39,7 @@ Module mapping:
 
 Doc maintenance:
 - Implementation doc references normalized to avoid broken-link false positives
+- Implementation overview references now point to `ngram/repair_core.py` and full TUI command paths
 - Manager startup reference uses `.ngram/CLAUDE.md`
 - Implementation details split into `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/` with an overview entry point
 - Runtime implementation content consolidated into `IMPLEMENTATION_TUI_Code_Architecture_Structure.md` to avoid duplicate docs

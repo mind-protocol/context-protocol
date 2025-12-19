@@ -28,6 +28,7 @@ Consolidated protocol IMPLEMENTATION docs under `docs/protocol/IMPLEMENTATION/IM
 Updated `docs/protocol/IMPLEMENTATION_Overview.md` to point to the consolidated implementation overview and note the consolidation.
 
 Implemented Gemini adapter tool handlers in `ngram/llms/gemini_agent.py` to replace placeholder tool stubs.
+Externalized the Gemini agent Google search base URL to `NGRAM_GOOGLE_SEARCH_URL` with a default fallback.
 
 Externalized the SVG namespace used by project map HTML to `NGRAM_SVG_NAMESPACE` with a default fallback and documented it in the CLI implementation docs.
 Moved project map SVG namespace defaults into `.ngram/config.yaml` and kept `NGRAM_SVG_NAMESPACE` as an override.

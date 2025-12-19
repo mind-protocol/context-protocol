@@ -40,7 +40,7 @@ THIS:            SYNC_LLM_Agents_State.md (you are here)
 
 ## CURRENT STATE
 
-`ngram/llms/gemini_agent.py` implements a standalone CLI process that authenticates with GEMINI_API_KEY (CLI arg, `.env`, or env var), sends a prompt to Gemini, streams JSON output for the TUI, and executes basic local tools (filesystem/search/web fetch). The CLI builds the subprocess invocation from `ngram/agent_cli.py` when the `gemini` provider is selected.
+`ngram/llms/gemini_agent.py` implements a standalone CLI process that authenticates with GEMINI_API_KEY (CLI arg, `.env`, or env var), sends a prompt to Gemini, streams JSON output for the TUI, and executes basic local tools (filesystem/search/web fetch). Google search requests use a configurable base URL via `NGRAM_GOOGLE_SEARCH_URL`. The CLI builds the subprocess invocation from `ngram/agent_cli.py` when the `gemini` provider is selected.
 
 ---
 
@@ -51,6 +51,12 @@ None.
 ---
 
 ## RECENT CHANGES
+
+### 2025-12-19: Externalized Google search base URL
+
+- **What:** Replaced the hardcoded Google search URL with `NGRAM_GOOGLE_SEARCH_URL` (defaulting to the prior value).
+- **Why:** Address HARDCODED_CONFIG in `ngram/llms/gemini_agent.py`.
+- **Files:** `ngram/llms/gemini_agent.py`, `docs/llm_agents/IMPLEMENTATION_LLM_Agent_Code_Architecture.md`
 
 ### 2025-12-19: Implemented Gemini tool handlers
 

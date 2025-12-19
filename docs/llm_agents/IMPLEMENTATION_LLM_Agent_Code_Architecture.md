@@ -67,6 +67,7 @@ ngram/llms/gemini_agent.py (python -m ngram.llms.gemini_agent)
 ## CONFIGURATION
 
 - `GEMINI_API_KEY` (CLI arg, `.env`, or environment variable)
+- `NGRAM_GOOGLE_SEARCH_URL` (optional, `.env` or environment variable; defaults to `https://www.google.com/search`)
 - `--output-format` determines JSON streaming vs plain text
 - Tool outputs may persist under .ngram/state (agent_todos.json, agent_memory.jsonl)
 

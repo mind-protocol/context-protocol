@@ -49,6 +49,11 @@ def main():
 
     # Get API key
     api_key = args.api_key or config.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
+    google_search_base_url = (
+        config.get("NGRAM_GOOGLE_SEARCH_URL")
+        or os.getenv("NGRAM_GOOGLE_SEARCH_URL")
+        or "https://www.google.com/search"
+    )
 
     if not api_key:
         print(json.dumps({"error": "GEMINI_API_KEY not found. Please set it in a .env file, as an environment variable, or pass it with --api-key."}), flush=True)
@@ -193,7 +198,8 @@ def main():
         if not query or not query.strip():
             return {"error": "Query cannot be empty"}
         try:
-            url = "https://www.google.com/search?" + urllib.parse.urlencode({"q": query})
+            separator = "&" if "?" in google_search_base_url else "?"
+            url = f"{google_search_base_url}{separator}{urllib.parse.urlencode({'q': query})}"
             request = urllib.request.Request(
                 url,
                 headers={"User-Agent": "Mozilla/5.0"},

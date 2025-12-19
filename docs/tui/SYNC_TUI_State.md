@@ -134,6 +134,12 @@ None currently.
   on_exception, action_doctor, action_repair, etc.) are complete implementations, just short
   delegating methods. Added to doctor-ignore.yaml.
 
+**Resolved 2025-12-19:**
+- INCOMPLETE_IMPL false positive in `widgets/input_bar.py` - 4 functions flagged (`CommandSubmitted.__init__`,
+  `ShowSuggestions.__init__`, `value` getter/setter) are all properly implemented. These are standard
+  Message subclass constructors (set attribute + super().__init__()) and property accessors (return/set
+  self.text). Added to doctor-ignore.yaml.
+
 ---
 
 ## HANDOFF: FOR AGENTS

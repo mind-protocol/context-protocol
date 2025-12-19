@@ -139,3 +139,17 @@ ignores:
       for maintainability. Doctor's ≤2 line threshold incorrectly flags them.
     added_by: repair-agent
     added_date: 2025-12-19
+
+  - issue_type: INCOMPLETE_IMPL
+    path: ngram/tui/widgets/input_bar.py
+    reason: |
+      False positive - all 4 flagged functions are fully implemented:
+      - CommandSubmitted.__init__: Sets self.command and calls super().__init__()
+      - ShowSuggestions.__init__: Sets self.suggestions list and calls super().__init__()
+      - value getter property: Returns self.text (line 108)
+      - value setter property: Sets self.text = new_value (line 113)
+      These are standard Message subclass constructors and property accessors.
+      Short implementations != incomplete implementations.
+      Doctor's ≤2 line threshold incorrectly flags these legitimate one-liners.
+    added_by: repair-agent
+    added_date: 2025-12-19

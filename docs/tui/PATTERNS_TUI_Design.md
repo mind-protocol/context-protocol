@@ -3,6 +3,8 @@
 ```
 STATUS: DESIGNING
 CREATED: 2025-12-18
+UPDATED: 2025-12-19
+@ngram:doctor:INCOMPLETE_IMPL:false_positive Short delegating UI actions are complete implementations, not stubs.
 ```
 
 ---

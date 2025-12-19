@@ -68,7 +68,7 @@ Based on what you need to do, load ONE view from `.ngram/views/`:
 | Writing or modifying code | VIEW_Implement_Write_Or_Modify_Code.md |
 | Adding features to existing modules | VIEW_Extend_Add_Features_To_Existing.md |
 | Pair programming with human | VIEW_Collaborate_Pair_Program_With_Human.md |
-| Writing tests | VIEW_Test_Write_Tests_And_Verify.md |
+| Health checks | VIEW_Health_Define_Health_Checks_And_Verify.md |
 | Debugging issues | VIEW_Debug_Investigate_And_Fix_Issues.md |
 | Reviewing changes | VIEW_Review_Evaluate_Changes.md |
 | Refactoring | VIEW_Refactor_Improve_Code_Structure.md |

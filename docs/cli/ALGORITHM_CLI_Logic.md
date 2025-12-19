@@ -167,6 +167,33 @@ write to .ngram/state/SYNC_Project_Health.md
 
 ---
 
+## ALGORITHM: Solve Escalations Command
+
+### Step 1: Load Ignore Patterns
+
+```
+config = load_doctor_config(target_dir)
+ignore = config.ignore + [log files]
+```
+
+### Step 2: Scan for Escalation Tags
+
+```
+for file in repo_files:
+    skip if ignored or binary
+    if "@ngram:escalation" or "@ngram:doctor:escalation" in content:
+        collect file path
+```
+
+### Step 3: Sort and Print
+
+```
+sort by priority (doctor escalation first) and occurrence count
+print numbered list and prompt human to resolve
+```
+
+---
+
 ## ALGORITHM: Repair Command
 
 ### Step 1: Identify Issues

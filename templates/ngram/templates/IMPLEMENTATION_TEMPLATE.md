@@ -15,7 +15,7 @@ BEHAVIORS:      ./BEHAVIORS_{name}.md
 ALGORITHM:      ./ALGORITHM_{name}.md
 VALIDATION:     ./VALIDATION_{name}.md
 THIS:           IMPLEMENTATION_{name}.md
-TEST:           ./TEST_{name}.md
+HEALTH:         ./HEALTH_{name}.md
 SYNC:           ./SYNC_{name}.md
 
 IMPL:           {path/to/main/source/file.py}
@@ -120,38 +120,75 @@ IMPL:           {path/to/main/source/file.py}
 
 ---
 
-## DATA FLOW
+## DATA FLOW AND DOCKING (FLOW-BY-FLOW)
+
+Start with the most important flows to track: those that transform data, cross boundaries, or carry risk (security, money, state, or user-visible output).
+Focus on flows that are complex, high-impact, or hard to reason about. Skip trivial pass-through paths.
+
+Each flow should:
+- Explain what belongs in this flow and why it matters.
+- List concrete steps across files in order.
+- Enumerate ALL available docking points in the flow (inputs/outputs).
+- Decide which docks are significant enough for HEALTH to select, and why.
 
 ### {Flow Name}: {Brief Description}
 
-```
-┌─────────────────┐
-│  {Input Source} │
-└────────┬────────┘
-         │ {data type}
-         ▼
-┌─────────────────┐
-│   {Module A}    │ ← {what happens here}
-│   {file.py}     │
-└────────┬────────┘
-         │ {transformed data}
-         ▼
-┌─────────────────┐
-│   {Module B}    │ ← {what happens here}
-│   {file.py}     │
-└────────┬────────┘
-         │ {output type}
-         ▼
-┌─────────────────┐
-│  {Output/Sink}  │
-└─────────────────┘
-```
+Explain what this flow covers, what it transforms, and why it matters.
+If this flow is low-risk or non-transformative, note why it is still tracked.
 
-### {Flow Name}: {Brief Description}
-
-```
-{Another flow diagram}
-```
+```yaml
+flow:
+  name: {flow_name}
+  purpose: {what this flow accomplishes}
+  scope: {inputs, outputs, boundaries}
+  steps:
+    - id: step_1
+      description: {what happens in this step}
+      file: {path/to/file.py}
+      function: {function_or_method}
+      input: {type_or_schema}
+      output: {type_or_schema}
+      trigger: {event_or_call_site}
+      side_effects: {state/files/api}
+    - id: step_2
+      description: {what happens next}
+      file: {path/to/file.py}
+      function: {function_or_method}
+      input: {type_or_schema}
+      output: {type_or_schema}
+      trigger: {event_or_call_site}
+      side_effects: {state/files/api}
+  docking_points:
+    guidance:
+      include_when: {significant, risky, complex, transformative}
+      omit_when: {trivial pass-through, redundant, low-impact}
+      selection_notes: {how to choose where HEALTH should dock}
+    available:
+      - id: dock_1
+        type: {graph_ops|file|api|event|queue|db|custom}
+        direction: {input|output}
+        file: {path/to/file.py}
+        function: {function_or_method}
+        trigger: {event_or_call_site}
+        payload: {type_or_schema}
+        async_hook: {required|optional|not_applicable}
+        needs: {add async hook|add watcher|add interceptor|none}
+        notes: {context or risk}
+      - id: dock_2
+        type: {graph_ops|file|api|event|queue|db|custom}
+        direction: {input|output}
+        file: {path/to/file.py}
+        function: {function_or_method}
+        trigger: {event_or_call_site}
+        payload: {type_or_schema}
+        async_hook: {required|optional|not_applicable}
+        needs: {add async hook|add watcher|add interceptor|none}
+        notes: {context or risk}
+    health_recommended:
+      - dock_id: dock_1
+        reason: {why this dock is significant}
+      - dock_id: dock_2
+        reason: {why this dock is significant}
 
 ---
 

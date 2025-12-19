@@ -69,6 +69,27 @@ for issue in all_issues:
     assert issue.type not in config["disabled_checks"]
 ```
 
+### I8: Doc Template Drift Threshold
+
+**Section content below 50 characters is flagged.**
+
+```python
+for section in required_sections:
+    if len(section_text) < 50:
+        assert "DOC_TEMPLATE_DRIFT" in issues_for_doc
+```
+
+### I9: Doc Tags Respect Deferrals
+
+**Postponed dates in the future suppress issues; past dates do not.**
+
+```python
+if postponed_until >= today:
+    assert issue_not_reported
+else:
+    assert issue_reported
+```
+
 ---
 
 ## CHECK CORRECTNESS

@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (INCOMPLETE_IMPL verification)
+UPDATED_BY: codex (doctor false positives migration)
 STATUS: IMPLEMENTED
 ```
 
@@ -32,6 +32,8 @@ Recent stability work:
 - Agent activity checks include subprocess returncode
 - Agent handle de-duplication and empty message suppression
 - Manager drift detection path normalization and PTY state handling
+- Rate-limit detection now requires error-context markers and only stops repair on failed agents to avoid false positives.
+- Migrated INCOMPLETE_IMPL suppressions into doc metadata tags and removed doctor-ignore entries.
 - Verified `ngram/tui/widgets/status_bar.py` already implements reported methods; no code changes needed.
 - Implemented `/doctor` handler logic to update health status and log results.
 - Streamed repair agent output into agent panels while buffering agent logs.

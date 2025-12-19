@@ -86,10 +86,15 @@ def get_issue_guidance(issue_type: str) -> Dict[str, str]:
             "file": "The SYNC file with GAPS section",
             "tip": "Complete the tasks listed in GAPS, then mark them [x] or remove the section"
         },
-        "ARBITRAGE": {
+        "ESCALATION": {
             "view": "VIEW_Specify_Design_Vision_And_Architecture.md",
             "file": "The SYNC file with CONFLICTS section",
             "tip": "Make a design decision, update conflicting docs/code to be consistent"
+        },
+        "RESOLVE_ESCALATION": {
+            "view": "VIEW_Escalation_How_To_Handle_Vague_Tasks_Missing_Information_And_Complex_Non-Obvious_Problems.md",
+            "file": "The file containing @ngram:solved-escalations",
+            "tip": "Apply the response, update docs/code, then remove the solved marker"
         },
         "LOG_ERROR": {
             "view": "VIEW_Debug_Investigate_And_Fix_Issues.md",
@@ -155,9 +160,13 @@ def get_issue_explanation(issue_type: str) -> Dict[str, str]:
             "risk": "A previous agent couldn't complete all work and left tasks in a GAPS section. These represent incomplete implementations, missing docs, or decisions that needed human input.",
             "action": "Read the GAPS section in the SYNC file, complete the listed tasks, and mark them [x] done or remove the section when finished.",
         },
-        "ARBITRAGE": {
+        "ESCALATION": {
             "risk": "Documentation or code contradicts itself. Agents found conflicts they couldn't resolve - either docs say different things, or docs don't match implementation. This causes confusion and inconsistent behavior.",
-            "action": "Review the CONFLICTS section, make a design decision for each ARBITRAGE item, update all conflicting sources to be consistent, then convert ARBITRAGE to DECISION (resolved).",
+            "action": "Review the CONFLICTS section, make a design decision for each ESCALATION item, update all conflicting sources to be consistent, then convert ESCALATION to DECISION (resolved).",
+        },
+        "RESOLVE_ESCALATION": {
+            "risk": "Resolved escalation markers left in place can accumulate and hide real blockers. They should be applied and cleared.",
+            "action": "Apply the response to docs/code, then remove the @ngram:solved-escalations marker.",
         },
         "LOG_ERROR": {
             "risk": "Recent log errors may indicate runtime failures or misconfigurations that are not captured by code-only checks.",
@@ -414,9 +423,12 @@ def print_doctor_report(results: Dict[str, Any], output_format: str = "text"):
     print("-" * 50)
     print(f"Health Score: {results['score']}/100")
     ignored_count = results.get('ignored_count', 0)
+    false_positive_count = results.get('false_positive_count', 0)
     summary_line = f"Critical: {results['summary']['critical']} | Warnings: {results['summary']['warning']} | Info: {results['summary']['info']}"
     if ignored_count > 0:
         summary_line += f" | Suppressed: {ignored_count}"
+    if false_positive_count > 0:
+        summary_line += f" | False positives: {false_positive_count}"
     print(summary_line)
     print("-" * 50)
 

@@ -40,6 +40,7 @@ from .doctor import doctor_command
 from .doctor_files import add_doctor_ignore, load_doctor_ignore
 from .project_map import print_project_map
 from .sync import sync_command
+from .solve_escalations import solve_escalations_command
 from .repair import repair_command
 from .repo_overview import generate_and_save as generate_overview
 
@@ -173,6 +174,18 @@ def main():
         type=int,
         default=10,
         help="Max GitHub issues to create (default: 10)"
+    )
+
+    # solve-escalations command
+    escalation_parser = subparsers.add_parser(
+        "solve-escalations",
+        help="List @ngram escalation markers for human resolution"
+    )
+    escalation_parser.add_argument(
+        "--dir", "-d",
+        type=Path,
+        default=Path.cwd(),
+        help="Project directory (default: current directory)"
     )
 
     # map command
@@ -352,6 +365,9 @@ def main():
             args.dir, args.format, args.level, args.no_save,
             github=args.github and not args.no_github, github_max=args.github_max
         )
+        sys.exit(exit_code)
+    elif args.command == "solve-escalations":
+        exit_code = solve_escalations_command(args.dir)
         sys.exit(exit_code)
     elif args.command == "map":
         print_project_map(args.dir, args.output)

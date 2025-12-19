@@ -77,7 +77,7 @@ Re-read the documentation chain and verify:
 
 | Doc Type | Verify |
 |----------|--------|
-| `PATTERNS_*.md` | Extension follows design philosophy |
+| `PATTERNS_*.md` | Extension follows design philosophy, is in scope |
 | `BEHAVIORS_*.md` | Existing behaviors still work, new ones match intent |
 | `ALGORITHM_*.md` | New logic integrates with existing procedures |
 | `VALIDATION_*.md` | All invariants (old and new) are maintained |

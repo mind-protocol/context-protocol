@@ -80,6 +80,15 @@ Each repair agent:
   Does not modify unrelated files
 ```
 
+### V6: Escalation Scan Respects Ignores
+
+```
+solve-escalations:
+  skips gitignored and ngramignored paths
+  skips .log files
+  returns only file paths with escalation tags
+```
+
 **Checked by:** Agent prompt structure, manual review
 
 ---

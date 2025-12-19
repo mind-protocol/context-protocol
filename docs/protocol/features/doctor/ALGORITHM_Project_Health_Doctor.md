@@ -121,6 +121,46 @@ def check_monolith(project: ProjectStructure, config: DoctorConfig) -> List[Issu
     return issues
 ```
 
+### Check: Doc Template Drift
+
+```python
+def check_doc_template_drift(project: ProjectStructure) -> List[Issue]:
+    issues = []
+    for doc in project.doc_files:
+        if doc.type not in templates:
+            continue
+        required_sections = templates[doc.type].sections
+        missing = required_sections - doc.sections
+        short = [s for s in required_sections if len(doc.section_text(s)) < 50]
+        if missing or short:
+            issues.append(Issue(
+                type="DOC_TEMPLATE_DRIFT",
+                severity="warning",
+                path=doc.path,
+                message=summary(missing, short),
+                suggestion="Fill missing sections and expand short ones"
+            ))
+    return issues
+```
+
+### Check: Non-Standard Doc Type
+
+```python
+def check_nonstandard_doc_type(project: ProjectStructure) -> List[Issue]:
+    issues = []
+    for doc in project.doc_files:
+        if doc.filename.starts_with_standard_prefix():
+            continue
+        issues.append(Issue(
+            type="NON_STANDARD_DOC_TYPE",
+            severity="warning",
+            path=doc.path,
+            message="Doc filename does not use a standard prefix",
+            suggestion="Rename to PATTERNS_/BEHAVIORS_/ALGORITHM_/VALIDATION_/IMPLEMENTATION_/TEST_/SYNC_"
+        ))
+    return issues
+```
+
 ### Check: Undocumented Code
 
 ```python

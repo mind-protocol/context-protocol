@@ -2,7 +2,7 @@
 Core repair logic shared between CLI and TUI.
 
 This module contains:
-- Data structures (RepairResult, ArbitrageDecision)
+- Data structures (RepairResult, EscalationDecision)
 - Constants (issue symbols, priorities, depth filters)
 - Pure functions for building prompts and parsing output
 - Async agent spawning for TUI integration
@@ -39,7 +39,7 @@ ISSUE_SYMBOLS = {
     "ORPHAN_DOCS": ("👻", "◌"),
     "STALE_IMPL": ("📉", "⇅"),
     "DOC_GAPS": ("🕳️", "○"),
-    "ARBITRAGE": ("⚖️", "⚡"),
+    "ESCALATION": ("⚖️", "⚡"),
     "SUGGESTION": ("💡", "?"),
     "NEW_UNDOC_CODE": ("🆕", "+"),
     "COMPONENT_NO_STORIES": ("📖", "◇"),
@@ -71,7 +71,7 @@ ISSUE_DESCRIPTIONS = {
     "ORPHAN_DOCS": ("link or remove orphan docs in", ""),
     "STALE_IMPL": ("update IMPLEMENTATION doc for", ""),
     "DOC_GAPS": ("complete gaps left in", ""),
-    "ARBITRAGE": ("resolve conflict in", ""),
+    "ESCALATION": ("resolve conflict in", ""),
     "SUGGESTION": ("implement suggestion from", ""),
     "NEW_UNDOC_CODE": ("update docs for", ""),
     "COMPONENT_NO_STORIES": ("add stories for", ""),
@@ -174,7 +174,7 @@ def get_issue_folder_name(issue_type: str, path: str, index: int = 0) -> str:
 #        INCOMPLETE_CHAIN (structural) → LARGE_DOC_MODULE (info) → HARDCODED_CONFIG (often false positive)
 ISSUE_PRIORITY = {
     "HARDCODED_SECRET": 0,   # Security first
-    "ARBITRAGE": 1,          # Conflicts block progress
+    "ESCALATION": 1,          # Conflicts block progress
     "MONOLITH": 2,           # Blocks everything
     "INCOMPLETE_IMPL": 3,    # Code before docs
     "STUB_IMPL": 4,          # Also code
@@ -220,7 +220,7 @@ DEPTH_DOCS = DEPTH_LINKS | {
     "LARGE_DOC_MODULE",
     "STALE_IMPL",
     "DOC_GAPS",
-    "ARBITRAGE",
+    "ESCALATION",
     "DOC_DUPLICATION",
 }
 
@@ -250,8 +250,8 @@ class RepairResult:
 
 
 @dataclass
-class ArbitrageDecision:
-    """User's decision for an ARBITRAGE conflict."""
+class EscalationDecision:
+    """User's decision for an ESCALATION conflict."""
     conflict_title: str
     decision: str
     passed: bool = False
@@ -312,9 +312,9 @@ IF YOU FIND CONTRADICTIONS (docs vs code, or doc vs doc):
 - If <70% confident, RE-READ the relevant docs first
 - Check: PATTERNS (why), BEHAVIORS (what), ALGORITHM (how), VALIDATION (constraints)
 
-- For each conflict, categorize as DECISION or ARBITRAGE:
+- For each conflict, categorize as DECISION or ESCALATION:
   - DECISION: You resolve it (this should be 90%+ of conflicts)
-  - ARBITRAGE: Only when you truly cannot decide
+  - ESCALATION: Only when you truly cannot decide
 
 - **DECISION format** (preferred - be decisive!):
   ```
@@ -570,7 +570,7 @@ async def spawn_repair_agent_async(
     on_output: Callable[[str], Awaitable[None]],
     instructions: Dict[str, Any],
     github_issue_number: Optional[int] = None,
-    arbitrage_decisions: Optional[List[ArbitrageDecision]] = None,
+    escalation_decisions: Optional[List[EscalationDecision]] = None,
     agent_id: Optional[str] = None,
     session_dir: Optional[Path] = None,
     agent_symbol: Optional[str] = None,
@@ -585,7 +585,7 @@ async def spawn_repair_agent_async(
         on_output: Async callback for each output line
         instructions: Instructions from get_issue_instructions()
         github_issue_number: Optional GitHub issue number
-        arbitrage_decisions: Optional user decisions for ARBITRAGE issues
+        escalation_decisions: Optional user decisions for ESCALATION issues
         agent_id: Unique identifier for this agent
         session_dir: Repair session directory (e.g., .ngram/repairs/2024-01-15_14-30-00/)
         agent_symbol: Symbol for this agent (e.g., "ninja" for 🥷)
@@ -594,19 +594,19 @@ async def spawn_repair_agent_async(
     Returns:
         RepairResult with success status and output
     """
-    # Handle ARBITRAGE decisions
-    if issue.issue_type == "ARBITRAGE" and arbitrage_decisions:
+    # Handle ESCALATION decisions
+    if issue.issue_type == "ESCALATION" and escalation_decisions:
         decisions_text = "\n".join(
             f"- **{d.conflict_title}**: {d.decision}"
-            for d in arbitrage_decisions if not d.passed
+            for d in escalation_decisions if not d.passed
         )
         instructions["prompt"] = instructions["prompt"].replace(
-            "{arbitrage_decisions}",
+            "{escalation_decisions}",
             decisions_text or "(No decisions provided)"
         )
-    elif issue.issue_type == "ARBITRAGE":
+    elif issue.issue_type == "ESCALATION":
         instructions["prompt"] = instructions["prompt"].replace(
-            "{arbitrage_decisions}",
+            "{escalation_decisions}",
             "(No decisions provided - skip this issue)"
         )
 

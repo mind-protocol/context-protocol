@@ -133,7 +133,17 @@ AND:    Output saved to docs/map.{md|yaml|json}
 - `--dir, -d PATH` — Target directory (default: cwd)
 - `--format, -f {md,yaml,json}` — Output format (default: md)
 
-### B10: Agents Command
+### B10: Solve Escalations Command
+
+```
+GIVEN:  A project directory
+WHEN:   `ngram solve-escalations` is executed
+THEN:   Files containing @ngram escalation markers are listed
+AND:    Results exclude gitignored, ngramignored, and log files
+AND:    Output prompts the human to fill the `response` field in the existing escalation YAML
+```
+
+### B11: Agents Command
 
 ```
 GIVEN:  A project with ngram Framework

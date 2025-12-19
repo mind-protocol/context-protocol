@@ -70,7 +70,7 @@ Compare your fix against the documentation chain:
 
 | Doc Type | Verify |
 |----------|--------|
-| `PATTERNS_*.md` | Fix follows design philosophy |
+| `PATTERNS_*.md` | Fix follows design philosophy, respects scope |
 | `BEHAVIORS_*.md` | Fix restores documented behavior |
 | `ALGORITHM_*.md` | Fix aligns with documented procedures |
 | `VALIDATION_*.md` | Fix maintains all invariants |

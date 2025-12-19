@@ -36,6 +36,8 @@ from .doctor_checks_docs import (
     doctor_check_stale_impl,
     doctor_check_large_doc_module,
     doctor_check_incomplete_chain,
+    doctor_check_doc_template_drift,
+    doctor_check_nonstandard_doc_type,
 )
 
 

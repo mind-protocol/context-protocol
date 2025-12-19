@@ -25,7 +25,7 @@ from .repair_core import (
     AGENT_SYMBOLS,
     AGENT_SYSTEM_PROMPT,
     RepairResult,
-    ArbitrageDecision,
+    EscalationDecision,
     get_learnings_content,
     get_issue_symbol,
     get_issue_action_parts,
@@ -33,13 +33,13 @@ from .repair_core import (
     build_agent_prompt,
     parse_decisions_from_output,
 )
-from .repair_interactive import (
+from .repair_escalation_interactive import (
     Colors,
     color,
     print_progress_bar,
     input_listener_thread,
     check_for_manager_input,
-    resolve_arbitrage_interactive,
+    resolve_escalation_interactive,
     reset_manager_state,
     stop_manager_listener,
 )
@@ -102,7 +102,7 @@ def save_github_issue_mapping(target_dir: Path, mapping: Dict[str, Dict[str, Any
             json.dump(mapping, f, indent=2)
 
 
-# Core repair logic (DEPTH_*, RepairResult, ArbitrageDecision, AGENT_SYSTEM_PROMPT,
+# Core repair logic (DEPTH_*, RepairResult, EscalationDecision, AGENT_SYSTEM_PROMPT,
 # build_agent_prompt, parse_decisions_from_output, etc.) imported from repair_core.py
 
 
@@ -111,7 +111,7 @@ def spawn_repair_agent(
     target_dir: Path,
     dry_run: bool = False,
     github_issue_number: Optional[int] = None,
-    arbitrage_decisions: Optional[List['ArbitrageDecision']] = None,
+    escalation_decisions: Optional[List['EscalationDecision']] = None,
     agent_symbol: str = "→",
     agent_provider: str = "claude",
 ) -> RepairResult:
@@ -120,19 +120,19 @@ def spawn_repair_agent(
 
     instructions = get_issue_instructions(issue, target_dir)
 
-    # For ARBITRAGE issues, inject the human decisions into the prompt
-    if issue.issue_type == "ARBITRAGE" and arbitrage_decisions:
+    # For ESCALATION issues, inject the human decisions into the prompt
+    if issue.issue_type == "ESCALATION" and escalation_decisions:
         decisions_text = "\n".join(
             f"- **{d.conflict_title}**: {d.decision}"
-            for d in arbitrage_decisions if not d.passed
+            for d in escalation_decisions if not d.passed
         )
         instructions["prompt"] = instructions["prompt"].replace(
-            "{arbitrage_decisions}",
+            "{escalation_decisions}",
             decisions_text or "(No decisions provided)"
         )
-    elif issue.issue_type == "ARBITRAGE":
+    elif issue.issue_type == "ESCALATION":
         instructions["prompt"] = instructions["prompt"].replace(
-            "{arbitrage_decisions}",
+            "{escalation_decisions}",
             "(No decisions provided - skip this issue)"
         )
 
@@ -285,7 +285,7 @@ def spawn_repair_agent(
 
 
 # print_progress_bar, input_listener_thread, spawn_manager_agent,
-# check_for_manager_input, resolve_arbitrage_interactive imported from repair_interactive.py
+# check_for_manager_input, resolve_escalation_interactive imported from repair_escalation_interactive.py
 
 
 def repair_command(
@@ -436,7 +436,7 @@ def repair_command(
     completed_count = [0]  # Use list to allow modification in nested function
     manager_responses: List[str] = []  # Track manager responses for report
 
-    def run_repair(issue_tuple, arbitrage_decisions=None):
+    def run_repair(issue_tuple, escalation_decisions=None):
         """Run a single repair in a thread."""
         idx, issue = issue_tuple
         github_issue_num = github_mapping.get(issue.path)
@@ -460,7 +460,7 @@ def repair_command(
             target_dir,
             dry_run=False,
             github_issue_number=github_issue_num,
-            arbitrage_decisions=arbitrage_decisions,
+            escalation_decisions=escalation_decisions,
             agent_symbol=agent_sym,
             agent_provider=agent_provider,
         )
@@ -476,19 +476,19 @@ def repair_command(
         return result
 
     # Separate special issues (need interactive input) from others
-    arbitrage_issues = [(i, iss) for i, iss in enumerate(issues_to_fix, 1) if iss.issue_type == "ARBITRAGE"]
+    escalation_issues = [(i, iss) for i, iss in enumerate(issues_to_fix, 1) if iss.issue_type == "ESCALATION"]
     suggestion_issues = [(i, iss) for i, iss in enumerate(issues_to_fix, 1) if iss.issue_type == "SUGGESTION"]
     other_issues = [(i, iss) for i, iss in enumerate(issues_to_fix, 1)
-                    if iss.issue_type not in ("ARBITRAGE", "SUGGESTION")]
+                    if iss.issue_type not in ("ESCALATION", "SUGGESTION")]
 
-    # Handle ARBITRAGE issues first (interactive, sequential)
-    if arbitrage_issues:
-        print(f"  {Colors.BOLD}⚖️ Resolving {len(arbitrage_issues)} conflict(s) first...{Colors.RESET}")
+    # Handle ESCALATION issues first (interactive, sequential)
+    if escalation_issues:
+        print(f"  {Colors.BOLD}⚖️ Resolving {len(escalation_issues)} conflict(s) first...{Colors.RESET}")
         print()
 
-        for idx, issue in arbitrage_issues:
+        for idx, issue in escalation_issues:
             # Interactive prompt
-            decisions = resolve_arbitrage_interactive(issue)
+            decisions = resolve_escalation_interactive(issue)
 
             # Check if any decisions were made (not all passed)
             has_decisions = any(not d.passed for d in decisions)
@@ -503,7 +503,7 @@ def repair_command(
                     target_dir,
                     dry_run=False,
                     github_issue_number=github_issue_num,
-                    arbitrage_decisions=decisions,
+                    escalation_decisions=decisions,
                     agent_provider=agent_provider,
                 )
                 repair_results.append(result)
@@ -589,7 +589,7 @@ def repair_command(
 
     # Run remaining agents in parallel or sequentially
     if not other_issues:
-        pass  # Only had ARBITRAGE issues
+        pass  # Only had ESCALATION issues
     elif parallel > 1:
         active_workers = min(parallel, len(other_issues))
         print(f"  Running {len(other_issues)} repairs with {active_workers} parallel agents...")

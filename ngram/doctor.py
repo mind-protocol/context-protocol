@@ -27,6 +27,8 @@ from .doctor_files import (
     load_doctor_config,
     load_doctor_ignore,
     filter_ignored_issues,
+    load_doctor_false_positives,
+    filter_false_positive_issues,
 )
 from .doctor_checks import (
     doctor_check_monolith,
@@ -41,6 +43,8 @@ from .doctor_checks import (
     doctor_check_yaml_drift,
     doctor_check_large_doc_module,
     doctor_check_incomplete_chain,
+    doctor_check_doc_template_drift,
+    doctor_check_nonstandard_doc_type,
     doctor_check_missing_tests,
     doctor_check_orphan_docs,
     doctor_check_stale_impl,
@@ -57,6 +61,7 @@ from .doctor_checks_content import (
     doctor_check_doc_duplication,
     doctor_check_long_strings,
     doctor_check_recent_log_errors,
+    doctor_check_resolve_escalation_markers,
 )
 
 
@@ -94,11 +99,14 @@ def run_doctor(target_dir: Path, config: DoctorConfig) -> Dict[str, Any]:
     all_issues.extend(doctor_check_missing_tests(target_dir, config))
     all_issues.extend(doctor_check_orphan_docs(target_dir, config))
     all_issues.extend(doctor_check_stale_impl(target_dir, config))
+    all_issues.extend(doctor_check_doc_template_drift(target_dir, config))
+    all_issues.extend(doctor_check_nonstandard_doc_type(target_dir, config))
     all_issues.extend(doctor_check_doc_gaps(target_dir, config))
     all_issues.extend(doctor_check_conflicts(target_dir, config))
     all_issues.extend(doctor_check_suggestions(target_dir, config))
     all_issues.extend(doctor_check_doc_duplication(target_dir, config))
     all_issues.extend(doctor_check_recent_log_errors(target_dir, config))
+    all_issues.extend(doctor_check_resolve_escalation_markers(target_dir, config))
     # Code quality checks
     all_issues.extend(doctor_check_magic_values(target_dir, config))
     all_issues.extend(doctor_check_hardcoded_secrets(target_dir, config))
@@ -107,6 +115,15 @@ def run_doctor(target_dir: Path, config: DoctorConfig) -> Dict[str, Any]:
     # Filter out suppressed issues from doctor-ignore.yaml
     ignores = load_doctor_ignore(target_dir)
     all_issues, ignored_count = filter_ignored_issues(all_issues, ignores)
+
+    # Filter out doc-declared false positives
+    false_positives = load_doctor_false_positives(target_dir, config)
+    all_issues, false_positive_count = filter_false_positive_issues(
+        all_issues,
+        false_positives,
+        target_dir,
+        config,
+    )
 
     # Group by severity
     grouped = {
@@ -127,6 +144,7 @@ def run_doctor(target_dir: Path, config: DoctorConfig) -> Dict[str, Any]:
             "info": len(grouped["info"]),
         },
         "ignored_count": ignored_count,
+        "false_positive_count": false_positive_count,
     }
 
 

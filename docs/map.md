@@ -1,43 +1,30 @@
 # Repository Map: ngram
 
-*Generated: 2025-12-19 11:06*
+*Generated: 2025-12-19 23:19*
 
-- **Files:** 99
+- **Files:** 100
 - **Directories:** 25
-- **Total Size:** 801.5K
-- **Doc Files:** 73
+- **Total Size:** 843.0K
+- **Doc Files:** 74
 - **Code Files:** 22
 - **Areas:** 4 (docs/ subfolders)
 - **Modules:** 6 (subfolders in areas)
 - **DOCS Links:** 21 (0.95 avg per code file)
 
-- markdown: 73
+- markdown: 74
 - python: 22
 
-```mermaid
-graph TD
-    cli[cli]
-    llm_agents[llm_agents]
-    tui[tui]
 ```
-
-| Module | Code | Docs | Lines | Files | Dependencies |
-|--------|------|------|-------|-------|--------------|
-| cli | `ngram/*` | `docs/cli/` | 9535 | 29 | - |
-| llm_agents | `ngram/llms/**` | `docs/llm_agents/` | 415 | 1 | - |
-| tui | `ngram/tui/**` | `docs/tui/` | 3313 | 13 | - |
-
-```
-├── docs/ (251.7K)
-│   ├── cli/ (46.2K)
-│   │   ├── ALGORITHM_CLI_Logic.md (8.0K)
-│   │   ├── BEHAVIORS_CLI_Command_Effects.md (4.4K)
-│   │   ├── IMPLEMENTATION_CLI_Code_Architecture.md (15.6K)
+├── docs/ (260.3K)
+│   ├── cli/ (48.0K)
+│   │   ├── ALGORITHM_CLI_Logic.md (8.5K)
+│   │   ├── BEHAVIORS_CLI_Command_Effects.md (4.8K)
+│   │   ├── IMPLEMENTATION_CLI_Code_Architecture.md (15.9K)
 │   │   ├── PATTERNS_Why_CLI_Over_Copy.md (4.7K)
-│   │   ├── SYNC_CLI_State.md (5.4K)
+│   │   ├── SYNC_CLI_State.md (5.9K)
 │   │   ├── SYNC_CLI_State_archive_2025-12.md (1.3K)
 │   │   ├── TEST_CLI_Coverage.md (1.7K)
-│   │   └── VALIDATION_CLI_Invariants.md (5.0K)
+│   │   └── VALIDATION_CLI_Invariants.md (5.2K)
 │   ├── llm_agents/ (19.5K)
 │   │   ├── ALGORITHM_Gemini_Stream_Flow.md (2.7K)
 │   │   ├── BEHAVIORS_Gemini_Agent_Output.md (2.0K)
@@ -46,21 +33,21 @@ graph TD
 │   │   ├── SYNC_LLM_Agents_State.md (5.8K)
 │   │   ├── TEST_LLM_Agent_Coverage.md (1.3K)
 │   │   └── VALIDATION_Gemini_Agent_Invariants.md (2.1K)
-│   ├── protocol/ (84.4K)
+│   ├── protocol/ (89.0K)
 │   │   ├── ALGORITHM/ (2.5K)
 │   │   │   └── ALGORITHM_Overview.md (2.5K)
 │   │   ├── IMPLEMENTATION/ (5.4K)
 │   │   │   └── IMPLEMENTATION_Overview.md (5.4K)
 │   │   ├── archive/ (839)
 │   │   │   └── SYNC_archive_2024-12.md (839)
-│   │   ├── features/ (49.5K)
-│   │   │   ├── doctor/ (40.1K)
-│   │   │   │   ├── ALGORITHM_Project_Health_Doctor.md (14.2K)
-│   │   │   │   ├── BEHAVIORS_Project_Health_Doctor.md (5.1K)
+│   │   ├── features/ (53.2K)
+│   │   │   ├── doctor/ (43.8K)
+│   │   │   │   ├── ALGORITHM_Project_Health_Doctor.md (15.5K)
+│   │   │   │   ├── BEHAVIORS_Project_Health_Doctor.md (6.5K)
 │   │   │   │   ├── PATTERNS_Project_Health_Doctor.md (4.1K)
-│   │   │   │   ├── SYNC_Project_Health_Doctor.md (4.0K)
+│   │   │   │   ├── SYNC_Project_Health_Doctor.md (4.5K)
 │   │   │   │   ├── TEST_Project_Health_Doctor.md (8.0K)
-│   │   │   │   └── VALIDATION_Project_Health_Doctor.md (4.7K)
+│   │   │   │   └── VALIDATION_Project_Health_Doctor.md (5.2K)
 │   │   │   ├── BEHAVIORS_Agent_Trace_Logging.md (3.7K)
 │   │   │   ├── PATTERNS_Agent_Trace_Logging.md (3.6K)
 │   │   │   └── SYNC_Agent_Trace_Logging.md (2.0K)
@@ -68,10 +55,10 @@ graph TD
 │   │   ├── BEHAVIORS_Observable_Protocol_Effects.md (5.9K)
 │   │   ├── IMPLEMENTATION_Overview.md (766)
 │   │   ├── PATTERNS_Bidirectional_Documentation_Chain_For_AI_Agents.md (4.4K)
-│   │   ├── SYNC_Protocol_Current_State.md (5.1K)
+│   │   ├── SYNC_Protocol_Current_State.md (6.0K)
 │   │   ├── TEST_Protocol_Test_Cases.md (3.8K)
 │   │   └── VALIDATION_Protocol_Invariants.md (5.6K)
-│   ├── tui/ (50.7K)
+│   ├── tui/ (51.2K)
 │   │   ├── IMPLEMENTATION_TUI_Code_Architecture/ (9.4K)
 │   │   │   └── IMPLEMENTATION_TUI_Code_Architecture_Structure.md (9.4K)
 │   │   ├── archive/ (4.1K)
@@ -79,17 +66,17 @@ graph TD
 │   │   │   └── SYNC_archive_2024-12.md (1.7K)
 │   │   ├── ALGORITHM_TUI_Flow.md (6.2K)
 │   │   ├── BEHAVIORS_TUI_Interactions.md (6.6K)
-│   │   ├── IMPLEMENTATION_TUI_Code_Architecture.md (2.0K)
-│   │   ├── PATTERNS_TUI_Design.md (4.3K)
-│   │   ├── SYNC_TUI_State.md (4.8K)
+│   │   ├── IMPLEMENTATION_TUI_Code_Architecture.md (2.2K)
+│   │   ├── PATTERNS_TUI_Design.md (4.5K)
+│   │   ├── SYNC_TUI_State.md (5.1K)
 │   │   ├── SYNC_TUI_State_archive_2025-12.md (3.6K)
 │   │   ├── TEST_TUI_Coverage.md (4.9K)
 │   │   └── VALIDATION_TUI_Invariants.md (4.7K)
-│   └── map.md (50.9K)
-├── ngram/ (589.5K)
-│   ├── llms/ (20.4K)
-│   │   └── gemini_agent.py (20.4K) →
-│   ├── tui/ (165.0K)
+│   └── map.md (52.6K)
+├── ngram/ (609.9K)
+│   ├── llms/ (19.9K)
+│   │   └── gemini_agent.py (19.9K) →
+│   ├── tui/ (168.3K)
 │   │   ├── styles/ (18.7K)
 │   │   │   ├── theme.tcss (9.2K)
 │   │   │   └── theme_light.tcss (9.6K)
@@ -101,52 +88,53 @@ graph TD
 │   │   │   ├── status_bar.py (7.0K) →
 │   │   │   ├── suggestions.py (1.2K) →
 │   │   │   └── (..1 more files)
-│   │   ├── app.py (38.0K) →
-│   │   ├── commands.py (28.6K) →
+│   │   ├── app.py (40.7K) →
+│   │   ├── commands.py (29.2K) →
 │   │   ├── commands_agent.py (18.4K) →
 │   │   ├── manager.py (9.9K) →
 │   │   ├── state.py (6.6K) →
 │   │   └── (..1 more files)
-│   ├── context.py (18.2K) →
-│   ├── doctor_checks.py (25.6K) →
-│   ├── doctor_checks_content.py (18.7K) →
-│   ├── doctor_report.py (20.6K)
-│   ├── repair.py (30.0K) →
+│   ├── doctor_checks.py (25.7K) →
+│   ├── doctor_checks_content.py (20.0K) →
+│   ├── doctor_files.py (22.1K) →
+│   ├── doctor_report.py (21.4K)
+│   ├── repair.py (30.1K) →
 │   ├── repair_core.py (27.4K) →
 │   ├── repair_instructions.py (27.6K) →
 │   ├── repair_instructions_docs.py (18.6K) →
 │   ├── repo_overview.py (26.4K) →
 │   ├── validate.py (28.2K) →
-│   └── (..19 more files)
-├── templates/ (106.4K)
-│   ├── ngram/ (100.6K)
-│   │   ├── agents/ (2.6K)
-│   │   │   └── manager/ (2.6K)
-│   │   │       └── CLAUDE.md (2.6K)
+│   └── (..20 more files)
+├── templates/ (131.0K)
+│   ├── ngram/ (125.2K)
+│   │   ├── agents/ (2.8K)
+│   │   │   └── manager/ (2.8K)
+│   │   │       └── CLAUDE.md (2.8K)
 │   │   ├── state/ (2.1K)
 │   │   │   └── SYNC_Project_State.md (2.1K)
-│   │   ├── templates/ (23.9K)
+│   │   ├── templates/ (39.4K)
 │   │   │   ├── ALGORITHM_TEMPLATE.md (2.3K)
 │   │   │   ├── BEHAVIORS_TEMPLATE.md (2.1K)
 │   │   │   ├── CONCEPT_TEMPLATE.md (1.1K)
-│   │   │   ├── IMPLEMENTATION_TEMPLATE.md (6.9K)
+│   │   │   ├── HEALTH_TEMPLATE.md (13.8K)
+│   │   │   ├── IMPLEMENTATION_TEMPLATE.md (8.7K)
 │   │   │   ├── PATTERNS_TEMPLATE.md (2.2K)
 │   │   │   ├── SYNC_TEMPLATE.md (3.1K)
 │   │   │   ├── TEST_TEMPLATE.md (1.7K)
 │   │   │   ├── TOUCHES_TEMPLATE.md (1.6K)
 │   │   │   └── VALIDATION_TEMPLATE.md (2.9K)
-│   │   ├── views/ (54.0K)
+│   │   ├── views/ (62.9K)
 │   │   │   ├── VIEW_Analyze_Structural_Analysis.md (4.1K)
 │   │   │   ├── VIEW_Debug_Investigate_And_Fix_Issues.md (3.7K)
 │   │   │   ├── VIEW_Document_Create_Module_Documentation.md (6.1K)
+│   │   │   ├── VIEW_Escalation_How_To_Handle_Vague_Tasks_Missing_Information_And_Complex_Non-Obvious_Problems.md (8.7K)
 │   │   │   ├── VIEW_Extend_Add_Features_To_Existing.md (4.9K)
+│   │   │   ├── VIEW_Health_Define_Health_Checks_And_Verify.md (5.9K)
 │   │   │   ├── VIEW_Implement_Write_Or_Modify_Code.md (4.6K)
 │   │   │   ├── VIEW_Ingest_Process_Raw_Data_Sources.md (4.5K)
 │   │   │   ├── VIEW_Onboard_Understand_Existing_Codebase.md (5.0K)
 │   │   │   ├── VIEW_Refactor_Improve_Code_Structure.md (5.1K)
-│   │   │   ├── VIEW_Scan_Populate_Ngramignore.md (3.0K)
-│   │   │   ├── VIEW_Test_Write_Tests_And_Verify.md (3.5K)
-│   │   │   └── (..17 more files)
+│   │   │   └── (..18 more files)
 │   │   ├── PRINCIPLES.md (7.2K)
 │   │   └── PROTOCOL.md (10.8K)
 │   ├── CODEX_SYSTEM_PROMPT_ADDITION.md (2.1K)
@@ -154,7 +142,7 @@ graph TD
 │   ├── ngramignore (806)
 │   └── (..1 more files)
 ├── .ngramignore (806)
-├── AGENTS.md (22.0K)
+├── AGENTS.md (22.3K)
 └── README.md (4.5K)
 ```
 
@@ -166,6 +154,7 @@ graph TD
 - ## DATA STRUCTURES
 - ## ALGORITHM: Validate Command
 - ## ALGORITHM: Doctor Command
+- ## ALGORITHM: Solve Escalations Command
 - ## ALGORITHM: Repair Command
 - # AGENTS.md = .ngram/CLAUDE.md + templates/CODEX_SYSTEM_PROMPT_ADDITION.md
 - ## KEY DECISIONS
@@ -208,12 +197,13 @@ graph TD
 - `ngram/prompt.py`
 - `ngram/repair.py`
 - `ngram/repair_core.py`
+- `ngram/repair_escalation_interactive.py`
 - `ngram/repair_instructions.py`
 - `ngram/repair_instructions_docs.py`
-- `ngram/repair_interactive.py`
 - `ngram/repair_report.py`
 - `ngram/repo_overview.py`
 - `ngram/repo_overview_formatters.py`
+- `ngram/solve_escalations.py`
 - `ngram/sync.py`
 - `ngram/utils.py`
 - `ngram/validate.py`
@@ -269,10 +259,12 @@ graph TD
 - `ngram.py`
 - `ngram/project_map_html.py`
 - `ngram/repair_core.py`
+- `ngram/solve_escalations.py`
 - `project_map_html.py`
 - `repo_overview.py`
 
 **Doc refs:**
+- `docs/cli/ALGORITHM_CLI_Logic.md`
 - `docs/cli/SYNC_CLI_State.md`
 
 **Sections:**
@@ -495,6 +487,10 @@ graph TD
 - # Ignore patterns
 - # Disable specific checks
 - # Custom severity overrides
+- ## FALSE POSITIVE SUPPRESSION
+- ## DOC TEMPLATE DRIFT DEFERMENTS
+- ## NON-STANDARD DOC TYPE DEFERMENTS
+- ## RESOLVED ESCALATION MARKERS
 - ## CHAIN
 
 **Sections:**
@@ -903,12 +899,14 @@ graph TD
 - `ngram/prompt.py`
 - `ngram/repair.py`
 - `ngram/repair_core.py`
+- `ngram/repair_escalation_interactive.py`
 - `ngram/repair_instructions.py`
 - `ngram/repair_instructions_docs.py`
 - `ngram/repair_interactive.py`
 - `ngram/repair_report.py`
 - `ngram/repo_overview.py`
 - `ngram/repo_overview_formatters.py`
+- `ngram/solve_escalations.py`
 - `ngram/sync.py`
 - `ngram/tui/__init__.py`
 - `ngram/tui/app.py`
@@ -936,6 +934,12 @@ graph TD
 - `scripts/check_doc_completeness.py`
 - `scripts/check_doc_refs.py`
 - `scripts/check_orphans.py`
+- `src/analytics/batch_ingest.py`
+- `src/analytics/storage/event_store.py`
+- `src/analytics/stream_ingest.py`
+- `src/analytics/validation/schema_rules.py`
+- `src/dashboard/op_metrics.py`
+- `src/dashboard/product_metrics.py`
 - `src/ngram/__init__.py`
 - `src/ngram/cli.py`
 - `src/ngram/context.py`
@@ -1072,6 +1076,7 @@ graph TD
 - `views/VIEW_Debug_Investigate_And_Fix_Issues.md`
 - `views/VIEW_Document_Create_Module_Documentation.md`
 - `views/VIEW_Extend_Add_Features_To_Existing.md`
+- `views/VIEW_Health_Define_Health_Checks_And_Verify.md`
 - `views/VIEW_Implement_Write_Or_Modify_Code.md`
 - `views/VIEW_Ingest_Process_Raw_Data_Sources.md`
 - `views/VIEW_Onboard_Understand_Existing_Codebase.md`
@@ -1268,6 +1273,7 @@ graph TD
 
 **Definitions:**
 - `def _truncate_thinking()`
+- `def _output_indicates_rate_limit()`
 - `async def handle_command()`
 - `async def handle_message()`
 - `async def _animate_loading()`
@@ -1353,23 +1359,6 @@ graph TD
 - `def active_count()`
 - `def clear_completed()`
 
-**Docs:** `docs/cli/PATTERNS_Why_CLI_Over_Copy.md`
-
-**Definitions:**
-- `def get_traces_dir()`
-- `def log_trace()`
-- `def read_traces()`
-- `def analyze_traces()`
-- `def print_trace_summary()`
-- `def clear_traces()`
-- `def parse_imports()`
-- `def find_file_from_import()`
-- `def find_module_docs()`
-- `def get_module_context()`
-- `def build_dependency_map()`
-- `def add_node()`
-- `def print_module_context()`
-
 **Docs:** `docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md`
 
 **Definitions:**
@@ -1394,6 +1383,30 @@ graph TD
 - `def doctor_check_doc_duplication()`
 - `def doctor_check_recent_log_errors()`
 - `def doctor_check_long_strings()`
+- `def doctor_check_resolve_escalation_markers()`
+
+**Docs:** `docs/cli/PATTERNS_Why_CLI_Over_Copy.md`
+
+**Definitions:**
+- `def parse_gitignore()`
+- `def load_doctor_config()`
+- `def load_doctor_ignore()`
+- `def is_issue_ignored()`
+- `def filter_ignored_issues()`
+- `def extract_docs_references_from_file()`
+- `def _parse_doc_false_positives()`
+- `def parse_doctor_doc_tags()`
+- `def load_doctor_false_positives()`
+- `def filter_false_positive_issues()`
+- `def add_doctor_ignore()`
+- `def should_ignore_path()`
+- `def is_binary_file()`
+- `def find_code_directories()`
+- `def has_direct_code_files()`
+- `def find_leaf_code_dirs()`
+- `def find_source_files()`
+- `def count_lines()`
+- `def find_long_sections()`
 
 **Definitions:**
 - `def get_issue_guidance()`
@@ -1420,7 +1433,7 @@ graph TD
 - `def get_symbol_name()`
 - `def get_issue_folder_name()`
 - `class RepairResult`
-- `class ArbitrageDecision`
+- `class EscalationDecision`
 - `def get_learnings_content()`
 - `def _get_git_head()`
 - `def get_issue_symbol()`
@@ -1489,6 +1502,7 @@ graph TD
 - ## What You Can Do
 - ## What You Output
 - ## Guidelines
+- ## Escalation Check
 - ## Files to Check
 - ## Updating LEARNINGS Files
 - ## After Your Response
@@ -1545,6 +1559,27 @@ graph TD
 - ## SEE ALSO
 
 **Code refs:**
+- `{path/to/health/checker_script.py`
+
+**Sections:**
+- # {Module} — Health: Verification Mechanics and Coverage
+- ## PURPOSE OF THIS FILE
+- ## WHY THIS PATTERN
+- ## HOW TO USE THIS TEMPLATE
+- ## CHAIN
+- ## FLOWS ANALYSIS (TRIGGERS + FREQUENCY)
+- ## HEALTH INDICATORS SELECTED
+- ## STATUS (RESULT INDICATOR)
+- ## DOCK TYPES (COMPLETE LIST)
+- ## CHECKER INDEX
+- ## INDICATOR: {Indicator Name}
+- ## HOW TO RUN
+- # Run all health checks for this module
+- # Run a specific checker
+- ## KNOWN GAPS
+- ## GAPS / IDEAS / QUESTIONS
+
+**Code refs:**
 - `{path/to/main/source/file.py`
 
 **Sections:**
@@ -1554,7 +1589,7 @@ graph TD
 - ## DESIGN PATTERNS
 - ## SCHEMA
 - ## ENTRY POINTS
-- ## DATA FLOW
+- ## DATA FLOW AND DOCKING (FLOW-BY-FLOW)
 - ## LOGIC CHAINS
 - ## MODULE DEPENDENCIES
 - ## STATE MANAGEMENT
@@ -1671,6 +1706,26 @@ graph TD
 - ## AFTER DOCUMENTATION
 - ## VERIFICATION
 
+**Code refs:**
+- `src/analytics/batch_ingest.py`
+- `src/analytics/storage/event_store.py`
+- `src/analytics/stream_ingest.py`
+- `src/analytics/validation/schema_rules.py`
+- `src/dashboard/op_metrics.py`
+- `src/dashboard/product_metrics.py`
+
+**Sections:**
+- # VIEW: Escalation
+- ## VISION
+- ## THE PATTERN
+- ## HOW ESCALATION WORKS
+- ## WHEN TO ESCALATE (PRECISE)
+- ## WHEN NOT TO ESCALATE
+- ## ESCALATION TYPES
+- ## ESCALATION MARKER FORMAT (YAML)
+- ## PRIORITY SCALE (HOW TO SET)
+- ## HOOKS (WHEN TO INCLUDE)
+
 **Sections:**
 - # VIEW: Extend
 - ## WHY THIS VIEW EXISTS
@@ -1684,6 +1739,19 @@ graph TD
 - ## OBSERVATIONS (Living Documentation)
 - ## Agent Observations
 - ## VERIFICATION
+
+**Sections:**
+- # VIEW: Health — Define Health Checks and Verify System Health
+- ## WHY THIS VIEW EXISTS
+- ## CONTEXT TO LOAD
+- ## WHAT TO DEFINE
+- ## WRITING GOOD HEALTH
+- ## AFTER DEFINING HEALTH
+- ## OBSERVATIONS (Living Documentation)
+- ## Agent Observations
+- ## HANDOFF
+- ## VERIFICATION
+- ## DOCTOR FALSE POSITIVES
 
 **Sections:**
 - # VIEW: Implement
@@ -1732,31 +1800,6 @@ graph TD
 - ## VERIFICATION
 
 **Sections:**
-- # VIEW: Scan — Populate .ngramignore
-- ## WHY THIS VIEW EXISTS
-- ## CONTEXT TO LOAD
-- ## THE WORK
-- ## OUTPUT FORMAT
-- # Dependencies
-- # Build outputs
-- # Project-specific
-- ## VERIFICATION
-- ## WHAT TO IGNORE vs KEEP
-- ## HANDOFF
-
-**Sections:**
-- # VIEW: Test — Write Tests and Verify Correctness
-- ## WHY THIS VIEW EXISTS
-- ## CONTEXT TO LOAD
-- ## WHAT TO TEST
-- ## WRITING GOOD TESTS
-- ## AFTER TESTING
-- ## OBSERVATIONS (Living Documentation)
-- ## Agent Observations
-- ## HANDOFF
-- ## VERIFICATION
-
-**Sections:**
 - # Working Principles
 - ## Architecture: One Solution Per Problem
 - ## Verification: Test Before Claiming Built
@@ -1771,13 +1814,13 @@ graph TD
 - `views/VIEW_Debug_Investigate_And_Fix_Issues.md`
 - `views/VIEW_Document_Create_Module_Documentation.md`
 - `views/VIEW_Extend_Add_Features_To_Existing.md`
+- `views/VIEW_Health_Define_Health_Checks_And_Verify.md`
 - `views/VIEW_Implement_Write_Or_Modify_Code.md`
 - `views/VIEW_Ingest_Process_Raw_Data_Sources.md`
 - `views/VIEW_Onboard_Understand_Existing_Codebase.md`
 - `views/VIEW_Refactor_Improve_Code_Structure.md`
 - `views/VIEW_Review_Evaluate_Changes.md`
 - `views/VIEW_Specify_Design_Vision_And_Architecture.md`
-- `views/VIEW_Test_Write_Tests_And_Verify.md`
 
 **Sections:**
 - # ngram Framework
@@ -1809,13 +1852,13 @@ graph TD
 - `views/VIEW_Debug_Investigate_And_Fix_Issues.md`
 - `views/VIEW_Document_Create_Module_Documentation.md`
 - `views/VIEW_Extend_Add_Features_To_Existing.md`
+- `views/VIEW_Health_Define_Health_Checks_And_Verify.md`
 - `views/VIEW_Implement_Write_Or_Modify_Code.md`
 - `views/VIEW_Ingest_Process_Raw_Data_Sources.md`
 - `views/VIEW_Onboard_Understand_Existing_Codebase.md`
 - `views/VIEW_Refactor_Improve_Code_Structure.md`
 - `views/VIEW_Review_Evaluate_Changes.md`
 - `views/VIEW_Specify_Design_Vision_And_Architecture.md`
-- `views/VIEW_Test_Write_Tests_And_Verify.md`
 
 **Sections:**
 - # ngram
@@ -1844,6 +1887,7 @@ graph TD
 - ## CLI Commands
 - ## 4. Protocol-First Reading
 - ## 5. Parallel Work Awareness
+- ## 6. Operational Proactivity
 - ## 5. Communication Principles
 
 **Sections:**

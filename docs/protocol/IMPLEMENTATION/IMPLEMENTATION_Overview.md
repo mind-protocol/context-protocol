@@ -38,7 +38,7 @@ This document consolidates the protocol implementation details that were previou
 ├── PROTOCOL.md
 ├── PRINCIPLES.md
 ├── views/                 # 11 VIEW files
-├── templates/             # 9 doc templates
+├── templates/             # 10 doc templates
 └── state/
     └── ../../../templates/ngram/state/SYNC_Project_State.md
 ```

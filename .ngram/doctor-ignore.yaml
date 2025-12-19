@@ -38,19 +38,4 @@
 #   - Glob: "tests/**" matches all files under tests/
 #   - Wildcard: "*" with issue_type suppresses ALL issues of that type (use sparingly)
 
-ignores:
-  - issue_type: INCOMPLETE_IMPL
-    path: ngram/tui/app.py
-    reason: Short delegating UI actions are complete implementations, not stubs.
-    added_by: codex
-    added_date: 2025-12-19
-  - issue_type: INCOMPLETE_IMPL
-    path: ngram/tui/widgets/input_bar.py
-    reason: Message constructors and property accessors are intentionally minimal but complete.
-    added_by: codex
-    added_date: 2025-12-19
-  - issue_type: INCOMPLETE_IMPL
-    path: ngram/tui/widgets/manager_panel.py
-    reason: Short UI helpers are implemented; no missing logic.
-    added_by: codex
-    added_date: 2025-12-19
+ignores: []

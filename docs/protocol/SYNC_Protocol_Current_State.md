@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: Codex (GPT-5)
+UPDATED_BY: codex (escalate view)
 STATUS: CANONICAL
 ```
 
@@ -12,9 +12,10 @@ STATUS: CANONICAL
 
 **What's canonical (v1):**
 - 5 principles (architecture, verification, communication, quality, experience)
-- 11 VIEWs covering full lifecycle
+- 12 VIEWs covering full lifecycle
 - CLI with init, validate, prompt, context
 - Documentation process with maturity tracking
+- HEALTH template for verification mechanics (replaces TEST template usage going forward)
 
 **What's still being designed:**
 - Nothing currently
@@ -33,8 +34,8 @@ Protocol V1 complete and in use. Dogfooding on itself + Blood Ledger.
 **What exists:**
 - PROTOCOL.md — navigation (what to load, where to update, how to structure docs)
 - PRINCIPLES.md — stance (5 principles: architecture, verification, communication, quality, experience)
-- 11 VIEWs covering product development lifecycle
-- 8 templates for documentation (including TEST)
+- 12 VIEWs covering product development lifecycle (includes VIEW_Escalation_How_To_Handle_Vague_Tasks_Missing_Information_And_Complex_Non-Obvious_Problems.md + LEARNINGS)
+- 10 templates for documentation (including HEALTH)
 - CLI package with `init`, `validate`, `prompt`, and `context` commands
 - CLAUDE_ADDITION.md with motivation, principles summary, and lifecycle-ordered VIEWs
 - Maturity tracking in SYNC (CANONICAL, DESIGNING, PROPOSED, DEPRECATED)
@@ -55,12 +56,16 @@ Protocol V1 complete and in use. Dogfooding on itself + Blood Ledger.
 - Removed redundant `docs/protocol/IMPLEMENTATION/IMPLEMENTATION_File_Structure.md`; file layout references now live only in `IMPLEMENTATION/IMPLEMENTATION_Overview.md`.
 - Normalized protocol implementation overview paths to explicit relative `.ngram/` locations to avoid broken-link detection.
 - Normalized protocol implementation overview file paths to point at .ngram/state files and avoid broken link detection.
+- Added HEALTH template to replace TEST usage going forward, with detailed usage guidance, flow analysis, indicator selection, status result indicator (stream destination), per-indicator representation, docking, mechanisms, throttling, forwarding, display, manual run sections, indicator-based severity signals, and explicit what-to-include guidance per section.
+- Expanded IMPLEMENTATION template to capture flow-by-flow YAML steps and explicit docking points with selection guidance.
+- Renamed the testing VIEW to a HEALTH-focused VIEW and updated guidance to align with docking-based health checks.
+- Updated protocol docs to replace TEST chain references with HEALTH.
 
 ---
 
 ## HANDOFF: FOR AGENTS
 
-**Your likely VIEW:** VIEW_Test_Write_Tests_And_Verify
+**Your likely VIEW:** VIEW_Health_Define_Health_Checks_And_Verify
 
 **What needs testing:**
 1. `pip install -e .` from repo root
@@ -106,7 +111,7 @@ Protocol V1 complete. Added PRINCIPLES.md capturing your working principles (arc
 ├── PROTOCOL.md              # Navigation — what to load
 ├── PRINCIPLES.md            # Stance — how to work
 ├── views/                   # 9 task-specific VIEWs
-├── templates/               # 7 doc templates
+├── templates/               # 10 doc templates
 └── state/
     └── SYNC_Project_State.md
 ```

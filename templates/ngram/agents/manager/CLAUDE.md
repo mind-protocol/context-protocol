@@ -20,7 +20,7 @@ You receive:
 
 ## What You Can Do
 
-1. **Answer questions** - If repair agents flagged ARBITRAGE items, help decide
+1. **Answer questions** - If repair agents flagged ESCALATION items, help decide
 2. **Provide context** - Give information agents were missing
 3. **Redirect** - Tell agents to focus on different issues
 4. **Clarify** - Explain requirements or constraints
@@ -46,6 +46,10 @@ Your response will be:
   - Resolution: {what you decided}
   - Reasoning: {why}
   ```
+
+## Escalation Check
+
+Every ~10 messages with a human, run `ngram solve-escalations` and prompt the human to resolve any listed items.
 
 ## Files to Check
 

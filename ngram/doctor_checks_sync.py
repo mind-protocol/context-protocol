@@ -2,7 +2,7 @@
 Doctor check functions for SYNC file analysis.
 
 Health checks that analyze SYNC files for workflow state:
-- Conflicts requiring human decision (ARBITRAGE)
+- Conflicts requiring human decision (ESCALATION)
 - Incomplete gaps from previous sessions
 - Agent suggestions awaiting action
 
@@ -17,10 +17,10 @@ from .doctor_files import should_ignore_path
 
 
 def doctor_check_conflicts(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
-    """Check for CONFLICTS sections with ARBITRAGE items needing human decision."""
+    """Check for CONFLICTS sections with ESCALATION items needing human decision."""
     issues = []
 
-    if "ARBITRAGE" in config.disabled_checks:
+    if "ESCALATION" in config.disabled_checks:
         return issues
 
     # Search SYNC files for ## CONFLICTS sections
@@ -44,8 +44,8 @@ def doctor_check_conflicts(target_dir: Path, config: DoctorConfig) -> List[Docto
                 if "## CONFLICTS" not in content and "## Conflicts" not in content:
                     continue
 
-                # Extract ARBITRAGE items (unresolved conflicts needing human input)
-                arbitrage_items = []
+                # Extract ESCALATION items (unresolved conflicts needing human input)
+                escalation_items = []
                 in_conflicts_section = False
                 current_item = None
 
@@ -57,34 +57,34 @@ def doctor_check_conflicts(target_dir: Path, config: DoctorConfig) -> List[Docto
                         # Left CONFLICTS section
                         break
                     elif in_conflicts_section:
-                        # Look for ARBITRAGE headers
-                        if "### ARBITRAGE:" in line or "### Arbitrage:" in line:
+                        # Look for ESCALATION headers
+                        if "### ESCALATION:" in line or "### Escalation:" in line:
                             if current_item:
-                                arbitrage_items.append(current_item)
+                                escalation_items.append(current_item)
                             current_item = {"title": line.split(":", 1)[-1].strip(), "details": []}
                         elif current_item and line.strip().startswith("-"):
                             current_item["details"].append(line.strip().lstrip("- "))
                         elif line.strip().startswith("### DECISION") or line.strip().startswith("### Decision"):
                             # DECISION items are resolved, skip
                             if current_item:
-                                arbitrage_items.append(current_item)
+                                escalation_items.append(current_item)
                             current_item = None
 
                 if current_item:
-                    arbitrage_items.append(current_item)
+                    escalation_items.append(current_item)
 
-                if arbitrage_items:
+                if escalation_items:
                     rel_path = str(sync_file.relative_to(target_dir))
                     issues.append(DoctorIssue(
-                        issue_type="ARBITRAGE",
+                        issue_type="ESCALATION",
                         severity="critical",  # Needs human decision
                         path=rel_path,
-                        message=f"{len(arbitrage_items)} conflict(s) need human decision",
+                        message=f"{len(escalation_items)} conflict(s) need human decision",
                         details={
-                            "conflicts": [item["title"] for item in arbitrage_items],
-                            "items": arbitrage_items[:5],
+                            "conflicts": [item["title"] for item in escalation_items],
+                            "items": escalation_items[:5],
                         },
-                        suggestion=f"Decide: {arbitrage_items[0]['title']}" if arbitrage_items else ""
+                        suggestion=f"Decide: {escalation_items[0]['title']}" if escalation_items else ""
                     ))
 
             except Exception:

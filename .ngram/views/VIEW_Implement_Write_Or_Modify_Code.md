@@ -67,7 +67,7 @@ Compare your implementation to the documentation chain:
 
 | Doc Type | Check |
 |----------|-------|
-| `PATTERNS_*.md` | Does code follow the design philosophy? |
+| `PATTERNS_*.md` | Does code follow the design philosophy? Is this in scope? |
 | `BEHAVIORS_*.md` | Does code produce the documented behaviors? |
 | `ALGORITHM_*.md` | Does code follow the documented procedures? |
 | `VALIDATION_*.md` | Are invariants maintained? |

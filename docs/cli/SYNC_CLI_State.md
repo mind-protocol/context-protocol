@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (modules.yaml cli path)
+UPDATED_BY: codex (escalation rename)
 STATUS: CANONICAL
 ```
 
@@ -40,6 +40,20 @@ No active development at this time.
 
 - Added a doctor check for recent .log files with error lines (last hour), surfaced as LOG_ERROR issues.
 - LOG_ERROR scanning now inspects only the last 2000 lines per recent log file.
+
+### 2025-12-19: Solve escalations command
+
+- Added `ngram solve-escalations` to scan for @ngram escalation markers.
+- Scan respects gitignore/ngramignore and skips log files.
+- Scan ignores `ngram/solve_escalations.py` and `docs/cli/ALGORITHM_CLI_Logic.md` explicitly.
+
+### 2025-12-19: Escalation terminology rename
+
+- Renamed arbitrage terminology to escalation across CLI commands, repair flow, and docs.
+
+### 2025-12-19: Doctor resolved escalation markers
+
+- Doctor now flags `@ngram:solved-escalations` markers as RESOLVE_ESCALATION issues.
 
 ### 2025-12-19: Doctor GitHub issues opt-in
 

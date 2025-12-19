@@ -40,7 +40,7 @@ Light background for readability. CSS-based via Textual's TCSS.
 ### Shared Core: repair_core.py
 
 Extracted shared logic from `repair.py`:
-- Dataclasses: `RepairResult`, `ArbitrageDecision`
+- Dataclasses: `RepairResult`, `EscalationDecision`
 - Constants: `ISSUE_SYMBOLS`, `ISSUE_PRIORITY`, `DEPTH_*`
 - Functions: `build_agent_prompt()`, `parse_decisions_from_output()`
 - Async spawn: `spawn_repair_agent_async()` for TUI integration

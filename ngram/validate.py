@@ -342,7 +342,7 @@ def check_views_exist(target_dir: Path) -> ValidationResult:
         "VIEW_Implement_Write_Or_Modify_Code.md",
         "VIEW_Extend_Add_Features_To_Existing.md",
         "VIEW_Collaborate_Pair_Program_With_Human.md",
-        "VIEW_Test_Write_Tests_And_Verify.md",
+        "VIEW_Health_Define_Health_Checks_And_Verify.md",
         "VIEW_Debug_Investigate_And_Fix_Issues.md",
         "VIEW_Review_Evaluate_Changes.md",
         "VIEW_Refactor_Improve_Code_Structure.md",

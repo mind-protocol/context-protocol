@@ -12,12 +12,13 @@ DOCS: docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md
 """
 
 import re
+from datetime import date
 from pathlib import Path
 from typing import List
 
 from .utils import find_module_directories
 from .doctor_types import DoctorIssue, DoctorConfig
-from .doctor_files import should_ignore_path
+from .doctor_files import should_ignore_path, parse_doctor_doc_tags
 
 try:
     import yaml
@@ -312,5 +313,188 @@ def doctor_check_incomplete_chain(target_dir: Path, config: DoctorConfig) -> Lis
                 details={"missing": missing, "present": [d.rstrip('_') for d in full_chain if d not in missing]},
                 suggestion="Complete the doc chain for full coverage"
             ))
+
+    return issues
+
+
+DOC_TYPE_TEMPLATES = {
+    "PATTERNS": ".ngram/templates/PATTERNS_TEMPLATE.md",
+    "BEHAVIORS": ".ngram/templates/BEHAVIORS_TEMPLATE.md",
+    "ALGORITHM": ".ngram/templates/ALGORITHM_TEMPLATE.md",
+    "VALIDATION": ".ngram/templates/VALIDATION_TEMPLATE.md",
+    "IMPLEMENTATION": ".ngram/templates/IMPLEMENTATION_TEMPLATE.md",
+    "TEST": ".ngram/templates/TEST_TEMPLATE.md",
+    "SYNC": ".ngram/templates/SYNC_TEMPLATE.md",
+    "CONCEPT": ".ngram/templates/CONCEPT_TEMPLATE.md",
+    "TOUCHES": ".ngram/templates/TOUCHES_TEMPLATE.md",
+}
+
+STANDARD_DOC_PREFIXES = tuple(f"{prefix}_" for prefix in DOC_TYPE_TEMPLATES.keys())
+
+
+def _iter_doc_files(target_dir: Path, config: DoctorConfig) -> List[Path]:
+    """Collect doc files from standard documentation roots."""
+    doc_files: List[Path] = []
+    search_dirs = [target_dir / "docs", target_dir / ".ngram" / "state"]
+
+    for search_dir in search_dirs:
+        if not search_dir.exists():
+            continue
+        for md_file in search_dir.rglob("*.md"):
+            if should_ignore_path(md_file, config.ignore, target_dir):
+                continue
+            doc_files.append(md_file)
+
+    return doc_files
+
+
+def _extract_h2_sections(content: str) -> dict:
+    """Extract H2 sections and their content."""
+    sections = {}
+    current = None
+    buffer: List[str] = []
+
+    for line in content.splitlines():
+        if line.startswith("## "):
+            if current is not None:
+                sections[current] = "\n".join(buffer).strip()
+            current = line[3:].strip()
+            buffer = []
+        elif current is not None:
+            buffer.append(line)
+
+    if current is not None:
+        sections[current] = "\n".join(buffer).strip()
+
+    return sections
+
+
+def _doc_tag_allows_suppression(
+    doc_path: Path,
+    issue_type: str,
+    allowed_statuses: set,
+) -> bool:
+    """Check if a doc tag suppresses an issue for now."""
+    tags = parse_doctor_doc_tags(doc_path).get(issue_type, [])
+    today = date.today()
+
+    for tag in tags:
+        status = tag.get("status", "")
+        if status not in allowed_statuses:
+            continue
+
+        if status == "postponed":
+            date_str = tag.get("date", "")
+            if not date_str:
+                continue
+            try:
+                postpone_until = date.fromisoformat(date_str)
+            except ValueError:
+                continue
+            if postpone_until >= today:
+                return True
+            continue
+
+        return True
+
+    return False
+
+
+def _doc_tag_message(doc_path: Path, issue_type: str, status: str) -> str:
+    """Return the first matching tag message for an issue type/status."""
+    tags = parse_doctor_doc_tags(doc_path).get(issue_type, [])
+    for tag in tags:
+        if tag.get("status") == status:
+            return tag.get("message", "")
+    return ""
+
+
+def doctor_check_doc_template_drift(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
+    """Check docs against their templates for missing or too-short sections."""
+    if "DOC_TEMPLATE_DRIFT" in config.disabled_checks:
+        return []
+
+    issues = []
+    template_sections_cache = {}
+
+    for doc_path in _iter_doc_files(target_dir, config):
+        prefix = doc_path.name.split("_", 1)[0]
+        template_path = DOC_TYPE_TEMPLATES.get(prefix)
+        if not template_path:
+            continue
+
+        if _doc_tag_allows_suppression(doc_path, "DOC_TEMPLATE_DRIFT", {"postponed", "non-required"}):
+            continue
+
+        if prefix not in template_sections_cache:
+            template_file = target_dir / template_path
+            if not template_file.exists():
+                template_sections_cache[prefix] = []
+            else:
+                template_content = template_file.read_text(errors="ignore")
+                template_sections_cache[prefix] = list(_extract_h2_sections(template_content).keys())
+
+        required_sections = template_sections_cache[prefix]
+        if not required_sections:
+            continue
+
+        doc_content = doc_path.read_text(errors="ignore")
+        doc_sections = _extract_h2_sections(doc_content)
+
+        missing = [section for section in required_sections if section not in doc_sections]
+        short = [
+            section for section in required_sections
+            if section in doc_sections and len(doc_sections[section].strip()) < 50
+        ]
+
+        escalation_note = ""
+        if missing:
+            escalation_note = _doc_tag_message(doc_path, "DOC_TEMPLATE_DRIFT", "escalation")
+
+        if missing or short:
+            rel_path = str(doc_path.relative_to(target_dir))
+            message_parts = []
+            if missing:
+                message_parts.append(f"Missing: {', '.join(missing)}")
+            if short:
+                message_parts.append(f"Too short: {', '.join(short)}")
+            if escalation_note:
+                message_parts.append(f"Escalation: {escalation_note}")
+
+            issues.append(DoctorIssue(
+                issue_type="DOC_TEMPLATE_DRIFT",
+                severity="warning",
+                path=rel_path,
+                message="; ".join(message_parts),
+                details={"missing": missing, "short": short},
+                suggestion="Fill missing sections and expand short ones to 50+ characters"
+            ))
+
+    return issues
+
+
+def doctor_check_nonstandard_doc_type(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
+    """Check for docs that don't use standard doc type prefixes."""
+    if "NON_STANDARD_DOC_TYPE" in config.disabled_checks:
+        return []
+
+    issues = []
+
+    for doc_path in _iter_doc_files(target_dir, config):
+        if doc_path.name.startswith(STANDARD_DOC_PREFIXES):
+            continue
+
+        if _doc_tag_allows_suppression(doc_path, "NON_STANDARD_DOC_TYPE", {"postponed", "exception"}):
+            continue
+
+        rel_path = str(doc_path.relative_to(target_dir))
+        issues.append(DoctorIssue(
+            issue_type="NON_STANDARD_DOC_TYPE",
+            severity="warning",
+            path=rel_path,
+            message="Doc filename does not use a standard prefix",
+            details={"prefixes": list(STANDARD_DOC_PREFIXES)},
+            suggestion="Rename to PATTERNS_/BEHAVIORS_/ALGORITHM_/VALIDATION_/IMPLEMENTATION_/TEST_/SYNC_"
+        ))
 
     return issues

@@ -1,8 +1,8 @@
 # SYNC: Project Health Doctor
 
 ```
-LAST_UPDATED: 2025-12-16
-UPDATED_BY: Claude (Opus 4.5)
+LAST_UPDATED: 2025-12-19
+UPDATED_BY: codex (doc checks)
 STATUS: CANONICAL
 ```
 
@@ -40,6 +40,10 @@ The command provides holistic project health analysis beyond pass/fail validatio
 - Placeholder docs (template markers)
 - Missing DOCS: references (info only)
 - Incomplete doc chains
+- Doc template drift (missing or short sections vs templates)
+- Non-standard doc type filenames
+- Doc template drift supports escalation tags to capture human questions.
+- Doctor now flags resolved escalation markers so they get applied and removed.
 
 Features:
 - Text and JSON output
@@ -47,6 +51,9 @@ Features:
 - .gitignore pattern support
 - Configurable thresholds via config.yaml
 - Smart default ignores (node_modules, .next, etc.)
+- False positive suppression from doc metadata via `@ngram:doctor:CHECK_TYPE_NAME:false_positive` entries under `UPDATED:`.
+- Legacy doctor-ignore entries migrated into doc metadata tags.
+- Added doc template drift and non-standard doc type checks with deferred/exception tags in doc metadata.
 
 ---
 

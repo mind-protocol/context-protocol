@@ -226,7 +226,7 @@ Read PRINCIPLES.md and internalize it. Then use this file for navigation.
 
 Documentation isn't an archive. It's navigation.
 
-Every module has a chain: PATTERNS → BEHAVIORS → ALGORITHM → VALIDATION → IMPLEMENTATION → TEST → SYNC.
+Every module has a chain: PATTERNS → BEHAVIORS → ALGORITHM → VALIDATION → IMPLEMENTATION → HEALTH → SYNC.
 Each file explains something different. You load what you need for your task.
 
 SYNC files track current state. They're how you understand what's happening and how you communicate to the next agent (or yourself in a future session).
@@ -259,7 +259,7 @@ VIEWs are organized by product development lifecycle. Pick the one matching your
 - `views/VIEW_Collaborate_Pair_Program_With_Human.md` — real-time work with human
 
 **Verifying:**
-- `views/VIEW_Test_Write_Tests_And_Verify.md` — testing correctness
+- `views/VIEW_Health_Define_Health_Checks_And_Verify.md` — defining health checks
 - `views/VIEW_Debug_Investigate_And_Fix_Issues.md` — fixing problems
 - `views/VIEW_Review_Evaluate_Changes.md` — evaluating changes
 
@@ -290,12 +290,12 @@ After changes, update SYNC files:
 
 | Pattern | Purpose | When to Load |
 |---------|---------|--------------|
-| `PATTERNS_*.md` | Design philosophy — WHY this shape | Before modifying module |
+| `PATTERNS_*.md` | Design philosophy & scope — WHY this shape, WHAT's in/out | Before modifying module |
 | `BEHAVIORS_*.md` | Observable effects — WHAT it should do | When behavior unclear |
 | `ALGORITHM_*.md` | Procedures — HOW it works (pseudocode) | When logic unclear |
 | `VALIDATION_*.md` | Invariants — WHAT must be true | Before implementing |
 | `IMPLEMENTATION_*.md` | Code architecture — WHERE code lives, data flows | When building or navigating code |
-| `TEST_*.md` | Test cases — WHAT's tested | When checking coverage |
+| `HEALTH_*.md` | Health checks — WHAT's verified in practice | When defining health signals |
 | `SYNC_*.md` | Current state — WHERE we are | Always |
 
 ### Cross-Cutting Documentation
@@ -545,7 +545,7 @@ Based on your task, load ONE view from `.ngram/views/`:
 | Writing/modifying code | VIEW_Implement_Write_Or_Modify_Code.md |
 | Adding features | VIEW_Extend_Add_Features_To_Existing.md |
 | Pair programming | VIEW_Collaborate_Pair_Program_With_Human.md |
-| Writing tests | VIEW_Test_Write_Tests_And_Verify.md |
+| Health checks | VIEW_Health_Define_Health_Checks_And_Verify.md |
 | Debugging | VIEW_Debug_Investigate_And_Fix_Issues.md |
 | Reviewing changes | VIEW_Review_Evaluate_Changes.md |
 | Refactoring | VIEW_Refactor_Improve_Code_Structure.md |

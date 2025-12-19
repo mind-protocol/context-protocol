@@ -222,6 +222,47 @@ doctor:
 
 ---
 
+## FALSE POSITIVE SUPPRESSION
+
+If a check is a false positive, the doctor ignores it when a linked doc declares it.
+
+Add a line directly under the doc's `UPDATED: YYYY-MM-DD` metadata line:
+
+`@ngram:doctor:CHECK_TYPE_NAME:false_positive Explanation message`
+
+The suppression applies when the issue's file references that doc via a `DOCS:` header, or when the issue targets that doc file directly.
+
+---
+
+## DOC TEMPLATE DRIFT DEFERMENTS
+
+For the doc template drift check (`DOC_TEMPLATE_DRIFT`), you can defer or mark as non-required in the same metadata block:
+
+`@ngram:doctor:DOC_TEMPLATE_DRIFT:postponed YYYY-MM-DD Short explanation`
+`@ngram:doctor:DOC_TEMPLATE_DRIFT:non-required Short explanation`
+`@ngram:doctor:DOC_TEMPLATE_DRIFT:escalation Detailed choice/question/context for human`
+
+If a postponed date is in the past, the issue is still reported.
+
+---
+
+## NON-STANDARD DOC TYPE DEFERMENTS
+
+For the non-standard doc type check (`NON_STANDARD_DOC_TYPE`), you can defer or mark as exception:
+
+`@ngram:doctor:NON_STANDARD_DOC_TYPE:postponed YYYY-MM-DD Short explanation`
+`@ngram:doctor:NON_STANDARD_DOC_TYPE:exception Short explanation`
+
+If a postponed date is in the past, the issue is still reported.
+
+---
+
+## RESOLVED ESCALATION MARKERS
+
+Doctor flags any file containing `@ngram:solved-escalations` (or `@ngram:solved-escalation`) as `RESOLVE_ESCALATION` so resolved markers get applied and cleaned up.
+
+---
+
 ## CHAIN
 
 ```

@@ -44,7 +44,8 @@ ngram/
 ├── repair_report.py        # Repair report generation (LLM + template)
 ├── repair_instructions.py  # Code/test/config repair prompts (main)
 ├── repair_instructions_docs.py # Doc-related repair prompts (extracted)
-├── repair_interactive.py   # Interactive arbitrage workflow helpers
+├── repair_escalation_interactive.py   # Interactive escalation workflow helpers
+├── solve_escalations.py     # Escalation marker scanner
 ├── sync.py                 # SYNC file management
 ├── context.py              # Code-to-docs navigation
 ├── prompt.py               # Bootstrap prompt generation
@@ -58,7 +59,7 @@ ngram/
 
 **Logical Groupings** (all in `ngram/`):
 - **Doctor subsystem:** doctor, doctor_checks, doctor_checks_content, doctor_types, doctor_report, doctor_files
-- **Repair subsystem:** repair, repair_core, repair_report, repair_instructions, repair_instructions_docs, repair_interactive
+- **Repair subsystem:** repair, repair_core, repair_report, repair_instructions, repair_instructions_docs, repair_escalation_interactive
 - **Agent CLI:** agent_cli (provider normalization + command building)
 - **Project map:** project_map, project_map_html
 - **Repo overview:** repo_overview, repo_overview_formatters
@@ -85,7 +86,8 @@ ngram/
 | `ngram/repair_report.py` | Report generation | `generate_llm_report()`, `generate_final_report()` | ~305 | OK |
 | `ngram/repair_instructions.py` | Code/test/config repair prompts | `get_issue_instructions()` | ~765 | WATCH |
 | `ngram/repair_instructions_docs.py` | Doc-related repair prompts | `get_doc_instructions()` | ~492 | WATCH |
-| `ngram/repair_interactive.py` | Interactive repair helpers | `resolve_arbitrage_interactive()` | ~372 | OK |
+| `ngram/repair_escalation_interactive.py` | Interactive repair helpers | `resolve_escalation_interactive()` | ~372 | OK |
+| `ngram/solve_escalations.py` | Escalation marker scanner | `find_escalation_markers()` | ~70 | OK |
 | `ngram/sync.py` | SYNC file management | `sync_command()`, `archive_all_syncs()` | ~346 | OK |
 | `ngram/context.py` | Documentation discovery | `print_module_context()`, `get_module_context()` | ~553 | WATCH |
 | `ngram/prompt.py` | LLM prompt generation | `print_bootstrap_prompt()` | ~89 | OK |
@@ -219,7 +221,7 @@ For detailed algorithmic steps, see `docs/cli/ALGORITHM_CLI_Logic.md`.
 - doctor_checks modules → doctor_types, doctor_files, utils
 
 **Repair subsystem:**
-- repair.py → doctor, repair_core, repair_interactive, repair_report, repair_instructions
+- repair.py → doctor, repair_core, repair_escalation_interactive, repair_report, repair_instructions
 - repair_instructions modules → doctor, repair_instructions_docs
 - repair_report.py → repair_core
 

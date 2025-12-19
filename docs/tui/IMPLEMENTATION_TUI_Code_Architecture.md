@@ -4,6 +4,7 @@
 STATUS: IMPLEMENTED
 CREATED: 2025-12-18
 UPDATED: 2025-12-19
+@ngram:doctor:INCOMPLETE_IMPL:false_positive Short widget helpers and accessors are intentionally minimal but complete.
 ```
 
 ---

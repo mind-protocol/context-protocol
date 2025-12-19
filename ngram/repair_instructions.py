@@ -276,10 +276,10 @@ MANDATORY FINAL LINE:
         },
 
         "MISSING_TESTS": {
-            "view": "VIEW_Test_Write_Tests_And_Verify.md",
+            "view": "VIEW_Health_Define_Health_Checks_And_Verify.md",
             "description": "Add tests for module",
             "docs_to_read": [
-                ".ngram/views/VIEW_Test_Write_Tests_And_Verify.md",
+                ".ngram/views/VIEW_Health_Define_Health_Checks_And_Verify.md",
                 "modules.yaml",
             ],
             "prompt": f"""## Task: Add Tests for Module
@@ -316,7 +316,7 @@ MANDATORY FINAL LINE:
             "docs_to_update": ["modules.yaml"],
         },
 
-        "ARBITRAGE": {
+        "ESCALATION": {
             "view": "VIEW_Specify_Design_Vision_And_Architecture.md",
             "description": "Resolve conflict with human decision",
             "docs_to_read": [
@@ -332,14 +332,14 @@ MANDATORY FINAL LINE:
 The human has made decisions about these conflicts. Implement them.
 
 ## Human Decisions:
-{{arbitrage_decisions}}
+{{escalation_decisions}}
 
 ## Steps:
 
 1. Read the SYNC file to understand each conflict
 2. For each decision:
    - Update the conflicting docs/code to match the decision
-   - Change ARBITRAGE to DECISION in the CONFLICTS section
+   - Change ESCALATION to DECISION in the CONFLICTS section
    - Add "Resolved:" note explaining what was changed
 3. Verify consistency - both sources should now agree
 4. If CONFLICTS section is now all DECISION items, consider removing it
@@ -347,7 +347,7 @@ The human has made decisions about these conflicts. Implement them.
 
 ## Success Criteria:
 - All decided conflicts are resolved (docs/code updated)
-- ARBITRAGE items converted to DECISION items
+- ESCALATION items converted to DECISION items
 - No contradictions remain for resolved items
 
 Report "REPAIR COMPLETE" when done, or "REPAIR FAILED: <reason>" if you cannot complete.

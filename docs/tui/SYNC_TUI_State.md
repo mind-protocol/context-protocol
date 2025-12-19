@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (large doc reduction)
+UPDATED_BY: codex (verify status bar implementations)
 STATUS: IMPLEMENTED
 ```
 
@@ -32,6 +32,7 @@ Recent stability work:
 - Agent activity checks include subprocess returncode
 - Agent handle de-duplication and empty message suppression
 - Manager drift detection path normalization and PTY state handling
+- Verified `ngram/tui/widgets/status_bar.py` already implements reported methods; no code changes needed.
 
 Module mapping:
 - `modules.yaml` includes `tui` module mapping under `modules`

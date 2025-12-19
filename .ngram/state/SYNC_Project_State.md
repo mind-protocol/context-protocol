@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (project map svg config)
+UPDATED_BY: codex (verify status bar implementations)
 ```
 
 ---

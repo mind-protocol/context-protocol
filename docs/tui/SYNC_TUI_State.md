@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (verify TUI implementation doc references)
+UPDATED_BY: codex (align TUI structure doc labels)
 STATUS: IMPLEMENTED
 ```
 
@@ -47,6 +47,7 @@ Doc maintenance:
 - Runtime implementation content consolidated into `IMPLEMENTATION_TUI_Code_Architecture_Structure.md` to avoid duplicate docs
 - Structure doc file list updated for new widgets and theme files
 - Re-verified IMPLEMENTATION doc backtick references for STALE_IMPL; all paths resolve
+- Clarified suggestions bar label in the structure doc file list
 
 Archived detail:
 - Historical feature list, handoffs, and observations moved to `docs/tui/archive/SYNC_archive_2024-12.md`

@@ -11,6 +11,8 @@ UPDATED_BY: codex (tui manager drift detection)
 
 TUI implementations are complete, and the manager drift detection now parses code/doc updates more reliably while reflecting PTY subprocess state.
 
+Updated TUI implementation docs to fix a broken reference to the manager bootstrap CLAUDE.md file.
+
 ---
 
 ## ACTIVE WORK

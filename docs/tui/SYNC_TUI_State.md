@@ -44,6 +44,10 @@ The TUI provides an agent-style persistent chat interface for ngram. Entry point
 
 - `modules.yaml` now nests the `tui` entry under `modules` so widgets map to this doc chain.
 
+### 2025-12-19: Implementation doc link corrected
+
+- Fixed the manager startup reference to point to `../../.ngram/CLAUDE.md`.
+
 ### Completed Features
 
 #### Two-Panel Layout

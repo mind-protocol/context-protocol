@@ -42,7 +42,7 @@ ngram/cli.py                         # CLI entry point (TUI launched via `ngram`
 ngram/repair_core.py                 # Shared repair logic (497L)
 ```
 
-Manager startup mirrors `.ngram/CLAUDE.md` into the manager working directory and writes `AGENTS.md` with the same content for Codex/Gemini compatibility.
+Manager startup mirrors `../../.ngram/CLAUDE.md` into the manager working directory and writes `AGENTS.md` with the same content for Codex/Gemini compatibility.
 
 ### File Responsibilities
 

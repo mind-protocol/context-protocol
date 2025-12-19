@@ -182,3 +182,16 @@ ignores:
       This is an implementation constant, not network configuration.
     added_by: repair-agent
     added_date: 2025-12-19
+
+  - issue_type: HARDCODED_CONFIG
+    path: ngram/project_map_html.py
+    reason: |
+      False positive - the URL 'http://www.w3.org/2000/svg' at line 258 is the
+      W3C SVG XML namespace URI. This is a standardized identifier defined by
+      the W3C that MUST be exactly this value for SVG elements to work correctly
+      in JavaScript's document.createElementNS(). It is not a configurable URL,
+      server endpoint, or external service - it's a namespace identifier that is
+      part of the XML/SVG specification. Changing this value would break the
+      SVG arrow rendering in the HTML project map visualization.
+    added_by: repair-agent
+    added_date: 2025-12-19

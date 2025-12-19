@@ -312,7 +312,7 @@ Project → init → Protocol Installed → validate → Validated → doctor �
 | stale_sync_days | .ngram/config.yaml (optional) | 14 | Days before SYNC is stale |
 | ignore | .ngram/config.yaml + .gitignore | common patterns | Paths to ignore |
 | disabled_checks | .ngram/config.yaml (optional) | [] | Checks to skip |
-| svg_namespace | `NGRAM_SVG_NAMESPACE` env var | `http://www.w3.org/2000/svg` | SVG namespace used by `ngram/project_map_html.py` |
+| svg_namespace | `.ngram/config.yaml` (`project_map_html.svg_namespace`) or `NGRAM_SVG_NAMESPACE` env var | `http://www.w3.org/2000/svg` | SVG namespace used by `ngram/project_map_html.py` (env var overrides config) |
 
 ---
 

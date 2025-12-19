@@ -13,6 +13,24 @@ from pathlib import Path
 from typing import Optional
 
 from .project_map import analyze_modules, topological_layers
+from .utils import HAS_YAML
+
+if HAS_YAML:
+    import yaml
+
+
+def load_project_map_config(project_dir: Path) -> dict:
+    """Load project map HTML configuration from .ngram/config.yaml."""
+    config_path = project_dir / ".ngram" / "config.yaml"
+    if not HAS_YAML or not config_path.exists():
+        return {}
+
+    try:
+        with open(config_path) as f:
+            data = yaml.safe_load(f) or {}
+        return data.get("project_map_html", {}) or {}
+    except Exception:
+        return {}
 
 
 def generate_html_map(project_dir: Path) -> str:
@@ -46,7 +64,8 @@ def generate_html_map(project_dir: Path) -> str:
     # Get project name
     project_name = project_dir.resolve().name
 
-    svg_namespace = os.getenv("NGRAM_SVG_NAMESPACE", "http://www.w3.org/2000/svg")
+    project_map_config = load_project_map_config(project_dir)
+    svg_namespace = os.getenv("NGRAM_SVG_NAMESPACE") or project_map_config.get("svg_namespace", "")
 
     # Generate HTML
     html = f'''<!DOCTYPE html>
@@ -258,7 +277,7 @@ def generate_html_map(project_dir: Path) -> str:
         const positions = {json.dumps(positions)};
 
         const svg = document.getElementById('arrows');
-        const ns = {json.dumps(svg_namespace)};
+        const ns = {json.dumps(svg_namespace)} || svg.namespaceURI;
 
         // Add arrow marker
         const defs = document.createElementNS(ns, 'defs');

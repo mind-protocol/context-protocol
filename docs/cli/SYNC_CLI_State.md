@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (sync cli impl doc with code)
+UPDATED_BY: codex (project map svg config)
 STATUS: CANONICAL
 ```
 
@@ -53,8 +53,9 @@ No active development at this time.
 
 ### 2025-12-19: Externalized SVG namespace config
 
-- `project_map_html.py` now reads SVG namespace from `NGRAM_SVG_NAMESPACE` with default fallback
-- Documented env var in CLI implementation config table
+- `project_map_html.py` now reads SVG namespace from `.ngram/config.yaml` (`project_map_html.svg_namespace`) with `NGRAM_SVG_NAMESPACE` override
+- Added default SVG namespace to `.ngram/config.yaml` for development
+- Documented config/env var options in CLI implementation config table
 
 ### 2025-12-20: Multi-agent provider support
 
@@ -105,6 +106,7 @@ No active development at this time.
 - SVG namespace now configurable via `NGRAM_SVG_NAMESPACE` for project map HTML output.
 - Overview DOCS header scan length now configurable via `doctor.docs_ref_search_chars` in `.ngram/config.yaml`.
 - Implementation doc now avoids false broken-link hits from config key notation.
+- Added `.ngram/config.yaml` entry for `project_map_html.svg_namespace` with env var override.
 
 ### Suggestions
 - [ ] Reconcile `modules.yaml` with CLI module docs to remove mapping drift.

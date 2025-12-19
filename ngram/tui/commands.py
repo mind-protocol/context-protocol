@@ -381,6 +381,11 @@ async def _run_agent_message(app: "NgramApp", message: str, response_widget, sto
                                 app.log_error(f"Unknown stream type: {msg_type}")
                         except json.JSONDecodeError:
                             continue
+                except asyncio.TimeoutError:
+                    process.kill()
+                    break
+                except Exception:
+                    break
         elif process.stdout:
             while True:
                 try:

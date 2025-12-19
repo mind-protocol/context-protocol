@@ -107,16 +107,14 @@ InputBar {
     background: #FAF6ED;  /* Warm cream */
     height: 3;
     dock: bottom;
+    color: #4A4A4A;  /* Dark grey input text */
 }
 
-InputBar Input {
-    background: #F5F0E6;  /* Vellum */
-    color: #2F5496;  /* Ink blue */
-    border: solid #C4B49A;  /* Kraft */
-    padding: 0 1;
+InputBar .text-area--content {
+    color: #4A4A4A;  /* Dark grey input text */
 }
 
-InputBar Input:focus {
+InputBar:focus-within {
     border: solid #A0522D;  /* Rust when focused */
 }
 

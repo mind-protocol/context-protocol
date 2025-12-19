@@ -10,7 +10,7 @@ Tabs:
 
 from typing import TYPE_CHECKING
 
-from textual.containers import Container, VerticalScroll
+from textual.containers import Container, VerticalScroll, Horizontal, ScrollableContainer
 from textual.widgets import Static, TabbedContent, TabPane, Markdown
 
 if TYPE_CHECKING:
@@ -53,12 +53,39 @@ class AgentContainer(Container):
         text-align: center;
         color: $text-muted;
         padding: 2;
+        width: 100%;
     }
 
     AgentContainer VerticalScroll {
         width: 100%;
         height: 100%;
         padding: 1;
+    }
+
+    /* Completed agents list (stacked above active columns) */
+    AgentContainer #agents-stack {
+        width: 100%;
+        height: 100%;
+    }
+
+    AgentContainer #agents-completed {
+        width: 100%;
+        height: auto;
+        max-height: 40%;
+        padding: 1;
+    }
+
+    /* Agent columns container */
+    AgentContainer #agents-columns {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+    }
+
+    /* Each agent panel takes equal width */
+    AgentContainer #agents-columns > AgentPanel {
+        width: 1fr;
+        height: 100%;
     }
     """
 
@@ -68,6 +95,7 @@ class AgentContainer(Container):
         super().__init__(**kwargs)
         self._agent_panels: dict[str, any] = {}
         self._tabbed: TabbedContent | None = None
+        self._completed_ids: set[str] = set()
 
     def compose(self):
         """Compose the tabbed interface. Order: CHANGES, SYNC, DOCTOR, MAP, AGENTS."""
@@ -94,7 +122,13 @@ class AgentContainer(Container):
             )
             yield TabPane(
                 "AGENTS",
-                VerticalScroll(Static("No agents running. Type /repair to start.", classes="placeholder"), id="agents-scroll"),
+                Container(
+                    Container(
+                        VerticalScroll(Static("No completed agents yet.", classes="placeholder"), id="agents-completed"),
+                        Horizontal(Static("No agents running. Type /repair to start.", classes="placeholder"), id="agents-columns"),
+                        id="agents-stack",
+                    ),
+                ),
                 id="agents-tab"
             )
 
@@ -107,13 +141,13 @@ class AgentContainer(Container):
             self.log.error(f"on_mount: failed to find TabbedContent: {e}")
 
     def add_agent(self, agent: "AgentHandle") -> None:
-        """Add a panel for a new agent."""
+        """Add a panel for a new agent as a column."""
         from .agent_panel import AgentPanel
 
         # Remove placeholder if present (any Static with placeholder class)
         try:
-            agents_scroll = self.query_one("#agents-scroll")
-            for child in list(agents_scroll.children):
+            agents_columns = self.app.query_one("#agents-columns", Horizontal)
+            for child in list(agents_columns.children):
                 if hasattr(child, 'has_class') and child.has_class("placeholder"):
                     child.remove()
         except Exception:
@@ -127,10 +161,11 @@ class AgentContainer(Container):
             id=f"agent-panel-{agent.id}",
         )
 
-        # Mount in agents scroll container
-        agents_scroll = self.query_one("#agents-scroll")
-        agents_scroll.mount(panel)
+        # Mount in agents columns container (horizontal layout)
+        agents_columns = self.app.query_one("#agents-columns", Horizontal)
+        agents_columns.mount(panel)
         self._agent_panels[agent.id] = panel
+        self._completed_ids.discard(agent.id)
 
         # Switch to agents tab when agent starts
         if self._tabbed:
@@ -147,39 +182,85 @@ class AgentContainer(Container):
         panel = self._agent_panels.pop(agent_id, None)
         if panel:
             panel.remove()
+        was_completed = agent_id in self._completed_ids
+        self._completed_ids.discard(agent_id)
+
+        if was_completed:
+            try:
+                completed_list = self.app.query_one("#agents-completed", VerticalScroll)
+                has_completed = any(
+                    child.id and str(child.id).startswith("agent-panel-")
+                    for child in completed_list.children
+                )
+                if not has_completed:
+                    completed_list.mount(
+                        Static("No completed agents yet.", classes="placeholder")
+                    )
+            except Exception:
+                pass
 
         # Show placeholder if empty
         if not self._agent_panels:
-            agents_scroll = self.query_one("#agents-scroll")
-            placeholder = Static(
-                "No agents running. Type /repair to start.",
-                classes="placeholder"
-            )
-            agents_scroll.mount(placeholder)
+            try:
+                agents_columns = self.app.query_one("#agents-columns", Horizontal)
+                placeholder = Static(
+                    "No agents running. Type /repair to start.",
+                    classes="placeholder"
+                )
+                agents_columns.mount(placeholder)
+            except Exception:
+                pass
 
     def set_agent_status(self, agent_id: str, status: str) -> None:
         """Update an agent's status."""
         panel = self._agent_panels.get(agent_id)
         if panel:
             panel.set_status(status)
+            if status in ("completed", "failed"):
+                self._move_to_completed(agent_id, panel)
+
+    def _move_to_completed(self, agent_id: str, panel) -> None:
+        """Move completed/failed agent panel above active columns."""
+        if agent_id in self._completed_ids:
+            return
+        try:
+            completed_list = self.app.query_one("#agents-completed", VerticalScroll)
+            # Remove placeholder if present
+            for child in list(completed_list.children):
+                if hasattr(child, 'has_class') and child.has_class("placeholder"):
+                    child.remove()
+            panel.remove()
+            completed_list.mount(panel)
+            self._completed_ids.add(agent_id)
+        except Exception:
+            return
+
+        # Show placeholder if no active agents remain in columns
+        try:
+            agents_columns = self.app.query_one("#agents-columns", Horizontal)
+            active_panels = [child for child in agents_columns.children if child.id and str(child.id).startswith("agent-panel-")]
+            if not active_panels:
+                agents_columns.mount(
+                    Static("No agents running. Type /repair to start.", classes="placeholder")
+                )
+        except Exception:
+            pass
 
     def update_sync_content(self, content: str) -> None:
         """Update the SYNC tab content with Markdown."""
         try:
-            # Query from app level to find nested widgets
             app = self.app
             scroll = app.query_one("#sync-scroll", VerticalScroll)
-            # Remove old content
-            for child in list(scroll.children):
-                child.remove()
-            # Add new Markdown content (no ID to avoid conflicts)
-            scroll.mount(Markdown(content))
+            # Try to update existing Markdown, or create if none
+            md_widgets = list(scroll.query(Markdown))
+            if md_widgets:
+                md_widgets[0].update(content)
+            else:
+                # Remove any non-Markdown children first
+                for child in list(scroll.children):
+                    child.remove()
+                scroll.mount(Markdown(content))
         except Exception as e:
-            try:
-                manager = self.app.query_one("#manager-panel")
-                manager.add_message(f"[red]SYNC error: {e}[/]")
-            except:
-                pass
             self.log.error(f"update_sync_content failed: {e}")
 
     def update_doctor_content(self, issues: list, score: int) -> None:
@@ -214,29 +295,29 @@ class AgentContainer(Container):
 
             content = "\n".join(lines)
             scroll = self.app.query_one("#doctor-scroll", VerticalScroll)
-            for child in list(scroll.children):
-                child.remove()
-            scroll.mount(Markdown(content))
+            md_widgets = list(scroll.query(Markdown))
+            if md_widgets:
+                md_widgets[0].update(content)
+            else:
+                for child in list(scroll.children):
+                    child.remove()
+                scroll.mount(Markdown(content))
         except Exception as e:
-            try:
-                manager = self.app.query_one("#manager-panel")
-                manager.add_message(f"[red]DOCTOR error: {e}[/]")
-            except:
-                pass
+            self.log.error(f"update_doctor_content failed: {e}")
 
     def update_map_content(self, content: str) -> None:
         """Update the MAP tab content with Markdown."""
         try:
             scroll = self.app.query_one("#map-scroll", VerticalScroll)
-            for child in list(scroll.children):
-                child.remove()
-            scroll.mount(Markdown(content))
+            md_widgets = list(scroll.query(Markdown))
+            if md_widgets:
+                md_widgets[0].update(content)
+            else:
+                for child in list(scroll.children):
+                    child.remove()
+                scroll.mount(Markdown(content))
         except Exception as e:
-            try:
-                manager = self.app.query_one("#manager-panel")
-                manager.add_message(f"[red]MAP error: {e}[/]")
-            except:
-                pass
+            self.log.error(f"update_map_content failed: {e}")
 
     def update_changes_content(self, file_changes: str, commits: str, updated_at: str = "") -> None:
         """Update the CHANGES tab with Markdown."""
@@ -260,15 +341,15 @@ class AgentContainer(Container):
 
             content = "\n".join(lines)
             scroll = self.app.query_one("#changes-scroll", VerticalScroll)
-            for child in list(scroll.children):
-                child.remove()
-            scroll.mount(Markdown(content))
+            md_widgets = list(scroll.query(Markdown))
+            if md_widgets:
+                md_widgets[0].update(content)
+            else:
+                for child in list(scroll.children):
+                    child.remove()
+                scroll.mount(Markdown(content))
         except Exception as e:
-            try:
-                manager = self.app.query_one("#manager-panel")
-                manager.add_message(f"[red]CHANGES error: {e}[/]")
-            except:
-                pass
+            self.log.error(f"update_changes_content failed: {e}")
 
     def switch_to_tab(self, tab_id: str) -> None:
         """Switch to a specific tab."""

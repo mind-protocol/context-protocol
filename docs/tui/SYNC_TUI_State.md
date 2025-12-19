@@ -160,6 +160,9 @@ None currently.
   `__init__` calls super and inits _messages list; `on_mount` is intentionally empty (no header);
   scroll methods are 1-2 line implementations; `add_tool_call` is 30+ lines; `escape_markup` is
   a complete nested function. Added to doctor-ignore.yaml.
+- INCOMPLETE_IMPL false positive in `app.py` - short UI actions (`action_doctor`, `action_repair`,
+  tab switching, and input focus helpers) are complete delegating implementations. Added to
+  doctor-ignore.yaml.
 
 ---
 
@@ -204,6 +207,19 @@ TUI is functional with Claude integration, repair agent spawning, and conversati
 **Needs your input:**
 - Should `/repair --max N` be configurable?
 - Priority for remaining features (syntax highlighting, tab layout, queue processing)
+
+---
+
+## Agent Observations
+
+### Remarks
+- INCOMPLETE_IMPL findings for short TUI action helpers were false positives and are now suppressed.
+
+### Suggestions
+- [ ] Keep doctor-ignore and SYNC notes updated together to avoid drift.
+
+### Propositions
+- If more false positives appear, consider refining the doctor heuristic for short methods.
 
 ---
 

@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (manager drift checks)
+UPDATED_BY: codex (status bar verification)
 STATUS: IMPLEMENTED
 ```
 
@@ -47,6 +47,10 @@ The TUI provides an agent-style persistent chat interface for ngram. Entry point
 ### 2025-12-19: TUI state functions verified
 
 - Confirmed `ConversationMessage.to_dict` and `AgentHandle.duration` in `ngram/tui/state.py` are fully implemented; no code changes needed.
+
+### 2025-12-19: Status bar functions verified
+
+- Re-checked `ngram/tui/widgets/status_bar.py`; all flagged methods are fully implemented and no changes were required.
 
 ### 2025-12-19: Implementation doc link corrected
 

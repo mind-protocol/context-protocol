@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (repair incomplete impl false positive)
+UPDATED_BY: codex (status bar verification)
 ```
 
 ---
@@ -18,6 +18,8 @@ Repo overview now uses DoctorConfig for DOCS header scan length, configurable vi
 Confirmed `ngram/repair_core.py` already implements `get_issue_symbol` and `get_issue_action_parts`; no code changes required for the INCOMPLETE_IMPL repair.
 
 Verified `ngram/tui/state.py` has no empty stubs for `ConversationMessage.to_dict` or `AgentHandle.duration`; documentation updated to reflect confirmation.
+
+Re-verified `ngram/tui/widgets/status_bar.py` includes complete implementations for the reported methods; no code changes needed.
 
 ---
 

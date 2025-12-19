@@ -25,5 +25,3 @@ SYNC:            ./SYNC_Protocol_Current_State.md
 
 Detailed workflows are in `docs/protocol/ALGORITHM/`:
 - `ALGORITHM/ALGORITHM_Overview.md`
-- `ALGORITHM/ALGORITHM_Installation_And_Bootstrap.md`
-- `ALGORITHM/ALGORITHM_Module_Workflows.md`

@@ -10,6 +10,7 @@ UPDATED_BY: codex (verify tui state functions)
 ## CURRENT STATE
 
 Reduced `docs/protocol` size by splitting ALGORITHM/IMPLEMENTATION into folders, trimming SYNC detail, and adding a condensed archive file.
+Consolidated protocol ALGORITHM docs into `docs/protocol/ALGORITHM/ALGORITHM_Overview.md` and removed duplicate workflow/install docs.
 
 Updated protocol implementation doc to avoid a broken link reference by describing the manager AGENTS.md sibling without an inline path.
 

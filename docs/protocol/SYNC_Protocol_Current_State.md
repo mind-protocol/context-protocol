@@ -48,6 +48,7 @@ Protocol V1 complete and in use. Dogfooding on itself + Blood Ledger.
 - Split ALGORITHM and IMPLEMENTATION docs into folders for size control and clearer navigation.
 - Compressed legacy sync details into archive notes for long-term reference.
 - Added root overview stubs so validation still sees full chain files.
+- Consolidated protocol ALGORITHM docs into a single overview and removed duplicate workflow/install files.
 
 ---
 

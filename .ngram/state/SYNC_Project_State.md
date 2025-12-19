@@ -1,7 +1,7 @@
 # Project — Sync: Current State
 
 ```
-LAST_UPDATED: 2025-12-18
+LAST_UPDATED: 2025-12-19
 UPDATED_BY: repair-agent
 ```
 
@@ -17,7 +17,7 @@ ngram CLI project with doctor/repair functionality for maintaining project healt
 
 ### Monolith Refactoring
 
-- **Area:** `src/ngram/`
+- **Area:** `ngram/`
 - **Status:** completed
 - **Owner:** repair-agent
 - **Context:** Reducing file sizes to meet 800-line threshold
@@ -25,6 +25,14 @@ ngram CLI project with doctor/repair functionality for maintaining project healt
 ---
 
 ## RECENT CHANGES
+
+### 2025-12-19: Verified state.py TUI functions as complete (false positive)
+
+- **What:** Verified 10 functions in `ngram/tui/state.py` are implemented correctly (not empty).
+- **Why:** INCOMPLETE_IMPL flagged: to_dict, get_recent, clear, duration, is_active, append_output, get_output, add_agent, add_manager_message, active_count.
+- **Impact:** No code changes needed. These are intentionally simple one-liner accessor/mutator methods on dataclasses.
+- **Added:** Ignore entry in `.ngram/doctor-ignore.yaml` to suppress future false positives.
+- **Note:** Doctor threshold of ≤2 lines is too aggressive for dataclass utility methods.
 
 ### 2025-12-18: Split doctor_checks.py monolith
 
@@ -65,7 +73,7 @@ ngram CLI project with doctor/repair functionality for maintaining project healt
 
 ### 2025-12-18: Verified app.py TUI functions as complete (false positive)
 
-- **What:** Verified 7 functions in `src/ngram/tui/app.py` are implemented correctly (not empty).
+- **What:** Verified 7 functions in `ngram/tui/app.py` are implemented correctly (not empty).
 - **Why:** INCOMPLETE_IMPL flagged: _startup_sequence, on_claude_output, _build_manager_overview_prompt, on_click, on_exception, action_doctor, action_repair.
 - **Impact:** No code changes needed. These are legitimate short methods (delegating, callbacks, or one-liners).
 - **Added:** Ignore entry in `.ngram/doctor-ignore.yaml` to suppress future false positives.
@@ -77,7 +85,7 @@ ngram CLI project with doctor/repair functionality for maintaining project healt
 
 | Issue | Severity | Area | Notes |
 |-------|----------|------|-------|
-| INCOMPLETE_IMPL false positives | info | `src/ngram/` | Doctor flags one-liner functions as "empty". Files have explanatory comments. Consider improving empty function detection heuristics. |
+| INCOMPLETE_IMPL false positives | info | `ngram/` | Doctor flags one-liner functions as "empty". Files have explanatory comments. Consider improving empty function detection heuristics. |
 
 ---
 

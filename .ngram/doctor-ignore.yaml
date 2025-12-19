@@ -50,7 +50,7 @@ ignores:
     added_date: 2025-12-18
 
   - issue_type: INCOMPLETE_IMPL
-    path: src/ngram/repair.py
+    path: ngram/repair.py
     reason: |
       False positive for get_agent_color and get_agent_symbol functions.
       These are complete one-liner utility functions that index into color/symbol
@@ -62,7 +62,7 @@ ignores:
     added_date: 2025-12-18
 
   - issue_type: INCOMPLETE_IMPL
-    path: src/ngram/repair_core.py
+    path: ngram/repair_core.py
     reason: |
       False positive for get_issue_symbol and get_issue_action_parts functions.
       These are complete one-liner dictionary lookups with sensible defaults.
@@ -72,7 +72,7 @@ ignores:
     added_date: 2025-12-18
 
   - issue_type: INCOMPLETE_IMPL
-    path: src/ngram/tui/app.py
+    path: ngram/tui/app.py
     reason: |
       False positive - the flagged functions are implemented, just short:
       - _startup_sequence: Awaits two method calls (doctor check + manager overview)
@@ -86,3 +86,40 @@ ignores:
       Doctor bug: threshold of ≤2 lines is too aggressive for delegating methods.
     added_by: repair-agent
     added_date: 2025-12-18
+
+  - issue_type: INCOMPLETE_IMPL
+    path: ngram/tui/state.py
+    reason: |
+      False positive - all 10 flagged functions are fully implemented:
+      - to_dict: Returns dict with role, content, timestamp
+      - get_recent: Returns sliced messages list
+      - clear: Clears messages and saves
+      - duration: Property returning time.time() - start_time
+      - is_active: Property returning status == "running"
+      - append_output: Appends text to output_buffer
+      - get_output: Joins output_buffer with newlines
+      - add_agent: Appends agent to active_agents
+      - add_manager_message: Appends message to manager_messages
+      - active_count: Property summing active agents
+      These are intentionally simple one-liner accessor/mutator methods on
+      dataclasses. Short body != incomplete. Doctor's ≤2 line threshold is
+      too aggressive for dataclass utility methods.
+    added_by: repair-agent
+    added_date: 2025-12-19
+
+  - issue_type: INCOMPLETE_IMPL
+    path: ngram/tui/manager.py
+    reason: |
+      False positive - all 4 flagged functions are fully implemented:
+      - is_running: Property returning self._running (1-line accessor)
+      - extract_changed_files: Uses regex self._file_patterns.findall() and returns
+        deduplicated list - complete file extraction logic
+      - extract_doc_updates: Uses regex self._doc_patterns.findall() and returns
+        deduplicated list - complete doc extraction logic
+      - on_agent_complete: Delegation pattern calling await self.monitor_agent(agent)
+        which performs the actual drift check
+      These are legitimate short methods implementing real functionality.
+      Doctor's ≤2 line threshold incorrectly flags property accessors,
+      regex extraction utilities, and delegation methods.
+    added_by: repair-agent
+    added_date: 2025-12-19

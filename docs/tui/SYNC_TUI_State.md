@@ -230,6 +230,7 @@ TUI is functional with Claude integration, repair agent spawning, and conversati
 - INCOMPLETE_IMPL findings for short TUI action helpers were false positives and are now suppressed.
 - State helper methods in `ngram/tui/state.py` now include guardrails (copying history slices, de-dup agent ids).
 - Verified `ngram/tui/state.py` functions are fully implemented; no empty stubs remain.
+- Manager drift detection now normalizes file paths and checks PTY subprocess state.
 
 ### Suggestions
 - [ ] Keep doctor-ignore and SYNC notes updated together to avoid drift.

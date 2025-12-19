@@ -84,6 +84,77 @@ A mental model of:
 
 ---
 
+## CODE RESTRUCTURE ANALYSIS
+
+If the codebase structure doesn't match the documentation areas/modules, consider restructuring:
+
+### Identify Natural Boundaries
+
+1. **Backend Areas** — API, services, data access, infrastructure
+2. **Frontend Areas** — UI components, state management, routing, styles
+3. **Shared Areas** — Types, utils, config, constants
+
+### Typical Area Structure
+
+```
+src/
+├── backend/           # or api/, server/
+│   ├── auth/          # module: authentication
+│   ├── users/         # module: user management
+│   └── payments/      # module: billing/payments
+├── frontend/          # or client/, web/, app/
+│   ├── components/    # module: UI components
+│   ├── pages/         # module: routes/views
+│   ├── state/         # module: state management
+│   └── styles/        # module: theming/CSS
+├── shared/            # or common/, lib/
+│   ├── types/         # module: shared types
+│   └── utils/         # module: utilities
+└── infra/             # module: deployment, CI/CD
+```
+
+### Frontend Considerations
+
+- **Component library** — Shared UI primitives (buttons, inputs, modals)
+- **Feature modules** — Self-contained features with their own state
+- **Layout components** — Page shells, navigation, sidebars
+- **Hooks/utilities** — Reusable logic (useAuth, useFetch, etc.)
+- **Styles architecture** — Global vs scoped, theming, design tokens
+
+### Module Mapping Checklist
+
+For each code directory, answer:
+
+1. **Is it a module?** — Does it have clear boundaries and purpose?
+2. **Which area?** — Backend, frontend, shared, infra?
+3. **What docs exist?** — PATTERNS, SYNC, BEHAVIORS?
+4. **What's missing?** — Add to modules.yaml if unmapped
+
+### Restructure Recommendations
+
+After analysis, propose changes like:
+
+```markdown
+## Proposed Structure Changes
+
+### Move
+- `src/helpers/` → `src/shared/utils/` (generic utilities)
+- `src/api/` → `src/backend/api/` (clearer area boundary)
+
+### Split
+- `src/components/` → `src/frontend/components/` + `src/frontend/pages/`
+
+### Create
+- `src/frontend/state/` — extract state management from components
+- `docs/frontend/` — document frontend architecture
+
+### Update modules.yaml
+- Add frontend module mappings
+- Add shared module mappings
+```
+
+---
+
 ## OUTPUT
 
 After onboarding, you should be able to:
@@ -91,6 +162,7 @@ After onboarding, you should be able to:
 - Understand why things are structured as they are
 - Know who to "ask" (which docs to consult) for different questions
 - Identify where your work fits in the larger picture
+- **Propose restructuring** if code doesn't match logical areas/modules
 
 ---
 

@@ -139,6 +139,11 @@ None currently.
   `ShowSuggestions.__init__`, `value` getter/setter) are all properly implemented. These are standard
   Message subclass constructors (set attribute + super().__init__()) and property accessors (return/set
   self.text). Added to doctor-ignore.yaml.
+- INCOMPLETE_IMPL false positive in `widgets/manager_panel.py` - 6 functions flagged (`__init__`,
+  `on_mount`, `_is_at_bottom`, `_auto_scroll`, `add_tool_call`, `escape_markup`) are all complete.
+  `__init__` calls super and inits _messages list; `on_mount` is intentionally empty (no header);
+  scroll methods are 1-2 line implementations; `add_tool_call` is 30+ lines; `escape_markup` is
+  a complete nested function. Added to doctor-ignore.yaml.
 
 ---
 

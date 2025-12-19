@@ -58,6 +58,17 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
         Binding("ctrl+d", "doctor", "Doctor", show=False),
         Binding("ctrl+r", "repair", "Repair", show=False),
         Binding("ctrl+p", "command_palette", show=False),
+        # Tab switching: Ctrl+1-5 for direct access (order: CHANGES, SYNC, DOCTOR, MAP, AGENTS)
+        Binding("ctrl+1", "tab_changes", "Changes", show=False),
+        Binding("ctrl+2", "tab_sync", "Sync", show=False),
+        Binding("ctrl+3", "tab_doctor", "Doctor", show=False),
+        Binding("ctrl+4", "tab_map", "Map", show=False),
+        Binding("ctrl+5", "tab_agents", "Agents", show=False),
+        # Tab cycling - multiple key options
+        Binding("tab", "next_tab", "Next Tab", show=False),
+        Binding("shift+tab", "prev_tab", "Prev Tab", show=False),
+        Binding("ctrl+tab", "next_tab", "Next Tab", show=False),
+        Binding("ctrl+shift+tab", "prev_tab", "Prev Tab", show=False),
     ]
 
     def __init__(self, target_dir: Optional[Path] = None) -> None:
@@ -71,6 +82,7 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
         self._in_error_handler = False  # Prevent infinite loops
         self.claude_pty: Optional[ClaudePTY] = None
         self._ctrl_c_pending = False  # Track first Ctrl+C press
+        self._running_process: Optional[asyncio.subprocess.Process] = None  # Track Claude subprocess
 
     def compose(self) -> ComposeResult:
         """Compose the TUI layout."""
@@ -78,6 +90,7 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
         from .widgets.manager_panel import ManagerPanel
         from .widgets.agent_container import AgentContainer
         from .widgets.input_bar import InputBar
+        from .widgets.suggestions import SuggestionsBar
 
         yield StatusBar(folder_name=self.target_dir.name, id="status-bar")
 
@@ -85,6 +98,7 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
             # Left column: manager panel + input
             with Vertical(id="manager-column"):
                 yield ManagerPanel(id="manager-panel")
+                yield SuggestionsBar(id="suggestions-bar")
                 yield InputBar(id="input-bar")
             # Right column: agent container
             yield AgentContainer(id="agent-container")
@@ -214,8 +228,10 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
+            self._running_process = process
 
             stdout_data, _ = await process.communicate()
+            self._running_process = None
 
             # Stop animation and remove loading indicator
             animation_task.cancel()
@@ -276,18 +292,18 @@ class NgramApp(App if TEXTUAL_AVAILABLE else object):
 
     def _build_manager_overview_prompt(self) -> str:
         """Build the initial prompt for manager to provide project overview."""
-        return """Please read the following files to understand the project state, then provide an overview:
+        # Simple overview prompt - init tasks are handled by `ngram init`, not TUI launch
+        return """Please read the following files to understand the project:
 
-1. Read `.ngram/PRINCIPLES.md` - the working principles and vision
-2. Read `.ngram/PROTOCOL.md` - the protocol overview
-3. Read `.ngram/state/SYNC_Project_State.md` - the current project state
+1. Read `docs/map.md` - the project structure map
+2. Read `.ngram/state/SYNC_Project_State.md` - current project state
 
-Then provide:
-- Brief overview of where the project currently stands
-- Any active work or recent changes
-- Proposed next steps based on the handoff notes
+Then provide a brief overview:
+- Where the project currently stands
+- Any active work or issues
+- Suggested next steps
 
-Keep it concise but informative. Focus on actionable state."""
+Keep it concise and actionable (2-3 paragraphs max)."""
 
     async def _show_static_overview(self) -> None:
         """Show static overview when Claude is not available."""
@@ -345,6 +361,17 @@ Keep it concise but informative. Focus on actionable state."""
         except Exception as e:
             self.log_error(str(e))
 
+    def on_input_bar_input_changed(self, event) -> None:
+        """Scroll chat to bottom when user starts typing."""
+        manager = self.query_one("#manager-panel")
+        manager.scroll_end(animate=False)
+
+    def on_input_bar_show_suggestions(self, event) -> None:
+        """Show or hide command suggestions."""
+        from .widgets.suggestions import SuggestionsBar
+        suggestions_bar = self.query_one("#suggestions-bar", SuggestionsBar)
+        suggestions_bar.show_suggestions(event.suggestions)
+
     async def _run_doctor(self) -> None:
         """Run doctor check and update health score."""
         manager = self.query_one("#manager-panel")
@@ -360,107 +387,176 @@ Keep it concise but informative. Focus on actionable state."""
             self.log_error(f"Health check failed: {e}")
 
     async def _run_doctor_with_display(self) -> None:
-        """Run doctor check and display issues in agent container."""
+        """Run doctor check and display issues in DOCTOR tab (parallelized)."""
         from .widgets.agent_container import AgentContainer
-        from textual.widgets import Static
-        from textual.containers import VerticalScroll
+        import asyncio
 
         manager = self.query_one("#manager-panel")
-        agent_container = self.query_one("#agent-container")
-        # Message already shown in on_mount
+        agent_container = self.query_one("#agent-container", AgentContainer)
 
         try:
-            from ..doctor import run_doctor
-            from ..doctor_types import DoctorConfig
-            import asyncio
+            manager.add_message("[dim]Loading tabs...[/]")
 
-            loop = asyncio.get_event_loop()
-            config = DoctorConfig()
-            result = await loop.run_in_executor(
-                None,
-                lambda: run_doctor(self.target_dir, config)
+            # Run all data loading operations in parallel
+            doctor_task = self._load_doctor_data()
+            sync_task = self._load_sync_data()
+            map_task = self._load_map_data()
+            git_task = self._load_git_data()
+
+            # Wait for all to complete
+            doctor_result, sync_content, map_content, git_data = await asyncio.gather(
+                doctor_task, sync_task, map_task, git_task,
+                return_exceptions=True
             )
 
-            # Update health score
-            score = result.get("score", 50) if isinstance(result, dict) else 50
-            issues_dict = result.get("issues", {}) if isinstance(result, dict) else {}
-            self.state.health_score = score
+            # Process doctor results
+            if isinstance(doctor_result, Exception):
+                manager.add_message(f"[red]Doctor error: {doctor_result}[/]")
+                score, all_issues = 50, []
+            else:
+                score, all_issues = doctor_result
 
+            # Update health score and status bar
+            self.state.health_score = score
             status_bar = self.query_one("#status-bar")
             status_bar.update_health(score)
 
-            # Flatten issues from dict structure
-            all_issues = []
-            if isinstance(issues_dict, dict):
-                for severity in ["critical", "warning", "info"]:
-                    all_issues.extend(issues_dict.get(severity, []))
-
-            # Show progress bar with issue count (0 completed, 0 running = all pending)
             repair_issues = [i for i in all_issues if i.severity in ("critical", "warning")]
             if repair_issues:
                 status_bar.set_repair_progress(len(repair_issues), 0, 0)
 
-            # Remove placeholder and show issues
-            placeholder = agent_container.query(".placeholder")
-            if placeholder:
-                placeholder.first().remove()
-                agent_container.remove_class("empty")
+            # Update DOCTOR tab
+            try:
+                agent_container.update_doctor_content(all_issues, score)
+            except Exception as e:
+                manager.add_message(f"[red]DOCTOR tab error: {e}[/]")
 
-            # Show SYNC_Project_State.md in right panel by default
-            sync_file = self.target_dir / ".ngram" / "state" / "SYNC_Project_State.md"
-            if sync_file.exists():
-                from textual.widgets import Markdown
-                sync_content = sync_file.read_text()
-                # Wrap in VerticalScroll for scrollability
-                # Must mount container first, then add children
-                scroll_container = VerticalScroll(id="sync-display-container")
-                await agent_container.mount(scroll_container)
-                # Use Markdown widget to render formatting
-                sync_widget = Markdown(sync_content, id="sync-display")
-                await scroll_container.mount(sync_widget)
-                # Auto-scroll to top for initial display
-                scroll_container.scroll_home(animate=False)
-            elif all_issues:
-                # Fallback: show issues if no SYNC file
-                issue_lines = []
-                for issue in all_issues:
-                    if issue.severity == "critical":
-                        color = "red"
-                        symbol = "!"
-                    elif issue.severity == "warning":
-                        color = "#8B4513"
-                        symbol = "?"
-                    else:
-                        color = "dim"
-                        symbol = "·"
-                    issue_lines.append(f"[{color}][{symbol}] {issue.issue_type}: {issue.path}[/]")
-                # Wrap in VerticalScroll for scrollability
-                # Must mount container first, then add children
-                scroll_container = VerticalScroll(id="issue-summary-container")
-                await agent_container.mount(scroll_container)
-                summary = Static("\n".join(issue_lines), id="issue-summary")
-                await scroll_container.mount(summary)
-                scroll_container.scroll_home(animate=False)
+            # Update SYNC tab
+            if isinstance(sync_content, Exception):
+                manager.add_message(f"[red]SYNC error: {sync_content}[/]")
+            elif sync_content:
+                try:
+                    agent_container.update_sync_content(sync_content)
+                except Exception as e:
+                    manager.add_message(f"[red]SYNC tab error: {e}[/]")
+
+            # Update MAP tab
+            if isinstance(map_content, Exception):
+                manager.add_message(f"[red]MAP error: {map_content}[/]")
+            elif map_content:
+                try:
+                    agent_container.update_map_content(map_content)
+                except Exception as e:
+                    manager.add_message(f"[red]MAP tab error: {e}[/]")
+
+            # Update CHANGES tab
+            if isinstance(git_data, Exception):
+                manager.add_message(f"[red]CHANGES error: {git_data}[/]")
             else:
-                # Wrap in VerticalScroll for consistency
-                # Must mount container first, then add children
-                scroll_container = VerticalScroll(id="healthy-summary-container")
-                await agent_container.mount(scroll_container)
-                healthy = Static("Project is healthy!", id="healthy-summary")
-                await scroll_container.mount(healthy)
+                file_changes, commits, updated_at = git_data
+                try:
+                    agent_container.update_changes_content(file_changes, commits, updated_at)
+                except Exception as e:
+                    manager.add_message(f"[red]CHANGES tab error: {e}[/]")
+
+            # Default to CHANGES tab on startup
+            agent_container.switch_to_tab("changes-tab")
+            manager.add_message("[dim]Tabs loaded.[/]")
 
         except Exception as e:
+            manager.add_message(f"[red]Startup error: {e}[/]")
             self.log_error(f"Health check failed: {e}")
+
+    async def _load_doctor_data(self) -> tuple:
+        """Load doctor data in executor."""
+        from ..doctor import run_doctor
+        from ..doctor_files import load_doctor_config
+        import asyncio
+
+        loop = asyncio.get_event_loop()
+        config = load_doctor_config(self.target_dir)
+        result = await loop.run_in_executor(
+            None,
+            lambda: run_doctor(self.target_dir, config)
+        )
+
+        score = result.get("score", 50) if isinstance(result, dict) else 50
+        issues_dict = result.get("issues", {}) if isinstance(result, dict) else {}
+
+        all_issues = []
+        if isinstance(issues_dict, dict):
+            for severity in ["critical", "warning", "info"]:
+                all_issues.extend(issues_dict.get(severity, []))
+
+        return score, all_issues
+
+    async def _load_sync_data(self) -> str:
+        """Load SYNC file in executor."""
+        import asyncio
+
+        sync_file = self.target_dir / ".ngram" / "state" / "SYNC_Project_State.md"
+        if not sync_file.exists():
+            return ""
+
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, sync_file.read_text)
+
+    async def _load_map_data(self) -> str:
+        """Load map.md in executor."""
+        import asyncio
+
+        map_file = self.target_dir / "docs" / "map.md"
+        if not map_file.exists():
+            return ""
+
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, map_file.read_text)
+
+    async def _load_git_data(self) -> tuple:
+        """Load git status and log concurrently."""
+        import asyncio
+        from datetime import datetime
+
+        updated_at = datetime.now().strftime("%H:%M")
+
+        async def get_status():
+            try:
+                proc = await asyncio.create_subprocess_exec(
+                    "git", "status", "--short",
+                    cwd=self.target_dir,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE,
+                )
+                stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=5)
+                return stdout.decode().strip() if proc.returncode == 0 else ""
+            except Exception:
+                return "(unable to get git status)"
+
+        async def get_log():
+            try:
+                proc = await asyncio.create_subprocess_exec(
+                    "git", "log", "--format=%h %s (%ar)", "-15",
+                    cwd=self.target_dir,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE,
+                )
+                stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=5)
+                return stdout.decode().strip() if proc.returncode == 0 else ""
+            except Exception:
+                return "(unable to get git log)"
+
+        file_changes, commits = await asyncio.gather(get_status(), get_log())
+        return file_changes, commits, updated_at
 
     async def _run_doctor_async(self) -> dict:
         """Run doctor check asynchronously."""
         import asyncio
         from ..doctor import run_doctor
-        from ..doctor_types import DoctorConfig
+        from ..doctor_files import load_doctor_config
 
         # Run doctor in executor to not block event loop
         loop = asyncio.get_event_loop()
-        config = DoctorConfig()
+        config = load_doctor_config(self.target_dir)
         result = await loop.run_in_executor(
             None,
             lambda: run_doctor(self.target_dir, config)
@@ -511,10 +607,45 @@ Keep it concise but informative. Focus on actionable state."""
         # Suppress selection-related IndexErrors (Textual bug with dynamic content)
         if isinstance(error, IndexError):
             tb_str = "".join(traceback.format_tb(error.__traceback__))
-            if "selection" in tb_str or "get_copy_text" in tb_str:
+            # Check for various selection-related paths in traceback
+            if any(s in tb_str for s in ["selection", "get_copy_text", "extract", "Selection"]):
                 return True  # Suppress silently - known Textual bug
         self.log_error(str(error))
         return True  # Return True to prevent crash, keep app running
+
+    async def action_interrupt_or_quit(self) -> None:
+        """Handle Ctrl+C: first press interrupts, second press quits."""
+        if self._ctrl_c_pending:
+            # Second press - quit
+            await self.action_quit()
+            return
+
+        manager = self.query_one("#manager-panel")
+
+        # First press - interrupt Claude subprocess if running
+        if self._running_process and self._running_process.returncode is None:
+            try:
+                self._running_process.kill()
+                manager.add_message("[dim]*Interrupted*[/]")
+            except Exception:
+                pass
+            self._running_process = None
+            self._ctrl_c_pending = True
+            self.set_timer(2.0, self._reset_ctrl_c)
+        elif self.claude_pty and self.claude_pty.is_running:
+            await self.claude_pty.stop()
+            manager.add_message("[dim]*Interrupted*[/]")
+            self._ctrl_c_pending = True
+            self.set_timer(2.0, self._reset_ctrl_c)
+        else:
+            # Nothing running - set pending for quit
+            self._ctrl_c_pending = True
+            manager.add_message("[dim]*Press Ctrl+C again to quit*[/]")
+            self.set_timer(2.0, self._reset_ctrl_c)
+
+    def _reset_ctrl_c(self) -> None:
+        """Reset the Ctrl+C pending flag."""
+        self._ctrl_c_pending = False
 
     async def action_quit(self) -> None:
         """Quit the application."""
@@ -531,6 +662,60 @@ Keep it concise but informative. Focus on actionable state."""
     async def action_repair(self) -> None:
         """Start repair session."""
         await self.handle_command("/repair")
+
+    # Tab switching actions
+    def action_tab_agents(self) -> None:
+        """Switch to AGENTS tab."""
+        self._switch_tab("agents-tab")
+
+    def action_tab_sync(self) -> None:
+        """Switch to SYNC tab."""
+        self._switch_tab("sync-tab")
+
+    def action_tab_doctor(self) -> None:
+        """Switch to DOCTOR tab."""
+        self._switch_tab("doctor-tab")
+
+    def action_tab_map(self) -> None:
+        """Switch to MAP tab."""
+        self._switch_tab("map-tab")
+
+    def action_tab_changes(self) -> None:
+        """Switch to CHANGES tab."""
+        self._switch_tab("changes-tab")
+
+    def action_next_tab(self) -> None:
+        """Switch to next tab."""
+        tabs = ["changes-tab", "sync-tab", "doctor-tab", "map-tab", "agents-tab"]
+        self._cycle_tab(tabs, 1)
+
+    def action_prev_tab(self) -> None:
+        """Switch to previous tab."""
+        tabs = ["changes-tab", "sync-tab", "doctor-tab", "map-tab", "agents-tab"]
+        self._cycle_tab(tabs, -1)
+
+    def _switch_tab(self, tab_id: str) -> None:
+        """Switch to a specific tab."""
+        from .widgets.agent_container import AgentContainer
+        try:
+            agent_container = self.query_one("#agent-container", AgentContainer)
+            agent_container.switch_to_tab(tab_id)
+        except Exception:
+            pass
+
+    def _cycle_tab(self, tabs: list, direction: int) -> None:
+        """Cycle through tabs."""
+        from .widgets.agent_container import AgentContainer
+        try:
+            agent_container = self.query_one("#agent-container", AgentContainer)
+            tabbed = agent_container.query_one("#right-tabs")
+            current = tabbed.active
+            if current in tabs:
+                idx = tabs.index(current)
+                new_idx = (idx + direction) % len(tabs)
+                agent_container.switch_to_tab(tabs[new_idx])
+        except Exception:
+            pass
 
 
 def main(target_dir: Optional[Path] = None) -> None:

@@ -164,16 +164,17 @@ async def handle_message(app: "NgramApp", message: str) -> None:
 async def _animate_loading(widget, stop_flag: dict) -> None:
     """Animate the loading indicator until stop flag is set."""
     import asyncio
-    dots = [".", "..", "...", ".."]
+    dots = [".", "..", "..."]
     i = 0
     try:
         while not stop_flag.get("flag", False):
+            widget.update(f"[dim]{dots[i % len(dots)]}[/]")
+            widget.refresh()
+            i += 1
             await asyncio.sleep(0.3)
             # Check stop flag after sleep
             if stop_flag.get("flag", False):
                 break
-            widget.update(f"[dim]{dots[i % len(dots)]}[/]")
-            i += 1
     except Exception:
         pass  # Widget removed or app closing
 
@@ -224,6 +225,7 @@ async def _run_claude_message(app: "NgramApp", message: str, response_widget, st
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
+        app._running_process = process
 
         response_parts = []
         buffer = ""
@@ -355,6 +357,7 @@ async def _run_claude_message(app: "NgramApp", message: str, response_widget, st
         # Wait for process and stderr drain to complete
         await process.wait()
         await stderr_task
+        app._running_process = None  # Clear process reference
 
         # Log if process failed or no output
         if process.returncode != 0 or not response_parts:
@@ -413,7 +416,7 @@ async def handle_help(app: "NgramApp", args: str) -> None:
   /quit    - Exit TUI
 
 Keyboard shortcuts:
-  Ctrl+C   - Quit
+  Ctrl+C   - Interrupt (2x to quit)
   Ctrl+D   - Run doctor
   Ctrl+R   - Start repair"""
     manager.add_message(help_text)
@@ -499,7 +502,7 @@ async def handle_repair(app: "NgramApp", args: str) -> None:
     """Start a repair session."""
     import asyncio
     from ..doctor import run_doctor
-    from ..doctor_types import DoctorConfig
+    from ..doctor_files import load_doctor_config
     from ..repair_core import AGENT_SYMBOLS
     from .state import AgentHandle
 
@@ -509,10 +512,10 @@ async def handle_repair(app: "NgramApp", args: str) -> None:
     manager.add_message("")
     manager.add_message("[bold]Starting repair session...[/]")
 
-    # Run doctor to find issues
+    # Run doctor to find issues (load config from .ngramignore)
     try:
         loop = asyncio.get_event_loop()
-        config = DoctorConfig()
+        config = load_doctor_config(app.target_dir)
         result = await loop.run_in_executor(
             None,
             lambda: run_doctor(app.target_dir, config)
@@ -540,13 +543,17 @@ async def handle_repair(app: "NgramApp", args: str) -> None:
     status_bar.set_repair_progress(len(all_issues), 0, 0)
 
     manager.add_message(f"Found {len(all_issues)} issues to repair.")
+    # Show all issues
+    from ..repair_core import AGENT_SYMBOLS
+    for i, issue in enumerate(all_issues):
+        symbol = AGENT_SYMBOLS[i % len(AGENT_SYMBOLS)]
+        manager.add_message(f"[dim]{symbol} {issue.issue_type}: {issue.path}[/]")
     # Log repair start
     issue_list = "\n".join(f"  - {i.issue_type}: {i.path}" for i in all_issues[:10])
     app.conversation.add_message("system", f"/repair\nFound {len(all_issues)} issues:\n{issue_list}")
 
-    # Clear right panel for agent display
-    for child in list(agent_container.children):
-        child.remove()
+    # Switch to agents tab and clear existing agent panels
+    agent_container.switch_to_tab("agents-tab")
     agent_container._agent_panels.clear()
 
     # Store issue queue on app for agent completion to pull from
@@ -562,9 +569,6 @@ async def handle_repair(app: "NgramApp", args: str) -> None:
 
     for i, issue in enumerate(all_issues[:max_agents]):
         await _spawn_agent(app, issue, i)
-
-    if len(all_issues) > max_agents:
-        manager.add_message(f"[dim]({len(all_issues) - max_agents} more issues queued)[/]")
 
 
 async def _spawn_agent(app: "NgramApp", issue, agent_index: int) -> None:
@@ -608,14 +612,19 @@ async def _spawn_agent(app: "NgramApp", issue, agent_index: int) -> None:
         agent_ref=agent
     ) -> None:
         """Handle agent output with throttling to prevent UI blocking."""
+        import asyncio
         import time
+        # Skip empty or whitespace-only deltas
+        if not text or not text.strip():
+            return
         buf.append(text)
         # Also store in agent handle for later retrieval
         agent_ref.append_output(text)
         now = time.time()
         # Only update UI every 100ms to prevent blocking
         if now - upd[0] > 0.1:
-            agent_container.update_agent(aid, "".join(buf))
+            combined = "".join(buf)
+            agent_container.update_agent(aid, combined)
             upd[0] = now
             await asyncio.sleep(0)  # Yield to event loop
 
@@ -629,6 +638,7 @@ async def _spawn_agent(app: "NgramApp", issue, agent_index: int) -> None:
 
 async def _run_agent(app: "NgramApp", agent, issue, instructions: dict, on_output) -> None:
     """Run a single repair agent."""
+    import asyncio
     from ..repair_core import spawn_repair_agent_async
 
     manager = app.query_one("#manager-panel")
@@ -723,11 +733,10 @@ async def handle_clear(app: "NgramApp", args: str) -> None:
 
 
 async def handle_issues(app: "NgramApp", args: str) -> None:
-    """Display issues list in right panel."""
+    """Display issues list in DOCTOR tab."""
     import asyncio
     from ..doctor import run_doctor
-    from ..doctor_types import DoctorConfig
-    from textual.widgets import Static
+    from ..doctor_files import load_doctor_config
 
     manager = app.query_one("#manager-panel")
     agent_container = app.query_one("#agent-container")
@@ -736,9 +745,9 @@ async def handle_issues(app: "NgramApp", args: str) -> None:
     manager.add_message("Running health check...")
 
     try:
-        # Run doctor to find issues
+        # Run doctor to find issues (load config from .ngramignore)
         loop = asyncio.get_event_loop()
-        config = DoctorConfig()
+        config = load_doctor_config(app.target_dir)
         result = await loop.run_in_executor(
             None,
             lambda: run_doctor(app.target_dir, config)
@@ -758,33 +767,17 @@ async def handle_issues(app: "NgramApp", args: str) -> None:
             for severity in ["critical", "warning", "info"]:
                 all_issues.extend(issues_dict.get(severity, []))
 
-        # Clear right panel
-        for child in list(agent_container.children):
-            child.remove()
-        agent_container.remove_class("empty")
+        # Switch to doctor tab (it already has issues displayed)
+        agent_container.switch_to_tab("doctor-tab")
 
-        # Display issues with severity colors
+        # Update doctor tab with issues
+        agent_container.update_doctor_content(all_issues, score)
+
+        # Display summary in manager panel
         if all_issues:
-            issue_lines = []
-            for issue in all_issues:
-                if issue.severity == "critical":
-                    color = "red"
-                    symbol = "!"
-                elif issue.severity == "warning":
-                    color = "#8B4513"
-                    symbol = "?"
-                else:
-                    color = "dim"
-                    symbol = "·"
-                issue_lines.append(f"[{color}][{symbol}] {issue.issue_type}: {issue.path}[/]")
-
-            summary = Static("\n".join(issue_lines), id="issue-summary")
-            agent_container.mount(summary)
-            manager.add_message(f"Found {len(all_issues)} issues.")
+            manager.add_message(f"Found {len(all_issues)} issues. See DOCTOR tab.")
         else:
-            healthy = Static("Project is healthy!", id="healthy-summary")
-            agent_container.mount(healthy)
-            manager.add_message("[green]No issues found.[/]")
+            manager.add_message("[green]No issues found. Project is healthy![/]")
 
     except Exception as e:
         manager.add_message(f"[red]Health check failed: {e}[/]")
@@ -794,7 +787,6 @@ async def handle_issues(app: "NgramApp", args: str) -> None:
 async def handle_logs(app: "NgramApp", args: str) -> None:
     """Display completed agent logs in collapsible panels."""
     from textual.widgets import Static, Markdown, Collapsible
-    from textual.containers import VerticalScroll
 
     manager = app.query_one("#manager-panel")
     agent_container = app.query_one("#agent-container")
@@ -814,35 +806,37 @@ async def handle_logs(app: "NgramApp", args: str) -> None:
 
     manager.add_message(f"Showing logs for {len(completed_agents)} completed agents.")
 
-    # Clear right panel
-    for child in list(agent_container.children):
-        child.remove()
-    agent_container._agent_panels.clear()
-    agent_container.remove_class("empty")
+    # Switch to agents tab and use its scroll container
+    agent_container.switch_to_tab("agents-tab")
 
-    # Create scrollable container
-    scroll = VerticalScroll(id="logs-container")
-    await agent_container.mount(scroll)
+    try:
+        scroll = app.query_one("#agents-scroll")
+        # Clear existing content
+        for child in list(scroll.children):
+            child.remove()
+        agent_container._agent_panels.clear()
 
-    # Add collapsible for each completed agent
-    for agent in completed_agents:
-        status_color = "green" if agent.status == "completed" else "red"
-        title = f"{agent.symbol} [{status_color}]{agent.status.upper()}[/] - {agent.issue_type}: {agent.target_path}"
+        # Add collapsible for each completed agent
+        for agent in completed_agents:
+            status_color = "green" if agent.status == "completed" else "red"
+            title = f"{agent.symbol} [{status_color}]{agent.status.upper()}[/] - {agent.issue_type}: {agent.target_path}"
 
-        # Get output (last 100 lines to avoid huge logs)
-        output = agent.get_output()
-        lines = output.split('\n')
-        if len(lines) > 100:
-            output = '\n'.join(lines[-100:])
-            output = f"[dim]... ({len(lines) - 100} lines truncated) ...[/]\n\n{output}"
+            # Get output (last 100 lines to avoid huge logs)
+            output = agent.get_output()
+            lines = output.split('\n')
+            if len(lines) > 100:
+                output = '\n'.join(lines[-100:])
+                output = f"[dim]... ({len(lines) - 100} lines truncated) ...[/]\n\n{output}"
 
-        # Create collapsible with markdown output
-        collapsible = Collapsible(
-            Markdown(output if output else "[dim](no output)[/]"),
-            title=title,
-            collapsed=True,
-        )
-        await scroll.mount(collapsible)
+            # Create collapsible with markdown output
+            collapsible = Collapsible(
+                Markdown(output if output else "[dim](no output)[/]"),
+                title=title,
+                collapsed=True,
+            )
+            await scroll.mount(collapsible)
+    except Exception as e:
+        manager.add_message(f"[red]Logs error: {e}[/]")
 
 
 async def _refresh_map(app: "NgramApp") -> None:

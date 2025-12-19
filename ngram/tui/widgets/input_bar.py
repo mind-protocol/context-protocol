@@ -4,6 +4,18 @@
 from textual.widgets import TextArea
 from textual.message import Message
 
+# Command definitions with descriptions
+COMMANDS = {
+    "/help": "Show available commands",
+    "/doctor": "Run project health check",
+    "/repair": "Auto-fix project issues",
+    "/issues": "Show current project issues",
+    "/clear": "Clear chat history",
+    "/logs": "Show agent logs",
+    "/run": "Run a shell command",
+    "/quit": "Exit the TUI",
+}
+
 
 class InputBar(TextArea):
     """
@@ -35,6 +47,18 @@ class InputBar(TextArea):
             self.command = command
             super().__init__()
 
+    class InputChanged(Message):
+        """Message emitted when input text changes (for auto-scroll)."""
+        pass
+
+    class ShowSuggestions(Message):
+        """Message emitted to show/hide command suggestions."""
+
+        def __init__(self, suggestions: list[tuple[str, str]]) -> None:
+            # List of (command, description) tuples, empty to hide
+            self.suggestions = suggestions
+            super().__init__()
+
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self._history: list[str] = []
@@ -59,9 +83,24 @@ class InputBar(TextArea):
         new_height = min(max(line_count + 2, 3), 12)
         self.styles.height = new_height
 
-    def watch_text(self, text: str) -> None:
-        """Called when text changes - adjust height."""
+    def on_text_area_changed(self, event: TextArea.Changed) -> None:
+        """Called when text changes - adjust height and notify for auto-scroll."""
         self._update_height()
+        # Notify app to scroll chat to bottom when user starts typing
+        self.post_message(self.InputChanged())
+
+        # Show command suggestions when typing /
+        current = self.text.strip()
+        if current.startswith("/") and "\n" not in current:
+            # Filter matching commands
+            matches = [
+                (cmd, desc) for cmd, desc in COMMANDS.items()
+                if cmd.startswith(current)
+            ]
+            self.post_message(self.ShowSuggestions(matches))
+        else:
+            # Hide suggestions
+            self.post_message(self.ShowSuggestions([]))
 
     @property
     def value(self) -> str:
@@ -79,6 +118,18 @@ class InputBar(TextArea):
         if not value:
             return
 
+        # Expand partial slash commands (e.g., /re -> /repair)
+        if value.startswith("/") and " " not in value:
+            # Find matching commands
+            matches = [cmd for cmd in COMMANDS.keys() if cmd.startswith(value)]
+            if len(matches) == 1:
+                # Unique match - expand to full command
+                value = matches[0]
+            elif value in COMMANDS:
+                # Exact match - use as is
+                pass
+            # If multiple matches or no match, let it through as-is
+
         # Add to history
         self._history.append(value)
         self._history_index = len(self._history)
@@ -86,6 +137,9 @@ class InputBar(TextArea):
         # Clear input and draft
         self.text = ""
         self._current_draft = ""
+
+        # Hide suggestions
+        self.post_message(self.ShowSuggestions([]))
 
         # Emit command (both / commands and regular messages)
         self.post_message(self.CommandSubmitted(value))
@@ -110,13 +164,10 @@ class InputBar(TextArea):
             if not current_value.startswith("/"):
                 return
 
-            # Available commands
-            commands = ["/help", "/repair", "/doctor", "/quit", "/clear", "/issues", "/logs", "/run"]
-
             # First Tab press - build candidate list
             if current_value != self._tab_original_value:
                 self._tab_original_value = current_value
-                self._tab_candidates = [cmd for cmd in commands if cmd.startswith(current_value)]
+                self._tab_candidates = [cmd for cmd in COMMANDS.keys() if cmd.startswith(current_value)]
                 self._tab_index = -1
 
             # If we have candidates, cycle through them

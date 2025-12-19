@@ -103,7 +103,7 @@ class AgentPanel(Vertical):
         self._output_scroll = VerticalScroll(classes="output-scroll")
         self.mount(self._output_scroll)
 
-        self._output_widget = Markdown("", classes="output")
+        self._output_widget = Markdown("*...*", classes="output")
         self._output_scroll.mount(self._output_widget)
 
         # Input field for agent interaction (non-functional for now)
@@ -114,6 +114,17 @@ class AgentPanel(Vertical):
         self.mount(self._input)
 
         self.add_class("running")
+
+    def set_output(self, text: str) -> None:
+        """Set/replace the output area content."""
+        if self._output_widget:
+            self._output_content = text
+            # Show last 50 lines to prevent slowdown
+            lines = text.split('\n')
+            display = '\n'.join(lines[-50:])
+            self._output_widget.update(display)
+            if self._output_scroll:
+                self._output_scroll.scroll_end(animate=False)
 
     def append_output(self, text: str) -> None:
         """Append text to the output area."""

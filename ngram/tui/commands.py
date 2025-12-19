@@ -199,6 +199,7 @@ def _build_codex_history_prompt(app: "NgramApp", message: str) -> str:
 async def _run_agent_message(app: "NgramApp", message: str, response_widget, stop_animation: dict) -> None:
     """Run agent subprocess in background."""
     import asyncio
+    import inspect
     import json
     import shutil
     from ..agent_cli import build_agent_command
@@ -273,7 +274,6 @@ async def _run_agent_message(app: "NgramApp", message: str, response_widget, sto
         def throttled_update():
             """Update widget, throttled to avoid Textual selection bugs."""
             import time
-            import inspect
             now = time.time()
             # Only update every 50ms to avoid overwhelming Textual
             if now - last_update_time[0] > 0.05:

@@ -167,6 +167,7 @@ Check `modules.yaml` (project root) for full manifest.
 - `ngram validate` fails due to missing `IMPLEMENTATION_Project_Health_Doctor.md` references.
 - `ngram/tui/state.py` INCOMPLETE_IMPL report was outdated; functions already implemented.
 - Updated `docs/tui/SYNC_TUI_State.md` to note the INCOMPLETE_IMPL repair verification for `ngram/tui/state.py`.
+- Re-verified `ngram/tui/widgets/status_bar.py` implementations for the INCOMPLETE_IMPL report; no code changes required.
 - `repo_overview.py` now reads DOCS header scan length from DoctorConfig instead of a hardcoded value.
 - INCOMPLETE_IMPL task for `ngram/repair_core.py` was a false positive; SYNC updated to document the check.
 - Manager-agent subprocess handling moved to `ngram/tui/commands_agent.py` to keep `ngram/tui/commands.py` under the monolith threshold.

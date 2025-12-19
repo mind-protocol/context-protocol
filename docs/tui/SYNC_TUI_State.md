@@ -81,6 +81,7 @@ Archived detail:
 ### Remarks
 - Large sync content archived to keep module docs within size targets.
 - Verified `ConversationMessage.to_dict` and `AgentHandle.duration` are implemented in `ngram/tui/state.py` during INCOMPLETE_IMPL repair review; no code changes required.
+- Re-verified `ngram/tui/widgets/status_bar.py` implementations for the INCOMPLETE_IMPL report; no code changes required.
 
 ### Suggestions
 - [ ] Keep doctor-ignore and SYNC notes updated together to avoid drift.

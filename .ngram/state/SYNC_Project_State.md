@@ -24,6 +24,7 @@ Moved project map SVG namespace defaults into `.ngram/config.yaml` and kept `NGR
 Repo overview now uses DoctorConfig for DOCS header scan length, configurable via `.ngram/config.yaml`.
 
 Adjusted CLI implementation documentation to avoid false broken-link detection and to reference `ngram/project_map_html.py` explicitly.
+Normalized CLI implementation config table paths and key notation to fix broken link detection.
 
 Documented the LLM agent module (`ngram/llms`) and added module mapping + DOCS pointer.
 Updated LLM agent implementation docs to remove broken references and point to concrete file paths.

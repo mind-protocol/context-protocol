@@ -45,6 +45,7 @@ No active development at this time.
 
 - Removed inline backtick references that were misclassified as files
 - Updated SVG namespace note to reference `ngram/project_map_html.py`
+- Normalized config file paths and key notation in the CLI implementation config table
 
 ### 2025-12-19: Externalized overview DOCS header scan length
 

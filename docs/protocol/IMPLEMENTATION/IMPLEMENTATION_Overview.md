@@ -40,7 +40,7 @@ templates/ngram/
 ├── views/                 # 11 VIEW files
 ├── templates/             # 9 doc templates
 └── state/
-    └── SYNC_Project_State.md
+    └── .ngram/state/SYNC_Project_State.md
 ```
 
 ### Installed Directory (Target Project)
@@ -53,8 +53,8 @@ templates/ngram/
 ├── templates/
 ├── modules.yaml
 ├── state/
-│   ├── SYNC_Project_State.md
-│   └── SYNC_Project_Health.md
+│   ├── .ngram/state/SYNC_Project_State.md
+│   └── .ngram/state/SYNC_Project_Health.md
 └── traces/                # Optional agent logs
 ```
 
@@ -66,16 +66,16 @@ templates/ngram/
 | PRINCIPLES.md | Working stance | Session start |
 | VIEW_*.md | Task instructions | Based on task |
 | *_TEMPLATE.md | Doc scaffolding | When creating docs |
-| SYNC_Project_State.md | Project state and handoff | Session start |
-| SYNC_Project_Health.md | Doctor output | After `doctor` |
+| .ngram/state/SYNC_Project_State.md | Project state and handoff | Session start |
+| .ngram/state/SYNC_Project_Health.md | Doctor output | After `doctor` |
 | modules.yaml | Code ↔ docs mapping | CLI and tooling |
 
 ### Bootstrap Files
 
 The protocol is surfaced through:
-- `.ngram/CLAUDE.md` (includes templates/CLAUDE_ADDITION.md, PRINCIPLES.md, PROTOCOL.md)
-- Root `AGENTS.md` mirroring `.ngram/CLAUDE.md` plus `templates/CODEX_SYSTEM_PROMPT_ADDITION.md`
-- `.ngram/agents/manager/AGENTS.md` for manager role
+- .ngram/CLAUDE.md (includes templates/CLAUDE_ADDITION.md, PRINCIPLES.md, PROTOCOL.md)
+- Root `AGENTS.md` mirroring .ngram/CLAUDE.md plus `templates/CODEX_SYSTEM_PROMPT_ADDITION.md`
+- .ngram/agents/manager/AGENTS.md for manager role
 
 ---
 
@@ -158,7 +158,7 @@ VIEW:
 Agent starts
   → read .ngram/CLAUDE.md / AGENTS.md
   → read PROTOCOL + PRINCIPLES
-  → load SYNC_Project_State
+  → load .ngram/state/SYNC_Project_State.md
   → select VIEW_{Task}
   → load module docs
   → do work
@@ -198,7 +198,7 @@ PROTOCOL.md
   → views/VIEW_*.md
   → templates/*_TEMPLATE.md
 VIEW_*.md
-  → state/SYNC_Project_State.md
+  → .ngram/state/SYNC_Project_State.md
   → docs/{area}/{module}/*.md
 modules.yaml
   → code paths

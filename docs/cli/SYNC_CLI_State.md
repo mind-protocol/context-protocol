@@ -36,6 +36,10 @@ No active development at this time.
 
 ## RECENT CHANGES
 
+### 2025-12-19: INCOMPLETE_IMPL verification for repair_core helpers
+
+- Re-verified `ngram/repair_core.py` issue lookup helpers during INCOMPLETE_IMPL repair; no code changes needed
+
 ### 2025-12-19: Fix CLI module code path drift
 
 - Updated `modules.yaml` CLI `code` pattern to avoid drift on non-existent `ngram.py`
@@ -108,6 +112,7 @@ No active development at this time.
 
 ### Remarks
 - Confirmed INCOMPLETE_IMPL finding was a false positive due to short helper bodies.
+- Re-verified `ngram/repair_core.py` issue lookup helpers; implementations already complete.
 - SVG namespace now configurable via `NGRAM_SVG_NAMESPACE` for project map HTML output.
 - Overview DOCS header scan length now configurable via `doctor.docs_ref_search_chars` in `.ngram/config.yaml`.
 - Implementation doc now avoids false broken-link hits from config key notation.

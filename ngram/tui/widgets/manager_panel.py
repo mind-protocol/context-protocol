@@ -6,6 +6,64 @@ from textual.containers import VerticalScroll
 from textual.widget import Widget
 
 
+class ClickableStatic(Static):
+    """Static widget that copies content on click."""
+
+    def __init__(self, content: str, **kwargs) -> None:
+        super().__init__(content, **kwargs)
+        self._raw_content = content
+
+    def on_click(self) -> None:
+        """Copy content to clipboard on click."""
+        self.app.copy_to_clipboard(self._raw_content)
+        self.notify("Copied!", timeout=1)
+
+    def update(self, content: str):
+        """Update content and raw content."""
+        import inspect
+        import asyncio
+
+        self._raw_content = content
+        result = super().update(content)
+        if inspect.isawaitable(result):
+            try:
+                loop = asyncio.get_running_loop()
+                task = loop.create_task(result)
+                return task
+            except RuntimeError:
+                return result
+        return result
+
+
+class ClickableMarkdown(Markdown):
+    """Markdown widget that copies content on click."""
+
+    def __init__(self, content: str, **kwargs) -> None:
+        super().__init__(content, **kwargs)
+        self._raw_content = content
+
+    def on_click(self) -> None:
+        """Copy content to clipboard on click."""
+        self.app.copy_to_clipboard(self._raw_content)
+        self.notify("Copied!", timeout=1)
+
+    def update(self, content: str):
+        """Update content and raw content."""
+        import inspect
+        import asyncio
+
+        self._raw_content = content
+        result = super().update(content)
+        if inspect.isawaitable(result):
+            try:
+                loop = asyncio.get_running_loop()
+                task = loop.create_task(result)
+                return task
+            except RuntimeError:
+                return result
+        return result
+
+
 class ManagerPanel(VerticalScroll):
     """
     Left panel displaying manager/orchestration messages.
@@ -42,13 +100,13 @@ class ManagerPanel(VerticalScroll):
     }
 
     ManagerPanel .thinking-collapsible CollapsibleTitle {
-        color: #888;
+        color: #8B7355;  /* Oak - muted */
         text-style: italic;
         padding: 0;
     }
 
     ManagerPanel .thinking-content {
-        color: #888;
+        color: #8B7355;  /* Oak - muted */
         text-style: italic;
         padding-left: 2;
     }
@@ -96,9 +154,9 @@ class ManagerPanel(VerticalScroll):
                 markdown = False
 
         if markdown:
-            widget = Markdown(message, classes="markdown-message")
+            widget = ClickableMarkdown(message, classes="markdown-message")
         else:
-            widget = Static(message, classes="message")
+            widget = ClickableStatic(message, classes="message")
 
         if before:
             self.mount(widget, before=before)
@@ -179,10 +237,14 @@ class ManagerPanel(VerticalScroll):
                 params.append(f"{k}={escape_markup(val)}")
             param_str = ", ".join(params)
             text = f"[blue]🔧 {escape_markup(tool_name)}({param_str})[/]"
+            # Plain text for clipboard
+            copy_text = f"{tool_name}({param_str})"
         else:
             text = f"[blue]🔧 {escape_markup(tool_name)}[/]"
+            copy_text = tool_name
 
-        widget = Static(text, classes="tool-call")
+        inner_widget = Static(text, classes="tool-call")
+        widget = CopyableMessage(content=copy_text, widget=inner_widget)
         if before:
             self.mount(widget, before=before)
         else:

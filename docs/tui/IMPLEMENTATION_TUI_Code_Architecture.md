@@ -256,6 +256,12 @@ ngram/cli.py
 | Agent handles | SessionState active_agents | Session | Per repair run |
 | Widget state | Individual widgets | Widget instance | Widget lifetime |
 
+### SessionState Helpers
+
+- `add_agent()` replaces an existing agent with the same id to avoid duplicate handles.
+- `active_count` relies on `AgentHandle.is_active`, which also checks subprocess returncode.
+- `ConversationHistory.get_recent()` returns a copy and handles non-positive limits.
+
 ### State Transitions
 
 ```

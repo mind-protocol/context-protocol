@@ -22,7 +22,8 @@ class ConversationMessage:
     timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
 
     def to_dict(self) -> dict:
-        return {"role": self.role, "content": self.content, "timestamp": self.timestamp}
+        timestamp = self.timestamp or datetime.now().isoformat()
+        return {"role": self.role, "content": self.content, "timestamp": timestamp}
 
     @classmethod
     def from_dict(cls, data: dict) -> "ConversationMessage":
@@ -70,10 +71,18 @@ class ConversationHistory:
 
     def get_recent(self, limit: int = 50) -> List[ConversationMessage]:
         """Get most recent messages."""
+        if limit is None:
+            return list(self.messages)
+        if limit <= 0:
+            return []
+        if limit >= len(self.messages):
+            return list(self.messages)
         return self.messages[-limit:]
 
     def clear(self) -> None:
         """Clear all history."""
+        if not self.messages and not self.history_file.exists():
+            return
         self.messages = []
         self._save()
 
@@ -104,19 +113,27 @@ class AgentHandle:
     @property
     def duration(self) -> float:
         """Get duration in seconds."""
-        return time.time() - self.start_time
+        return max(0.0, time.time() - self.start_time)
 
     @property
     def is_active(self) -> bool:
         """Check if agent is still running."""
-        return self.status == "running"
+        if self.status != "running":
+            return False
+        if self.process and self.process.returncode is not None:
+            return False
+        return True
 
     def append_output(self, text: str) -> None:
         """Append text to output buffer."""
+        if not text:
+            return
         self.output_buffer.append(text)
 
     def get_output(self) -> str:
         """Get full output as string."""
+        if not self.output_buffer:
+            return ""
         return "\n".join(self.output_buffer)
 
 
@@ -137,6 +154,10 @@ class SessionState:
 
     def add_agent(self, agent: AgentHandle) -> None:
         """Add an agent to active list."""
+        for i, existing in enumerate(self.active_agents):
+            if existing.id == agent.id:
+                self.active_agents[i] = agent
+                return
         self.active_agents.append(agent)
 
     def remove_agent(self, agent_id: str) -> Optional[AgentHandle]:
@@ -155,12 +176,20 @@ class SessionState:
 
     def add_manager_message(self, message: str) -> None:
         """Add a message to manager history."""
+        if not message or not message.strip():
+            return
+        if self.manager_messages and self.manager_messages[-1] == message:
+            return
         self.manager_messages.append(message)
 
     @property
     def active_count(self) -> int:
         """Count of currently running agents."""
-        return sum(1 for a in self.active_agents if a.is_active)
+        count = 0
+        for agent in self.active_agents:
+            if agent.is_active:
+                count += 1
+        return count
 
     def clear_completed(self) -> List[AgentHandle]:
         """Remove and return all completed agents."""

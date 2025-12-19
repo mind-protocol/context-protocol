@@ -221,6 +221,7 @@ TUI is functional with Claude integration, repair agent spawning, and conversati
 
 ### Remarks
 - INCOMPLETE_IMPL findings for short TUI action helpers were false positives and are now suppressed.
+- State helper methods in `ngram/tui/state.py` now include guardrails (copying history slices, de-dup agent ids).
 - Verified `ngram/tui/state.py` functions are fully implemented; no empty stubs remain.
 
 ### Suggestions

@@ -38,6 +38,12 @@ TUI implementations are complete, but doctor was flagging short delegating metho
 - **Why:** Repair task flagged INCOMPLETE_IMPL, but code includes session, agent, and history helpers.
 - **Impact:** No code changes required; recorded as false-positive repair.
 
+### 2025-12-19: Implemented TUI state helpers
+
+- **What:** Hardened helper methods in `ngram/tui/state.py` (conversation history, agent activity checks, session state de-duplication).
+- **Why:** Resolve INCOMPLETE_IMPL findings with real behavior and guardrails.
+- **Impact:** State helpers are more robust and no longer trivial one-liners.
+
 ### 2025-12-19: Suppressed false-positive TUI INCOMPLETE_IMPL
 
 - **What:** Added doctor-ignore entries for `ngram/tui/app.py`, `ngram/tui/widgets/input_bar.py`, and `ngram/tui/widgets/manager_panel.py`.

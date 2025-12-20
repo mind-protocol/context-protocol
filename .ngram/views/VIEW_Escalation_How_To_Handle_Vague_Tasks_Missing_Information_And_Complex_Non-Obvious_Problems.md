@@ -1,6 +1,6 @@
-# VIEW: Escalation
+# VIEW: Escalation & Proposition
 
-**How to handle vague tasks, missing information, and complex non-obvious problems.**
+**How to handle vague tasks, missing information, complex non-obvious problems, and agent-generated proposals.**
 
 ---
 
@@ -25,9 +25,18 @@ A good escalation makes the human response immediately actionable without re-rea
 ## HOW ESCALATION WORKS
 
 1. Add an `@ngram:escalation` marker in the most relevant file near the issue.
-2. `ngram solve-escalations` picks it up.
+2. `ngram solve-markers` picks it up.
 3. The manager asks the human to resolve it.
 4. The human response is added in the same location with an explicit resolution note.
+
+---
+
+## HOW PROPOSITION WORKS
+
+1. An agent adds an `@ngram:proposition` marker in the most relevant file near a suggested improvement.
+2. `ngram solve-markers` (or `ngram doctor`) picks it up.
+3. The proposition is presented for human review.
+4. If approved, the human applies the suggested changes and removes the marker.
 
 ---
 
@@ -186,6 +195,43 @@ response: # optional human response fields (fill after decision)
   pattern: "Event-driven ingestion" # optional pattern name
   behavior: "Dashboards update within 5 minutes; batch job removed" # optional behavior summary
   notes: "Approved higher infra cost for lower latency" # optional extra context
+```
+
+---
+
+## PROPOSITION MARKER FORMAT (YAML)
+
+```
+@ngram:proposition
+
+title: "Refactor `utils.py` into smaller, cohesive modules" # Concise title for the proposition
+
+priority: 3 # 1-10; 10=high impact, 1-3=low impact/cleanup
+
+context: | # 1-2 paragraphs: current situation, why the proposition is beneficial
+  The `utils.py` file has grown significantly and now contains a mix of unrelated
+  helper functions for various parts of the application. This makes it hard to
+  navigate, test, and understand dependencies.
+
+  Splitting it into more focused modules (e.g., `file_utils.py`, `string_utils.py`)
+  would improve modularity and maintainability.
+
+implications: | # Potential impacts on existing code or system
+  - Requires updating import paths in various files.
+  - Improves code organization and reduces cognitive load.
+  - May slightly increase the number of files in the project.
+
+suggested_changes: | # High-level description of proposed changes
+  - Create `ngram/utils/file_utils.py` and move file-related functions.
+  - Create `ngram/utils/string_utils.py` and move string manipulation functions.
+  - Update all call sites to import from the new modules.
+  - Consider creating `ngram/utils/validation_utils.py` for validation helpers.
+
+links: # only the most relevant pointers
+  files:
+    - path: ngram/utils.py # The file(s) the proposition applies to
+  docs:
+    - path: docs/cli/PATTERNS_Why_CLI_Over_Copy.md # Related documentation
 ```
 
 ---

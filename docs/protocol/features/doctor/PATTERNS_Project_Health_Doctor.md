@@ -153,7 +153,6 @@ PATTERNS:        THIS
 BEHAVIORS:       ./BEHAVIORS_Project_Health_Doctor.md
 ALGORITHM:       ./ALGORITHM_Project_Health_Doctor.md
 VALIDATION:      ./VALIDATION_Project_Health_Doctor.md
-IMPLEMENTATION:  ./IMPLEMENTATION_Project_Health_Doctor.md
-TEST:            ./TEST_Project_Health_Doctor.md
+HEALTH:          ./HEALTH_Project_Health_Doctor.md
 SYNC:            ./SYNC_Project_Health_Doctor.md
 ```

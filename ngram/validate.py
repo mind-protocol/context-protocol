@@ -145,7 +145,7 @@ def check_module_docs_minimum(target_dir: Path) -> ValidationResult:
 
 
 def check_full_chain(target_dir: Path) -> ValidationResult:
-    """Check that module docs have the full chain (PATTERNS, BEHAVIORS, ALGORITHM, VALIDATION, TEST, SYNC)."""
+    """Check that module docs have the full chain (PATTERNS, BEHAVIORS, ALGORITHM, VALIDATION, HEALTH, SYNC)."""
     docs_dir = target_dir / "docs"
 
     if not docs_dir.exists():
@@ -158,7 +158,7 @@ def check_full_chain(target_dir: Path) -> ValidationResult:
         )
 
     # Full chain doc types (in order)
-    full_chain = ["PATTERNS_", "BEHAVIORS_", "ALGORITHM_", "VALIDATION_", "IMPLEMENTATION_", "TEST_", "SYNC_"]
+    full_chain = ["PATTERNS_", "BEHAVIORS_", "ALGORITHM_", "VALIDATION_", "IMPLEMENTATION_", "HEALTH_", "SYNC_"]
 
     issues = []
     modules = find_module_directories(docs_dir)
@@ -210,7 +210,7 @@ def check_chain_links(target_dir: Path) -> ValidationResult:
     files_checked = 0
 
     # Pattern to match CHAIN section links
-    chain_pattern = re.compile(r'^\s*(PATTERNS|BEHAVIORS|ALGORITHM|VALIDATION|IMPLEMENTATION|TEST|SYNC|THIS):\s*(.+\.md)\s*$', re.MULTILINE)
+    chain_pattern = re.compile(r'^\s*(PATTERNS|BEHAVIORS|ALGORITHM|VALIDATION|IMPLEMENTATION|HEALTH|SYNC|THIS):\s*(.+\.md)\s*$', re.MULTILINE)
 
     for md_file in docs_dir.rglob("*.md"):
         content = md_file.read_text()
@@ -278,7 +278,7 @@ def check_naming_conventions(target_dir: Path) -> ValidationResult:
         "ALGORITHM_",
         "VALIDATION_",
         "IMPLEMENTATION_",
-        "TEST_",
+        "HEALTH_",
         "SYNC_",
         "CONCEPT_",
         "TOUCHES_",
@@ -527,7 +527,7 @@ def generate_fix_prompt(target_dir: Path, results: List[ValidationResult]) -> st
             prompt_parts.append("3. `ALGORITHM_*.md` — How it works (step-by-step logic)\n")
             prompt_parts.append("4. `VALIDATION_*.md` — How to verify (invariants, checks)\n")
             prompt_parts.append("5. `IMPLEMENTATION_*.md` — Code architecture (where code lives, data flows)\n")
-            prompt_parts.append("6. `TEST_*.md` — Test cases (what's tested, coverage)\n")
+            prompt_parts.append("6. `HEALTH_*.md` — Health checks (verification mechanics, signals)\n")
             prompt_parts.append("7. `SYNC_*.md` — Current state (status, handoffs)\n\n")
 
             prompt_parts.append("### Issues Found\n")
@@ -541,7 +541,7 @@ def generate_fix_prompt(target_dir: Path, results: List[ValidationResult]) -> st
             prompt_parts.append("- ALGORITHM: \"How does it work?\"\n")
             prompt_parts.append("- VALIDATION: \"How do I verify it's correct?\"\n")
             prompt_parts.append("- IMPLEMENTATION: \"Where is the code? How does data flow?\"\n")
-            prompt_parts.append("- TEST: \"What's tested? What's not?\"\n")
+            prompt_parts.append("- HEALTH: \"Is it healthy? How do I verify it?\"\n")
             prompt_parts.append("- SYNC: \"What's the current state?\"\n\n")
 
             prompt_parts.append("### How to Fix\n")
@@ -574,7 +574,7 @@ def generate_fix_prompt(target_dir: Path, results: List[ValidationResult]) -> st
             prompt_parts.append("| ALGORITHM | `ALGORITHM_Descriptive_Name.md` | `ALGORITHM_Projection_Rebuild.md` |\n")
             prompt_parts.append("| VALIDATION | `VALIDATION_Descriptive_Name.md` | `VALIDATION_Event_Ordering.md` |\n")
             prompt_parts.append("| IMPLEMENTATION | `IMPLEMENTATION_Descriptive_Name.md` | `IMPLEMENTATION_Event_Store_Code.md` |\n")
-            prompt_parts.append("| TEST | `TEST_Descriptive_Name.md` | `TEST_Event_Store_Suite.md` |\n")
+            prompt_parts.append("| HEALTH | `HEALTH_Descriptive_Name.md` | `HEALTH_Event_Store_Verification.md` |\n")
             prompt_parts.append("| SYNC | `SYNC_Descriptive_Name.md` | `SYNC_Event_Store_State.md` |\n\n")
 
             prompt_parts.append("### How to Fix\n")
@@ -609,7 +609,7 @@ def generate_fix_prompt(target_dir: Path, results: List[ValidationResult]) -> st
             prompt_parts.append("ALGORITHM:       ./ALGORITHM_Descriptive_Name.md\n")
             prompt_parts.append("VALIDATION:      ./VALIDATION_Descriptive_Name.md\n")
             prompt_parts.append("IMPLEMENTATION:  ./IMPLEMENTATION_Descriptive_Name.md\n")
-            prompt_parts.append("TEST:            ./TEST_Descriptive_Name.md\n")
+            prompt_parts.append("HEALTH:          ./HEALTH_Descriptive_Name.md\n")
             prompt_parts.append("THIS:            SYNC_Descriptive_Name.md\n")
             prompt_parts.append("```\n\n")
 

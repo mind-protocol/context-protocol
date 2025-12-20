@@ -51,6 +51,9 @@ from .doctor_checks import (
     doctor_check_magic_values,
     doctor_check_hardcoded_secrets,
 )
+from .doctor_checks_naming import (
+    doctor_check_naming_conventions,
+)
 from .doctor_checks_sync import (
     doctor_check_conflicts,
     doctor_check_doc_gaps,
@@ -101,6 +104,7 @@ def run_doctor(target_dir: Path, config: DoctorConfig) -> Dict[str, Any]:
     all_issues.extend(doctor_check_stale_impl(target_dir, config))
     all_issues.extend(doctor_check_doc_template_drift(target_dir, config))
     all_issues.extend(doctor_check_nonstandard_doc_type(target_dir, config))
+    all_issues.extend(doctor_check_naming_conventions(target_dir, config))
     all_issues.extend(doctor_check_doc_gaps(target_dir, config))
     all_issues.extend(doctor_check_conflicts(target_dir, config))
     all_issues.extend(doctor_check_suggestions(target_dir, config))

@@ -5,34 +5,18 @@ DOCS: docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md
 """
 
 import argparse
-import json
-import os
-import sys
-from google import genai
-from dotenv import dotenv_values
-
-
-"""
-Gemini LLM agent subprocess for the ngram CLI.
-
-DOCS: docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md
-"""
-
-import argparse
 import glob
-import html
 import json
 import os
 import re
 import shutil
-import subprocess # Added for run_shell_command
+import subprocess
 import sys
 import urllib.parse
 import urllib.request
-from pathlib import Path # Added for read_file
+from pathlib import Path
 from google import genai
 from dotenv import dotenv_values
-
 
 def main():
     parser = argparse.ArgumentParser(description="Gemini LLM agent for ngram CLI.")
@@ -44,7 +28,7 @@ def main():
 
     args = parser.parse_args()
 
-    # Load from .env file first
+    # Load from .env file
     config = dotenv_values()
 
     # Get API key
@@ -62,385 +46,200 @@ def main():
     # Create the genai client with API key
     client = genai.Client(api_key=api_key)
 
-
-
     # --- Tool Definitions ---
-    # Python functions to be exposed to the Gemini model
-    def run_shell_command_tool(command: str, description: str = ""):
+    def run_shell_command(command: str, description: str = ""):
+        """Execute a bash command."""
         try:
             print(json.dumps({"type": "tool_code", "name": "run_shell_command", "args": {"command": command, "description": description}}), flush=True)
-            result = subprocess.run(command, shell=True, capture_output=True, text=True, check=True)
-            return {"stdout": result.stdout, "stderr": result.stderr}
-        except subprocess.CalledProcessError as e:
-            return {"error": e.stderr if e.stderr else e.stdout, "exit_code": e.returncode}
+            result = subprocess.run(command, shell=True, capture_output=True, text=True)
+            return {"stdout": result.stdout, "stderr": result.stderr, "exit_code": result.returncode}
         except Exception as e:
             return {"error": str(e)}
 
-    def read_file_tool(file_path: str):
+    def read_file(file_path: str):
+        """Read a file's content."""
         try:
             print(json.dumps({"type": "tool_code", "name": "read_file", "args": {"file_path": file_path}}), flush=True)
-            content = Path(file_path).read_text()
+            content = Path(file_path).read_text(encoding="utf-8")
             return {"content": content}
-        except FileNotFoundError:
-            return {"error": f"File not found: {file_path}"}
         except Exception as e:
             return {"error": str(e)}
 
-    # Placeholder for other tools from the ngram CLI
-    # These will need actual implementations later
-    def list_directory_tool(dir_path: str):
-        print(json.dumps({"type": "tool_code", "name": "list_directory", "args": {"dir_path": dir_path}}), flush=True)
+    def list_directory(dir_path: str):
+        """List files and directories."""
         try:
+            print(json.dumps({"type": "tool_code", "name": "list_directory", "args": {"dir_path": dir_path}}), flush=True)
             base_path = Path(dir_path)
-            if not base_path.exists():
-                return {"error": f"Directory not found: {dir_path}"}
-            if not base_path.is_dir():
-                return {"error": f"Not a directory: {dir_path}"}
             entries = []
-            for entry in sorted(base_path.iterdir(), key=lambda p: p.name.lower()):
-                entry_type = "dir" if entry.is_dir() else "file"
-                entries.append({"name": entry.name, "path": str(entry), "type": entry_type})
+            for entry in sorted(base_path.iterdir()):
+                entries.append({"name": entry.name, "type": "dir" if entry.is_dir() else "file"})
             return {"entries": entries, "count": len(entries)}
         except Exception as e:
             return {"error": str(e)}
 
-    def search_file_content_tool(pattern: str, dir_path: str = "."):
-        print(json.dumps({"type": "tool_code", "name": "search_file_content", "args": {"pattern": pattern, "dir_path": dir_path}}), flush=True)
+    def search_file_content(pattern: str, dir_path: str = "."):
+        """Search for pattern in files (grep)."""
         try:
+            print(json.dumps({"type": "tool_code", "name": "search_file_content", "args": {"pattern": pattern, "dir_path": dir_path}}), flush=True)
             regex = re.compile(pattern)
-        except re.error as e:
-            return {"error": f"Invalid regex pattern: {e}"}
-        matches = []
-        files_scanned = 0
-        max_matches = 200
-        for root, dirs, files in os.walk(dir_path):
-            dirs[:] = [d for d in dirs if d not in {".git", "__pycache__"}]
-            for filename in files:
-                file_path = Path(root) / filename
-                files_scanned += 1
-                try:
-                    with file_path.open("r", encoding="utf-8", errors="ignore") as handle:
-                        for line_number, line in enumerate(handle, start=1):
+            matches = []
+            for root, _, files in os.walk(dir_path):
+                if ".git" in root or "__pycache__" in root: continue
+                for filename in files:
+                    p = Path(root) / filename
+                    try:
+                        content = p.read_text(encoding="utf-8", errors="ignore")
+                        for i, line in enumerate(content.splitlines(), 1):
                             if regex.search(line):
-                                matches.append({
-                                    "path": str(file_path),
-                                    "line": line_number,
-                                    "text": line.rstrip("\n"),
-                                })
-                                if len(matches) >= max_matches:
-                                    return {
-                                        "matches": matches,
-                                        "count": len(matches),
-                                        "files_scanned": files_scanned,
-                                        "truncated": True,
-                                    }
-                except Exception:
-                    continue
-        return {
-            "matches": matches,
-            "count": len(matches),
-            "files_scanned": files_scanned,
-            "truncated": False,
-        }
-
-    def glob_tool(pattern: str, dir_path: str = "."):
-        print(json.dumps({"type": "tool_code", "name": "glob", "args": {"pattern": pattern, "dir_path": dir_path}}), flush=True)
-        try:
-            if os.path.isabs(pattern):
-                search_pattern = pattern
-            else:
-                search_pattern = str(Path(dir_path) / pattern)
-            matches = sorted(glob.glob(search_pattern, recursive=True))
+                                matches.append({"path": str(p), "line": i, "text": line.strip()})
+                                if len(matches) >= 50: break
+                    except: continue
+                if len(matches) >= 50: break
             return {"matches": matches, "count": len(matches)}
         except Exception as e:
             return {"error": str(e)}
 
-    def replace_tool(file_path: str, old_string: str, new_string: str, instruction: str = ""):
-        print(json.dumps({"type": "tool_code", "name": "replace", "args": {"file_path": file_path, "old_string": old_string, "new_string": new_string, "instruction": instruction}}), flush=True)
-        if old_string == "":
-            return {"error": "old_string cannot be empty"}
+    def glob_files(pattern: str, dir_path: str = "."):
+        """Find files matching glob pattern."""
         try:
-            target_path = Path(file_path)
-            if not target_path.exists():
-                return {"error": f"File not found: {file_path}"}
-            content = target_path.read_text(encoding="utf-8")
-            count = content.count(old_string)
-            if count == 0:
+            print(json.dumps({"type": "tool_code", "name": "glob", "args": {"pattern": pattern, "dir_path": dir_path}}), flush=True)
+            p = str(Path(dir_path) / pattern)
+            matches = sorted(glob.glob(p, recursive=True))
+            return {"matches": matches, "count": len(matches)}
+        except Exception as e:
+            return {"error": str(e)}
+
+    def replace_text(file_path: str, old_string: str, new_string: str, instruction: str = ""):
+        """Replace text in a file."""
+        try:
+            print(json.dumps({"type": "tool_code", "name": "replace", "args": {"file_path": file_path, "old_string": old_string, "new_string": new_string, "instruction": instruction}}), flush=True)
+            p = Path(file_path)
+            content = p.read_text(encoding="utf-8")
+            if old_string not in content:
                 return {"error": f"String not found in {file_path}"}
-            updated = content.replace(old_string, new_string)
-            target_path.write_text(updated, encoding="utf-8")
-            return {"path": str(target_path), "replacements": count}
+            new_content = content.replace(old_string, new_string)
+            p.write_text(new_content, encoding="utf-8")
+            return {"path": file_path, "success": True}
         except Exception as e:
             return {"error": str(e)}
 
-    def write_file_tool(file_path: str, content: str):
-        print(json.dumps({"type": "tool_code", "name": "write_file", "args": {"file_path": file_path, "content": content}}), flush=True)
+    def write_file(file_path: str, content: str):
+        """Write content to a file."""
         try:
-            target_path = Path(file_path)
-            target_path.parent.mkdir(parents=True, exist_ok=True)
-            target_path.write_text(content, encoding="utf-8")
-            return {"path": str(target_path), "bytes_written": len(content.encode("utf-8"))}
+            print(json.dumps({"type": "tool_code", "name": "write_file", "args": {"file_path": file_path, "content": content}}), flush=True)
+            p = Path(file_path)
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(content, encoding="utf-8")
+            return {"path": file_path, "bytes": len(content)}
         except Exception as e:
             return {"error": str(e)}
-    
-    def google_web_search_tool(query: str):
-        print(json.dumps({"type": "tool_code", "name": "google_web_search", "args": {"query": query}}), flush=True)
-        if not query or not query.strip():
-            return {"error": "Query cannot be empty"}
+
+    def google_web_search(query: str):
+        """Perform a Google search."""
         try:
-            separator = "&" if "?" in google_search_base_url else "?"
-            url = f"{google_search_base_url}{separator}{urllib.parse.urlencode({'q': query})}"
-            request = urllib.request.Request(
-                url,
-                headers={"User-Agent": "Mozilla/5.0"},
-            )
-            with urllib.request.urlopen(request, timeout=10) as response:
-                body = response.read(200000).decode("utf-8", "ignore")
+            print(json.dumps({"type": "tool_code", "name": "google_web_search", "args": {"query": query}}), flush=True)
+            url = f"{google_search_base_url}?q={urllib.parse.quote(query)}"
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                body = resp.read(100000).decode("utf-8", "ignore")
+            links = re.findall(r'href="/url\?q=([^&"]+)', body)
+            results = [{"url": urllib.parse.unquote(l)} for l in links if l.startswith("http")][:5]
+            return {"results": results}
+        except Exception as e:
+            return {"error": str(e)}
+
+    def web_fetch(prompt: str):
+        """Fetch content from a URL found in the prompt."""
+        try:
+            print(json.dumps({"type": "tool_code", "name": "web_fetch", "args": {"prompt": prompt}}), flush=True)
+            url = re.search(r"https?://\S+", prompt).group(0)
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                content = resp.read(100000).decode("utf-8", "ignore")
+            return {"url": url, "content": content}
+        except Exception as e:
+            return {"error": str(e)}
+
+    def codebase_investigator(objective: str):
+        """Explore the codebase to understand architecture or find symbols."""
+        try:
+            print(json.dumps({"type": "tool_code", "name": "codebase_investigator", "args": {"objective": objective}}), flush=True)
+            keywords = objective.split()
             results = []
-            seen = set()
-            for match in re.findall(r'href="/url\\?q=([^&"]+)', body):
-                link = urllib.parse.unquote(match)
-                if link.startswith("http") and link not in seen:
-                    seen.add(link)
-                    results.append({"url": link})
-                if len(results) >= 5:
-                    break
-            return {"query": query, "results": results, "count": len(results)}
-        except Exception as e:
-            return {"error": str(e)}
-    
-    def web_fetch_tool(prompt: str):
-        print(json.dumps({"type": "tool_code", "name": "web_fetch", "args": {"prompt": prompt}}), flush=True)
-        try:
-            match = re.search(r"https?://\\S+", prompt)
-            url = match.group(0) if match else prompt.strip()
-            if not url:
-                return {"error": "No URL provided"}
-            request = urllib.request.Request(
-                url,
-                headers={"User-Agent": "Mozilla/5.0"},
-            )
-            with urllib.request.urlopen(request, timeout=10) as response:
-                content_type = response.headers.get("Content-Type", "")
-                raw = response.read(200000)
-            text = raw.decode("utf-8", "ignore")
-            truncated = len(raw) >= 200000
-            return {
-                "url": url,
-                "content_type": content_type,
-                "content": text,
-                "truncated": truncated,
-            }
-        except Exception as e:
-            return {"error": str(e)}
-
-    def write_todos_tool(todos: list):
-        print(json.dumps({"type": "tool_code", "name": "write_todos", "args": {"todos": todos}}), flush=True)
-        if not isinstance(todos, list):
-            return {"error": "todos must be a list"}
-        try:
-            todo_path = Path(".ngram/state/agent_todos.json")
-            existing = []
-            if todo_path.exists():
-                try:
-                    existing_data = json.loads(todo_path.read_text(encoding="utf-8"))
-                    if isinstance(existing_data, list):
-                        existing = existing_data
-                    elif isinstance(existing_data, dict) and isinstance(existing_data.get("todos"), list):
-                        existing = existing_data["todos"]
-                except Exception:
-                    existing = []
-            updated = existing + todos
-            todo_path.parent.mkdir(parents=True, exist_ok=True)
-            todo_path.write_text(json.dumps(updated, indent=2), encoding="utf-8")
-            return {"path": str(todo_path), "count": len(updated)}
-        except Exception as e:
-            return {"error": str(e)}
-    
-    def save_memory_tool(fact: str):
-        print(json.dumps({"type": "tool_code", "name": "save_memory", "args": {"fact": fact}}), flush=True)
-        if not fact or not str(fact).strip():
-            return {"error": "fact cannot be empty"}
-        try:
-            memory_path = Path(".ngram/state/agent_memory.jsonl")
-            memory_path.parent.mkdir(parents=True, exist_ok=True)
-            record = {"fact": str(fact).strip()}
-            with memory_path.open("a", encoding="utf-8") as handle:
-                handle.write(json.dumps(record) + "\n")
-            return {"path": str(memory_path)}
-        except Exception as e:
-            return {"error": str(e)}
-
-    def codebase_investigator_tool(objective: str):
-        print(json.dumps({"type": "tool_code", "name": "codebase_investigator", "args": {"objective": objective}}), flush=True)
-        if not objective or not objective.strip():
-            return {"error": "objective cannot be empty"}
-        try:
-            query = objective.strip()
-            if shutil.which("rg"):
-                result = subprocess.run(
-                    ["rg", "-n", query, "."],
-                    capture_output=True,
-                    text=True,
-                )
-                if result.returncode not in (0, 1):
-                    return {"error": result.stderr.strip() or "rg failed"}
-                lines = result.stdout.splitlines()
-                matches = []
-                for line in lines[:50]:
-                    parts = line.split(":", 2)
-                    if len(parts) == 3:
-                        path, line_number, text = parts
-                        matches.append({
-                            "path": path,
-                            "line": int(line_number),
-                            "text": text,
-                        })
-                return {
-                    "matches": matches,
-                    "count": len(matches),
-                    "truncated": len(lines) > 50,
-                }
-            matches = []
-            files_scanned = 0
-            max_matches = 50
-            for root, dirs, files in os.walk("."):
-                dirs[:] = [d for d in dirs if d not in {".git", "__pycache__"}]
+            for root, _, files in os.walk("."):
+                if ".git" in root or "__pycache__" in root: continue
                 for filename in files:
-                    file_path = Path(root) / filename
-                    files_scanned += 1
-                    try:
-                        with file_path.open("r", encoding="utf-8", errors="ignore") as handle:
-                            for line_number, line in enumerate(handle, start=1):
-                                if query in line:
-                                    matches.append({
-                                        "path": str(file_path),
-                                        "line": line_number,
-                                        "text": line.rstrip("\n"),
-                                    })
-                                    if len(matches) >= max_matches:
-                                        return {
-                                            "matches": matches,
-                                            "count": len(matches),
-                                            "files_scanned": files_scanned,
-                                            "truncated": True,
-                                        }
-                    except Exception:
-                        continue
-            return {
-                "matches": matches,
-                "count": len(matches),
-                "files_scanned": files_scanned,
-                "truncated": False,
-            }
+                    if any(k.lower() in filename.lower() for k in keywords):
+                        results.append(str(Path(root) / filename))
+                    if len(results) >= 10: break
+                if len(results) >= 10: break
+            return {"relevant_files": results}
         except Exception as e:
             return {"error": str(e)}
 
-
-    # Create the GenerativeModel with tools
-    # Use gemini-3-flash-preview as the default model
-    gemini_model = config.get("GEMINI_MODEL") or os.getenv("GEMINI_MODEL") or "gemini-3-flash-preview"
-    model = client.models.GenerativeModel(
-        model_name=gemini_model,
-        tools=[
-            run_shell_command_tool, read_file_tool, list_directory_tool,
-            search_file_content_tool, glob_tool, replace_tool, write_file_tool,
-            google_web_search_tool, web_fetch_tool, write_todos_tool,
-            save_memory_tool, codebase_investigator_tool
-        ]
-    )
-
-    # Build contents for chat
-    contents = []
-    if args.system_prompt:
-        contents.append({'role': 'user', 'parts': [args.system_prompt]})
-        contents.append({'role': 'model', 'parts': ['ok']}) # Gemini expects a reply from model if user starts with system prompt
+    # Map tool functions for the model
+    tools = [
+        run_shell_command, read_file, list_directory, search_file_content,
+        glob_files, replace_text, write_file, google_web_search, web_fetch,
+        codebase_investigator
+    ]
     
-    # Initial user prompt
-    contents.append({'role': 'user', 'parts': [args.prompt]})
+    tool_map = {t.__name__: t for t in tools}
+
+    # Model configuration
+    gemini_model = config.get("GEMINI_MODEL") or os.getenv("GEMINI_MODEL") or "gemini-3-flash-preview"
+    
+    history = []
+    if args.system_prompt:
+        history.append({"role": "user", "content": args.system_prompt})
+        history.append({"role": "model", "content": "OK. I will follow the protocol."})
 
     try:
-        # Start chat session
-        chat_session = model.start_chat(history=[])
+        # Start chat
+        chat = client.chats.create(model=gemini_model, config={"tools": tools}, history=history)
+        
+        # Send initial message
+        response = chat.send_message(args.prompt)
 
-        # Send the first message
-        response_stream = chat_session.send_message(contents[0]['parts'][0], stream=True)
-
-        for chunk in response_stream:
-            # Process text output
-            if chunk.text:
-                print(json.dumps({
-                    "type": "assistant",
-                    "message": {
-                        "content": [
-                            {"type": "text", "text": chunk.text}
-                        ]
-                    }
-                }), flush=True)
-            
-            # Process tool calls
-            if chunk.tool_calls:
-                for tool_call in chunk.tool_calls:
-                    tool_name = tool_call.name
-                    tool_args = tool_call.args
-                    
-                    # Output tool call JSON
-                    print(json.dumps({"type": "tool_code", "name": tool_name, "args": tool_args}), flush=True)
-                    
-                    # --- Execute tool based on its name ---
-                    tool_result = None
-                    if tool_name == "run_shell_command_tool":
-                        tool_result = run_shell_command_tool(**tool_args)
-                    elif tool_name == "read_file_tool":
-                        tool_result = read_file_tool(**tool_args)
-                    elif tool_name == "list_directory_tool":
-                        tool_result = list_directory_tool(**tool_args)
-                    elif tool_name == "search_file_content_tool":
-                        tool_result = search_file_content_tool(**tool_args)
-                    elif tool_name == "glob_tool":
-                        tool_result = glob_tool(**tool_args)
-                    elif tool_name == "replace_tool":
-                        tool_result = replace_tool(**tool_args)
-                    elif tool_name == "write_file_tool":
-                        tool_result = write_file_tool(**tool_args)
-                    elif tool_name == "google_web_search_tool":
-                        tool_result = google_web_search_tool(**tool_args)
-                    elif tool_name == "web_fetch_tool":
-                        tool_result = web_fetch_tool(**tool_args)
-                    elif tool_name == "write_todos_tool":
-                        tool_result = write_todos_tool(**tool_args)
-                    elif tool_name == "save_memory_tool":
-                        tool_result = save_memory_tool(**tool_args)
-                    elif tool_name == "codebase_investigator_tool":
-                        tool_result = codebase_investigator_tool(**tool_args)
+        while True:
+            # Process response parts
+            for part in response.candidates[0].content.parts:
+                if part.text:
+                    if args.output_format == "stream-json":
+                        print(json.dumps({
+                            "type": "assistant",
+                            "message": {"content": [{"type": "text", "text": part.text}]}
+                        }), flush=True)
                     else:
-                        tool_result = {"error": f"Unknown tool: {tool_name}"}
-
-                    # Output tool result
-                    print(json.dumps({"type": "tool_result", "name": tool_name, "result": tool_result}), flush=True)
-
-                    # Send tool output back to the model
-                    response_from_tool_stream = chat_session.send_message(
-                        genai.tool_code(tool_result), stream=True # Correctly use genai.tool_code with the result
-                    )
+                        print(part.text, end="", flush=True)
+                
+                if part.call:
+                    tc = part.call
+                    tool_name = tc.function_name
+                    tool_args = tc.args
                     
-                    # Process response from tool output
-                    for tool_response_chunk in response_from_tool_stream:
-                        if tool_response_chunk.text:
-                            print(json.dumps({
-                                "type": "assistant",
-                                "message": {
-                                    "content": [
-                                        {"type": "text", "text": tool_response_chunk.text}
-                                    ]
-                                }
-                            }), flush=True)
+                    if tool_name in tool_map:
+                        result = tool_map[tool_name](**tool_args)
+                        
+                        if args.output_format == "stream-json":
+                            print(json.dumps({"type": "tool_result", "name": tool_name, "result": result}), flush=True)
+                        
+                        # Send result back to model
+                        response = chat.send_message(result)
+                        break 
+            else:
+                break
 
-        # Indicate successful completion
+        if not args.output_format == "stream-json":
+            print() 
+            
         sys.exit(0)
 
     except Exception as e:
-        print(json.dumps({"error": str(e)}), flush=True)
+        if args.output_format == "stream-json":
+            print(json.dumps({"error": str(e)}), flush=True)
+        else:
+            print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
 if __name__ == "__main__":

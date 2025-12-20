@@ -39,6 +39,9 @@ from .doctor_checks_docs import (
     doctor_check_doc_template_drift,
     doctor_check_nonstandard_doc_type,
 )
+from .doctor_checks_naming import (
+    doctor_check_naming_conventions,
+)
 
 
 def doctor_check_monolith(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:

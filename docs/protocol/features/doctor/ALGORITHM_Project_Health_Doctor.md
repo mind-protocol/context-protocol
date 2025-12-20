@@ -156,7 +156,7 @@ def check_nonstandard_doc_type(project: ProjectStructure) -> List[Issue]:
             severity="warning",
             path=doc.path,
             message="Doc filename does not use a standard prefix",
-            suggestion="Rename to PATTERNS_/BEHAVIORS_/ALGORITHM_/VALIDATION_/IMPLEMENTATION_/TEST_/SYNC_"
+            suggestion="Rename to PATTERNS_/BEHAVIORS_/ALGORITHM_/VALIDATION_/IMPLEMENTATION_/HEALTH_/SYNC_"
         ))
     return issues
 ```
@@ -330,6 +330,44 @@ def check_activity_gaps(project: ProjectStructure, config: DoctorConfig) -> List
     return issues
 ```
 
+### Check: Naming Conventions
+
+```python
+def check_naming_conventions(project: ProjectStructure, config: DoctorConfig) -> List[Issue]:
+    """Flag files/directories violating naming conventions."""
+    violations = []
+    
+    # 1. Folders must be snake_case
+    for directory in project.code_dirs:
+        if not is_snake_case(directory.name):
+            violations.append({"path": directory, "type": "directory", "expected": "snake_case"})
+            
+    # 2. Code files must be snake_case.py
+    for source_file in project.source_files:
+        if source_file.suffix == ".py" and not is_snake_case(source_file.stem):
+            violations.append({"path": source_file, "type": "code file", "expected": "snake_case"})
+            
+    # 3. Doc files must be PREFIX_PascalCase_With_Underscores.md
+    for doc_file in project.doc_files:
+        prefix, rest = split_prefix(doc_file.name)
+        if not is_pascal_case_with_underscores(rest):
+            violations.append({"path": doc_file, "type": "doc file", "expected": "PREFIX_PascalCase_With_Underscores.md"})
+            
+    # Group into tasks of 10
+    issues = []
+    for i in range(0, len(violations), 10):
+        group = violations[i:i+10]
+        issues.append(Issue(
+            type="NAMING_CONVENTION",
+            severity="warning",
+            path=group[0]["path"],
+            message=f"Naming convention violations task ({i//10 + 1}): {len(group)} items",
+            details={"violations": group},
+            suggestion=f"Rename these files/folders to follow {group[0]['expected']}"
+        ))
+    return issues
+```
+
 ### Check: Abandoned Areas
 
 ```python
@@ -349,7 +387,7 @@ def check_abandoned_areas(project: ProjectStructure, config: DoctorConfig) -> Li
         # Check if only has PATTERNS or SYNC (started but not continued)
         doc_types = set()
         for doc in docs:
-            for prefix in ["PATTERNS_", "BEHAVIORS_", "ALGORITHM_", "VALIDATION_", "TEST_", "SYNC_"]:
+            for prefix in ["PATTERNS_", "BEHAVIORS_", "ALGORITHM_", "VALIDATION_", "HEALTH_", "SYNC_"]:
                 if doc.name.startswith(prefix):
                     doc_types.add(prefix.rstrip("_"))
 
@@ -497,7 +535,6 @@ PATTERNS:        ./PATTERNS_Project_Health_Doctor.md
 BEHAVIORS:       ./BEHAVIORS_Project_Health_Doctor.md
 ALGORITHM:       THIS
 VALIDATION:      ./VALIDATION_Project_Health_Doctor.md
-IMPLEMENTATION:  ./IMPLEMENTATION_Project_Health_Doctor.md
-TEST:            ./TEST_Project_Health_Doctor.md
+HEALTH:          ./HEALTH_Project_Health_Doctor.md
 SYNC:            ./SYNC_Project_Health_Doctor.md
 ```

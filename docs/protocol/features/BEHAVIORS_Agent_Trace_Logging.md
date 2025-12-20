@@ -44,7 +44,7 @@ Most loaded:
 
 Least loaded:
   1. VALIDATION_*.md                (0 loads)
-  2. TEST_*.md                      (1 load, 8% of sessions)
+  2. HEALTH_*.md                    (1 load, 8% of sessions)
 
 Navigation patterns:
   VIEW → SYNC → PATTERNS           (8 times)

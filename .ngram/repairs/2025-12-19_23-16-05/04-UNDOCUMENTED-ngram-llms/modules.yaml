@@ -1,9 +1,0 @@
-modules:
-  llm_agents.gemini_agent:
-    code: "ngram/llms/gemini_agent.py"
-    docs: "docs/llm_agents/Gemini_Agent/"
-    maturity: CANONICAL
-    owner: agent
-    notes: |
-      Integrates Gemini LLM as a subprocess for the ngram CLI, handling
-      tool definitions and interactions.

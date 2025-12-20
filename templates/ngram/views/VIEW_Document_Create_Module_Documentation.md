@@ -80,10 +80,10 @@ Before writing anything, answer these questions:
 - What are the entry points?
 - What are the internal and external dependencies?
 
-**Testing (for TEST):**
-- What tests exist? What's covered?
-- What's not tested?
-- How do you run the tests?
+**Health (for HEALTH):**
+- What verification mechanics exist?
+- What health signals are monitored?
+- How do you run the health checks?
 
 ### Phase 2: Name Descriptively
 
@@ -100,7 +100,7 @@ BEHAVIORS_Token_Lifecycle_And_Validation.md
 ALGORITHM_Refresh_Token_Rotation.md
 VALIDATION_Auth_Security_Invariants.md
 IMPLEMENTATION_Auth_Code_Architecture.md
-TEST_Auth_Integration_Test_Suite.md
+HEALTH_Auth_Verification.md
 SYNC_Auth_Implementation_State.md
 ```
 
@@ -117,7 +117,7 @@ Each doc type serves a different reader need:
 | ALGORITHM | "How does it work?" | Walk through the logic step-by-step |
 | VALIDATION | "How do I verify it?" | List invariants, checks, verification steps |
 | IMPLEMENTATION | "Where is the code?" | Code structure, data flows, entry points |
-| TEST | "What's tested?" | Document test coverage and gaps |
+| HEALTH | "Is it healthy?" | Document verification mechanics and health signals |
 | SYNC | "What's the current state?" | Status, recent changes, handoffs |
 
 ### Phase 4: Link the Chain
@@ -132,7 +132,7 @@ BEHAVIORS:       ./BEHAVIORS_Token_Lifecycle_And_Validation.md
 ALGORITHM:       ./ALGORITHM_Refresh_Token_Rotation.md
 VALIDATION:      ./VALIDATION_Auth_Security_Invariants.md
 IMPLEMENTATION:  ./IMPLEMENTATION_Auth_Code_Architecture.md
-TEST:            ./TEST_Auth_Integration_Test_Suite.md
+HEALTH_Auth_Verification.md
 THIS:            SYNC_Auth_Implementation_State.md
 ```
 

@@ -14,10 +14,9 @@ VERIFIED: {DATE} against {COMMIT}
 PATTERNS:        ./PATTERNS_*.md
 BEHAVIORS:       ./BEHAVIORS_*.md
 THIS:            ALGORITHM_*.md (you are here)
-VALIDATION:      ./VALIDATION_*.md
-IMPLEMENTATION:  ./IMPLEMENTATION_*.md
-TEST:            ./TEST_*.md
-SYNC:            ./SYNC_*.md
+VALIDATION:      ./VALIDATION_{name}.md
+HEALTH:          ./HEALTH_{name}.md
+SYNC:            ./SYNC_{name}.md
 
 IMPL:            {path/to/main/source/file.py}
 ```

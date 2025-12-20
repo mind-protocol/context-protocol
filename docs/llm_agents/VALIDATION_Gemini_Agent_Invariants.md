@@ -16,7 +16,7 @@ BEHAVIORS:       ./BEHAVIORS_Gemini_Agent_Output.md
 ALGORITHM:       ./ALGORITHM_Gemini_Stream_Flow.md
 THIS:            VALIDATION_Gemini_Agent_Invariants.md (you are here)
 IMPLEMENTATION:  ./IMPLEMENTATION_LLM_Agent_Code_Architecture.md
-TEST:            ./TEST_LLM_Agent_Coverage.md
+HEALTH:          ./HEALTH_LLM_Agent_Coverage.md
 SYNC:            ./SYNC_LLM_Agents_State.md
 ```
 

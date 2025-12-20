@@ -15,9 +15,9 @@ PATTERNS:        ./PATTERNS_*.md
 BEHAVIORS:       ./BEHAVIORS_*.md
 ALGORITHM:       ./ALGORITHM_*.md
 THIS:            VALIDATION_*.md (you are here)
-IMPLEMENTATION:  ./IMPLEMENTATION_*.md
-TEST:            ./TEST_*.md
-SYNC:            ./SYNC_*.md
+IMPLEMENTATION:  ./IMPLEMENTATION_{name}.md
+HEALTH:          ./HEALTH_{name}.md
+SYNC:            ./SYNC_{name}.md
 
 IMPL:            {path/to/main/source/file.py}
 ```

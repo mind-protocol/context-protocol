@@ -16,7 +16,7 @@ THIS:            BEHAVIORS_CLI_Command_Effects.md (you are here)
 ALGORITHM:       ./ALGORITHM_CLI_Logic.md
 VALIDATION:      ./VALIDATION_CLI_Invariants.md
 IMPLEMENTATION:  ./IMPLEMENTATION_CLI_Code_Architecture.md
-TEST:            ./TEST_CLI_Coverage.md
+HEALTH:          ./HEALTH_CLI_Coverage.md
 SYNC:            ./SYNC_CLI_State.md
 ```
 
@@ -136,11 +136,11 @@ AND:    Output saved to docs/map.{md|yaml|json}
 ### B10: Solve Escalations Command
 
 ```
-GIVEN:  A project directory
-WHEN:   `ngram solve-escalations` is executed
-THEN:   Files containing @ngram escalation markers are listed
-AND:    Results exclude gitignored, ngramignored, and log files
-AND:    Output prompts the human to fill the `response` field in the existing escalation YAML
+GIVEN:  A project with files containing `@ngram:escalation` or `@ngram:proposition` markers
+WHEN:   `ngram solve-markers` is executed
+THEN:   The CLI identifies all files containing these markers
+AND:    The CLI prints a numbered list of these files in priority order
+AND:    The CLI prompts the human to review and resolve them
 ```
 
 ### B11: Agents Command

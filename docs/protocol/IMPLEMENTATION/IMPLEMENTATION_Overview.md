@@ -14,8 +14,7 @@ PATTERNS:        ../PATTERNS_Bidirectional_Documentation_Chain_For_AI_Agents.md
 BEHAVIORS:       ../BEHAVIORS_Observable_Protocol_Effects.md
 ALGORITHM:       ../ALGORITHM_Overview.md
 VALIDATION:      ../VALIDATION_Protocol_Invariants.md
-THIS:            ./IMPLEMENTATION_Overview.md
-TEST:            ../TEST_Protocol_Test_Cases.md
+HEALTH:          ../HEALTH_Protocol_Verification.md
 SYNC:            ../SYNC_Protocol_Current_State.md
 ```
 

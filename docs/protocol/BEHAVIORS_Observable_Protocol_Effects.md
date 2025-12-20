@@ -15,7 +15,7 @@ THIS:            BEHAVIORS_Observable_Protocol_Effects.md
 ALGORITHM:       ./ALGORITHM_Overview.md
 VALIDATION:      ./VALIDATION_Protocol_Invariants.md
 IMPLEMENTATION:  ./IMPLEMENTATION_Overview.md
-TEST:            ./TEST_Protocol_Test_Cases.md
+HEALTH:          ./HEALTH_Protocol_Verification.md
 SYNC:            ./SYNC_Protocol_Current_State.md
 ```
 

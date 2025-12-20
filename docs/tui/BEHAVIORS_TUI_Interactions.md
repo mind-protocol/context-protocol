@@ -16,7 +16,7 @@ THIS:            BEHAVIORS_TUI_Interactions.md (you are here)
 ALGORITHM:       ./ALGORITHM_TUI_Flow.md
 VALIDATION:      ./VALIDATION_TUI_Invariants.md
 IMPLEMENTATION:  ./IMPLEMENTATION_TUI_Code_Architecture.md
-TEST:            ./TEST_TUI_Coverage.md
+HEALTH:          ./HEALTH_TUI_Coverage.md
 SYNC:            ./SYNC_TUI_State.md
 ```
 

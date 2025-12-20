@@ -14,8 +14,8 @@ def _detect_commands(text: str) -> list[str]:
     """Detect runnable commands in text."""
     commands = []
 
-    # ngram subcommands we know about
-    ngram_subs = r'(?:doctor|repair|sync|init|validate|context|prompt|solve-escalations)'
+    # Detect ngram subcommands
+    ngram_subs = r'(?:doctor|repair|sync|init|validate|context|prompt|solve-markers)'
     # Other CLI tools
     other_cmds = r'(?:python|pip|npm|git|pytest|uv|make|cargo|go)'
 

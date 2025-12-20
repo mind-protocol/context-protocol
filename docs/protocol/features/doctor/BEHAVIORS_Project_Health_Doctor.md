@@ -31,6 +31,37 @@ ngram doctor --check undocumented
 
 ---
 
+## HEALTH CHECKS
+
+The doctor performs various checks across documentation, code, and project structure:
+
+- **Naming Conventions** (NEW)
+    - Flags directories and code files not using `snake_case`.
+    - Flags doc files not using `PREFIX_PascalCase_With_Underscores.md`.
+    - Groups violations into tasks of 10 items for organized refactoring.
+
+- **Monolith Files**
+    - Flags files exceeding line count thresholds (default: 500 for code, 1000 for docs).
+
+- **Documentation Health**
+    - **Undocumented Code**: Modules without mappings in `modules.yaml`.
+    - **Incomplete Chains**: Missing required doc types (PATTERNS, SYNC, etc.).
+    - **Doc Template Drift**: Docs missing sections from templates or with very short content.
+    - **Placeholder Docs**: Files containing template placeholders like `{TODO}`.
+    - **Non-Standard Doc Type**: Doc files missing standard prefixes.
+
+- **Code Health**
+    - **No DOCS: Reference**: Code files missing headers pointing to their documentation.
+    - **Broken Implementation Links**: Implementation docs referencing non-existent files.
+    - **Stub/Incomplete Implementations**: Files with many TODOs or empty functions.
+
+- **Sync and Workflow**
+    - **Stale SYNC**: SYNC files not updated recently.
+    - **Conflicts/Escalations**: SYNC files with unresolved human decision points.
+    - **Activity Gaps**: Long periods without any project activity.
+
+---
+
 ## OUTPUT BEHAVIOR
 
 ### Text Format (Default)
@@ -61,7 +92,7 @@ ngram doctor --check undocumented
     → Add: # DOCS: docs/types/PATTERNS_*.md
 
   ⚠ INCOMPLETE_CHAIN: docs/auth/
-    Missing: TEST_*.md
+    Missing: HEALTH_*.md
     → Create TEST doc or mark as intentionally skipped
 
 ## Info (3 issues)
@@ -271,6 +302,6 @@ BEHAVIORS:       THIS
 ALGORITHM:       ./ALGORITHM_Project_Health_Doctor.md
 VALIDATION:      ./VALIDATION_Project_Health_Doctor.md
 IMPLEMENTATION:  ./IMPLEMENTATION_Project_Health_Doctor.md
-TEST:            ./TEST_Project_Health_Doctor.md
+HEALTH:          ./HEALTH_Project_Health_Doctor.md
 SYNC:            ./SYNC_Project_Health_Doctor.md
 ```

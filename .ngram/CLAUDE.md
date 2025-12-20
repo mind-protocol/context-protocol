@@ -565,6 +565,7 @@ ngram validate          # Check protocol invariants
 ngram doctor            # Health checks (auto-archives large SYNCs)
 ngram sync              # Show SYNC status (auto-archives large SYNCs)
 ngram repair [--max N]  # Auto-fix issues using Claude Code agents
+ngram solve-markers     # Review escalations and propositions
 ngram context <file>    # Get doc context for a file
 ngram prompt            # Generate bootstrap prompt for LLM
 ngram overview          # Generate repo map with file tree, links, definitions

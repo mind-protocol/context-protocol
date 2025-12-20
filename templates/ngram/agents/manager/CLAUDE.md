@@ -47,9 +47,9 @@ Your response will be:
   - Reasoning: {why}
   ```
 
-## Escalation Check
+## Special Marker Check
 
-Every ~10 messages with a human, run `ngram solve-escalations` and prompt the human to resolve any listed items.
+Every ~10 messages with a human, run `ngram solve-markers` and prompt the human to resolve any listed items (escalations or propositions).
 
 ## Files to Check
 

@@ -16,7 +16,7 @@ BEHAVIORS:       ./BEHAVIORS_CLI_Command_Effects.md
 THIS:            ALGORITHM_CLI_Logic.md (you are here)
 VALIDATION:      ./VALIDATION_CLI_Invariants.md
 IMPLEMENTATION:  ./IMPLEMENTATION_CLI_Code_Architecture.md
-TEST:            ./TEST_CLI_Coverage.md
+HEALTH:          ./HEALTH_CLI_Coverage.md
 SYNC:            ./SYNC_CLI_State.md
 ```
 
@@ -167,7 +167,7 @@ write to .ngram/state/SYNC_Project_Health.md
 
 ---
 
-## ALGORITHM: Solve Escalations Command
+## ALGORITHM: Solve Special Markers Command
 
 ### Step 1: Load Ignore Patterns
 
@@ -176,20 +176,22 @@ config = load_doctor_config(target_dir)
 ignore = config.ignore + [log files]
 ```
 
-### Step 2: Scan for Escalation Tags
+### Step 2: Scan for Escalation and Proposition Tags
 
 ```
 for file in repo_files:
     skip if ignored or binary
     if "@ngram:escalation" or "@ngram:doctor:escalation" in content:
-        collect file path
+        collect file path as ESCALATION
+    if "@ngram:proposition" or "@ngram:doctor:proposition" in content:
+        collect file path as PROPOSITION
 ```
 
 ### Step 3: Sort and Print
 
 ```
-sort by priority (doctor escalation first) and occurrence count
-print numbered list and prompt human to resolve
+sort by priority (doctor escalation/proposition first) and occurrence count
+print numbered list and prompt human to resolve escalations or review propositions
 ```
 
 ---

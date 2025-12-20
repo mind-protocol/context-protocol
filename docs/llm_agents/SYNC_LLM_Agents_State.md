@@ -16,7 +16,7 @@ BEHAVIORS:       ./BEHAVIORS_Gemini_Agent_Output.md
 ALGORITHM:       ./ALGORITHM_Gemini_Stream_Flow.md
 VALIDATION:      ./VALIDATION_Gemini_Agent_Invariants.md
 IMPLEMENTATION:  ./IMPLEMENTATION_LLM_Agent_Code_Architecture.md
-TEST:            ./TEST_LLM_Agent_Coverage.md
+HEALTH:          ./HEALTH_LLM_Agent_Coverage.md
 THIS:            SYNC_LLM_Agents_State.md (you are here)
 ```
 
@@ -74,7 +74,7 @@ None.
 
 - **What:** Added full doc chain + module mapping for `ngram/llms`.
 - **Why:** The module was previously undocumented, causing unmapped code warnings and incomplete chain validation failures.
-- **Files:** `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md`, `docs/llm_agents/ALGORITHM_Gemini_Stream_Flow.md`, `docs/llm_agents/VALIDATION_Gemini_Agent_Invariants.md`, `docs/llm_agents/IMPLEMENTATION_LLM_Agent_Code_Architecture.md`, `docs/llm_agents/TEST_LLM_Agent_Coverage.md`, `docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`, `modules.yaml`, `ngram/llms/gemini_agent.py`
+- **Files:** `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md`, `docs/llm_agents/ALGORITHM_Gemini_Stream_Flow.md`, `docs/llm_agents/VALIDATION_Gemini_Agent_Invariants.md`, `docs/llm_agents/IMPLEMENTATION_LLM_Agent_Code_Architecture.md`, `docs/llm_agents/HEALTH_LLM_Agent_Coverage.md`, `docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`, `modules.yaml`, `ngram/llms/gemini_agent.py`
 - **Struggles/Insights:** Needed the full chain to satisfy `ngram validate`.
 
 ### 2025-12-19: Fixed implementation doc links

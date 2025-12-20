@@ -40,6 +40,7 @@ ISSUE_SYMBOLS = {
     "STALE_IMPL": ("📉", "⇅"),
     "DOC_GAPS": ("🕳️", "○"),
     "ESCALATION": ("⚖️", "⚡"),
+    "PROPOSITION": ("💡", "✨"), # New: Agent proposals for improvement/refactor/features
     "SUGGESTION": ("💡", "?"),
     "NEW_UNDOC_CODE": ("🆕", "+"),
     "COMPONENT_NO_STORIES": ("📖", "◇"),
@@ -72,6 +73,7 @@ ISSUE_DESCRIPTIONS = {
     "STALE_IMPL": ("update IMPLEMENTATION doc for", ""),
     "DOC_GAPS": ("complete gaps left in", ""),
     "ESCALATION": ("resolve conflict in", ""),
+    "PROPOSITION": ("review agent proposition in", ""), # New: Agent proposals for improvement/refactor/features
     "SUGGESTION": ("implement suggestion from", ""),
     "NEW_UNDOC_CODE": ("update docs for", ""),
     "COMPONENT_NO_STORIES": ("add stories for", ""),
@@ -190,6 +192,7 @@ ISSUE_PRIORITY = {
     "STALE_IMPL": 14,        # Update impl docs
     "DOC_GAPS": 15,          # Fill gaps
     "NEW_UNDOC_CODE": 16,    # New code docs
+    "PROPOSITION": 16,        # New: Agent proposals, high priority for human review
     "SUGGESTION": 17,        # Nice to have
     "ORPHAN_DOCS": 18,       # Cleanup
     "MISSING_TESTS": 19,     # Tests last

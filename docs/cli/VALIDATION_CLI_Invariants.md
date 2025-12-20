@@ -16,7 +16,7 @@ BEHAVIORS:       ./BEHAVIORS_CLI_Command_Effects.md
 ALGORITHM:       ./ALGORITHM_CLI_Logic.md
 THIS:            VALIDATION_CLI_Invariants.md (you are here)
 IMPLEMENTATION:  ./IMPLEMENTATION_CLI_Code_Architecture.md
-TEST:            ./TEST_CLI_Coverage.md
+HEALTH:          ./HEALTH_CLI_Coverage.md
 SYNC:            ./SYNC_CLI_State.md
 ```
 
@@ -83,10 +83,7 @@ Each repair agent:
 ### V6: Escalation Scan Respects Ignores
 
 ```
-solve-escalations:
-  skips gitignored and ngramignored paths
-  skips .log files
-  returns only file paths with escalation tags
+- `solve-markers`: finds markers, sorts correctly, exits 0
 ```
 
 **Checked by:** Agent prompt structure, manual review

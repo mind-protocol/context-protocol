@@ -23,6 +23,7 @@ from .doctor_files import (
     count_lines,
     is_binary_file,
 )
+from .solve_escalations import ESCALATION_TAGS, PROPOSITION_TAGS, IGNORED_FILES
 
 try:
     import yaml
@@ -473,37 +474,46 @@ def doctor_check_long_strings(target_dir: Path, config: DoctorConfig) -> List[Do
     return issues
 
 
-def doctor_check_resolve_escalation_markers(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
-    """Check for resolved escalation markers that need cleanup."""
-    if "RESOLVE_ESCALATION" in config.disabled_checks:
-        return []
+from .solve_escalations import ESCALATION_TAGS, PROPOSITION_TAGS, IGNORED_FILES
 
+def doctor_check_special_markers(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
+    """Check for special markers that need attention (escalations, propositions)."""
     issues = []
-    marker_tags = ("@ngram:solved-escalations", "@ngram:solved-escalation")
 
-    for path in target_dir.rglob("*"):
-        if not path.is_file():
-            continue
-        if should_ignore_path(path, config.ignore, target_dir):
-            continue
-        if path.suffix == ".log":
-            continue
-        if is_binary_file(path):
-            continue
-        try:
-            content = path.read_text(errors="ignore")
-        except Exception:
-            continue
-        if not any(tag in content for tag in marker_tags):
-            continue
-        rel_path = str(path.relative_to(target_dir))
-        issues.append(DoctorIssue(
-            issue_type="RESOLVE_ESCALATION",
-            severity="warning",
-            path=rel_path,
-            message="Resolved escalation marker needs cleanup",
-            details={"markers": [tag for tag in marker_tags if tag in content]},
-            suggestion="Apply the response, update docs/code, then remove the solved marker"
-        ))
+    all_marker_info = [
+        ("ESCALATION", ESCALATION_TAGS, "Escalation marker needs decision"),
+        ("PROPOSITION", PROPOSITION_TAGS, "Agent proposition needs review"),
+    ]
+
+    for issue_type, marker_tags, message_template in all_marker_info:
+        for path in target_dir.rglob("*"):
+            if not path.is_file():
+                continue
+            if should_ignore_path(path, config.ignore, target_dir):
+                continue
+            if str(path.relative_to(target_dir)) in IGNORED_FILES:
+                continue
+            if path.suffix == ".log":
+                continue
+            if is_binary_file(path):
+                continue
+            try:
+                content = path.read_text(errors="ignore")
+            except Exception:
+                continue
+            if not any(tag in content for tag in marker_tags):
+                continue
+            rel_path = str(path.relative_to(target_dir))
+            issues.append(DoctorIssue(
+                issue_type=issue_type,
+                severity="warning" if issue_type == "ESCALATION" else "info",
+                path=rel_path,
+                message=message_template,
+                details={
+                    "markers": [tag for tag in marker_tags if tag in content],
+                    "content_snippet": content[content.find(next(tag for tag in marker_tags if tag in content)):][:200] + "..." if any(tag in content for tag in marker_tags) else ""
+                },
+                suggestion=f"Review and resolve {issue_type.lower()} in this file"
+            ))
 
     return issues

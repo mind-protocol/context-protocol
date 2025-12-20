@@ -285,7 +285,7 @@ def doctor_check_incomplete_chain(target_dir: Path, config: DoctorConfig) -> Lis
     if not docs_dir.exists():
         return issues
 
-    full_chain = ["PATTERNS_", "BEHAVIORS_", "ALGORITHM_", "VALIDATION_", "IMPLEMENTATION_", "TEST_", "SYNC_"]
+    full_chain = ["PATTERNS_", "BEHAVIORS_", "ALGORITHM_", "VALIDATION_", "IMPLEMENTATION_", "HEALTH_", "SYNC_"]
     modules = find_module_directories(docs_dir)
 
     for module_dir in modules:
@@ -323,7 +323,7 @@ DOC_TYPE_TEMPLATES = {
     "ALGORITHM": ".ngram/templates/ALGORITHM_TEMPLATE.md",
     "VALIDATION": ".ngram/templates/VALIDATION_TEMPLATE.md",
     "IMPLEMENTATION": ".ngram/templates/IMPLEMENTATION_TEMPLATE.md",
-    "TEST": ".ngram/templates/TEST_TEMPLATE.md",
+    "HEALTH": ".ngram/templates/HEALTH_TEMPLATE.md",
     "SYNC": ".ngram/templates/SYNC_TEMPLATE.md",
     "CONCEPT": ".ngram/templates/CONCEPT_TEMPLATE.md",
     "TOUCHES": ".ngram/templates/TOUCHES_TEMPLATE.md",
@@ -494,7 +494,7 @@ def doctor_check_nonstandard_doc_type(target_dir: Path, config: DoctorConfig) ->
             path=rel_path,
             message="Doc filename does not use a standard prefix",
             details={"prefixes": list(STANDARD_DOC_PREFIXES)},
-            suggestion="Rename to PATTERNS_/BEHAVIORS_/ALGORITHM_/VALIDATION_/IMPLEMENTATION_/TEST_/SYNC_"
+            suggestion="Rename to PATTERNS_/BEHAVIORS_/ALGORITHM_/VALIDATION_/IMPLEMENTATION_/HEALTH_/SYNC_"
         ))
 
     return issues

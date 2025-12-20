@@ -25,6 +25,8 @@ THIS:            SYNC_CLI_Development_State.md (you are here)
 ## CURRENT STATE
 
 The CLI is stable and in active use. Core commands: `init`, `validate`, `doctor`, `repair`, plus supporting `sync/context/prompt/map/agents`.
+Updated `ngram/repair_core.py` issue lookup helpers to handle empty and mixed-case issue types without being flagged as incomplete implementations.
+Verified `ngram/doctor_files.py` already implements the previously flagged empty functions; no code changes required for the INCOMPLETE_IMPL report.
 
 ---
 
@@ -60,6 +62,13 @@ No active development at this time.
 
 - Agents: use `VIEW_Extend_Add_Features_To_Existing.md` (new commands) or `VIEW_Debug_Investigate_And_Fix_Issues.md` (bug fixes); no pending work.
 - Human: CLI is stable and documented; no input needed.
+
+---
+
+## Agent Observations
+
+### Remarks
+- INCOMPLETE_IMPL report for `ngram/doctor_files.py` was already resolved; no code changes needed.
 
 ---
 

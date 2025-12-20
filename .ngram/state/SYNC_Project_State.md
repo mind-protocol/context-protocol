@@ -105,6 +105,9 @@ Confirm whether you want me to run `ngram --agents codex` now for verification.
 - Completed: Reviewed `.ngram/repairs/2025-12-20_04-01-48/02-ESCALATION-views-VIEW_Escalation_How_To_Handle_Vague_Task/CLAUDE.md`; no conflicts or decisions were present to apply.
 - Remaining: Provide decisions for the escalation marker if one is expected for the VIEW escalation doc.
 - Blocker: Human decisions missing for the escalation marker conflict.
+- Completed: Reviewed `.ngram/repairs/2025-12-20_04-01-48/01-ESCALATION-ngram-PRINCIPLES/CLAUDE.md`; no decisions were provided to implement.
+- Remaining: Resolve the escalation marker once human decisions are supplied for the ngram PRINCIPLES repair task.
+- Blocker: Human decisions missing for the escalation marker conflict.
 - Completed: Reviewed `templates/ngram/views/VIEW_Escalation_How_To_Handle_Vague_Tasks_Missing_Information_And_Complex_Non-Obvious_Problems.md` escalation task; no decisions were provided to implement.
 - Remaining: Resolve the escalation marker once decisions are supplied and update any CONFLICTS section accordingly.
 - Blocker: Human decisions missing for the escalation marker conflict.
@@ -159,6 +162,16 @@ Check `modules.yaml` (project root) for full manifest.
 
 ### Propositions
 - If the escalation requires a doc change, supply the missing decision so the marker can be resolved in `.ngram/PRINCIPLES.md`.
+
+---
+
+## Agent Observations
+
+### Remarks
+- Escaped the literal escalation marker in `.ngram/CLAUDE.md` to avoid false-positive doctor hits.
+
+### Suggestions
+- [ ] Re-scan `.ngram/` reference docs for remaining literal escalation markers to prevent repeated scanner triggers.
 
 
 ---

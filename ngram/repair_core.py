@@ -19,6 +19,8 @@ from pathlib import Path
 from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from .agent_cli import build_agent_command, normalize_agent
+from .doctor_types import DoctorConfig
+from .doctor_files import save_doctor_config
 
 
 # Symbols and emojis per issue type
@@ -367,12 +369,24 @@ def _get_git_head(target_dir: Path) -> Optional[str]:
 
 def get_issue_symbol(issue_type: str) -> tuple:
     """Get emoji and symbol for an issue type."""
-    return ISSUE_SYMBOLS.get(issue_type, ("🔹", "•"))
+    default = ("🔹", "•")
+    if not issue_type:
+        return default
+    symbol = ISSUE_SYMBOLS.get(issue_type)
+    if symbol:
+        return symbol
+    return ISSUE_SYMBOLS.get(issue_type.upper(), default)
 
 
 def get_issue_action_parts(issue_type: str) -> tuple:
     """Get action parts (prefix, suffix) for an issue type."""
-    return ISSUE_DESCRIPTIONS.get(issue_type, ("fix", ""))
+    default = ("fix", "")
+    if not issue_type:
+        return default
+    parts = ISSUE_DESCRIPTIONS.get(issue_type)
+    if parts:
+        return parts
+    return ISSUE_DESCRIPTIONS.get(issue_type.upper(), default)
 
 
 def get_issue_action(issue_type: str, path: str) -> str:
@@ -572,6 +586,7 @@ async def spawn_repair_agent_async(
     target_dir: Path,
     on_output: Callable[[str], Awaitable[None]],
     instructions: Dict[str, Any],
+    config: DoctorConfig, # New: DoctorConfig to manage fallback status
     github_issue_number: Optional[int] = None,
     escalation_decisions: Optional[List[EscalationDecision]] = None,
     agent_id: Optional[str] = None,
@@ -617,50 +632,76 @@ async def spawn_repair_agent_async(
     prompt = build_agent_prompt(issue, instructions, target_dir, github_issue_number)
     system_prompt = AGENT_SYSTEM_PROMPT + get_learnings_content(target_dir)
 
-    agent_cmd = build_agent_command(
-        agent_provider,
-        prompt=prompt,
-        system_prompt=system_prompt,
-        stream_json=(agent_provider == "claude"),
-        continue_session=False,
-    )
+    GEMINI_PRIMARY_MODEL = "gemini-3-flash-preview"
+    GEMINI_FALLBACK_MODEL = "gemini-2.5-flash"
 
-    start_time = time.time()
+    # Determine Gemini model, with fallback logic
+    current_gemini_model = config.gemini_model_fallback_status.get(agent_id or "default_repair", GEMINI_PRIMARY_MODEL)
+    current_attempt = 0
+    max_attempts = 2 if agent_provider == "gemini" else 1
     text_output = []
+    start_time = time.time()
 
+    # Outer loop for model fallback retry
     try:
-        import shutil
+        while True:
+            try:
+                agent_cmd = build_agent_command(
+                    agent_provider,
+                    prompt=prompt,
+                    system_prompt=system_prompt,
+                    stream_json=(agent_provider == "claude"),
+                    continue_session=False,
+                    model_name=current_gemini_model if agent_provider == "gemini" else None, # Pass model name
+                )
 
-        # Create agent directory within session folder
-        # Structure: .ngram/repairs/{timestamp}/{agent_symbol}/
-        if session_dir and agent_symbol:
-            # Use symbol name as folder (e.g., "ninja" for 🥷)
-            agent_dir = session_dir / agent_symbol
-        elif session_dir and agent_id:
-            agent_dir = session_dir / agent_id
-        elif agent_id:
-            # Fallback to old structure
-            agent_dir = target_dir / ".ngram" / "agents" / "repair" / agent_id
-        else:
-            import uuid
-            agent_dir = target_dir / ".ngram" / "agents" / "repair" / f"agent-{uuid.uuid4().hex[:8]}"
-        agent_dir.mkdir(parents=True, exist_ok=True)
+                start_time = time.time()
+                text_output = []  # Reset text_output for each attempt
 
-        # Copy CLAUDE.md so agent has context
-        claude_md_src = target_dir / ".ngram" / "CLAUDE.md"
-        claude_md_dst = agent_dir / "CLAUDE.md"
-        agents_md_src = target_dir / "AGENTS.md"
-        agents_md_dst = agent_dir / "AGENTS.md"
-        if claude_md_src.exists() and not claude_md_dst.exists():
-            shutil.copy(claude_md_src, claude_md_dst)
-        if agents_md_src.exists():
-            agents_md_dst.write_text(agents_md_src.read_text())
-        elif claude_md_src.exists():
-            agents_md_dst.write_text(claude_md_src.read_text())
+                import shutil
 
-        # Write issue info to agent folder for reference
-        issue_info = agent_dir / "ISSUE.md"
-        issue_info.write_text(f"""# Repair Task
+            except Exception as e:
+                logger.error(f"Error during agent command build or execution: {e}")
+                current_attempt += 1
+                if agent_provider == "gemini" and current_gemini_model != GEMINI_FALLBACK_MODEL:
+                    current_gemini_model = GEMINI_FALLBACK_MODEL
+                    config.gemini_model_fallback_status[agent_id or "default_repair"] = current_gemini_model
+                if current_attempt >= max_attempts:
+                    logger.error(f"Max attempts ({max_attempts}) reached for {issue.path}. Giving up.")
+                    raise
+                continue  # Retry outer while loop
+
+            # Create agent directory within session folder
+            # Structure: .ngram/repairs/{timestamp}/{agent_symbol}/
+            if session_dir and agent_symbol:
+                # Use symbol name as folder (e.g., "ninja" for 🥷)
+                agent_dir = session_dir / agent_symbol
+            elif session_dir and agent_id:
+                agent_dir = session_dir / agent_id
+            elif agent_id:
+                # Fallback to old structure
+                agent_dir = target_dir / ".ngram" / "agents" / "repair" / agent_id
+            else:
+                import uuid
+                agent_dir = target_dir / ".ngram" / "agents" / "repair" / f"agent-{uuid.uuid4().hex[:8]}"
+
+            agent_dir.mkdir(parents=True, exist_ok=True)
+
+            # Copy CLAUDE.md so agent has context
+            claude_md_src = target_dir / ".ngram" / "CLAUDE.md"
+            claude_md_dst = agent_dir / "CLAUDE.md"
+            agents_md_src = target_dir / "AGENTS.md"
+            agents_md_dst = agent_dir / "AGENTS.md"
+            if claude_md_src.exists() and not claude_md_dst.exists():
+                shutil.copy(claude_md_src, claude_md_dst)
+            if agents_md_src.exists():
+                agents_md_dst.write_text(agents_md_src.read_text())
+            elif claude_md_src.exists():
+                agents_md_dst.write_text(claude_md_src.read_text())
+
+            # Write issue info to agent folder for reference
+            issue_info = agent_dir / "ISSUE.md"
+            issue_info.write_text(f"""# Repair Task
 
 **Issue Type:** {issue.issue_type}
 **Severity:** {issue.severity}
@@ -673,85 +714,85 @@ async def spawn_repair_agent_async(
 {chr(10).join('- ' + d for d in instructions.get('docs_to_read', []))}
 """)
 
-        head_before = _get_git_head(target_dir)
+            head_before = _get_git_head(target_dir)
 
-        # Run subprocess in thread pool to keep UI responsive
-        import subprocess as sync_subprocess
-        import concurrent.futures
+            # Run subprocess in thread pool to keep UI responsive
+            import subprocess as sync_subprocess
+            import concurrent.futures
 
-        def run_agent_sync():
-            """Run agent synchronously in thread, return output lines."""
-            output_lines = []
-            try:
-                proc = sync_subprocess.Popen(
-                    agent_cmd.cmd,
-                    cwd=agent_dir,
-                    stdout=sync_subprocess.PIPE,
-                    stderr=sync_subprocess.STDOUT,
-                    stdin=sync_subprocess.PIPE if agent_cmd.stdin else None,
-                    text=False,
-                )
-                if agent_cmd.stdin:
-                    proc.stdin.write((agent_cmd.stdin + "\n").encode())
-                    proc.stdin.close()
+            def run_agent_sync():
+                """Run agent synchronously in thread, return output lines."""
+                output_lines = []
+                try:
+                    proc = sync_subprocess.Popen(
+                        agent_cmd.cmd,
+                        cwd=agent_dir,
+                        stdout=sync_subprocess.PIPE,
+                        stderr=sync_subprocess.STDOUT,
+                        stdin=sync_subprocess.PIPE if agent_cmd.stdin else None,
+                        text=False,
+                    )
+                    if agent_cmd.stdin:
+                        proc.stdin.write((agent_cmd.stdin + "\n").encode())
+                        proc.stdin.close()
 
-                for line in proc.stdout:
-                    line_str = line.decode(errors='replace').strip()
-                    if not line_str:
-                        continue
-                    parsed = parse_stream_json_line(line_str)
-                    if parsed:
-                        output_lines.append(parsed)
-                    elif not line_str.startswith("{"):
-                        output_lines.append(line_str)
+                    for line in proc.stdout:
+                        line_str = line.decode(errors='replace').strip()
+                        if not line_str:
+                            continue
+                        parsed = parse_stream_json_line(line_str)
+                        if parsed:
+                            output_lines.append(parsed)
+                        elif not line_str.startswith("{"):
+                            output_lines.append(line_str)
 
-                proc.wait()
-                return output_lines, proc.returncode
-            except Exception as e:
-                output_lines.append(f"ERROR: {e}")
-                return output_lines, -1
+                    proc.wait()
+                    return output_lines, proc.returncode
+                except Exception as e:
+                    output_lines.append(f"ERROR: {e}")
+                    return output_lines, -1
 
-        loop = asyncio.get_event_loop()
-        with concurrent.futures.ThreadPoolExecutor() as pool:
-            future = loop.run_in_executor(pool, run_agent_sync)
-            last_callback = time.time()
-            while not future.done():
-                await asyncio.sleep(0.5)  # Yield to UI every 500ms
-                now = time.time()
-                if (now - last_callback) > 5.0:
-                    await on_output("")  # Heartbeat
-                    last_callback = now
+            loop = asyncio.get_event_loop()
+            with concurrent.futures.ThreadPoolExecutor() as pool:
+                future = loop.run_in_executor(pool, run_agent_sync)
+                last_callback = time.time()
+                while not future.done():
+                    await asyncio.sleep(0.5)  # Yield to UI every 500ms
+                    now = time.time()
+                    if (now - last_callback) > 5.0:
+                        await on_output("")  # Heartbeat
+                        last_callback = now
 
-            text_output, returncode = await asyncio.wrap_future(future)
-        duration = time.time() - start_time
+                text_output, returncode = await asyncio.wrap_future(future)
+            duration = time.time() - start_time
 
-        head_after = _get_git_head(target_dir)
-        readable_output = "\n".join(text_output)
-        success = bool(head_before and head_after and head_before != head_after)
-        decisions = parse_decisions_from_output(readable_output)
+            head_after = _get_git_head(target_dir)
+            readable_output = "\n".join(text_output)
+            success = bool(head_before and head_after and head_before != head_after)
+            decisions = parse_decisions_from_output(readable_output)
 
-        # Workaround: Delete GEMINI.md created by gemini CLI in agent's directory
-        if agent_provider == "gemini":
-            gemini_md_path = agent_dir / "GEMINI.md"
-            if gemini_md_path.exists():
-                gemini_md_path.unlink()
-                print(f"Cleaned up: Deleted {gemini_md_path}")
+            # Workaround: Delete GEMINI.md created by gemini CLI in agent's directory
+            if agent_provider == "gemini":
+                gemini_md_path = agent_dir / "GEMINI.md"
+                if gemini_md_path.exists():
+                    gemini_md_path.unlink()
+                    print(f"Cleaned up: Deleted {gemini_md_path}")
 
-        error = None
-        if returncode != 0:
-            error = f"Exit code: {returncode}"
-        elif not success:
-            error = "No git commit detected"
+            error = None
+            if returncode != 0:
+                error = f"Exit code: {returncode}"
+            elif not success:
+                error = "No git commit detected"
 
-        return RepairResult(
-            issue_type=issue.issue_type,
-            target_path=issue.path,
-            success=success,
-            agent_output=readable_output,
-            duration_seconds=duration,
-            error=error,
-            decisions_made=decisions if decisions else None,
-        )
+            return RepairResult(
+                issue_type=issue.issue_type,
+                target_path=issue.path,
+                success=success,
+                agent_output=readable_output,
+                duration_seconds=duration,
+                error=error,
+                decisions_made=decisions if decisions else None,
+            )
 
     except asyncio.TimeoutError:
         return RepairResult(

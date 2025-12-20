@@ -54,7 +54,7 @@ ngram/
 ├── repo_overview.py         # Repo overview generation
 ├── repo_overview_formatters.py # Repo overview formatting helpers
 ├── github.py               # GitHub issue integration
-└── utils.py                # Shared utilities
+└── core_utils.py           # Shared utilities
 ```
 
 **Logical Groupings** (all in `ngram/`):
@@ -82,7 +82,7 @@ ngram/
 | `ngram/doctor_files.py` | File discovery | `find_source_files()`, `find_code_directories()` | ~321 | OK |
 | `ngram/agent_cli.py` | Agent CLI wrapper | `build_agent_command()`, `normalize_agent()` | ~60 | OK |
 | `ngram/repair.py` | Repair orchestration | `repair_command()`, `spawn_repair_agent()` | ~1013 | SPLIT |
-| `ngram/repair_core.py` | Repair models + helpers | `RepairResult`, `get_issue_symbol()` | ~693 | WATCH |
+| `ngram/repair_core.py` | Repair models + helpers (case-insensitive issue lookup) | `RepairResult`, `get_issue_symbol()` | ~693 | WATCH |
 | `ngram/repair_report.py` | Report generation | `generate_llm_report()`, `generate_final_report()` | ~305 | OK |
 | `ngram/repair_instructions.py` | Code/test/config repair prompts | `get_issue_instructions()` | ~765 | WATCH |
 | `ngram/repair_instructions_docs.py` | Doc-related repair prompts | `get_doc_instructions()` | ~492 | WATCH |
@@ -96,7 +96,7 @@ ngram/
 | `ngram/repo_overview.py` | Repo overview | `generate_repo_overview()`, `generate_and_save()` | ~754 | SPLIT |
 | `ngram/repo_overview_formatters.py` | Overview formatting | `format_text_overview()`, `format_json_overview()` | ~264 | OK |
 | `ngram/github.py` | GitHub API integration | `create_issues_for_findings()` | ~288 | OK |
-| `ngram/utils.py` | Shared helpers | `get_templates_path()`, `find_module_directories()` | ~103 | OK |
+| `ngram/core_utils.py` | Shared helpers | `get_templates_path()`, `find_module_directories()` | ~103 | OK |
 
 **Size Thresholds:**
 - **OK** (<400 lines): Healthy size
@@ -134,7 +134,7 @@ ngram/
 |----------|--------|---------|-----------|
 | Doctor subsystem | doctor_* modules | Other commands | `run_doctor()`, `DoctorIssue` |
 | Repair subsystem | repair_* modules | Other commands | `repair_command()`, `RepairResult` |
-| File discovery | doctor_files, utils | Check logic | `find_source_files()`, `find_code_directories()` |
+| File discovery | doctor_files, core_utils | Check logic | `find_source_files()`, `find_code_directories()` |
 
 ---
 
@@ -200,7 +200,7 @@ RepairResult:
 
 ## DATA FLOW
 
-For detailed algorithmic steps, see `docs/cli/ALGORITHM_CLI_Logic.md`.
+For detailed algorithmic steps, see `docs/cli/ALGORITHM_CLI_Command_Execution_Logic.md`.
 
 **Summary:**
 - **Init:** `get_templates_path()` → `shutil.copytree()` → update .ngram/CLAUDE.md + root AGENTS.md (append `templates/CODEX_SYSTEM_PROMPT_ADDITION.md`); on permission errors, fall back to in-place copy with warnings
@@ -218,14 +218,14 @@ For detailed algorithmic steps, see `docs/cli/ALGORITHM_CLI_Logic.md`.
 
 **Doctor subsystem:**
 - doctor.py → doctor_checks, doctor_checks_content, doctor_checks_docs, doctor_checks_quality, doctor_checks_sync, doctor_types, doctor_report, doctor_files, sync
-- doctor_checks modules → doctor_types, doctor_files, utils
+- doctor_checks modules → doctor_types, doctor_files, core_utils
 
 **Repair subsystem:**
 - repair.py → doctor, repair_core, repair_escalation_interactive, repair_report, repair_instructions
 - repair_instructions modules → doctor, repair_instructions_docs
 - repair_report.py → repair_core
 
-**Other commands:** validate.py → utils; project_map.py → project_map_html; repo_overview.py → repo_overview_formatters
+**Other commands:** validate.py → core_utils; project_map.py → project_map_html; repo_overview.py → repo_overview_formatters
 
 ### External Dependencies
 
@@ -235,7 +235,7 @@ For detailed algorithmic steps, see `docs/cli/ALGORITHM_CLI_Logic.md`.
 | pathlib | File paths | All modules |
 | subprocess | Agent spawning | repair |
 | concurrent.futures | Parallel execution | repair |
-| yaml (optional) | modules.yaml parsing | utils, doctor |
+| yaml (optional) | modules.yaml parsing | core_utils, doctor |
 | json | JSON output, traces | doctor, context |
 | shutil | File copying | init_cmd |
 | re | Regex patterns | validate, doctor |

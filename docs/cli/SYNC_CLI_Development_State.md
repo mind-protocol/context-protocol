@@ -78,6 +78,17 @@ No active development at this time.
 - Remaining: Resolve the escalation marker once a human decision is provided.
 - Blocker: No human decision was supplied for the escalation conflict, so no doc change was made.
 
+## Agent Observations
+
+### Remarks
+- The issue lookup helpers in `ngram/repair_core.py` are now robust against empty or mixed-case issue types, preventing false positives in the incomplete implementation check.
+
+### Suggestions
+- [ ] Consider updating the doctor incomplete-impl heuristic to ignore short, explicit dictionary lookup helpers to reduce noise.
+
+### Propositions
+- None.
+
 ## ARCHIVE
 
 Older content archived to: `archive/SYNC_CLI_State_Archive_2025-12.md`

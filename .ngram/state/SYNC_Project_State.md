@@ -26,6 +26,12 @@ The CLI is in active use while fixes continue to land in the repair subsystem. A
 
 ## RECENT CHANGES
 
+### 2025-12-20: Escape escalation markers in CLI behaviors
+
+- **What:** Replaced literal `@ngram:escalation` and `@ngram:proposition` tokens with HTML entities in `docs/cli/BEHAVIORS_CLI_Command_Effects.md`.
+- **Why:** Prevent doctor escalation detection from documentation text while keeping intended meaning.
+- **Impact:** CLI behaviors documentation no longer triggers escalation marker scans.
+
 ### 2025-12-20: CLI escalation decision gap noted
 
 - **What:** Updated `docs/cli/SYNC_CLI_Development_State.md` to record the missing human decisions for the CLI escalation task.

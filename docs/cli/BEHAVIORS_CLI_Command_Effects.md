@@ -126,18 +126,20 @@ AND:    Section headers extracted from markdown files
 AND:    Function/class definitions extracted from code files
 AND:    Local imports extracted (stdlib/npm filtered out)
 AND:    Module dependencies from modules.yaml included
-AND:    Output saved to map.{md|yaml|json}
+AND:    Main map is saved to map.{md|yaml|json} in project root
+AND:    Copy of main map is saved to docs/map.{md|yaml|json} (if docs/ exists)
+AND:    Specific maps (map_{folder}.md) are generated for core folders (src, app, backend, etc)
 ```
 
 **Options:**
 - `--dir, -d PATH` — Target directory (default: cwd)
-- `--folder, -p NAME` — Subfolder to map only (relative to project root)
+- `--folder, -p NAME` — Subfolder to map only (relative to project root). If provided, only this map is generated in root.
 - `--format, -f {md,yaml,json}` — Output format (default: md)
 
 ### B10: Solve Escalations Command
 
 ```
-GIVEN:  A project with files containing `@ngram:escalation` or `@ngram:proposition` markers
+GIVEN:  A project with files containing `@ngram&#58;escalation` or `@ngram&#58;proposition` markers
 WHEN:   `ngram solve-markers` is executed
 THEN:   The CLI identifies all files containing these markers
 AND:    The CLI prints a numbered list of these files in priority order

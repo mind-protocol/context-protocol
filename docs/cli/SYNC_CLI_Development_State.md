@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-20
-UPDATED_BY: codex (repair escalation check)
+UPDATED_BY: codex (escape markers in behaviors)
 STATUS: CANONICAL
 ```
 
@@ -35,6 +35,11 @@ No active development at this time.
 ---
 
 ## RECENT CHANGES
+
+### 2025-12-20: Escape escalation markers in CLI behaviors
+
+- Replaced literal `@ngram:escalation` and `@ngram:proposition` tokens with HTML entities in `BEHAVIORS_CLI_Command_Effects.md`.
+- Prevents escalation detection from documentation text while preserving meaning.
 
 ### 2025-12-20: Escalation decision gap noted
 

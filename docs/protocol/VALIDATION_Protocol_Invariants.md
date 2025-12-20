@@ -168,7 +168,7 @@ FIX:     Create minimum docs (PATTERNS, SYNC)
 
 ---
 
-## TEST COVERAGE
+## HEALTH COVERAGE
 
 | Requirement | Test / Check | Status |
 |-------------|--------------|--------|

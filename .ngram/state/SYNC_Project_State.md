@@ -26,11 +26,11 @@ UPDATED_BY: {AGENT/HUMAN}
 
 ## RECENT CHANGES
 
-### 2025-12-20: Transition from TEST to HEALTH documentation format
+### {DATE}: {Summary}
 
-- **What:** Renamed all `TEST_*.md` files to `HEALTH_*.md` across the repository. Updated `HEALTH_TEMPLATE.md` and refactored existing test documentation to match the new format. Updated `doctor` and `validate` commands to enforce the `HEALTH_` prefix and use the new template for drift detection.
-- **Why:** To align with the "Health" concept of monitoring real system state and verification mechanics rather than just static test cases.
-- **Impact:** All modules now use the `HEALTH` format for verification documentation. CLI tools now correctly identify and validate these files.
+- **What:** {description}
+- **Why:** {motivation}
+- **Impact:** {what this affects}
 
 ---
 

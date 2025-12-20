@@ -69,7 +69,7 @@ Write your plan in SYNC before starting.
 
 ---
 
-## BEFORE TESTING: DOC VERIFICATION
+## BEFORE VERIFICATION: DOC VERIFICATION
 
 **After implementing your extension, before running tests:**
 

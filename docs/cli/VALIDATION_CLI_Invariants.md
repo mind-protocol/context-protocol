@@ -162,7 +162,7 @@ SYMPTOM: Module manifest checks skipped/failed gracefully
 
 ---
 
-## TEST COVERAGE
+## HEALTH COVERAGE
 
 | Requirement | Test(s) | Status |
 |-------------|---------|--------|

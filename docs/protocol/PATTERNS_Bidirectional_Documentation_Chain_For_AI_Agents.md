@@ -115,6 +115,14 @@ Cross-cutting ideas get their own documentation:
 
 Agents working on any module can understand the concept.
 
+### 6. Human-Agent Feedback Loop
+
+The protocol provides explicit markers for agents to communicate with humans:
+- **Escalations** (`@ngram:escalation`): When an agent is blocked and needs a human decision.
+- **Propositions** (`@ngram:proposition`): When an agent suggests improvements or new ideas that require human approval.
+
+This ensures that human intuition and agent productivity remain aligned.
+
 ---
 
 ## DEPENDENCIES

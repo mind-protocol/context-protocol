@@ -11,9 +11,9 @@ STATUS: CANONICAL
 ## MATURITY
 
 **What's canonical (v1):**
-- 5 principles (architecture, verification, communication, quality, experience)
+- 6 principles (architecture, verification, communication, quality, experience, human-agent feedback loop)
 - 12 VIEWs covering full lifecycle
-- CLI with init, validate, prompt, context
+- CLI with init, validate, prompt, context, doctor, repair, solve-markers
 - Documentation process with maturity tracking
 - HEALTH template for verification mechanics (replaces TEST template usage going forward)
 
@@ -29,14 +29,15 @@ STATUS: CANONICAL
 
 ## CURRENT STATE
 
-Protocol V1 complete and in use. Dogfooding on itself + Blood Ledger.
+Protocol V1.1 complete. Now includes formal markers for human-agent collaboration.
 
 **What exists:**
 - PROTOCOL.md — navigation (what to load, where to update, how to structure docs)
-- PRINCIPLES.md — stance (5 principles: architecture, verification, communication, quality, experience)
+- PRINCIPLES.md — stance (6 principles: architecture, verification, communication, quality, experience, feedback loop)
 - 12 VIEWs covering product development lifecycle (includes VIEW_Escalation_How_To_Handle_Vague_Tasks_Missing_Information_And_Complex_Non-Obvious_Problems.md + LEARNINGS)
+- Special Markers: `@ngram:escalation` (blockers) and `@ngram:proposition` (ideas)
 - 10 templates for documentation (including HEALTH)
-- CLI package with `init`, `validate`, `prompt`, and `context` commands
+- CLI package with `init`, `validate`, `prompt`, `context`, `doctor`, `repair`, and `solve-markers` commands
 - CLAUDE_ADDITION.md with motivation, principles summary, and lifecycle-ordered VIEWs
 - Maturity tracking in SYNC (CANONICAL, DESIGNING, PROPOSED, DEPRECATED)
 - Documentation process guidance (top-down/bottom-up, pruning cycle)

@@ -154,7 +154,7 @@ SYMPTOM: No orphan processes after exit
 
 ---
 
-## TEST COVERAGE
+## HEALTH COVERAGE
 
 | Requirement | Test(s) | Status |
 |-------------|---------|--------|

@@ -276,7 +276,7 @@ def check_no_docs_ref(project: ProjectStructure, config: DoctorConfig) -> List[I
 ```python
 def check_incomplete_chain(project: ProjectStructure, config: DoctorConfig) -> List[Issue]:
     issues = []
-    required_types = ["PATTERNS", "BEHAVIORS", "ALGORITHM", "VALIDATION", "TEST", "SYNC"]
+    required_types = ["PATTERNS", "BEHAVIORS", "ALGORITHM", "VALIDATION", "IMPLEMENTATION", "HEALTH", "SYNC"]
 
     for doc_dir in find_module_doc_dirs(project):
         present = set()

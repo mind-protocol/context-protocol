@@ -59,7 +59,7 @@ Your implementation should reflect the PATTERNS. If you find yourself fighting t
 
 ---
 
-## BEFORE TESTING: DOC VERIFICATION
+## BEFORE VERIFICATION: DOC VERIFICATION
 
 **After implementing, before running tests, verify against docs:**
 

@@ -1,21 +1,21 @@
 # Repository Map: ngram
 
-*Generated: 2025-12-20 01:30*
+*Generated: 2025-12-20 01:40*
 
-- **Files:** 98
+- **Files:** 99
 - **Directories:** 25
-- **Total Size:** 793.6K
-- **Doc Files:** 72
+- **Total Size:** 844.9K
+- **Doc Files:** 73
 - **Code Files:** 22
 - **Areas:** 4 (docs/ subfolders)
 - **Modules:** 6 (subfolders in areas)
 - **DOCS Links:** 21 (0.95 avg per code file)
 
-- markdown: 72
+- markdown: 73
 - python: 22
 
 ```
-├── docs/ (218.8K)
+├── docs/ (270.1K)
 │   ├── cli/ (53.1K)
 │   │   ├── ALGORITHM_CLI_Logic.md (8.7K)
 │   │   ├── BEHAVIORS_CLI_Command_Effects.md (4.8K)
@@ -33,17 +33,17 @@
 │   │   ├── PATTERNS_Provider_Specific_LLM_Subprocesses.md (3.7K)
 │   │   ├── SYNC_LLM_Agents_State.md (6.4K)
 │   │   └── VALIDATION_Gemini_Agent_Invariants.md (2.1K)
-│   ├── protocol/ (90.0K)
+│   ├── protocol/ (91.9K)
 │   │   ├── ALGORITHM/ (2.5K)
 │   │   │   └── ALGORITHM_Overview.md (2.5K)
 │   │   ├── IMPLEMENTATION/ (5.4K)
 │   │   │   └── IMPLEMENTATION_Overview.md (5.4K)
 │   │   ├── archive/ (839)
 │   │   │   └── SYNC_archive_2024-12.md (839)
-│   │   ├── features/ (53.1K)
-│   │   │   ├── doctor/ (43.7K)
-│   │   │   │   ├── ALGORITHM_Project_Health_Doctor.md (17.0K)
-│   │   │   │   ├── BEHAVIORS_Project_Health_Doctor.md (8.0K)
+│   │   ├── features/ (53.8K)
+│   │   │   ├── doctor/ (44.5K)
+│   │   │   │   ├── ALGORITHM_Project_Health_Doctor.md (17.1K)
+│   │   │   │   ├── BEHAVIORS_Project_Health_Doctor.md (8.7K)
 │   │   │   │   ├── HEALTH_Project_Health_Doctor.md (5.0K)
 │   │   │   │   ├── PATTERNS_Project_Health_Doctor.md (4.0K)
 │   │   │   │   ├── SYNC_Project_Health_Doctor.md (4.6K)
@@ -52,26 +52,27 @@
 │   │   │   ├── PATTERNS_Agent_Trace_Logging.md (3.6K)
 │   │   │   └── SYNC_Agent_Trace_Logging.md (2.0K)
 │   │   ├── ALGORITHM_Overview.md (554)
-│   │   ├── BEHAVIORS_Observable_Protocol_Effects.md (5.9K)
+│   │   ├── BEHAVIORS_Observable_Protocol_Effects.md (6.4K)
 │   │   ├── HEALTH_Protocol_Verification.md (5.0K)
 │   │   ├── IMPLEMENTATION_Overview.md (726)
-│   │   ├── PATTERNS_Bidirectional_Documentation_Chain_For_AI_Agents.md (4.4K)
-│   │   ├── SYNC_Protocol_Current_State.md (6.0K)
+│   │   ├── PATTERNS_Bidirectional_Documentation_Chain_For_AI_Agents.md (4.8K)
+│   │   ├── SYNC_Protocol_Current_State.md (6.2K)
 │   │   └── VALIDATION_Protocol_Invariants.md (5.7K)
-│   └── tui/ (52.1K)
-│       ├── IMPLEMENTATION_TUI_Code_Architecture/ (9.3K)
-│       │   └── IMPLEMENTATION_TUI_Code_Architecture_Structure.md (9.3K)
-│       ├── archive/ (4.1K)
-│       │   ├── IMPLEMENTATION_archive_2024-12.md (2.5K)
-│       │   └── SYNC_archive_2024-12.md (1.7K)
-│       ├── ALGORITHM_TUI_Flow.md (6.2K)
-│       ├── BEHAVIORS_TUI_Interactions.md (6.6K)
-│       ├── HEALTH_TUI_Coverage.md (6.1K)
-│       ├── IMPLEMENTATION_TUI_Code_Architecture.md (2.0K)
-│       ├── PATTERNS_TUI_Design.md (4.5K)
-│       ├── SYNC_TUI_State.md (5.1K)
-│       ├── SYNC_TUI_State_archive_2025-12.md (3.6K)
-│       └── VALIDATION_TUI_Invariants.md (4.7K)
+│   ├── tui/ (52.1K)
+│   │   ├── IMPLEMENTATION_TUI_Code_Architecture/ (9.3K)
+│   │   │   └── IMPLEMENTATION_TUI_Code_Architecture_Structure.md (9.3K)
+│   │   ├── archive/ (4.1K)
+│   │   │   ├── IMPLEMENTATION_archive_2024-12.md (2.5K)
+│   │   │   └── SYNC_archive_2024-12.md (1.7K)
+│   │   ├── ALGORITHM_TUI_Flow.md (6.2K)
+│   │   ├── BEHAVIORS_TUI_Interactions.md (6.6K)
+│   │   ├── HEALTH_TUI_Coverage.md (6.1K)
+│   │   ├── IMPLEMENTATION_TUI_Code_Architecture.md (2.0K)
+│   │   ├── PATTERNS_TUI_Design.md (4.5K)
+│   │   ├── SYNC_TUI_State.md (5.1K)
+│   │   ├── SYNC_TUI_State_archive_2025-12.md (3.6K)
+│   │   └── VALIDATION_TUI_Invariants.md (4.7K)
+│   └── map.md (49.4K)
 ├── ngram/ (607.0K)
 │   ├── llms/ (10.7K)
 │   │   └── gemini_agent.py (10.7K) →
@@ -104,8 +105,8 @@
 │   ├── repo_overview.py (26.4K) →
 │   ├── validate.py (28.3K) →
 │   └── (..21 more files)
-├── templates/ (131.2K)
-│   ├── ngram/ (125.4K)
+├── templates/ (131.1K)
+│   ├── ngram/ (125.3K)
 │   │   ├── agents/ (2.8K)
 │   │   │   └── manager/ (2.8K)
 │   │   │       └── CLAUDE.md (2.8K)
@@ -317,7 +318,7 @@
 - ## INVARIANTS
 - ## PROPERTIES
 - ## ERROR CONDITIONS
-- ## TEST COVERAGE
+- ## HEALTH COVERAGE
 - ## VERIFICATION PROCEDURE
 - # Run CLI commands manually for now
 - # No automated test suite yet
@@ -504,6 +505,7 @@
 - # Filter by severity
 - # Specific checks
 - ## HEALTH CHECKS
+- ## SPECIAL MARKERS
 - ## OUTPUT BEHAVIOR
 - ## Critical (2 issues)
 - ## Warnings (3 issues)
@@ -715,7 +717,7 @@
 - ## INVARIANTS
 - ## PROPERTIES
 - ## ERROR CONDITIONS
-- ## TEST COVERAGE
+- ## HEALTH COVERAGE
 - ## VERIFICATION PROCEDURE
 - # Check all invariants
 - # Check specific invariant
@@ -911,12 +913,138 @@
 - ## INVARIANTS
 - ## PROPERTIES
 - ## ERROR CONDITIONS
-- ## TEST COVERAGE
+- ## HEALTH COVERAGE
 - ## VERIFICATION PROCEDURE
 - # Once tests exist:
 - # With coverage:
 - ## SYNC STATUS
 - ## GAPS / IDEAS / QUESTIONS
+
+**Code refs:**
+- `agent_cli.py`
+- `app.py`
+- `commands.py`
+- `context.py`
+- `doctor.py`
+- `doctor_checks.py`
+- `doctor_files.py`
+- `doctor_report.py`
+- `file_utils.py`
+- `gemini_agent.py`
+- `github.py`
+- `init_cmd.py`
+- `manager.py`
+- `ngram.py`
+- `ngram/agent_cli.py`
+- `ngram/cli.py`
+- `ngram/context.py`
+- `ngram/doctor.py`
+- `ngram/doctor_checks.py`
+- `ngram/doctor_checks_content.py`
+- `ngram/doctor_checks_docs.py`
+- `ngram/doctor_checks_quality.py`
+- `ngram/doctor_checks_sync.py`
+- `ngram/doctor_files.py`
+- `ngram/doctor_report.py`
+- `ngram/doctor_types.py`
+- `ngram/github.py`
+- `ngram/init_cmd.py`
+- `ngram/llms/gemini_agent.py`
+- `ngram/project_map.py`
+- `ngram/project_map_html.py`
+- `ngram/prompt.py`
+- `ngram/repair.py`
+- `ngram/repair_core.py`
+- `ngram/repair_escalation_interactive.py`
+- `ngram/repair_instructions.py`
+- `ngram/repair_instructions_docs.py`
+- `ngram/repair_report.py`
+- `ngram/repo_overview.py`
+- `ngram/repo_overview_formatters.py`
+- `ngram/solve_escalations.py`
+- `ngram/sync.py`
+- `ngram/tui/app.py`
+- `ngram/tui/commands.py`
+- `ngram/tui/commands_agent.py`
+- `ngram/tui/manager.py`
+- `ngram/tui/state.py`
+- `ngram/tui/widgets/agent_container.py`
+- `ngram/tui/widgets/agent_panel.py`
+- `ngram/tui/widgets/input_bar.py`
+- `ngram/tui/widgets/manager_panel.py`
+- `ngram/tui/widgets/status_bar.py`
+- `ngram/tui/widgets/suggestions.py`
+- `ngram/utils.py`
+- `ngram/utils/file_utils.py`
+- `ngram/utils/string_utils.py`
+- `ngram/utils/validation_utils.py`
+- `ngram/validate.py`
+- `project_map.py`
+- `project_map_html.py`
+- `prompt.py`
+- `repair.py`
+- `repair_core.py`
+- `repo_overview.py`
+- `scripts/check_chain_links.py`
+- `scripts/check_doc_completeness.py`
+- `scripts/check_doc_refs.py`
+- `scripts/check_orphans.py`
+- `src/analytics/batch_ingest.py`
+- `src/analytics/storage/event_store.py`
+- `src/analytics/stream_ingest.py`
+- `src/analytics/validation/schema_rules.py`
+- `src/dashboard/op_metrics.py`
+- `src/dashboard/product_metrics.py`
+- `state.py`
+- `string_utils.py`
+- `sync.py`
+- `utils.py`
+- `validate.py`
+
+**Doc refs:**
+- `archive/SYNC_archive_2024-12.md`
+- `docs/cli/ALGORITHM_CLI_Logic.md`
+- `docs/cli/HEALTH_CLI_Coverage.md`
+- `docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md`
+- `docs/cli/PATTERNS_Why_CLI_Over_Copy.md`
+- `docs/cli/SYNC_CLI_State.md`
+- `docs/cli/VALIDATION_CLI_Invariants.md`
+- `docs/llm_agents/ALGORITHM_Gemini_Stream_Flow.md`
+- `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md`
+- `docs/llm_agents/HEALTH_LLM_Agent_Coverage.md`
+- `docs/llm_agents/IMPLEMENTATION_LLM_Agent_Code_Architecture.md`
+- `docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md`
+- `docs/llm_agents/SYNC_LLM_Agents_State.md`
+- `docs/llm_agents/VALIDATION_Gemini_Agent_Invariants.md`
+- `docs/protocol/IMPLEMENTATION/IMPLEMENTATION_File_Structure.md`
+- `docs/protocol/IMPLEMENTATION/IMPLEMENTATION_Overview.md`
+- `docs/tui/BEHAVIORS_TUI_Interactions.md`
+- `docs/tui/HEALTH_TUI_Coverage.md`
+- `docs/tui/IMPLEMENTATION_TUI_Code_Architecture.md`
+- `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/IMPLEMENTATION_TUI_Code_Architecture_Structure.md`
+- `docs/tui/PATTERNS_TUI_Design.md`
+- `docs/tui/SYNC_TUI_State.md`
+- `docs/tui/archive/SYNC_archive_2024-12.md`
+- `templates/CLAUDE_ADDITION.md`
+- `templates/CODEX_SYSTEM_PROMPT_ADDITION.md`
+- `templates/ngram/PRINCIPLES.md`
+- `templates/ngram/PROTOCOL.md`
+- `templates/ngram/agents/manager/CLAUDE.md`
+- `views/VIEW_Analyze_Structural_Analysis.md`
+- `views/VIEW_Collaborate_Pair_Program_With_Human.md`
+- `views/VIEW_Debug_Investigate_And_Fix_Issues.md`
+- `views/VIEW_Document_Create_Module_Documentation.md`
+- `views/VIEW_Extend_Add_Features_To_Existing.md`
+- `views/VIEW_Health_Define_Health_Checks_And_Verify.md`
+- `views/VIEW_Implement_Write_Or_Modify_Code.md`
+- `views/VIEW_Ingest_Process_Raw_Data_Sources.md`
+- `views/VIEW_Onboard_Understand_Existing_Codebase.md`
+- `views/VIEW_Refactor_Improve_Code_Structure.md`
+- `views/VIEW_Review_Evaluate_Changes.md`
+- `views/VIEW_Specify_Design_Vision_And_Architecture.md`
+
+**Sections:**
+- # Repository Map: ngram
 
 **Docs:** `docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md`
 
@@ -1473,7 +1601,7 @@
 - ## INVARIANTS
 - ## PROPERTIES
 - ## ERROR CONDITIONS
-- ## TEST COVERAGE
+- ## HEALTH COVERAGE
 - ## VERIFICATION PROCEDURE
 - # Run tests
 - # Run with coverage
@@ -1550,7 +1678,7 @@
 - ## CONTEXT TO LOAD
 - ## PLANNING
 - ## THE WORK
-- ## BEFORE TESTING: DOC VERIFICATION
+- ## BEFORE VERIFICATION: DOC VERIFICATION
 - ## AFTER EXTENDING
 - # modules.yaml (project root)
 - ## HANDOFFS
@@ -1576,7 +1704,7 @@
 - ## WHY THIS VIEW EXISTS
 - ## CONTEXT TO LOAD
 - ## THE WORK
-- ## BEFORE TESTING: DOC VERIFICATION
+- ## BEFORE VERIFICATION: DOC VERIFICATION
 - ## AFTER IMPLEMENTATION
 - # modules.yaml (project root)
 - # ... other fields as relevant

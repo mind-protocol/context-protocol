@@ -102,13 +102,23 @@ AND:    The description part of the name is specific
 
 ### B8: Cross-Cutting Concepts Are Discoverable
 
-```
 GIVEN:  An agent encounters a concept that spans modules
 WHEN:   The agent needs to understand the concept
 THEN:   docs/concepts/{concept}/ exists
 AND:    CONCEPT_*.md explains what it means
 AND:    TOUCHES_*.md shows where it appears in code
-```
+
+### B9: Agents Communicate Blockers and Ideas
+
+GIVEN:  An agent is blocked by a vague requirement
+WHEN:   The agent cannot proceed safely
+THEN:   The agent adds an `@ngram:escalation` marker
+AND:    The agent describes the conflict/question in YAML format
+
+GIVEN:  An agent identifies a potential improvement or new feature
+WHEN:   The agent wants to suggest it without implementing it yet
+THEN:   The agent adds an `@ngram:proposition` marker
+AND:    The agent describes the idea and its implications in YAML format
 
 ---
 

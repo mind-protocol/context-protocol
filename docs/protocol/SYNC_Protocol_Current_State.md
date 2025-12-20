@@ -1,8 +1,8 @@
 # ngram Framework — Sync: Current State
 
 ```
-LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (escalate view)
+LAST_UPDATED: 2025-12-20
+UPDATED_BY: codex (specify view)
 STATUS: CANONICAL
 ```
 
@@ -35,7 +35,7 @@ Protocol V1.1 complete. Now includes formal markers for human-agent collaboratio
 - PROTOCOL.md — navigation (what to load, where to update, how to structure docs)
 - PRINCIPLES.md — stance (6 principles: architecture, verification, communication, quality, experience, feedback loop)
 - 12 VIEWs covering product development lifecycle (includes VIEW_Escalation_How_To_Handle_Vague_Tasks_Missing_Information_And_Complex_Non-Obvious_Problems.md + LEARNINGS)
-- Special Markers: `@ngram:escalation` (blockers) and `@ngram:proposition` (ideas)
+- Special Markers: `@ngram&#58;escalation` (blockers) and `@ngram&#58;proposition` (ideas)
 - 10 templates for documentation (including HEALTH)
 - CLI package with `init`, `validate`, `prompt`, `context`, `doctor`, `repair`, and `solve-markers` commands
 - CLAUDE_ADDITION.md with motivation, principles summary, and lifecycle-ordered VIEWs
@@ -43,12 +43,17 @@ Protocol V1.1 complete. Now includes formal markers for human-agent collaboratio
 - Documentation process guidance (top-down/bottom-up, pruning cycle)
 - Full documentation chain for protocol module (PATTERNS, BEHAVIORS, ALGORITHM, VALIDATION, IMPLEMENTATION, TEST, SYNC)
 
+**Recent changes (2025-12-20):**
+- Escaped literal escalation/proposition markers in this SYNC to avoid the doctor interpreting explanatory text as unresolved markers.
+
 **Recent changes (2025-12-18):**
 - Added protocol implementation documentation and corrected doc-link resolution issues.
 
 **Recent changes (2025-12-19):**
+- Updated `ngram overview` to generate multiple maps by default: `map.md` in root, `docs/map.md` as backup, and `map_{folder}.md` for core directories (`src`, `app`, `backend`, etc).
+- Added `--folder` (or `-p`) option to `ngram overview` to target a specific directory.
+- Relocated primary repository map from `docs/map.md` to the project root (`map.md`) and updated TUI/documentation references.
 - Added **DATA** section to `PATTERNS_TEMPLATE.md` to allow modules to list their data sources (files, URLs, other).
-- Split ALGORITHM and IMPLEMENTATION docs into folders for size control and clearer navigation.
 - Compressed legacy sync details into archive notes for long-term reference.
 - Added root overview stubs so validation still sees full chain files.
 - Consolidated IMPLEMENTATION folder content into `IMPLEMENTATION/IMPLEMENTATION_Overview.md` to remove duplicate docs.
@@ -149,3 +154,15 @@ Older content archived to: `archive/SYNC_archive_2024-12.md`
 
 ### Propositions
 - Consider a short "Docs Index" note in `IMPLEMENTATION_Overview.md` if more splits happen.
+
+## GAPS
+
+- Completed: Reviewed `docs/protocol/BEHAVIORS_Observable_Protocol_Effects.md` escalation task.
+- Remaining: Resolve the escalation marker decision once human input is provided.
+- Blocker: No human decisions were supplied for this escalation item.
+- Completed: Reviewed `docs/protocol/PATTERNS_Bidirectional_Documentation_Chain_For_AI_Agents.md` escalation task.
+- Remaining: Resolve the escalation marker token decision in the protocol PATTERNS doc once human input is provided.
+- Blocker: No human decisions were supplied for this escalation item.
+- Completed: Reviewed escalation task targeting `docs/protocol/SYNC_Protocol_Current_State.md`.
+- Remaining: Apply conflict resolution once human decisions are provided for the SYNC escalation.
+- Blocker: Human decisions missing for the SYNC escalation task.

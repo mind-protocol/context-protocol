@@ -9,7 +9,7 @@ UPDATED_BY: codex (sync escalation markers)
 
 ## CURRENT STATE
 
-The CLI is in active use while fixes continue to land in the repair subsystem. A SyntaxError in `ngram/repair_core.py` was blocking `ngram --agents` from importing; the function was repaired and retry state initialized. Verification of the CLI run is still pending. Escaped escalation markers in `docs/cli/SYNC_CLI_Development_State.md` to avoid false positive escalation detection.
+The CLI is in active use while fixes continue to land in the repair subsystem. A SyntaxError in `ngram/repair_core.py` was blocking `ngram --agents` from importing; the function was repaired and retry state initialized. Verification of the CLI run is still pending. Escaped escalation markers in `docs/cli/SYNC_CLI_Development_State.md` to avoid false positive escalation detection. Documented the missing human decisions for the protocol SYNC escalation in `docs/protocol/SYNC_Protocol_Current_State.md`.
 
 ---
 
@@ -84,6 +84,9 @@ Confirm whether you want me to run `ngram --agents codex` now for verification.
 - Completed: Reviewed `docs/protocol/BEHAVIORS_Observable_Protocol_Effects.md` escalation task; no decisions were provided to implement.
 - Remaining: Resolve the protocol behaviors escalation once decisions are supplied and update the protocol SYNC accordingly.
 - Blocker: Human decisions missing for the escalation marker conflict.
+- Completed: Reviewed `docs/protocol/SYNC_Protocol_Current_State.md` escalation task; no decisions were provided to implement.
+- Remaining: Resolve the protocol SYNC escalation once decisions are supplied and update the protocol SYNC accordingly.
+- Blocker: Human decisions missing for the SYNC escalation task.
 
 ---
 

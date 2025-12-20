@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-20
-UPDATED_BY: codex (specify view)
+UPDATED_BY: codex (principles escalation)
 STATUS: CANONICAL
 ```
 
@@ -166,3 +166,6 @@ Older content archived to: `archive/SYNC_archive_2024-12.md`
 - Completed: Reviewed escalation task targeting `docs/protocol/SYNC_Protocol_Current_State.md`.
 - Remaining: Apply conflict resolution once human decisions are provided for the SYNC escalation.
 - Blocker: Human decisions missing for the SYNC escalation task.
+- Completed: Reviewed escalation task targeting `.ngram/PRINCIPLES.md`.
+- Remaining: Resolve the escalation marker decision once human input is provided.
+- Blocker: Human decisions missing for the PRINCIPLES escalation item.

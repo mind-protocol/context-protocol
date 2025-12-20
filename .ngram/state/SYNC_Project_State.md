@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-20
-UPDATED_BY: codex (doctor behaviors escalation)
+UPDATED_BY: codex (principles escalation)
 ```
 
 ---

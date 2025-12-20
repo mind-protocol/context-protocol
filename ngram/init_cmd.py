@@ -5,14 +5,30 @@ Initializes the ngram in a project directory by:
 - Copying protocol files to .ngram/
 - Creating/updating .ngram/CLAUDE.md and root AGENTS.md with protocol bootstrap (inlined content)
 """
-# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
+# DOCS: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md
 
 import shutil
 import os
+import stat
 from pathlib import Path
 
-from .utils import get_templates_path
+from .core_utils import get_templates_path
 from .repo_overview import generate_and_save
+
+
+def _escape_marker_tokens(content: str) -> str:
+    """Escape special markers so generated prompts don't trigger scanners."""
+    replacements = {
+        "@ngram:doctor:escalation": "@ngram&#58;doctor&#58;escalation",
+        "@ngram:escalation": "@ngram&#58;escalation",
+        "@ngram:doctor:proposition": "@ngram&#58;doctor&#58;proposition",
+        "@ngram:proposition": "@ngram&#58;proposition",
+        "@ngram:doctor:todo": "@ngram&#58;doctor&#58;todo",
+        "@ngram:todo": "@ngram&#58;todo",
+    }
+    for source, target in replacements.items():
+        content = content.replace(source, target)
+    return content
 
 
 def _build_claude_addition(templates_path: Path) -> str:
@@ -26,6 +42,9 @@ def _build_claude_addition(templates_path: Path) -> str:
 
     principles_content = principles_path.read_text() if principles_path.exists() else ""
     protocol_content = protocol_path.read_text() if protocol_path.exists() else ""
+
+    principles_content = _escape_marker_tokens(principles_content)
+    protocol_content = _escape_marker_tokens(protocol_content)
 
     return f"""# ngram
 
@@ -94,9 +113,9 @@ ngram overview          # Generate repo map with file tree, links, definitions
 - Section headers from markdown, function definitions from code
 - Local imports (stdlib/npm filtered out)
 - Module dependencies from modules.yaml
-- Output: `map.{{md|yaml|json}}`
+- Output: `map.{{md|yaml|json}}` in root, plus folder-specific maps (e.g., `map_src.md`)
 
-Options: `--dir PATH`, `--format {{md,yaml,json}}`
+Options: `--dir PATH`, `--format {{md,yaml,json}}`, `--folder NAME`
 """
 
 
@@ -119,6 +138,38 @@ def _build_manager_agents_addition(templates_path: Path) -> str:
     if codex_addition:
         return f"{manager_content}\n\n{codex_addition}"
     return manager_content
+
+
+def _remove_write_permissions(path: Path) -> None:
+    """Strip write bits so files/directories become read-only."""
+    if not path.exists():
+        return
+    try:
+        current_mode = path.stat().st_mode
+        readonly_mode = current_mode & ~(stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
+        path.chmod(readonly_mode)
+        print(f"  ✓ Read-only: {path}")
+    except PermissionError:
+        print(f"  ○ Skipped (permission): {path}")
+
+
+def _enforce_readonly_for_views(views_root: Path) -> None:
+    """Set view documents read-only unless they are learning artifacts."""
+    if not views_root.exists():
+        return
+    for view_file in views_root.rglob("*.md"):
+        if "LEARNING" in view_file.name.upper():
+            continue
+        _remove_write_permissions(view_file)
+
+
+def _enforce_readonly_for_templates(templates_root: Path) -> None:
+    """Set template tree to read-only so inlined source docs stay stable."""
+    if not templates_root.exists():
+        return
+    for child in templates_root.rglob("*"):
+        _remove_write_permissions(child)
+
 
 
 def init_protocol(target_dir: Path, force: bool = False) -> bool:
@@ -205,6 +256,15 @@ def init_protocol(target_dir: Path, force: bool = False) -> bool:
     else:
         shutil.copytree(protocol_source, protocol_dest)
         print(f"✓ Created: {protocol_dest}/")
+
+    # Remove doctor-ignore after copy (we want a clean, read-only protocol install)
+    doctor_ignore = protocol_dest / "doctor-ignore.yaml"
+    if doctor_ignore.exists():
+        try:
+            doctor_ignore.unlink()
+            print(f"○ Removed: {doctor_ignore}")
+        except PermissionError:
+            print(f"  ○ Skipped (permission): {doctor_ignore}")
 
     # Restore preserved LEARNINGS files
     if preserved_learnings:
@@ -307,6 +367,18 @@ def init_protocol(target_dir: Path, force: bool = False) -> bool:
         print(f"✓ Created: {output_path}")
     except Exception as e:
         print(f"○ Map generation skipped: {e}")
+
+    # Enforce read-only permissions for core protocol artifacts
+    read_only_targets = [
+        protocol_dest / "GEMINI.md",
+        protocol_dest / "PRINCIPLES.md",
+        protocol_dest / "PROTOCOL.md",
+        claude_md,
+    ]
+    for ro_path in read_only_targets:
+        _remove_write_permissions(ro_path)
+    _enforce_readonly_for_views(protocol_dest / "views")
+    _enforce_readonly_for_templates(protocol_dest / "templates")
 
     print()
     print("ngram initialized!")

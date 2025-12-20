@@ -25,6 +25,7 @@ def main():
     parser.add_argument("--output-format", default="stream-json", help="Output format (stream-json or text).")
     parser.add_argument("--allowed-tools", help="Comma-separated list of allowed tools.")
     parser.add_argument("--api-key", help="Gemini API key.")
+    parser.add_argument("--model-name", default=None, help="Override default Gemini model (e.g., gemini-3-flash-preview).")
 
     args = parser.parse_args()
 
@@ -187,7 +188,7 @@ def main():
     tool_map = {t.__name__: t for t in tools}
 
     # Model configuration
-    gemini_model = config.get("GEMINI_MODEL") or os.getenv("GEMINI_MODEL") or "gemini-3-flash-preview"
+    gemini_model = args.model_name or config.get("GEMINI_MODEL") or os.getenv("GEMINI_MODEL") or "gemini-3-flash-preview"
     
     history = []
     if args.system_prompt:

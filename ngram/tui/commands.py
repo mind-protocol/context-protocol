@@ -283,6 +283,7 @@ async def handle_repair(app: "NgramApp", args: str) -> None:
     try:
         loop = asyncio.get_event_loop()
         config = load_doctor_config(app.target_dir)
+        app._repair_doctor_config = config
         result = await loop.run_in_executor(
             None,
             lambda: run_doctor(app.target_dir, config)
@@ -353,7 +354,7 @@ async def handle_repair(app: "NgramApp", args: str) -> None:
     status_bar.set_repair_progress(len(all_issues), 0, running_count)
 
     for i, issue in enumerate(all_issues[:max_agents]):
-        await _spawn_agent(app, issue, i)
+        await _spawn_agent(app, issue, i, config)
 
     # Start periodic summary updater (lightweight, no streaming)
     asyncio.create_task(_periodic_agent_summary(app))
@@ -456,7 +457,7 @@ Format exactly: SYMBOL: summary"""
             response_widget.update("[dim]Summary unavailable[/]")
 
 
-async def _spawn_agent(app: "NgramApp", issue, agent_index: int) -> None:
+async def _spawn_agent(app: "NgramApp", issue, agent_index: int, config) -> None:
     """Spawn a single repair agent for an issue."""
     import asyncio
     import time
@@ -500,11 +501,11 @@ async def _spawn_agent(app: "NgramApp", issue, agent_index: int) -> None:
 
     # Spawn agent in background
     asyncio.create_task(
-        _run_agent(app, agent, issue, instructions, on_output, session_dir, folder_name)
+        _run_agent(app, agent, issue, instructions, on_output, config, session_dir, folder_name)
     )
 
 
-async def _run_agent(app: "NgramApp", agent, issue, instructions: dict, on_output, session_dir=None, folder_name=None) -> None:
+async def _run_agent(app: "NgramApp", agent, issue, instructions: dict, on_output, config, session_dir=None, folder_name=None) -> None:
     """Run a single repair agent."""
     import asyncio
     from ..repair_core import spawn_repair_agent_async
@@ -519,6 +520,7 @@ async def _run_agent(app: "NgramApp", agent, issue, instructions: dict, on_outpu
             target_dir=app.target_dir,
             on_output=on_output,
             instructions=instructions,
+            config=config,
             agent_id=agent.id,
             session_dir=session_dir,
             agent_symbol=folder_name,  # Now uses issue-based folder name
@@ -621,7 +623,12 @@ async def _spawn_next_from_queue(app: "NgramApp") -> None:
     status_bar.set_repair_progress(total, completed, running)
 
     # Spawn the new agent
-    await _spawn_agent(app, next_issue, agent_index)
+    config = getattr(app, "_repair_doctor_config", None)
+    if config is None:
+        from ..doctor_files import load_doctor_config
+        config = load_doctor_config(app.target_dir)
+        app._repair_doctor_config = config
+    await _spawn_agent(app, next_issue, agent_index, config)
 
 
 async def _manager_review_agent(app: "NgramApp", agent, result) -> None:

@@ -11,13 +11,13 @@ VERIFIED: Not yet — implementation pending
 ## CHAIN
 
 ```
-PATTERNS:        ./PATTERNS_TUI_Design.md
+PATTERNS:        ./PATTERNS_TUI_Modular_Interface_Design.md
 BEHAVIORS:       ./BEHAVIORS_TUI_Interactions.md
-ALGORITHM:       ./ALGORITHM_TUI_Flow.md
-THIS:            VALIDATION_TUI_Invariants.md (you are here)
+ALGORITHM:       ./ALGORITHM_TUI_Widget_Interaction_Flow.md
+THIS:            VALIDATION_TUI_User_Interface_Invariants.md
 IMPLEMENTATION:  ./IMPLEMENTATION_TUI_Code_Architecture.md
-HEALTH:          ./HEALTH_TUI_Coverage.md
-SYNC:            ./SYNC_TUI_State.md
+HEALTH:          ./HEALTH_TUI_Component_Test_Coverage.md
+SYNC:            ./SYNC_TUI_Development_Current_State.md
 ```
 
 ---

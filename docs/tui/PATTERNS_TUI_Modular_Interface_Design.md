@@ -12,13 +12,13 @@ UPDATED: 2025-12-19
 ## CHAIN
 
 ```
-THIS:            PATTERNS_TUI_Design.md (you are here)
+THIS:            PATTERNS_TUI_Modular_Interface_Design.md
 BEHAVIORS:       ./BEHAVIORS_TUI_Interactions.md
-ALGORITHM:       ./ALGORITHM_TUI_Flow.md
-VALIDATION:      ./VALIDATION_TUI_Invariants.md
+ALGORITHM:       ./ALGORITHM_TUI_Widget_Interaction_Flow.md
+VALIDATION:      ./VALIDATION_TUI_User_Interface_Invariants.md
 IMPLEMENTATION:  ./IMPLEMENTATION_TUI_Code_Architecture.md
-HEALTH:          ./HEALTH_TUI_Coverage.md
-SYNC:            ./SYNC_TUI_State.md
+HEALTH:          ./HEALTH_TUI_Component_Test_Coverage.md
+SYNC:            ./SYNC_TUI_Development_Current_State.md
 ```
 
 ---
@@ -134,6 +134,24 @@ This means:
 - **Web interface** — No browser version planned
 - **Remote sessions** — Single machine only
 - **Custom themes** — White theme only initially
+
+---
+
+## IMPLEMENTATION REFERENCES
+
+| File | Role |
+|------|------|
+| `ngram/tui/__init__.py` | Package initializer for the TUI bundle and CLI handoff. |
+| `ngram/tui/app.py` | Entry point that builds `NgramApp` and bridges to `ngram/cli.py`. |
+| `ngram/tui/app_core.py` | Hosts the `NgramApp` lifecycle, event loop, and widget composition. |
+| `ngram/tui/manager.py` | Coordinates manager/agent panels and background refresh scheduling. |
+
+```
+IMPL: ngram/tui/__init__.py
+IMPL: ngram/tui/app.py
+IMPL: ngram/tui/app_core.py
+IMPL: ngram/tui/manager.py
+```
 
 ---
 

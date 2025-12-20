@@ -124,6 +124,38 @@ Normalized JSON output (TUI)
 
 ---
 
+## DATA STRUCTURES
+
+- `HistoryEntry` objects capture the speaker (`user` or `assistant`) and message text, which the Gemini SDK turns into conversation history.
+- `StreamChunk` dicts include `type`, `message`, and optional `tool_call`/`tool_result` fields that the TUI consumes.
+- `ToolResult` dicts bundle `tool_code`, `args`, and output metadata to allow downstream listeners to replay actions.
+
+---
+
+## KEY DECISIONS
+
+- Keep the CLI thin: delegate credential loading to `dotenv` plus environmental fallback and default to `gemini-3-flash-preview`.
+- Always emit JSON stream chunks with a stable shape before running any tool handlers so the TUI never sees partial structures.
+- Route tool outputs through `tool_code`/`tool_result` pairs so the repair system can document agent effects.
+
+---
+
+## HELPER FUNCTIONS
+
+- `parse_args()` centralizes CLI parsing to keep `main()` simple.
+- `list_models()` is wrapped to log model availability while allowing the adapter to continue if the list call fails.
+- `normalize_chunk()` converts Gemini chunk objects into dicts with `type`, `message`, and `timestamp`.
+
+---
+
+## INTERACTIONS
+
+- Invoked by `ngram agent` or `ngram repair` when Gemini is the selected provider.
+- The TUI listens on the JSON stream (`assistant_chunks`) and renders every `type`/`content` field in agent panels.
+- Tool handlers post `tool_result` messages so the repair workflow can track side effects.
+
+---
+
 ## GAPS / IDEAS / QUESTIONS
 
 - [ ] Add model selection via CLI argument.

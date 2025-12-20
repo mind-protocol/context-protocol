@@ -58,6 +58,9 @@ poetry.lock
 __snapshots__/
 *.snap
 
+# Protocol installation
+.ngram/
+
 # Logs
 logs/
 *.log

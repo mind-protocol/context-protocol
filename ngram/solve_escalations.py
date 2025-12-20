@@ -1,4 +1,4 @@
-# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
+# DOCS: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md
 """
 Scan the repo for escalation markers and report them.
 """
@@ -17,9 +17,15 @@ PROPOSITION_TAGS = (
     "@ngram:doctor:proposition",
     "@ngram:proposition",
 )
+
+TODO_TAGS = (
+    "@ngram:doctor:todo",
+    "@ngram:todo",
+)
 IGNORED_FILES = {
     "ngram/solve_escalations.py",
-    "docs/cli/ALGORITHM_CLI_Logic.md",
+    "ngram/init_cmd.py",
+    "docs/cli/core/ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md",
 }
 
 
@@ -68,7 +74,7 @@ def _find_markers_in_files(target_dir: Path, marker_tags: Tuple[str, ...], issue
             continue
 
         # Higher priority for explicit @ngram:doctor tags
-        doc_priority = 0 if any(f"@ngram:doctor:{issue_type.lower()}" in content for issue_type in marker_tags) else 1
+        doc_priority = 0 if any(tag.startswith("@ngram:doctor:") and tag in content for tag in marker_tags) else 1
         occurrences = sum(content.count(tag) for tag in marker_tags)
         matches.append((doc_priority, -occurrences, rel_path, issue_type))
 
@@ -80,8 +86,9 @@ def solve_special_markers_command(target_dir: Path) -> int:
     """CLI entrypoint for `ngram solve-markers` to find and report special markers."""
     escalation_matches = _find_markers_in_files(target_dir, ESCALATION_TAGS, "ESCALATION")
     proposition_matches = _find_markers_in_files(target_dir, PROPOSITION_TAGS, "PROPOSITION")
+    todo_matches = _find_markers_in_files(target_dir, TODO_TAGS, "TODO")
 
-    all_matches = sorted(escalation_matches + proposition_matches)
+    all_matches = sorted(escalation_matches + proposition_matches + todo_matches)
 
     if not all_matches:
         print("No special markers found.")
@@ -91,6 +98,6 @@ def solve_special_markers_command(target_dir: Path) -> int:
     for idx, (doc_prio, occ, path, issue_type) in enumerate(all_matches, 1):
         print(f"  {idx}. [{issue_type}] {path}")
 
-    print("\nPlease review these markers and provide decisions or consider implementing propositions.")
+    print("\nPlease review these markers and provide decisions, implement todos, or consider propositions.")
     print("After resolving, fill the `response` field in the existing escalation/proposition YAML.")
     return 0

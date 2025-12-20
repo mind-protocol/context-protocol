@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Optional
 
 from .project_map import analyze_modules, topological_layers
-from .utils import HAS_YAML
+from .core_utils import HAS_YAML
 
 if HAS_YAML:
     import yaml

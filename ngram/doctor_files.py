@@ -12,7 +12,7 @@ Contains:
 - count_lines: Count non-empty lines in a file
 - find_long_sections: Find long functions/classes in a file
 """
-# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
+# DOCS: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md
 
 import fnmatch
 import re

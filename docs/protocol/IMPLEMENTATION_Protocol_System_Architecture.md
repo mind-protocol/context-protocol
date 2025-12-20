@@ -12,9 +12,10 @@ CREATED: 2025-12-18
 ```
 PATTERNS:        ./PATTERNS_Bidirectional_Documentation_Chain_For_AI_Agents.md
 BEHAVIORS:       ./BEHAVIORS_Observable_Protocol_Effects.md
-ALGORITHM:       ./ALGORITHM_Overview.md
+ALGORITHM:       ./ALGORITHM_Protocol_Core_Mechanics.md
 VALIDATION:      ./VALIDATION_Protocol_Invariants.md
-HEALTH:          ./HEALTH_Protocol_Verification.md
+THIS:            IMPLEMENTATION_Protocol_System_Architecture.md
+TEST:            ./TEST_Protocol_Test_Cases.md
 SYNC:            ./SYNC_Protocol_Current_State.md
 ```
 
@@ -22,5 +23,5 @@ SYNC:            ./SYNC_Protocol_Current_State.md
 
 ## ENTRY POINT
 
-Detailed implementation docs live in `docs/protocol/IMPLEMENTATION/`. The overview below consolidates the previously split implementation notes (schemas/config, file structure, and flows/links).
-- `docs/protocol/IMPLEMENTATION/IMPLEMENTATION_Overview.md`
+Detailed workflows are in `docs/protocol/ALGORITHM/ALGORITHM_Protocol_Process_Flow.md`:
+- `docs/protocol/ALGORITHM/ALGORITHM_Protocol_Process_Flow.md`

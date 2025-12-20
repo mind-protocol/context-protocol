@@ -30,6 +30,7 @@ def build_agent_command(
     add_dir: Optional[Path] = None,
     allowed_tools: Optional[str] = None,
     use_dangerous: bool = True,
+    model_name: Optional[str] = None, # New: Optional model name for Gemini
 ) -> AgentCommand:
     agent = normalize_agent(agent)
     if agent == "gemini":
@@ -44,6 +45,9 @@ def build_agent_command(
         
         if allowed_tools:
             cmd.extend(["--allowed-tools", allowed_tools])
+        
+        if model_name: # Pass model name if specified
+            cmd.extend(["--model-name", model_name])
         
         return AgentCommand(cmd=cmd)
     if agent == "claude":

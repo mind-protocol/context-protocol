@@ -107,6 +107,12 @@ status:
 
 ---
 
+## HOW TO USE THIS TEMPLATE
+
+- Start by documenting the flow you intend to monitor (transport, auth, output).
+- Describe the invariant you are guarding, the docking points you observe, and how often the signal should be sampled.
+- Populate the indicator, status, and gap fields with precise expectations so doctor can validate the template.
+
 ## CHECKER INDEX
 
 ```yaml

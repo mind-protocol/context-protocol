@@ -1,4 +1,4 @@
-# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
+# DOCS: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md
 """
 Sync management for ngram CLI.
 
@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List, Dict, Optional, Tuple
 
-from .utils import HAS_YAML
+from .core_utils import HAS_YAML
 
 if HAS_YAML:
     import yaml

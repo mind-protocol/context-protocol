@@ -7,7 +7,7 @@ This module contains:
 - Pure functions for building prompts and parsing output
 - Async agent spawning for TUI integration
 
-DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
+DOCS: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md
 """
 
 import asyncio

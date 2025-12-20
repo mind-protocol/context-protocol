@@ -44,6 +44,42 @@ ngram/tui/styles/theme.tcss # Theme
 
 ---
 
+## COMPONENT REFERENCES
+
+- `ngram/tui/__init__.py` — Package initializer for the TUI bundle.
+- `ngram/tui/app.py` — Entry point invoked by `ngram/cli`.
+- `ngram/tui/app_core.py` — Hosts `NgramApp` and the widget lifecycle.
+- `ngram/tui/app_manager.py` — Manages startup sequences and event loops.
+- `ngram/tui/commands.py` — Slash command routing for textual commands.
+- `ngram/tui/commands_agent.py` — Spawns agent subprocesses and handles their I/O.
+- `ngram/tui/manager.py` — Coordinates multi-agent panels and refresh cycles.
+- `ngram/tui/state.py` — Shared session state for the UI.
+- `ngram/tui/widgets/__init__.py` — Widget exports.
+- `ngram/tui/widgets/agent_container.py` — Hosts agent cards.
+- `ngram/tui/widgets/agent_panel.py` — Displays individual agent outputs.
+- `ngram/tui/widgets/manager_panel.py` — Controls manager interactions.
+- `ngram/tui/widgets/status_bar.py` — Renders connection and health indicators.
+- `ngram/tui/widgets/suggestions.py` — Shows suggestion chips and hints.
+
+```
+IMPL: ngram/tui/__init__.py
+IMPL: ngram/tui/app.py
+IMPL: ngram/tui/app_core.py
+IMPL: ngram/tui/app_manager.py
+IMPL: ngram/tui/commands.py
+IMPL: ngram/tui/commands_agent.py
+IMPL: ngram/tui/manager.py
+IMPL: ngram/tui/state.py
+IMPL: ngram/tui/widgets/__init__.py
+IMPL: ngram/tui/widgets/agent_container.py
+IMPL: ngram/tui/widgets/agent_panel.py
+IMPL: ngram/tui/widgets/manager_panel.py
+IMPL: ngram/tui/widgets/status_bar.py
+IMPL: ngram/tui/widgets/suggestions.py
+```
+
+---
+
 ## ENTRY POINTS
 
 | Entry Point | File:Line | Triggered By |

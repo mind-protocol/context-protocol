@@ -8,7 +8,7 @@ Health checks that analyze documentation quality:
 - Large doc modules
 - Incomplete doc chains
 
-DOCS: docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md
+DOCS: docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md
 """
 
 import re
@@ -16,7 +16,7 @@ from datetime import date
 from pathlib import Path
 from typing import List
 
-from .utils import find_module_directories
+from .core_utils import find_module_directories
 from .doctor_types import DoctorIssue, DoctorConfig
 from .doctor_files import should_ignore_path, parse_doctor_doc_tags
 
@@ -479,9 +479,18 @@ def doctor_check_nonstandard_doc_type(target_dir: Path, config: DoctorConfig) ->
         return []
 
     issues = []
+    # Standard exceptions
+    EXCEPTIONS = {
+        "map.md", "CLAUDE.md", "AGENTS.md", "GEMINI.md", 
+        "README.md", "CONTRIBUTING.md", "LICENSE",
+        "SYNC_Project_Repository_Map.md", "gitignore", "ngramignore"
+    }
 
     for doc_path in _iter_doc_files(target_dir, config):
         if doc_path.name.startswith(STANDARD_DOC_PREFIXES):
+            continue
+            
+        if doc_path.name in EXCEPTIONS or doc_path.name.startswith("."):
             continue
 
         if _doc_tag_allows_suppression(doc_path, "NON_STANDARD_DOC_TYPE", {"postponed", "exception"}):

@@ -175,7 +175,8 @@ Agents must not guess when requirements are vague or designs are ambiguous. Sile
 **Use markers to bridge the gap.**
 
 - **Escalations** (`@ngram&#58;escalation`): Use when progress is blocked by a missing decision. Provide context, options, and recommendations.
-- **Propositions** (`@ngram:proposition`): Use to suggest improvements, refactors, or new features. Explain why the idea matters and its implications.
+- **Propositions** (`@ngram&#58;proposition`): Use to suggest improvements, refactors, or new features. Explain why the idea matters and its implications.
+- **Todos** (`@ngram&#58;todo`): Use to capture actionable tasks surfaced by agents or managers (especially during reviews).
 
 **Keep humans in the loop.**
 
@@ -528,6 +529,25 @@ The protocol includes a refocus practice:
 **The question to ask:** "If we shipped today, what actually matters?"
 
 Everything else is v2 (or noise).
+
+---
+
+## NAMING ENGINEERING PRINCIPLES
+
+Code and documentation files are written for agents first, so their naming must make focus and responsibility explicit.
+Follow the language's default casing (`snake_case.py` for Python) but use the name itself to point at the entity, the processing responsibility,
+and the pattern. Include the work being done ("parser", "runner", "validator") or use a verb phrase, for example `prompt_quality_validator`,
+so the agent understands focus immediately.
+
+- When a file embodies multiple responsibilities, list them explicitly in the name (e.g., `doctor_cli_parser_and_run_checker.py`).
+  The split should be obvious before the file is opened, signalling whether splitting or rerouting is needed.
+- Hint at the processing style instead of being vague (e.g., `semantic_proximity_based_character_node_selector.py`)
+  so agents understand both what and how without needing extra context.
+- Keep filenames long—25 to 75 characters—longer than typical human-led repos, to make responsibility boundaries explicit at
+  a glance and help agents locate the right file with minimal digging.
+
+This naming approach reduces ambiguity, surfaces when refactors are necessary, and lets agents land on the correct implementation faster with less state.
+
 
 ---
 

@@ -128,6 +128,14 @@ checkers:
     purpose: Specifically verifies that all files listed in CHAIN headers exist.
     status: active
     priority: high
+  - name: doc_link_integrity_checker
+    purpose: Ensures every implementation file (e.g., `ngram/prompt.py`) points to the correct doc chain and vice versa (`docs/cli/prompt/*`). Now enforced by `ngram doctor`.
+    status: active
+    priority: med
+  - name: code_doc_delta_coupling
+    purpose: Flags implementation changes without matching doc chain or SYNC updates (critical for modules like `prompt` with explicit health indicators). Now enforced by `ngram doctor`.
+    status: active
+    priority: high
 ```
 
 ---

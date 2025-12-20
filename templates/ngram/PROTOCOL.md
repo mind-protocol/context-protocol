@@ -317,6 +317,25 @@ Everything else is v2 (or noise).
 
 ---
 
+## NAMING ENGINEERING PRINCIPLES
+
+Code and documentation files are written for agents first, so their naming must make focus and responsibility explicit.
+Follow the language's default casing (`snake_case.py` for Python) but use the name itself to point at the entity, the processing responsibility,
+and the pattern. Include the work being done ("parser", "runner", "validator") or use a verb phrase, for example `prompt_quality_validator`,
+so the agent understands focus immediately.
+
+- When a file embodies multiple responsibilities, list them explicitly in the name (e.g., `doctor_cli_parser_and_run_checker.py`).
+  The split should be obvious before the file is opened, signalling whether splitting or rerouting is needed.
+- Hint at the processing style instead of being vague (e.g., `semantic_proximity_based_character_node_selector.py`)
+  so agents understand both what and how without needing extra context.
+- Keep filenames long—25 to 75 characters—longer than typical human-led repos, to make responsibility boundaries explicit at
+  a glance and help agents locate the right file with minimal digging.
+
+This naming approach reduces ambiguity, surfaces when refactors are necessary, and lets agents land on the correct implementation faster with less state.
+
+
+---
+
 ## THE PROTOCOL IS A TOOL
 
 You're intelligent. You understand context and nuance. 

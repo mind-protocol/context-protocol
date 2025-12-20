@@ -61,63 +61,55 @@ modules:
 #   notes: |
 #     Core type definitions. Changes affect entire codebase.
 
-# Add more modules as they emerge...
-  cli:
-    code: "ngram/"
-    docs: "docs/cli/"
+  # Add more modules as they emerge...
+
+  prompt:
+    code: "ngram/prompt.py"
+    docs: "docs/cli/prompt/"
+    maturity: DESIGNING
+    owner: agent
+    entry_points:
+      - "ngram/prompt.py"
+    depends_on:
+      - cli_core
+    patterns:
+      - "Bootstrap prompt anchors agents to PROTOCOL + PRINCIPLES before working"
+      - "Work mode guidance + VIEW table keep agents from default behavior"
+    notes: |
+      Provides the `ngram prompt` command that bootstraps LLMs with canonical docs,
+      VIEW choices, and verification reminders. Module is intentionally simple, but
+      must stay in sync with the broader CLI doc chain.
+
+  cli_core:
+    code: "ngram/**"
+    docs: "docs/cli/core/"
     maturity: CANONICAL
     owner: agent
     entry_points:
-      - cli.py
+      - "ngram/cli.py"
+    depends_on:
+      - prompt
     notes: |
-      The main CLI for the ngram framework.
+      Central CLI entrypoints, health commands, and navigation helpers. This module
+      covers `doctor`, `repair`, `validate`, and related utils; docs describe the
+      CLI architecture and how each check integrates into health workflows.
 
   llm_agents:
-    code: "ngram/llms/"
+    code: "ngram/llms/**"
     docs: "docs/llm_agents/"
     maturity: DESIGNING
     owner: agent
     notes: |
-      Contains implementations for various LLM agents.
+      Agent-facing integrations (Claude, Gemini, Codex) that spawn subprocesses,
+      manage prompts, and track telemetry. Docs capture the agent behaviors and
+      health checks tied to the language-model integrations.
 
   tui:
-    code: "ngram/tui/"
+    code: "ngram/tui/**"
     docs: "docs/tui/"
     maturity: DESIGNING
     owner: agent
-    internal:
-      - "tui/app_core.py"
-      - "tui/app_manager.py"
     notes: |
-      The Textual User Interface for interacting with ngram.
-      Manager startup helpers extracted to `ngram/tui/app_manager.py`.
-
-  tui_widgets:
-    code: "ngram/tui/widgets/"
-    docs: "docs/tui/" # Main TUI docs will cover widgets
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      Individual widgets used in the ngram TUI.
-
-  core_utils:
-    code: "ngram/core_utils.py"
-    docs: "docs/core_utils/" # Create a new docs folder for core_utils
-    maturity: CANONICAL
-    owner: agent
-    notes: |
-      Core utility functions for the ngram framework.
-
-  cybernetic_studio_architecture:
-    code: "data/ARCHITECTURE — Cybernetic Studio.md"
-    docs: "docs/architecture/cybernetic_studio_architecture/"
-    maturity: DESIGNING
-    owner: human
-    entry_points:
-      - "data/ARCHITECTURE — Cybernetic Studio.md"
-    patterns:
-      - "Two-repo platform + cartridge"
-      - "Graph as physics, repo as artifacts"
-    notes: |
-      Conceptual architecture for the Studio Platform (ngram) and Game Cartridge
-      (blood-ledger) with a shared graph service.
+      The textual UI that wraps CLI workflows in a persistent session. Docs outline
+      behaviors, patterns, and implementation details for widgets, commands, and
+      docking points observed by doctor health checks.

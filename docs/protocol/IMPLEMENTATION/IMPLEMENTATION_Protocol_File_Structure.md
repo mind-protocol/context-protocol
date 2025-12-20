@@ -12,10 +12,11 @@ CREATED: 2025-12-18
 ```
 PATTERNS:        ../PATTERNS_Bidirectional_Documentation_Chain_For_AI_Agents.md
 BEHAVIORS:       ../BEHAVIORS_Observable_Protocol_Effects.md
-ALGORITHM:       ../ALGORITHM_Overview.md
+ALGORITHM:       ../ALGORITHM_Protocol_Core_Mechanics.md
 VALIDATION:      ../VALIDATION_Protocol_Invariants.md
 HEALTH:          ../HEALTH_Protocol_Verification.md
 SYNC:            ../SYNC_Protocol_Current_State.md
+THIS:            ./IMPLEMENTATION_Protocol_File_Structure.md
 ```
 
 ---
@@ -39,7 +40,7 @@ This document consolidates the protocol implementation details that were previou
 ├── views/                 # 11 VIEW files
 ├── templates/             # 10 doc templates
 └── state/
-    └── ../../../templates/ngram/state/SYNC_Project_State.md
+    └── <!-- ../../../templates/ngram/state/SYNC_Project_State.md -->
 ```
 
 ### Installed Directory (Target Project)
@@ -52,8 +53,8 @@ This document consolidates the protocol implementation details that were previou
 ├── templates/
 ├── modules.yaml
 ├── state/
-│   ├── .ngram/state/SYNC_Project_State.md
-│   └── .ngram/state/SYNC_Project_Health.md
+│   ├── <!-- .ngram/state/SYNC_Project_State.md -->
+│   └── <!-- .ngram/state/SYNC_Project_Health.md -->
 └── traces/                # Optional agent logs
 ```
 

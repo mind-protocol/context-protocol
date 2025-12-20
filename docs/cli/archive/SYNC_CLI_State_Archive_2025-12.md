@@ -50,3 +50,54 @@ Original file: SYNC_CLI_State.md
 
 - Older details (TODO lists, prior minor changes) were removed for size.
 - This archive is CLI-specific; protocol and TUI archives live under their respective `docs/*/archive/` folders.
+
+---
+
+## RELATED ARCHIVES
+
+- Protocol archive: `../../protocol/archive/SYNC_Archive_2024-12.md`
+- TUI archive: `../../tui/archive/SYNC_TUI_State_Archive_2025-12.md`
+---
+
+## CHAIN
+
+```
+THIS: ./SYNC_CLI_State_Archive_2025-12.md
+```
+
+---
+
+## CURRENT STATE
+
+Snapshot of the CLI SYNC state as of 2025-12-18. Core commands stable; archives capture the doc chain at that point.
+
+## IN PROGRESS
+
+- None (archive is read-only); refer to the latest active SYNC file for current work.
+
+## KNOWN ISSUES
+
+- Archived content may lack recent doc-template drift fixes; check `docs/cli/core/SYNC_CLI_Development_State.md` for up-to-date state.
+
+## HANDOFF: FOR AGENTS
+
+- When revisiting CLI archives, read the archive summary first, then consult `VIEW_Extend_Add_Features_To_Existing.md` if you plan to modify active docs.
+
+## HANDOFF: FOR HUMAN
+
+- No action required; the archive documents the CLI state at 2025-12-18 for reference only.
+
+## TODO
+
+- [ ] Consider capturing automated diffs between successive archives to track what changed between 2024 and 2025 snapshots.
+
+## CONSCIOUSNESS TRACE
+
+- The archive is legacy state; updating it is low priority unless regression analysis demands historical context.
+
+## POINTERS
+
+| What | Where |
+|------|-------|
+| Active CLI SYNC | `docs/cli/core/SYNC_CLI_Development_State.md` |
+| Protocol archive | `docs/protocol/archive/SYNC_Archive_2024-12.md` |

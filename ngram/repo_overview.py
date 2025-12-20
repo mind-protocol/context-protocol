@@ -1,4 +1,4 @@
-# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
+# DOCS: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md
 """
 Repository Overview Generator.
 
@@ -24,7 +24,7 @@ from .doctor_files import (
 )
 from .project_map import analyze_modules, load_modules_yaml
 from .context import parse_imports
-from .utils import IGNORED_EXTENSIONS
+from .core_utils import IGNORED_EXTENSIONS
 from .repo_overview_formatters import (
     format_markdown,
     format_yaml,
@@ -720,22 +720,15 @@ def generate_repo_overview(
     )
 
 
-def generate_and_save(
+def _save_single_map(
     target_dir: Path,
-    output_format: str = "md",
-    subfolder: Optional[str] = None,
-    min_size: int = 500,
-    top_files: int = 10,
+    output_dir: Path,
+    output_format: str,
+    subfolder: Optional[str],
+    min_size: int,
+    top_files: int,
 ) -> Path:
-    """Generate overview and save to project root as map.{format}.
-
-    Args:
-        target_dir: Root directory of the project
-        output_format: Output format (md, yaml, json)
-        subfolder: Optional subfolder to map only
-        min_size: Minimum file size in chars to include (default 500)
-        top_files: Maximum files per directory (default 10, 0 = unlimited)
-    """
+    """Internal helper to generate and save a single map file."""
     overview = generate_repo_overview(
         target_dir,
         subfolder=subfolder,
@@ -744,25 +737,71 @@ def generate_and_save(
     )
 
     # Generate filename (map_subfolder if provided)
+    ext = output_format if output_format in ["yaml", "json"] else "md"
     output_name = "map"
     if subfolder:
         # Sanitize subfolder name for filename
         safe_folder = re.sub(r'[^a-zA-Z0-9_-]', '_', subfolder.strip('/'))
         output_name = f"map_{safe_folder}"
 
-    # Generate output in root directory
+    output_path = output_dir / f"{output_name}.{ext}"
+
     if output_format == "yaml":
         content = format_yaml(overview)
-        output_path = target_dir / f"{output_name}.yaml"
     elif output_format == "json":
         content = format_json(overview)
-        output_path = target_dir / f"{output_name}.json"
-    else:  # default to markdown
+    else:
         content = format_markdown(overview)
-        output_path = target_dir / f"{output_name}.md"
 
     output_path.write_text(content, encoding='utf-8')
     return output_path
+
+
+def generate_and_save(
+    target_dir: Path,
+    output_format: str = "md",
+    subfolder: Optional[str] = None,
+    min_size: int = 500,
+    top_files: int = 10,
+) -> Path:
+    """Generate overview and save to project root.
+
+    Default behavior (no subfolder):
+    - Saves map.{ext} to root
+    - Saves map.{ext} to docs/ (if exists)
+    - Saves map_{folder}.{ext} for key folders (src, app, backend, frontend, etc)
+
+    Args:
+        target_dir: Root directory of the project
+        output_format: Output format (md, yaml, json)
+        subfolder: Optional subfolder to map only
+        min_size: Minimum file size in chars to include
+        top_files: Maximum files per directory
+    """
+    if subfolder:
+        # Explicit subfolder requested - save only to root
+        return _save_single_map(target_dir, target_dir, output_format, subfolder, min_size, top_files)
+
+    # Default logic: Multi-generation
+    # 1. Main map in root
+    main_map = _save_single_map(target_dir, target_dir, output_format, None, min_size, top_files)
+
+    # 2. Main map in docs/ (if exists)
+    docs_dir = target_dir / "docs"
+    if docs_dir.exists() and docs_dir.is_dir():
+        _save_single_map(target_dir, docs_dir, output_format, None, min_size, top_files)
+
+    # 3. Auto-folder maps (in root)
+    auto_folders = ['src', 'app', 'backend', 'frontend', 'website', 'api']
+    for folder in auto_folders:
+        folder_path = target_dir / folder
+        if folder_path.exists() and folder_path.is_dir():
+            try:
+                _save_single_map(target_dir, target_dir, output_format, folder, min_size, top_files)
+            except Exception:
+                continue
+
+    return main_map
 
 
 if __name__ == "__main__":

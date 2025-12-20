@@ -1,4 +1,4 @@
-# DOCS: docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md
+# DOCS: docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md
 """
 Repository Overview Formatting Functions.
 

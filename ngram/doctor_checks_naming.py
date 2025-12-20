@@ -6,7 +6,7 @@ Health checks that verify:
 - Code files use snake_case.py
 - Directories use snake_case
 
-DOCS: docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md
+DOCS: docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md
 """
 
 import re
@@ -70,6 +70,9 @@ def doctor_check_naming_conventions(target_dir: Path, config: DoctorConfig) -> L
     for code_dir in find_code_directories(target_dir, config):
         if should_ignore_path(code_dir, config.ignore, target_dir):
             continue
+            
+        if code_dir.name.startswith("."):
+            continue
 
         rel_path = str(code_dir.relative_to(target_dir))
         
@@ -91,6 +94,9 @@ def doctor_check_naming_conventions(target_dir: Path, config: DoctorConfig) -> L
     for source_file in find_source_files(target_dir, config):
         # Skip doc files (checked separately)
         if source_file.suffix.lower() == '.md':
+            continue
+            
+        if source_file.name.startswith("."):
             continue
 
         rel_path = str(source_file.relative_to(target_dir))
@@ -121,9 +127,20 @@ def doctor_check_naming_conventions(target_dir: Path, config: DoctorConfig) -> L
 
     # Check documentation files
     docs_dir = target_dir / "docs"
+    # Standard exceptions for doc files
+    EXCEPTIONS = {
+        "map.md", "CLAUDE.md", "AGENTS.md", "GEMINI.md", 
+        "README.md", "CONTRIBUTING.md", "LICENSE",
+        "SYNC_Project_Repository_Map.md", "gitignore", "ngramignore"
+    }
+    
     if docs_dir.exists():
         for md_file in docs_dir.rglob("*.md"):
             if should_ignore_path(md_file, config.ignore, target_dir):
+                continue
+
+            # Skip exceptions and dotfiles
+            if md_file.name in EXCEPTIONS or md_file.name.startswith("."):
                 continue
 
             name = md_file.stem

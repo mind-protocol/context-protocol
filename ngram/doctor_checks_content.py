@@ -7,7 +7,7 @@ Health checks that analyze file content for issues:
 - New undocumented code (code fresher than docs)
 - Recent log errors
 
-DOCS: docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md
+DOCS: docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md
 """
 
 import re
@@ -15,7 +15,7 @@ import time
 from pathlib import Path
 from typing import List, Dict, Any
 
-from .utils import find_module_directories
+from .core_utils import find_module_directories
 from .doctor_types import DoctorIssue, DoctorConfig
 from .doctor_files import (
     should_ignore_path,
@@ -23,7 +23,7 @@ from .doctor_files import (
     count_lines,
     is_binary_file,
 )
-from .solve_escalations import ESCALATION_TAGS, PROPOSITION_TAGS, IGNORED_FILES
+from .solve_escalations import ESCALATION_TAGS, PROPOSITION_TAGS, TODO_TAGS, IGNORED_FILES
 
 try:
     import yaml
@@ -483,7 +483,13 @@ def doctor_check_special_markers(target_dir: Path, config: DoctorConfig) -> List
     all_marker_info = [
         ("ESCALATION", ESCALATION_TAGS, "Escalation marker needs decision"),
         ("PROPOSITION", PROPOSITION_TAGS, "Agent proposition needs review"),
+        ("TODO", TODO_TAGS, "Todo marker needs a task"),
     ]
+    severity_by_type = {
+        "ESCALATION": "warning",
+        "PROPOSITION": "info",
+        "TODO": "info",
+    }
 
     for issue_type, marker_tags, message_template in all_marker_info:
         for path in target_dir.rglob("*"):
@@ -497,16 +503,18 @@ def doctor_check_special_markers(target_dir: Path, config: DoctorConfig) -> List
                 continue
             if is_binary_file(path):
                 continue
+            rel_path = str(path.relative_to(target_dir))
+            if rel_path.startswith("templates/") or rel_path.startswith(".ngram/views"):
+                continue
             try:
                 content = path.read_text(errors="ignore")
             except Exception:
                 continue
             if not any(tag in content for tag in marker_tags):
                 continue
-            rel_path = str(path.relative_to(target_dir))
             issues.append(DoctorIssue(
                 issue_type=issue_type,
-                severity="warning" if issue_type == "ESCALATION" else "info",
+                severity=severity_by_type.get(issue_type, "info"),
                 path=rel_path,
                 message=message_template,
                 details={

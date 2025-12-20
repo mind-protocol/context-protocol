@@ -12,10 +12,10 @@ CREATED: 2024-12-15
 ```
 PATTERNS:        ./PATTERNS_Bidirectional_Documentation_Chain_For_AI_Agents.md
 THIS:            BEHAVIORS_Observable_Protocol_Effects.md
-ALGORITHM:       ./ALGORITHM_Overview.md
+ALGORITHM:       ./ALGORITHM_Protocol_Core_Mechanics.md
 VALIDATION:      ./VALIDATION_Protocol_Invariants.md
-IMPLEMENTATION:  ./IMPLEMENTATION_Overview.md
-HEALTH:          ./HEALTH_Protocol_Verification.md
+IMPLEMENTATION:  ./IMPLEMENTATION_Protocol_System_Architecture.md
+TEST:            ./TEST_Protocol_Test_Cases.md
 SYNC:            ./SYNC_Protocol_Current_State.md
 ```
 
@@ -112,13 +112,18 @@ AND:    TOUCHES_*.md shows where it appears in code
 
 GIVEN:  An agent is blocked by a vague requirement
 WHEN:   The agent cannot proceed safely
-THEN:   The agent adds an `@ngram:escalation` marker
+THEN:   The agent adds an `@ngram&#58;escalation` marker
 AND:    The agent describes the conflict/question in YAML format
 
 GIVEN:  An agent identifies a potential improvement or new feature
 WHEN:   The agent wants to suggest it without implementing it yet
-THEN:   The agent adds an `@ngram:proposition` marker
+THEN:   The agent adds an `@ngram&#58;proposition` marker
 AND:    The agent describes the idea and its implications in YAML format
+
+GIVEN:  An agent or manager identifies a concrete follow-up task
+WHEN:   The task should be tracked for later execution
+THEN:   The agent or manager adds an `@ngram&#58;todo` marker
+AND:    The agent describes the task details in YAML format
 
 ---
 

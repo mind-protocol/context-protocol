@@ -7,7 +7,7 @@ Contains:
 - Interactive conflict resolution (ESCALATION)
 - CLI progress display utilities
 
-DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
+DOCS: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md
 """
 
 import subprocess

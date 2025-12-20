@@ -9,7 +9,7 @@ Provides health checks for projects:
 - Missing DOCS: references
 - Incomplete doc chains
 
-DOCS: docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md
+DOCS: docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md
 """
 
 import json
@@ -48,6 +48,11 @@ from .doctor_checks import (
     doctor_check_missing_tests,
     doctor_check_orphan_docs,
     doctor_check_stale_impl,
+    doctor_check_prompt_doc_reference,
+    doctor_check_prompt_view_table,
+    doctor_check_prompt_checklist,
+    doctor_check_doc_link_integrity,
+    doctor_check_code_doc_delta_coupling,
     doctor_check_magic_values,
     doctor_check_hardcoded_secrets,
 )
@@ -103,6 +108,11 @@ def run_doctor(target_dir: Path, config: DoctorConfig) -> Dict[str, Any]:
     all_issues.extend(doctor_check_orphan_docs(target_dir, config))
     all_issues.extend(doctor_check_stale_impl(target_dir, config))
     all_issues.extend(doctor_check_doc_template_drift(target_dir, config))
+    all_issues.extend(doctor_check_prompt_doc_reference(target_dir, config))
+    all_issues.extend(doctor_check_prompt_view_table(target_dir, config))
+    all_issues.extend(doctor_check_prompt_checklist(target_dir, config))
+    all_issues.extend(doctor_check_doc_link_integrity(target_dir, config))
+    all_issues.extend(doctor_check_code_doc_delta_coupling(target_dir, config))
     all_issues.extend(doctor_check_nonstandard_doc_type(target_dir, config))
     all_issues.extend(doctor_check_naming_conventions(target_dir, config))
     all_issues.extend(doctor_check_doc_gaps(target_dir, config))

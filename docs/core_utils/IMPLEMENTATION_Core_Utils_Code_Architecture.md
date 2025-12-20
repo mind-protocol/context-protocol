@@ -261,7 +261,7 @@ Files that reference this documentation:
 
 | File | Line | Reference |
 |------|------|-----------|
-| `ngram/core_utils.py` | 4 | `DOCS: docs/core_utils/PATTERNS_Core_Utils_Functions.md` |
+| `ngram/core_utils.py` | 4 | `DOCS: PATTERNS_Core_Utils_Functions.md` |
 
 ### Docs → Code
 

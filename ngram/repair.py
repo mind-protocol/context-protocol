@@ -4,7 +4,7 @@ Repair command for ngram CLI.
 Automatically fixes project health issues by spawning repair agents.
 Each agent follows the protocol: read docs, fix issue, update SYNC.
 """
-# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
+# DOCS: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md
 
 import json
 import subprocess
@@ -17,6 +17,7 @@ from threading import Lock
 from typing import List, Dict, Any, Optional
 
 from .doctor import run_doctor, load_doctor_config, DoctorIssue
+from .doctor_types import DoctorConfig
 from .repair_instructions import get_issue_instructions
 from .repair_report import generate_llm_report, generate_final_report
 from .agent_cli import build_agent_command, normalize_agent
@@ -109,6 +110,7 @@ def save_github_issue_mapping(target_dir: Path, mapping: Dict[str, Dict[str, Any
 def spawn_repair_agent(
     issue: DoctorIssue,
     target_dir: Path,
+    config: DoctorConfig, # New: DoctorConfig to manage fallback status
     dry_run: bool = False,
     github_issue_number: Optional[int] = None,
     escalation_decisions: Optional[List['EscalationDecision']] = None,
@@ -158,131 +160,19 @@ def spawn_repair_agent(
     # Build system prompt with learnings
     system_prompt = AGENT_SYSTEM_PROMPT + get_learnings_content(target_dir)
 
-    agent_cmd = build_agent_command(
-        agent_provider,
-        prompt=prompt,
-        system_prompt=system_prompt,
-        stream_json=(agent_provider == "claude"),
-        continue_session=False,
+    # The actual agent spawning is in repair_core.py
+    return spawn_repair_agent_async(
+        issue,
+        target_dir,
+        # on_output - not used in this sync wrapper (used by TUI directly)
+        lambda x: None, 
+        instructions,
+        config, # Pass config here
+        github_issue_number,
+        escalation_decisions,
+        agent_symbol=agent_symbol,
+        agent_provider=agent_provider,
     )
-
-    start_time = time.time()
-    output_lines = []
-    text_output = []  # Human-readable text only
-
-    try:
-        # Run agent from .ngram/ directory where CLAUDE.md lives
-        ngram_dir = target_dir / ".ngram"
-        process = subprocess.Popen(
-            agent_cmd.cmd,
-            cwd=ngram_dir,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            stdin=subprocess.PIPE if agent_cmd.stdin else None,
-            bufsize=1,  # Line buffered
-        )
-        if agent_cmd.stdin and process.stdin:
-            process.stdin.write(agent_cmd.stdin + "\n")
-            process.stdin.flush()
-            process.stdin.close()
-
-        # Stream output - parse JSON and extract text
-        for line in process.stdout:
-            output_lines.append(line)
-            line = line.strip()
-            if not line:
-                continue
-
-            # Try to parse JSON and extract readable content
-            try:
-                data = json.loads(line)
-                msg_type = data.get("type", "")
-
-                # Extract assistant text messages
-                if msg_type == "assistant":
-                    message = data.get("message", {})
-                    for content in message.get("content", []):
-                        if content.get("type") == "text":
-                            text = content.get("text", "")
-                            if text:
-                                text_output.append(text)
-                                # Show full text output, indented
-                                for line in text.split('\n'):
-                                    stripped = line.strip()
-                                    if stripped:
-                                        # Highlight DECISION items
-                                        if '### DECISION:' in stripped or '### Decision:' in stripped:
-                                            decision_name = stripped.split(':', 1)[1].strip() if ':' in stripped else ''
-                                            sys.stdout.write(f"    {Colors.BOLD}{agent_symbol} ⚡ DECISION: {decision_name}{Colors.RESET}\n")
-                                        elif stripped.lower().startswith('- resolution:') or stripped.lower().startswith('resolution:'):
-                                            resolution = stripped.split(':', 1)[1].strip()
-                                            sys.stdout.write(f"    {agent_symbol} {Colors.SUCCESS}→ {resolution}{Colors.RESET}\n")
-                                        else:
-                                            sys.stdout.write(f"    {agent_symbol} {line}\n")
-                                        sys.stdout.flush()
-                        elif content.get("type") == "tool_use":
-                            tool = content.get("name", "unknown")
-                            tool_input = content.get("input", {})
-                            # Extract file path for file operations
-                            file_path = tool_input.get("file_path") or tool_input.get("path") or ""
-                            if file_path and tool in ("Read", "Write", "Edit", "Glob", "Grep"):
-                                # Shorten path for display
-                                short_path = file_path.split("/")[-2:] if "/" in file_path else [file_path]
-                                path_display = "/".join(short_path)
-                                sys.stdout.write(f"    {agent_symbol} {Colors.DIM}{Colors.ITALIC}📎 {tool} {path_display}{Colors.RESET}\n")
-                            else:
-                                sys.stdout.write(f"    {agent_symbol} {Colors.DIM}{Colors.ITALIC}📎 {tool}{Colors.RESET}\n")
-                            sys.stdout.flush()
-
-            except json.JSONDecodeError:
-                # Not JSON, might be plain text
-                if line and not line.startswith("{"):
-                    text_output.append(line)
-                    sys.stdout.write(f"    {agent_symbol} {line}\n")
-                    sys.stdout.flush()
-
-        process.wait(timeout=600)
-        duration = time.time() - start_time
-        output = "".join(output_lines)
-        readable_output = "\n".join(text_output)
-
-        # Check for success markers in readable text output (not raw JSON)
-        success = "REPAIR COMPLETE" in readable_output and "REPAIR FAILED" not in readable_output
-
-        # Parse decisions made by the agent
-        decisions = parse_decisions_from_output(readable_output)
-
-        return RepairResult(
-            issue_type=issue.issue_type,
-            target_path=issue.path,
-            success=success,
-            agent_output=output,
-            duration_seconds=duration,
-            error=None if process.returncode == 0 else f"Exit code: {process.returncode}",
-            decisions_made=decisions if decisions else None,
-        )
-
-    except subprocess.TimeoutExpired:
-        process.kill()
-        return RepairResult(
-            issue_type=issue.issue_type,
-            target_path=issue.path,
-            success=False,
-            agent_output="".join(output_lines),
-            duration_seconds=600,
-            error="Agent timed out after 10 minutes",
-        )
-    except Exception as e:
-        return RepairResult(
-            issue_type=issue.issue_type,
-            target_path=issue.path,
-            success=False,
-            agent_output="".join(output_lines),
-            duration_seconds=time.time() - start_time,
-            error=str(e),
-        )
-
 
 # print_progress_bar, input_listener_thread, spawn_manager_agent,
 # check_for_manager_input, resolve_escalation_interactive imported from repair_escalation_interactive.py
@@ -436,7 +326,7 @@ def repair_command(
     completed_count = [0]  # Use list to allow modification in nested function
     manager_responses: List[str] = []  # Track manager responses for report
 
-    def run_repair(issue_tuple, escalation_decisions=None):
+    def run_repair(issue_tuple, config: DoctorConfig, escalation_decisions=None): # Added config
         """Run a single repair in a thread."""
         idx, issue = issue_tuple
         github_issue_num = github_mapping.get(issue.path)
@@ -458,6 +348,7 @@ def repair_command(
         result = spawn_repair_agent(
             issue,
             target_dir,
+            config, # Pass config
             dry_run=False,
             github_issue_number=github_issue_num,
             escalation_decisions=escalation_decisions,
@@ -501,6 +392,7 @@ def repair_command(
                 result = spawn_repair_agent(
                     issue,
                     target_dir,
+                    config, # Pass config
                     dry_run=False,
                     github_issue_number=github_issue_num,
                     escalation_decisions=decisions,
@@ -571,6 +463,7 @@ def repair_command(
                 result = spawn_repair_agent(
                     issue,
                     target_dir,
+                    config, # Pass config
                     dry_run=False,
                     github_issue_number=github_issue_num,
                     agent_symbol=agent_sym,

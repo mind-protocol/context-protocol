@@ -1,7 +1,7 @@
 """
 ngram CLI - Memory for AI agents
 
-DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
+DOCS: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md
 
 Protocol for context, state, and handoffs across sessions.
 
@@ -42,10 +42,22 @@ from .project_map import print_project_map
 from .sync import sync_command
 from .solve_escalations import solve_special_markers_command
 from .repair import repair_command
+from .refactor import refactor_command
 from .repo_overview import generate_and_save as generate_overview
 
 
 from .agent_cli import build_agent_command
+
+
+def _add_module_translation_args(parser):
+    parser.add_argument("--module-old", type=str, help="Existing module key in modules.yaml")
+    parser.add_argument("--module-new", type=str, help="New module key name in modules.yaml")
+
+
+def _validate_module_translation(args):
+    if args.module_old or args.module_new:
+        if not (args.module_old and args.module_new):
+            raise ValueError("--module-old and --module-new must be supplied together")
 
 
 
@@ -312,6 +324,65 @@ def main():
         help="Agent provider for repair runs (default: claude)",
     )
 
+    # refactor command
+    refactor_parser = subparsers.add_parser(
+        "refactor",
+        help="Adjust module/doc names and keep references in sync"
+    )
+    refactor_parser.add_argument(
+        "--dir", "-d",
+        type=Path,
+        default=Path.cwd(),
+        help="Project directory (default: current directory)"
+    )
+    refactor_subparsers = refactor_parser.add_subparsers(dest="action")
+
+    rename_parser = refactor_subparsers.add_parser(
+        "rename",
+        help="Rename a doc/module path and update references"
+    )
+    rename_parser.add_argument("old", type=str, help="Existing path to rename (relative to project root)")
+    rename_parser.add_argument("new", type=str, help="New target path (relative to project root)")
+    _add_module_translation_args(rename_parser)
+    rename_parser.set_defaults(action="rename")
+
+    move_parser = refactor_subparsers.add_parser(
+        "move",
+        help="Move a doc/module path elsewhere (alias for rename)"
+    )
+    move_parser.add_argument("old", type=str, help="Existing path to move (relative to project root)")
+    move_parser.add_argument("new", type=str, help="Destination path (relative to project root)")
+    _add_module_translation_args(move_parser)
+    move_parser.set_defaults(action="move")
+
+    promote_parser = refactor_subparsers.add_parser(
+        "promote",
+        help="Promote a docs area/module into the root docs folder"
+    )
+    promote_parser.add_argument("source", type=str, help="Existing docs path (docs/<area>/<module>)")
+    promote_parser.add_argument(
+        "--target", "-t",
+        type=str,
+        default=None,
+        help="Optional explicit target path (defaults to docs/<module>)"
+    )
+    _add_module_translation_args(promote_parser)
+    promote_parser.set_defaults(action="promote")
+
+    demote_parser = refactor_subparsers.add_parser(
+        "demote",
+        help="Demote a docs module into an area (docs/<area>/<module>)"
+    )
+    demote_parser.add_argument("module", type=str, help="Existing module path (usually docs/<module>)")
+    demote_parser.add_argument(
+        "--target-area", "-a",
+        type=str,
+        required=True,
+        help="Area name under docs/ to move into"
+    )
+    _add_module_translation_args(demote_parser)
+    demote_parser.set_defaults(action="demote")
+
     # ignore command
     ignore_parser = subparsers.add_parser(
         "ignore",
@@ -403,6 +474,17 @@ def main():
             parallel=args.parallel,
             agent_provider=args.agents,
         )
+        sys.exit(exit_code)
+    elif args.command == "refactor":
+        if not args.action:
+            refactor_parser.print_help()
+            sys.exit(1)
+        try:
+            _validate_module_translation(args)
+        except ValueError as exc:
+            print(exc)
+            sys.exit(1)
+        exit_code = refactor_command(args)
         sys.exit(exit_code)
     elif args.command == "ignore":
         if args.list:

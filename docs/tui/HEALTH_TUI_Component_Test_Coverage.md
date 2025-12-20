@@ -36,15 +36,13 @@ HEALTH is separate from tests because it verifies real system health without cha
 ## CHAIN
 
 ```
-PATTERNS:        ./PATTERNS_TUI_Design.md
+PATTERNS:        ./PATTERNS_TUI_Modular_Interface_Design.md
 BEHAVIORS:       ./BEHAVIORS_TUI_Interactions.md
-ALGORITHM:       ./ALGORITHM_TUI_Flow.md
-VALIDATION:      ./VALIDATION_TUI_Invariants.md
+ALGORITHM:       ./ALGORITHM_TUI_Widget_Interaction_Flow.md
+VALIDATION:      ./VALIDATION_TUI_User_Interface_Invariants.md
 IMPLEMENTATION:  ./IMPLEMENTATION_TUI_Code_Architecture.md
-THIS:            HEALTH_TUI_Coverage.md
-SYNC:            ./SYNC_TUI_State.md
-
-IMPL:            ngram/tui/app.py
+THIS:            HEALTH_TUI_Component_Test_Coverage.md
+SYNC:            ./SYNC_TUI_Development_Current_State.md
 ```
 
 ---

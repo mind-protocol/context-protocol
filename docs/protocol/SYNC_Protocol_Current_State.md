@@ -2,7 +2,7 @@
 
 ```
 LAST_UPDATED: 2025-12-20
-UPDATED_BY: codex (principles escalation)
+UPDATED_BY: codex (todo marker support)
 STATUS: CANONICAL
 ```
 
@@ -35,7 +35,7 @@ Protocol V1.1 complete. Now includes formal markers for human-agent collaboratio
 - PROTOCOL.md — navigation (what to load, where to update, how to structure docs)
 - PRINCIPLES.md — stance (6 principles: architecture, verification, communication, quality, experience, feedback loop)
 - 12 VIEWs covering product development lifecycle (includes VIEW_Escalation_How_To_Handle_Vague_Tasks_Missing_Information_And_Complex_Non-Obvious_Problems.md + LEARNINGS)
-- Special Markers: `@ngram&#58;escalation` (blockers) and `@ngram&#58;proposition` (ideas)
+- Special Markers: `@ngram&#58;escalation` (blockers), `@ngram&#58;proposition` (ideas), and `@ngram&#58;todo` (tasks)
 - 10 templates for documentation (including HEALTH)
 - CLI package with `init`, `validate`, `prompt`, `context`, `doctor`, `repair`, and `solve-markers` commands
 - CLAUDE_ADDITION.md with motivation, principles summary, and lifecycle-ordered VIEWs
@@ -45,6 +45,7 @@ Protocol V1.1 complete. Now includes formal markers for human-agent collaboratio
 
 **Recent changes (2025-12-20):**
 - Escaped literal escalation/proposition markers in this SYNC to avoid the doctor interpreting explanatory text as unresolved markers.
+- Added `@ngram&#58;todo` to the special marker set for task tracking alongside escalation and proposition.
 
 **Recent changes (2025-12-18):**
 - Added protocol implementation documentation and corrected doc-link resolution issues.

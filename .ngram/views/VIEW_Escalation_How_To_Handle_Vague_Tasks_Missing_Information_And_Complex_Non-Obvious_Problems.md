@@ -24,7 +24,7 @@ A good escalation makes the human response immediately actionable without re-rea
 
 ## HOW ESCALATION WORKS
 
-1. Add an `@ngram:escalation` marker in the most relevant file near the issue.
+1. Add an `@ngram&#58;escalation` marker in the most relevant file near the issue.
 2. `ngram solve-markers` picks it up.
 3. The manager asks the human to resolve it.
 4. The human response is added in the same location with an explicit resolution note.
@@ -33,10 +33,19 @@ A good escalation makes the human response immediately actionable without re-rea
 
 ## HOW PROPOSITION WORKS
 
-1. An agent adds an `@ngram:proposition` marker in the most relevant file near a suggested improvement.
+1. An agent adds an `@ngram&#58;proposition` marker in the most relevant file near a suggested improvement.
 2. `ngram solve-markers` (or `ngram doctor`) picks it up.
 3. The proposition is presented for human review.
 4. If approved, the human applies the suggested changes and removes the marker.
+
+---
+
+## HOW TODO WORKS
+
+1. An agent or manager adds an `@ngram&#58;todo` marker in the most relevant file near the task.
+2. `ngram solve-markers` (or `ngram doctor`) picks it up.
+3. The manager triages the task with the human and assigns ownership.
+4. The assignee completes the task and removes the marker.
 
 ---
 
@@ -99,7 +108,7 @@ Use one category:
 ## ESCALATION MARKER FORMAT (YAML)
 
 ```
-@ngram:escalation
+@ngram&#58;escalation
 
 task_name: "Choose streaming vs batch ingestion to meet dashboard freshness for analytics" # one-line decision with scope + goal
 
@@ -202,7 +211,7 @@ response: # optional human response fields (fill after decision)
 ## PROPOSITION MARKER FORMAT (YAML)
 
 ```
-@ngram:proposition
+@ngram&#58;proposition
 
 title: "Refactor `utils.py` into smaller, cohesive modules" # Concise title for the proposition
 
@@ -231,7 +240,7 @@ links: # only the most relevant pointers
   files:
     - path: ngram/utils.py # The file(s) the proposition applies to
   docs:
-    - path: docs/cli/PATTERNS_Why_CLI_Over_Copy.md # Related documentation
+    - path: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md # Related documentation
 ```
 
 ---
@@ -248,3 +257,20 @@ links: # only the most relevant pointers
 ## HOOKS (WHEN TO INCLUDE)
 
 - `claude_code_hook`: include when the manager should actively surface this escalation during conversation loops.
+
+---
+
+## TODO MARKER FORMAT (YAML)
+
+```
+@ngram&#58;todo
+title: "Add snapshot tests for settings panel"
+created_by: "agent" # agent | manager | human
+priority: medium # low | medium | high | critical
+context: |
+  1-2 paragraphs explaining why this task exists and what it unblocks.
+task: |
+  The concrete work to perform, including any key constraints.
+paths:
+  - path: src/settings/ # optional paths to touch
+```

@@ -53,55 +53,11 @@ documentation-only updates, and adapter behavior is unchanged.
 
 ## RECENT CHANGES
 
-### 2025-12-20: Documented scope and data expectations
+### 2025-12-20: Filled Gemini behaviors template sections
 
-- **What:** Added SCOPE and DATA sections to clarify adapter boundaries and input/output expectations.
-- **Why:** Resolve doc template drift and make provider adapter responsibilities explicit.
-- **Files:** `docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md`
-
-
-### 2025-12-20: Filled PATTERNS scope/data sections
-
-- **What:** Added SCOPE and DATA sections to the provider-specific subprocess patterns doc.
-- **Why:** Resolve DOC_TEMPLATE_DRIFT for missing template sections.
-- **Files:** `docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md`
-
-### 2025-12-20: Expanded short SYNC sections
-
-- **What:** Expanded IN PROGRESS and KNOWN ISSUES entries to meet template minimums.
-- **Why:** Resolve DOC_TEMPLATE_DRIFT for short sections.
-- **Files:** `docs/llm_agents/SYNC_LLM_Agents_State.md`
-
-### 2025-12-19: Updated default model and CLI integration
-
-- **What:** Set default Gemini model to `gemini-3-flash-preview` and updated `ngram/agent_cli.py` to use the internal `gemini_agent` adapter instead of the external `gemini` CLI.
-- **Why:** To fulfill user request for latest model and align the codebase with documentation while enabling local tools for Gemini.
-- **Files:** `ngram/llms/gemini_agent.py`, `ngram/agent_cli.py`, `docs/llm_agents/ALGORITHM_Gemini_Stream_Flow.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`
-
-### 2025-12-19: Externalized Google search base URL
-
-- **What:** Replaced the hardcoded Google search URL with `NGRAM_GOOGLE_SEARCH_URL` (defaulting to the prior value).
-- **Why:** Address HARDCODED_CONFIG in `ngram/llms/gemini_agent.py`.
-- **Files:** `ngram/llms/gemini_agent.py`, `docs/llm_agents/IMPLEMENTATION_LLM_Agent_Code_Architecture.md`
-
-### 2025-12-19: Implemented Gemini tool handlers
-
-- **What:** Replaced placeholder tool handlers with working filesystem, search, web fetch/search, todo, and memory helpers.
-- **Why:** INCOMPLETE_IMPL flagged empty tool functions in `ngram/llms/gemini_agent.py`.
-- **Files:** `ngram/llms/gemini_agent.py`, `docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md`, `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md`, `docs/llm_agents/ALGORITHM_Gemini_Stream_Flow.md`, `docs/llm_agents/VALIDATION_Gemini_Agent_Invariants.md`, `docs/llm_agents/IMPLEMENTATION_LLM_Agent_Code_Architecture.md`
-
-### 2025-12-19: Documented LLM agent module
-
-- **What:** Added full doc chain + module mapping for `ngram/llms`.
-- **Why:** The module was previously undocumented, causing unmapped code warnings and incomplete chain validation failures.
-- **Files:** `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md`, `docs/llm_agents/ALGORITHM_Gemini_Stream_Flow.md`, `docs/llm_agents/VALIDATION_Gemini_Agent_Invariants.md`, `docs/llm_agents/IMPLEMENTATION_LLM_Agent_Code_Architecture.md`, `docs/llm_agents/HEALTH_LLM_Agent_Coverage.md`, `docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`, `modules.yaml`, `ngram/llms/gemini_agent.py`
-- **Struggles/Insights:** Needed the full chain to satisfy `ngram validate`.
-
-### 2025-12-19: Fixed implementation doc links
-
-- **What:** Updated LLM agent implementation doc to use concrete file paths and avoid non-file link detection for external packages and module commands.
-- **Why:** Broken link detector flagged non-existent references for gemini entry points and the GenAI package.
-- **Files:** `docs/llm_agents/IMPLEMENTATION_LLM_Agent_Code_Architecture.md`
+- **What:** Added INPUTS/OUTPUTS, EDGE CASES, ANTI-BEHAVIORS, and GAPS sections to the Gemini behaviors doc.
+- **Why:** Resolve DOC_TEMPLATE_DRIFT for the behaviors template and clarify output expectations.
+- **Files:** `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md`
 
 ---
 
@@ -142,28 +98,6 @@ None.
 
 ---
 
-## TODO
-
-### Doc/Impl Drift
-
-- [ ] IMPL→DOCS: If a shared adapter helper is introduced, expand the doc chain.
-
-### Tests to Run
-
-```bash
-# No module-specific tests documented yet.
-```
-
-### Immediate
-
-- [ ] None.
-
-### Later
-
-- [ ] Expand tool schema support and document additional provider adapters.
-
----
-
 ## CONSCIOUSNESS TRACE
 
 **Mental state when stopping:**
@@ -185,6 +119,7 @@ That only the Gemini adapter exists, so the docs should stay lean.
 ### Remarks
 - Added SCOPE and DATA sections to the provider adapter PATTERNS doc to resolve template drift.
 - Added missing template sections (SCOPE/DATA) to the provider subprocess patterns doc.
+- Filled missing template sections in the Gemini behaviors doc to document inputs, outputs, and edge cases.
 - Gemini tool stubs were replaced with real filesystem/web handlers and light persistence.
 - Google search base URL is now configurable via `NGRAM_GOOGLE_SEARCH_URL`.
 - Expanded short SYNC sections to satisfy template length requirements.
@@ -203,3 +138,14 @@ That only the Gemini adapter exists, so the docs should stay lean.
 |------|-------|
 | Gemini adapter | `ngram/llms/gemini_agent.py` |
 | CLI integration | `ngram/agent_cli.py` |
+
+
+---
+
+## TODO
+
+- [ ] Capture telemetry for LLM adapters (usage counts, errors, sync updates) so doctor can surface trends and the SYNC reflects real-world load.
+
+## ARCHIVE
+
+Older content archived to: `SYNC_LLM_Agents_State_archive_2025-12.md`

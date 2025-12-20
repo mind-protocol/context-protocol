@@ -7,7 +7,7 @@ Provides:
 - Dependency mapping
 - Trace logging for access patterns
 
-DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
+DOCS: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md
 """
 
 import json

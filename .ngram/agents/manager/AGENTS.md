@@ -49,7 +49,7 @@ Your response will be:
 
 ## Special Marker Check
 
-Every ~10 messages with a human, run `ngram solve-markers` and prompt the human to resolve any listed items (escalations or propositions).
+Every ~10 messages with a human, run `ngram solve-markers` and prompt the human to resolve any listed items (escalations, propositions, or todos).
 
 ## Files to Check
 

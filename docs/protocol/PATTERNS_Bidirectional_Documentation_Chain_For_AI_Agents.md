@@ -12,10 +12,10 @@ CREATED: 2024-12-15
 ```
 THIS:            PATTERNS_Bidirectional_Documentation_Chain_For_AI_Agents.md
 BEHAVIORS:       ./BEHAVIORS_Observable_Protocol_Effects.md
-ALGORITHM:       ./ALGORITHM_Overview.md
+ALGORITHM:       ./ALGORITHM_Protocol_Core_Mechanics.md
 VALIDATION:      ./VALIDATION_Protocol_Invariants.md
-IMPLEMENTATION:  ./IMPLEMENTATION_Overview.md
-HEALTH:          ./HEALTH_Protocol_Verification.md
+IMPLEMENTATION:  ./IMPLEMENTATION_Protocol_System_Architecture.md
+TEST:            ./TEST_Protocol_Test_Cases.md
 SYNC:            ./SYNC_Protocol_Current_State.md
 ```
 
@@ -118,8 +118,9 @@ Agents working on any module can understand the concept.
 ### 6. Human-Agent Feedback Loop
 
 The protocol provides explicit markers for agents to communicate with humans:
-- **Escalations** (`@ngram:escalation`): When an agent is blocked and needs a human decision.
-- **Propositions** (`@ngram:proposition`): When an agent suggests improvements or new ideas that require human approval.
+- **Escalations** (`@ngram&#58;escalation`): When an agent is blocked and needs a human decision.
+- **Propositions** (`@ngram&#58;proposition`): When an agent suggests improvements or new ideas that require human approval.
+- **Todos** (`@ngram&#58;todo`): When an agent or manager captures a task that should be tracked and executed.
 
 This ensures that human intuition and agent productivity remain aligned.
 

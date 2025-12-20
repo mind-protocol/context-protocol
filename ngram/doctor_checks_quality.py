@@ -5,7 +5,7 @@ Health checks that analyze code for quality issues:
 - Magic numbers and hardcoded values
 - Hardcoded secrets and credentials
 
-DOCS: docs/cli/IMPLEMENTATION_CLI_Code_Architecture.md
+DOCS: docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md
 """
 
 import re

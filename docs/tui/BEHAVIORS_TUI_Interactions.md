@@ -11,13 +11,13 @@ VERIFIED: 2025-12-18 — core behaviors working (B6, B8, B10, B12 implemented 20
 ## CHAIN
 
 ```
-PATTERNS:        ./PATTERNS_TUI_Design.md
-THIS:            BEHAVIORS_TUI_Interactions.md (you are here)
-ALGORITHM:       ./ALGORITHM_TUI_Flow.md
-VALIDATION:      ./VALIDATION_TUI_Invariants.md
+PATTERNS:        ./PATTERNS_TUI_Modular_Interface_Design.md
+THIS:            BEHAVIORS_TUI_Interactions.md
+ALGORITHM:       ./ALGORITHM_TUI_Widget_Interaction_Flow.md
+VALIDATION:      ./VALIDATION_TUI_User_Interface_Invariants.md
 IMPLEMENTATION:  ./IMPLEMENTATION_TUI_Code_Architecture.md
-HEALTH:          ./HEALTH_TUI_Coverage.md
-SYNC:            ./SYNC_TUI_State.md
+HEALTH:          ./HEALTH_TUI_Component_Test_Coverage.md
+SYNC:            ./SYNC_TUI_Development_Current_State.md
 ```
 
 ---
@@ -250,6 +250,16 @@ GIVEN:   User is outside project directory
 WHEN:    User runs `ngram`
 MUST NOT: Launch TUI in wrong context
 INSTEAD:  Show error about missing .ngram directory
+```
+
+---
+
+## IMPLEMENTATION REFERENCES
+
+- `ngram/tui/commands.py` — Slash command router used by the TUI input bar to map `/repair`, `/doctor`, and other commands to handlers.
+
+```
+IMPL: ngram/tui/commands.py
 ```
 
 ---

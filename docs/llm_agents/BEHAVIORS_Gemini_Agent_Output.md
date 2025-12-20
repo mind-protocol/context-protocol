@@ -74,3 +74,83 @@ AND:    A tool_result JSON message is emitted with either data or an error
 ## NOTES
 
 Input shaping for system prompts and tool use is documented in the ALGORITHM/VALIDATION docs to avoid duplication here.
+
+---
+
+## INPUTS / OUTPUTS
+
+### Inputs
+
+- CLI args: `prompt` (required), `system_prompt` (optional), `output_format` (stream-json or text), `api_key` (optional), `allowed_tools` (currently unused).
+- Environment: `GEMINI_API_KEY` from `.env` or process env when `--api-key` is absent.
+
+### Outputs
+
+- Stdout: JSON stream (`tool_code`, `tool_result`, `assistant`, `result`) for `stream-json`, or plain response text for `text`.
+- Stderr: model listing output and model listing errors, leaving stdout parseable.
+- Exit code: `1` on missing credentials; otherwise `0` on success.
+
+---
+
+## EDGE CASES
+
+### E1: Empty stream chunks
+
+```
+GIVEN:  Gemini emits chunk objects with empty or missing text
+THEN:   The adapter skips those chunks and does not emit empty assistant JSON
+```
+
+### E2: Model listing fails
+
+```
+GIVEN:  list_models() throws or returns unexpected errors
+THEN:   The adapter logs the error to stderr and continues normal request flow
+```
+
+### E3: Tool handler errors
+
+```
+GIVEN:  A tool handler raises or returns an error payload
+THEN:   A tool_result JSON message is emitted with an error field instead of crashing
+```
+
+---
+
+## ANTI-BEHAVIORS
+
+What should NOT happen:
+
+### A1: Emitting JSON in text mode
+
+```
+GIVEN:   --output-format text
+WHEN:    The adapter receives a response
+MUST NOT: wrap the response in JSON or emit tool_code/tool_result messages
+INSTEAD: print only the raw response text to stdout
+```
+
+### A2: Polluting stdout with debug logs
+
+```
+GIVEN:   The adapter lists models or encounters listing errors
+WHEN:    The Gemini SDK returns data or errors
+MUST NOT: write debug/model listing output to stdout
+INSTEAD: write those logs to stderr to keep stdout parseable
+```
+
+### A3: Emitting empty assistant messages
+
+```
+GIVEN:   Streamed chunks with empty text
+WHEN:    The adapter emits assistant messages
+MUST NOT: emit JSON messages with empty content parts
+INSTEAD: skip empty chunks entirely
+```
+
+---
+
+## GAPS / IDEAS / QUESTIONS
+
+- [ ] Add explicit documentation for tool schema fields (name, args, response) once the schema stabilizes.
+- QUESTION: Should tool_result errors include a standardized code field for downstream UI handling?

@@ -1,4 +1,4 @@
-# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
+# DOCS: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md
 """
 Documentation-related repair instructions.
 

@@ -65,6 +65,18 @@ Standard Python `os.path` and `shutil` modules.
 
 ---
 
+## IMPLEMENTATION REFERENCES
+
+| File | Role |
+|------|------|
+| `ngram/core_utils.py` | Canonical location for utility helpers; used by CLI commands, health checks, and other modules for path resolution, doc discovery, and file operations. |
+
+```
+IMPL: ngram/core_utils.py
+```
+
+---
+
 ## GAPS / IDEAS / QUESTIONS
 
 - IDEA: Formalize a process for adding new utility functions to ensure they meet the reusability and simplicity criteria.

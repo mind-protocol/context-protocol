@@ -101,6 +101,31 @@ def get_issue_guidance(issue_type: str) -> Dict[str, str]:
             "file": "Recent .log file",
             "tip": "Inspect the error line and trace the root cause"
         },
+        "PROMPT_DOC_REFERENCE": {
+            "view": "VIEW_Health_Define_Health_Checks_And_Verify.md",
+            "file": "ngram/prompt.py",
+            "tip": "Make sure PROTOCOL, PRINCIPLES, and SYNC paths stay in the introduction section"
+        },
+        "PROMPT_VIEW_TABLE": {
+            "view": "VIEW_Health_Define_Health_Checks_And_Verify.md",
+            "file": "ngram/prompt.py",
+            "tip": "Keep the PROMPT_VIEW_ENTRIES list aligned with the rendered table"
+        },
+        "PROMPT_CHECKLIST": {
+            "view": "VIEW_Health_Define_Health_Checks_And_Verify.md",
+            "file": "ngram/prompt.py",
+            "tip": "Finish the bootstrap prompt with the checklist that reminds the agent to update SYNC and rerun `ngram prompt --dir`"
+        },
+        "DOC_LINK_INTEGRITY": {
+            "view": "VIEW_Document_Create_Module_Documentation.md",
+            "file": "The code file header + referenced docs",
+            "tip": "Add missing docs or mention the code file inside the doc's IMPL/CHAIN section"
+        },
+        "CODE_DOC_DELTA_COUPLING": {
+            "view": "VIEW_Document_Create_Module_Documentation.md",
+            "file": "The doc/SYNC pair",
+            "tip": "Update the associated docs or SYNC file whenever the code changes"
+        },
     }
     return guidance.get(issue_type, {"view": "VIEW_Implement_Write_Or_Modify_Code.md", "file": "", "tip": ""})
 
@@ -171,6 +196,26 @@ def get_issue_explanation(issue_type: str) -> Dict[str, str]:
         "LOG_ERROR": {
             "risk": "Recent log errors may indicate runtime failures or misconfigurations that are not captured by code-only checks.",
             "action": "Review the error line in the log, identify the failing component, and address the underlying issue.",
+        },
+        "PROMPT_DOC_REFERENCE": {
+            "risk": "Missing doc references in the bootstrap prompt leaves agents without the protocol anchors they need.",
+            "action": "Restore the PROTOCOL/PRINCIPLES/SYNC references before the VIEW table."
+        },
+        "PROMPT_VIEW_TABLE": {
+            "risk": "A truncated VIEW table steers agents to the wrong guidance or hides the task they intended to run.",
+            "action": "Render every row defined in PROMPT_VIEW_ENTRIES and confirm each view file appears."
+        },
+        "PROMPT_CHECKLIST": {
+            "risk": "Without the final checklist, agents may skip updating SYNC or forget how to rediscover the bootstrap instructions.",
+            "action": "Finish the prompt with the checklist block that references SYNC and `ngram prompt --dir`."
+        },
+        "DOC_LINK_INTEGRITY": {
+            "risk": "Code pointing to nonexistent docs or docs that do not mention the code breaks the bidirectional documentation chain.",
+            "action": "Add the referenced docs and mention the code file (IMPL/chain entries) so agents can travel both directions."
+        },
+        "CODE_DOC_DELTA_COUPLING": {
+            "risk": "Code changes that are not reflected in docs or SYNC leave the documentation stale and untrustworthy.",
+            "action": "Update the doc or SYNC file after modifying the code so the timestamps stay coupled."
         },
     }
     return explanations.get(issue_type, {"risk": "This issue may cause problems.", "action": "Review and fix."})

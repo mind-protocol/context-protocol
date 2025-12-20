@@ -1,4 +1,4 @@
-# DOCS: docs/cli/PATTERNS_Why_CLI_Over_Copy.md
+# DOCS: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md
 """
 Validation command for ngram CLI.
 
@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 
-from .utils import find_module_directories
+from .core_utils import find_module_directories
 
 
 @dataclass

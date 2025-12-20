@@ -1,36 +1,31 @@
 # Project — Sync: Current State
 
 ```
-LAST_UPDATED: {DATE}
-UPDATED_BY: {AGENT/HUMAN}
+LAST_UPDATED: 2025-12-20
+UPDATED_BY: codex (todo marker support + init refresh)
 ```
 
 ---
 
 ## CURRENT STATE
 
-{Narrative of the project's current state. Not a feature list — the story of where things are.}
+Added `@ngram:todo` marker support to the special-marker workflow (doctor + solve-markers) and refreshed protocol files via `ngram init`. The .ngram folder was regenerated from templates; previous SYNC narrative was replaced by the template and has been rewritten here with the current changes only.
 
 ---
 
 ## ACTIVE WORK
 
-### {Work Stream}
-
-- **Area:** `{area}/`
-- **Status:** {in progress / blocked}
-- **Owner:** {agent/human}
-- **Context:** {what's happening, why it matters}
+None. Todo marker support and docs refresh complete; no follow-up task currently in progress.
 
 ---
 
 ## RECENT CHANGES
 
-### {DATE}: {Summary}
+### 2025-12-20: Todo marker support
 
-- **What:** {description}
-- **Why:** {motivation}
-- **Impact:** {what this affects}
+- **What:** Added `@ngram:todo` marker detection to doctor and solve-markers, updated protocol/CLI docs, and refreshed generated protocol files via `ngram init`.
+- **Why:** Allows agents and managers (especially during reviews) to record actionable tasks that appear in the doctor workflow.
+- **Impact:** Special-marker scanning now includes TODO items alongside escalations and propositions.
 
 ---
 
@@ -38,37 +33,31 @@ UPDATED_BY: {AGENT/HUMAN}
 
 | Issue | Severity | Area | Notes |
 |-------|----------|------|-------|
-| {description} | {level} | `{area}/` | {context} |
+| Project SYNC was reset by `ngram init` | warning | `.ngram/state/` | Prior detailed state is not restored here; only current change notes are captured. |
 
 ---
 
 ## HANDOFF: FOR AGENTS
 
-**Likely VIEW for continuing:** {which VIEW}
+**Likely VIEW for continuing:** `VIEW_Extend_Add_Features_To_Existing.md`
 
-**Current focus:** {what the project is working toward right now}
+**Current focus:** No active work; review todo marker docs if adjustments are needed.
 
-**Key context:**
-{The things an agent needs to know that aren't obvious from the code/docs}
+**Key context:** `@ngram:todo` markers are now detected by `ngram doctor` and `ngram solve-markers`.
 
-**Watch out for:**
-{Project-level gotchas}
+**Watch out for:** `ngram init` overwrites `.ngram/` content; re-run only when regeneration is desired.
 
 ---
 
 ## HANDOFF: FOR HUMAN
 
-**Executive summary:**
-{2-3 sentences on project state}
+**Executive summary:** Added todo marker support across doctor/solve-markers and refreshed the generated protocol files with `ngram init`.
 
-**Decisions made recently:**
-{Key choices with rationale}
+**Decisions made recently:** Treat todo markers as info-level special markers for task triage.
 
-**Needs your input:**
-{Blocked items, strategic questions}
+**Needs your input:** None.
 
-**Concerns:**
-{Things that might be problems, flagged for awareness}
+**Concerns:** None beyond the SYNC reset note above.
 
 ---
 
@@ -76,25 +65,21 @@ UPDATED_BY: {AGENT/HUMAN}
 
 ### High Priority
 
-- [ ] {Must do}
+- [ ] Review whether TODO markers should be warning-level instead of info-level.
 
 ### Backlog
 
-- [ ] {Should do}
-- IDEA: {Possibility}
+- [ ] Decide if the doctor should skip all docs/ views for special markers or only templates/views (currently skips templates + .ngram/views).
 
 ---
 
 ## CONSCIOUSNESS TRACE
 
-**Project momentum:**
-{Is the project moving well? Stuck? What's the energy like?}
+**Project momentum:** Moving; todo marker support landed with docs updates and init refresh.
 
-**Architectural concerns:**
-{Things that feel like they might become problems}
+**Architectural concerns:** None observed in this change set.
 
-**Opportunities noticed:**
-{Ideas that came up during work}
+**Opportunities noticed:** Tighten special-marker guidance in review workflows if needed.
 
 ---
 
@@ -102,7 +87,9 @@ UPDATED_BY: {AGENT/HUMAN}
 
 | Area | Status | SYNC |
 |------|--------|------|
-| `{area}/` | {status} | `docs/{area}/SYNC_*.md` |
+| `cli/` | active | `docs/cli/SYNC_CLI_Development_State.md` |
+| `protocol/` | active | `docs/protocol/SYNC_Protocol_Current_State.md` |
+| `protocol/features/doctor/` | active | `docs/protocol/features/doctor/SYNC_Project_Health_Doctor.md` |
 
 ---
 
@@ -113,10 +100,13 @@ Check `modules.yaml` (project root) for full manifest.
 **Mapped modules:**
 | Module | Code | Docs | Maturity |
 |--------|------|------|----------|
-| {module} | `{code_path}` | `{docs_path}` | {status} |
+| cli | `ngram/` | `docs/cli/` | CANONICAL |
+| llm_agents | `ngram/llms/` | `docs/llm_agents/` | DESIGNING |
+| tui | `ngram/tui/` | `docs/tui/` | DESIGNING |
+| tui_widgets | `ngram/tui/widgets/` | `docs/tui/` | DESIGNING |
+| core_utils | `ngram/core_utils.py` | `docs/core_utils/` | CANONICAL |
 
 **Unmapped code:** (run `ngram validate` to check)
-- {List any code directories without module mappings}
+- Not reviewed in this change set.
 
-**Coverage notes:**
-{Any notes about why certain code isn't mapped, or plans to add mappings}
+**Coverage notes:** `modules.yaml` was regenerated by `ngram init` and may need reconciliation with any local edits.

@@ -73,6 +73,14 @@ SYNC files, UI rooms, and VIEWs are treated as Places that shape context and sur
 
 **Checked by:** Place registry/config review (NOT YET VERIFIED)
 
+### V6: Graph Service Ownership
+
+```
+The graph service is owned and operated by `ngram`. `blood-ledger` integrates as a client.
+```
+
+**Checked by:** Repo boundary review + deployment configuration audit (NOT YET VERIFIED)
+
 ---
 
 ## PROPERTIES
@@ -130,6 +138,7 @@ SYMPTOM: dangling Thing nodes without resolvable artifacts
 | V3: No overmind | process_inventory | ⚠ NOT YET VERIFIED |
 | V4: Adaptive gates | gate_audit | ⚠ NOT YET VERIFIED |
 | V5: Places are real | place_registry | ⚠ NOT YET VERIFIED |
+| V6: Graph ownership | ownership_boundary | ⚠ NOT YET VERIFIED |
 
 ---
 
@@ -143,6 +152,7 @@ SYMPTOM: dangling Thing nodes without resolvable artifacts
 [ ] V3 holds — no privileged always-on controller exists
 [ ] V4 holds — adaptive gates are used for thresholds
 [ ] V5 holds — SYNC/UI/VIEWs are registered Places
+[ ] V6 holds — graph service ownership is enforced in ngram
 [ ] All behaviors from BEHAVIORS_Cybernetic_Studio_System_Behaviors.md work
 [ ] All edge cases handled
 [ ] All anti-behaviors prevented

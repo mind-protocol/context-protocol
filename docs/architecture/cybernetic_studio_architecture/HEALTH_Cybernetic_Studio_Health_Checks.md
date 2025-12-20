@@ -85,6 +85,10 @@ health_indicators:
     flow_id: sync_place_updates
     priority: high
     rationale: Ensures SYNC updates surface as Moments and keep Places real (V5).
+  - name: graph_ownership_boundary
+    flow_id: stimulus_ingestion_and_tick
+    priority: medium
+    rationale: Ensures graph service remains owned by `ngram` (V6).
   - name: adaptive_gate_usage
     flow_id: stimulus_ingestion_and_tick
     priority: medium
@@ -119,6 +123,10 @@ checkers:
     purpose: Validate V5 (Places are real)
     status: pending
     priority: high
+  - name: graph_ownership_boundary
+    purpose: Validate V6 (graph service ownership)
+    status: pending
+    priority: medium
   - name: adaptive_gate_usage
     purpose: Validate V4 (no arbitrary constants)
     status: pending
@@ -224,6 +232,66 @@ display:
 manual_run:
   command: ngram doctor (planned)
   notes: Run once graph injection hooks exist.
+```
+
+---
+
+## INDICATOR: graph_ownership_boundary
+
+### VALUE TO CLIENTS & VALIDATION MAPPING
+
+```yaml
+value_and_validation:
+  indicator: graph_ownership_boundary
+  client_value: Keeps graph service responsibility centralized in the platform repo.
+  validation:
+    - validation_id: V6
+      criteria: Graph service ownership is enforced by `ngram`.
+```
+
+### HEALTH REPRESENTATION
+
+```yaml
+representation:
+  allowed:
+    - enum
+  selected:
+    - enum
+  semantics:
+    enum: OK if graph service configuration is owned and deployed by `ngram`; ERROR otherwise.
+  aggregation:
+    method: worst_of
+    display: enum
+```
+
+### ALGORITHM / CHECK MECHANISM
+
+```yaml
+mechanism:
+  summary: Verify graph service deployment/config is owned by `ngram` and consumed by clients.
+  steps:
+    - confirm service config lives under `ngram` ownership
+    - confirm client access only from `blood-ledger`
+  data_required: deployment config, service endpoints
+  failure_mode: `blood-ledger` owns or deploys the graph service
+```
+
+### THROTTLING STRATEGY
+
+```yaml
+throttling:
+  trigger: schedule
+  max_frequency: 1/day
+  burst_limit: 1
+  backoff: none
+```
+
+### MANUAL RUN
+
+```yaml
+manual_run:
+  command: ngram doctor (planned)
+  notes: Run after deployment or config changes.
 ```
 
 ---

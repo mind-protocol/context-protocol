@@ -145,6 +145,7 @@ None for this change set.
 ### Immediate
 
 - [ ] Decide where Place registry lives (ngram vs graph service).
+- [ ] Define graph service ownership boundary in `ngram` (deployment/config/contracts).
 
 ### Later
 

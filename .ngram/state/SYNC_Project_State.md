@@ -9,7 +9,7 @@ UPDATED_BY: codex (llm agent patterns scope/data)
 
 ## CURRENT STATE
 
-Added `@ngram:todo` marker support to the special-marker workflow (doctor + solve-markers) and refreshed protocol files via `ngram init`. The .ngram folder was regenerated from templates; previous SYNC narrative was replaced by the template and has been rewritten here with the current changes only. Consolidated the TUI archive SYNC docs by keeping `docs/tui/archive/SYNC_TUI_State_Archive_2025-12.md` as canonical and referencing it from `docs/tui/archive/SYNC_Archive_2024-12.md`. Filled missing SCOPE/DATA sections in `docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md` to resolve DOC_TEMPLATE_DRIFT.
+Added `@ngram&#58;todo` marker support to the special-marker workflow (doctor + solve-markers) and refreshed protocol files via `ngram init`. The .ngram folder was regenerated from templates; previous SYNC narrative was replaced by the template and has been rewritten here with the current changes only. Consolidated the TUI archive SYNC docs by keeping `docs/tui/archive/SYNC_TUI_State_Archive_2025-12.md` as canonical and referencing it from `docs/tui/archive/SYNC_Archive_2024-12.md`. Filled missing SCOPE/DATA sections in `docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md` to resolve DOC_TEMPLATE_DRIFT.
 
 ---
 
@@ -23,7 +23,7 @@ None. Todo marker support and docs refresh complete; no follow-up task currently
 
 ### 2025-12-20: Todo marker support
 
-- **What:** Added `@ngram:todo` marker detection to doctor and solve-markers, updated protocol/CLI docs, and refreshed generated protocol files via `ngram init`.
+- **What:** Added `@ngram&#58;todo` marker detection to doctor and solve-markers, updated protocol/CLI docs, and refreshed generated protocol files via `ngram init`.
 - **Why:** Allows agents and managers (especially during reviews) to record actionable tasks that appear in the doctor workflow.
 - **Impact:** Special-marker scanning now includes TODO items alongside escalations and propositions.
 
@@ -49,7 +49,7 @@ None. Todo marker support and docs refresh complete; no follow-up task currently
 
 **Current focus:** No active work; review todo marker docs if adjustments are needed.
 
-**Key context:** `@ngram:todo` markers are now detected by `ngram doctor` and `ngram solve-markers`.
+**Key context:** `@ngram&#58;todo` markers are now detected by `ngram doctor` and `ngram solve-markers`.
 
 **Watch out for:** `ngram init` overwrites `.ngram/` content; re-run only when regeneration is desired.
 

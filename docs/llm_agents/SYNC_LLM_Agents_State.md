@@ -187,6 +187,7 @@ That only the Gemini adapter exists, so the docs should stay lean.
 - Added missing template sections (SCOPE/DATA) to the provider subprocess patterns doc.
 - Gemini tool stubs were replaced with real filesystem/web handlers and light persistence.
 - Google search base URL is now configurable via `NGRAM_GOOGLE_SEARCH_URL`.
+- Expanded short SYNC sections to satisfy template length requirements.
 
 ### Suggestions
 - [ ] Add automated tests for tool outputs (tool_code/tool_result JSON).

@@ -19,7 +19,7 @@ THIS:            IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Con
 HEALTH:          ./HEALTH_Connectome_Runtime_Engine_Runtime_Verification_Of_Pacing_And_Order.md
 SYNC:            ./SYNC_Connectome_Runtime_Engine_Sync_Current_State.md
 
-IMPL:            app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine.ts (PROPOSED)
+IMPL:            app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine (planned) (PROPOSED)
 ```
 
 ---
@@ -30,18 +30,18 @@ IMPL:            app/connectome/lib/next_step_gate_and_realtime_playback_runtime
 app/
 └── connectome/
 ├── lib/
-│   ├── next_step_gate_and_realtime_playback_runtime_engine.ts
-│   ├── minimum_duration_clamp_and_speed_based_default_policy.ts
-│   └── step_script_cursor_and_replay_determinism_helpers.ts
+│   ├── next_step_gate_and_realtime_playback_runtime_engine (planned)
+│   ├── minimum_duration_clamp_and_speed_based_default_policy (planned)
+│   └── step_script_cursor_and_replay_determinism_helpers (planned)
 ```
 
 ### File Responsibilities
 
 | File                                                       | Responsibility                                                    | Key Exports                                     |
 | ---------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------- |
-| `next_step_gate_and_realtime_playback_runtime_engine.ts`   | command dispatch + step release gate + realtime attach (deferred) | `dispatch_runtime_command`, `release_next_step` |
-| `minimum_duration_clamp_and_speed_based_default_policy.ts` | duration policy + thresholds                                      | `compute_animation_duration_ms`                 |
-| `step_script_cursor_and_replay_determinism_helpers.ts`     | cursor movement + stable ids for stepper                          | `make_stepper_event_id`, `advance_cursor`       |
+| `next_step_gate_and_realtime_playback_runtime_engine (planned)`   | command dispatch + step release gate + realtime attach (deferred) | `dispatch_runtime_command`, `release_next_step` |
+| `minimum_duration_clamp_and_speed_based_default_policy (planned)` | duration policy + thresholds                                      | `compute_animation_duration_ms`                 |
+| `step_script_cursor_and_replay_determinism_helpers (planned)`     | cursor movement + stable ids for stepper                          | `make_stepper_event_id`, `advance_cursor`       |
 
 ---
 
@@ -101,12 +101,12 @@ flow:
 name: stepper_next_step_release
 steps:
 - id: cmd_received
-file: app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine.ts
+file: app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine (planned)
 function: dispatch_runtime_command
 trigger: direct
 output: RuntimeReleaseResult (released/blocked/end_of_script)
 - id: normalize
-file: app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine.ts
+file: app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine (planned)
 function: release_next_step
 trigger: direct
 output: FlowEvent
@@ -120,7 +120,7 @@ docking_points:
 - id: dock_runtime_release_result
 type: event
 direction: output
-file: app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine.ts
+file: app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine (planned)
 function: release_next_step
 payload: RuntimeReleaseResult
 notes: "HEALTH observes one-click-one-event"
@@ -195,7 +195,7 @@ notes: "HEALTH observes one-click-one-event"
 ### Missing Implementation
 
 * [ ] implement runtime engine TS files
-* [ ] add health runner (scripts/connectome/health/runtime_engine_health_check_runner.ts)
+* [ ] add health runner (scripts/connectome/health/runtime_engine_health_check_runner (planned))
 
 ### Ideas
 

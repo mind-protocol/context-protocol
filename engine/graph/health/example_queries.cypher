@@ -3,6 +3,7 @@
 // Natural language-inspired queries for FalkorDB
 // Quality ratings indicate gameplay/narrative usefulness (1-10)
 // =============================================================================
+// DOCS: docs/schema/graph-health/PATTERNS_Graph_Health_Validation.md
 
 // -----------------------------------------------------------------------------
 // CHARACTER QUERIES

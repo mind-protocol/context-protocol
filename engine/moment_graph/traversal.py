@@ -5,6 +5,8 @@ Handles click traversal, weight updates, and moment state transitions.
 This is the hot path — must be <50ms for all operations.
 """
 
+# DOCS: docs/engine/moment-graph-engine/PATTERNS_Instant_Traversal_Moment_Graph.md
+
 import logging
 from typing import Dict, Any, Optional, List
 

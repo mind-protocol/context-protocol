@@ -647,7 +647,7 @@ Options: `--dir PATH`, `--format {md,yaml,json}`, `--folder NAME`
 - If approvals are required by the environment, request them immediately and proceed.
 - Be decisive when you are adequately convinced the solution is the right one; do not hedge or stall once confidence is earned.
 - Do not stop a task until you have tried every solution you can think of to complete it.
-- Do not stop to ask questions; if unsure, add an `@ngram:escalation` marker and proceed with the most likely implementation.
+- Do not stop to ask questions; if unsure, add an `@ngram&#58;escalation` marker and proceed with the most likely implementation.
 - Don't pause before acting; directly act.
 - ALWAYS fix the underlying issue properly, not the symptoms.
   - Example: `ngram doctor --format json` still reports `BROKEN_IMPL_LINK` in multiple docs, so the correct response is: "No, orphaned links are not absent yet; I'll immediately find the core issue by reading docs and implementation to fix the problem once and for all. Adapt behavior immediately."

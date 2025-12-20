@@ -19,7 +19,7 @@ THIS:            IMPLEMENTATION_Connectome_Telemetry_Adapter_Code_Structure_For_
 HEALTH:          ./HEALTH_Connectome_Telemetry_Adapter_Runtime_Verification_Of_Stream_Integrity_And_Buffer_Bounds.md
 SYNC:            ./SYNC_Connectome_Telemetry_Adapter_Sync_Current_State.md
 
-IMPL:            app/connectome/lib/sse_telemetry_eventsource_adapter_with_envelope_emission.ts (PROPOSED)
+IMPL:            app/connectome/lib/sse_telemetry_eventsource_adapter_with_envelope_emission (planned) (PROPOSED)
 ```
 
 ---
@@ -30,22 +30,22 @@ IMPL:            app/connectome/lib/sse_telemetry_eventsource_adapter_with_envel
 app/
 └── connectome/
 ├── lib/
-│   ├── sse_telemetry_eventsource_adapter_with_envelope_emission.ts
-│   ├── telemetry_envelope_parser_and_json_decode_with_error_preservation.ts
-│   ├── telemetry_connection_state_machine_with_retry_backoff.ts
-│   ├── telemetry_arrival_index_and_rate_estimation_window.ts
-│   └── telemetry_stream_configuration_for_connectome_sources.ts
+│   ├── sse_telemetry_eventsource_adapter_with_envelope_emission (planned)
+│   ├── telemetry_envelope_parser_and_json_decode_with_error_preservation (planned)
+│   ├── telemetry_connection_state_machine_with_retry_backoff (planned)
+│   ├── telemetry_arrival_index_and_rate_estimation_window (planned)
+│   └── telemetry_stream_configuration_for_connectome_sources (planned)
 ```
 
 ### File Responsibilities
 
 | File                                                                   | Responsibility                       | Key Exports                                        |
 | ---------------------------------------------------------------------- | ------------------------------------ | -------------------------------------------------- |
-| `sse_telemetry_eventsource_adapter_with_envelope_emission.ts`          | creates EventSource, emits envelopes | `attachTelemetryStreams`, `detachTelemetryStreams` |
-| `telemetry_envelope_parser_and_json_decode_with_error_preservation.ts` | parse JSON with explicit errors      | `parseEnvelopeDataText`                            |
-| `telemetry_connection_state_machine_with_retry_backoff.ts`             | retry/backoff and status             | `ConnectionStateMachine`                           |
-| `telemetry_arrival_index_and_rate_estimation_window.ts`                | monotonic ordering + rate            | `ArrivalIndex`, `RateWindow`                       |
-| `telemetry_stream_configuration_for_connectome_sources.ts`             | list of stream urls/names            | `STREAM_CONFIGS` (placeholder `?`)                 |
+| `sse_telemetry_eventsource_adapter_with_envelope_emission (planned)`          | creates EventSource, emits envelopes | `attachTelemetryStreams`, `detachTelemetryStreams` |
+| `telemetry_envelope_parser_and_json_decode_with_error_preservation (planned)` | parse JSON with explicit errors      | `parseEnvelopeDataText`                            |
+| `telemetry_connection_state_machine_with_retry_backoff (planned)`             | retry/backoff and status             | `ConnectionStateMachine`                           |
+| `telemetry_arrival_index_and_rate_estimation_window (planned)`                | monotonic ordering + rate            | `ArrivalIndex`, `RateWindow`                       |
+| `telemetry_stream_configuration_for_connectome_sources (planned)`             | list of stream urls/names            | `STREAM_CONFIGS` (placeholder `?`)                 |
 
 ---
 

@@ -14,6 +14,8 @@ Usage:
     --graph         Graph name to query (default: blood_ledger)
 """
 
+# DOCS: docs/schema/graph-health/PATTERNS_Graph_Health_Validation.md
+
 import argparse
 import re
 import sys

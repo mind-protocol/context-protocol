@@ -19,7 +19,7 @@ THIS:            IMPLEMENTATION_Connectome_State_Store_Code_Structure_And_Zustan
 HEALTH:          ./HEALTH_Connectome_State_Store_Runtime_Verification_Of_Ledger_And_Timer_Correctness.md
 SYNC:            ./SYNC_Connectome_State_Store_Sync_Current_State.md
 
-IMPL:            app/connectome/lib/zustand_connectome_state_store_with_atomic_commit_actions.ts (PROPOSED)
+IMPL:            app/connectome/lib/zustand_connectome_state_store_with_atomic_commit_actions (planned) (PROPOSED)
 ```
 
 ---
@@ -30,20 +30,20 @@ IMPL:            app/connectome/lib/zustand_connectome_state_store_with_atomic_c
 app/
 └── connectome/
 ├── lib/
-│   ├── zustand_connectome_state_store_with_atomic_commit_actions.ts
-│   ├── connectome_session_boundary_and_restart_policy_controller.ts
-│   ├── connectome_wait_timer_progress_and_tick_display_signal_selectors.ts
-│   └── connectome_export_jsonl_and_text_log_serializer.ts
+│   ├── zustand_connectome_state_store_with_atomic_commit_actions (planned)
+│   ├── connectome_session_boundary_and_restart_policy_controller (planned)
+│   ├── connectome_wait_timer_progress_and_tick_display_signal_selectors (planned)
+│   └── connectome_export_jsonl_and_text_log_serializer (planned)
 ```
 
 ### File Responsibilities
 
 | File                                                                  | Responsibility                   | Key Exports                                       |
 | --------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------- |
-| `zustand_connectome_state_store_with_atomic_commit_actions.ts`        | store state + long-named actions | `useConnectomeStore`                              |
-| `connectome_session_boundary_and_restart_policy_controller.ts`        | implements restart policy A/B    | `restart_session_*`                               |
-| `connectome_wait_timer_progress_and_tick_display_signal_selectors.ts` | selectors for wait/tick widgets  | `selectWaitProgress`, `selectTickDisplay`         |
-| `connectome_export_jsonl_and_text_log_serializer.ts`                  | stable copy/export               | `serializeLedgerToJsonl`, `serializeLedgerToText` |
+| `zustand_connectome_state_store_with_atomic_commit_actions (planned)`        | store state + long-named actions | `useConnectomeStore`                              |
+| `connectome_session_boundary_and_restart_policy_controller (planned)`        | implements restart policy A/B    | `restart_session_*`                               |
+| `connectome_wait_timer_progress_and_tick_display_signal_selectors (planned)` | selectors for wait/tick widgets  | `selectWaitProgress`, `selectTickDisplay`         |
+| `connectome_export_jsonl_and_text_log_serializer (planned)`                  | stable copy/export               | `serializeLedgerToJsonl`, `serializeLedgerToText` |
 
 ---
 

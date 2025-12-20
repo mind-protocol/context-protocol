@@ -6,6 +6,8 @@ Used by:
 - orchestrator.py (after narrator/world runner)
 """
 
+# DOCS: docs/infrastructure/api/PATTERNS_Api.md
+
 import asyncio
 import logging
 from typing import Dict, List, Any

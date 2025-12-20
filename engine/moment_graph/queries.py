@@ -5,6 +5,8 @@ Fast queries for the moment graph. All operations must be <50ms.
 No LLM calls. Pure graph traversal.
 """
 
+# DOCS: docs/engine/moment-graph-engine/PATTERNS_Instant_Traversal_Moment_Graph.md
+
 import json
 import logging
 from typing import List, Dict, Any, Optional, Set

@@ -19,7 +19,7 @@ THIS:            IMPLEMENTATION_Connectome_Node_Kit_Component_Map_And_Styling_To
 HEALTH:          ./HEALTH_Connectome_Node_Kit_Runtime_Verification_Of_Node_State_And_Visual_Signal_Truth.md
 SYNC:            ./SYNC_Connectome_Node_Kit_Sync_Current_State.md
 
-IMPL:            app/connectome/components/node_kit/typed_connectome_node_components_with_energy_and_step_highlighting.tsx (PROPOSED)
+IMPL:            app/connectome/components/node_kit/typed_connectome_node_components_with_energy_and_step_highlighting (planned) (PROPOSED)
 ```
 
 ---
@@ -31,26 +31,26 @@ app/
 └── connectome/
 ├── components/
 │   └── node_kit/
-│       ├── typed_connectome_node_components_with_energy_and_step_highlighting.tsx
-│       ├── connectome_node_frame_with_title_path_and_tooltip_shell.tsx
-│       ├── connectome_energy_badge_bucketed_glow_and_value_formatter.tsx
-│       ├── connectome_player_wait_progress_bar_with_four_second_cap.tsx
-│       ├── connectome_tick_cron_circular_progress_ring_with_speed_label.tsx
-│       ├── connectome_node_background_theme_tokens_by_type_and_language.ts
-│       └── connectome_node_step_list_and_active_step_highlighter.tsx
+│       ├── typed_connectome_node_components_with_energy_and_step_highlighting (planned)
+│       ├── connectome_node_frame_with_title_path_and_tooltip_shell (planned)
+│       ├── connectome_energy_badge_bucketed_glow_and_value_formatter (planned)
+│       ├── connectome_player_wait_progress_bar_with_four_second_cap (planned)
+│       ├── connectome_tick_cron_circular_progress_ring_with_speed_label (planned)
+│       ├── connectome_node_background_theme_tokens_by_type_and_language (planned)
+│       └── connectome_node_step_list_and_active_step_highlighter (planned)
 ```
 
 ### File Responsibilities
 
 | File                                                                     | Responsibility                                         | Key Exports                                                                                         |
 | ------------------------------------------------------------------------ | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| `typed_connectome_node_components_with_energy_and_step_highlighting.tsx` | exports node variants used by flow_canvas              | `PlayerNode`, `UiNode`, `ModuleNode`, `GraphQueriesNode`, `MomentNode`, `AgentNode`, `TickCronNode` |
-| `connectome_node_frame_with_title_path_and_tooltip_shell.tsx`            | shared rounded frame (“more circled”) + tooltip anchor | `NodeFrame`                                                                                         |
-| `connectome_energy_badge_bucketed_glow_and_value_formatter.tsx`          | energy value display + deterministic glow mapping      | `EnergyBadge`                                                                                       |
-| `connectome_player_wait_progress_bar_with_four_second_cap.tsx`           | wait progress bar widget                               | `PlayerWaitProgressBar`                                                                             |
-| `connectome_tick_cron_circular_progress_ring_with_speed_label.tsx`       | tick cron ring widget                                  | `TickCronRing`                                                                                      |
-| `connectome_node_background_theme_tokens_by_type_and_language.ts`        | token tables for background + title colors             | `themeForNodeTypeAndLanguage`                                                                       |
-| `connectome_node_step_list_and_active_step_highlighter.tsx`              | renders steps list + active highlight                  | `StepList`                                                                                          |
+| `typed_connectome_node_components_with_energy_and_step_highlighting (planned)` | exports node variants used by flow_canvas              | `PlayerNode`, `UiNode`, `ModuleNode`, `GraphQueriesNode`, `MomentNode`, `AgentNode`, `TickCronNode` |
+| `connectome_node_frame_with_title_path_and_tooltip_shell (planned)`            | shared rounded frame (“more circled”) + tooltip anchor | `NodeFrame`                                                                                         |
+| `connectome_energy_badge_bucketed_glow_and_value_formatter (planned)`          | energy value display + deterministic glow mapping      | `EnergyBadge`                                                                                       |
+| `connectome_player_wait_progress_bar_with_four_second_cap (planned)`           | wait progress bar widget                               | `PlayerWaitProgressBar`                                                                             |
+| `connectome_tick_cron_circular_progress_ring_with_speed_label (planned)`       | tick cron ring widget                                  | `TickCronRing`                                                                                      |
+| `connectome_node_background_theme_tokens_by_type_and_language (planned)`        | token tables for background + title colors             | `themeForNodeTypeAndLanguage`                                                                       |
+| `connectome_node_step_list_and_active_step_highlighter (planned)`              | renders steps list + active highlight                  | `StepList`                                                                                          |
 
 ---
 

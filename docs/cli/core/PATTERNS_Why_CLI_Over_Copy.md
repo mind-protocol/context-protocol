@@ -104,6 +104,7 @@ Repair and agent-facing commands build structured prompts, spawn subprocesses vi
 | `ngram/repo_overview.py` | Repository mapping | Generates project maps used by doc-link integrity signals. |
 | `ngram/solve_escalations.py` | Marker resolution | Surfaces proposals detected by `doctor` and `solve-markers`. |
 | `ngram/core_utils.py` | Utils | Path resolution, doc discovery, and canonical file helpers reused across CLI checks. |
+| `ngram/github.py` | GitHub integration | Creates issues from doctor results and tracks issue state. |
 
 ```
 IMPL: ngram/doctor_files.py
@@ -115,6 +116,7 @@ IMPL: ngram/repair_report.py
 IMPL: ngram/repo_overview.py
 IMPL: ngram/solve_escalations.py
 IMPL: ngram/core_utils.py
+IMPL: ngram/github.py
 ```
 
 ---

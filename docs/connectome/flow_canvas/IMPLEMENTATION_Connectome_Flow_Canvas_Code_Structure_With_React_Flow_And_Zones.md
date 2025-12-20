@@ -19,7 +19,7 @@ THIS:            IMPLEMENTATION_Connectome_Flow_Canvas_Code_Structure_With_React
 HEALTH:          ./HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_Stability_And_Perf_Budgets.md
 SYNC:            ./SYNC_Connectome_Flow_Canvas_Sync_Current_State.md
 
-IMPL:            app/connectome/components/pannable_zoomable_zoned_flow_canvas_renderer.tsx (PROPOSED)
+IMPL:            app/connectome/components/pannable_zoomable_zoned_flow_canvas_renderer (planned) (PROPOSED)
 ```
 
 ---
@@ -30,18 +30,18 @@ IMPL:            app/connectome/components/pannable_zoomable_zoned_flow_canvas_r
 app/
 └── connectome/
 ├── components/
-│   ├── pannable_zoomable_zoned_flow_canvas_renderer.tsx
-│   ├── deterministic_zone_and_node_layout_computation_helpers.ts
-│   └── edge_label_declutter_and_visibility_policy_helpers.ts
+│   ├── pannable_zoomable_zoned_flow_canvas_renderer (planned)
+│   ├── deterministic_zone_and_node_layout_computation_helpers (planned)
+│   └── edge_label_declutter_and_visibility_policy_helpers (planned)
 ```
 
 ### File Responsibilities
 
 | File                                                        | Responsibility                              | Key Components/Exports                   |
 | ----------------------------------------------------------- | ------------------------------------------- | ---------------------------------------- |
-| `pannable_zoomable_zoned_flow_canvas_renderer.tsx`          | renders zones + nodes + edges with pan/zoom | `FlowCanvas`                             |
-| `deterministic_zone_and_node_layout_computation_helpers.ts` | compute positions from node list            | `computeZones`, `computeNodePositions`   |
-| `edge_label_declutter_and_visibility_policy_helpers.ts`     | label placement offsets and zoom policy     | `computeLabelAnchors`, `shouldShowLabel` |
+| `pannable_zoomable_zoned_flow_canvas_renderer (planned)`          | renders zones + nodes + edges with pan/zoom | `FlowCanvas`                             |
+| `deterministic_zone_and_node_layout_computation_helpers (planned)` | compute positions from node list            | `computeZones`, `computeNodePositions`   |
+| `edge_label_declutter_and_visibility_policy_helpers (planned)`     | label placement offsets and zoom policy     | `computeLabelAnchors`, `shouldShowLabel` |
 
 ---
 

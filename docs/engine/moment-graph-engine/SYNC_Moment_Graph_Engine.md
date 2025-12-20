@@ -80,6 +80,12 @@ The module relies on physics graph ops/queries and is treated as a hot path.
 - **Files:** `engine/moment_graph/queries.py`
 - **Result:** `get_current_view` returns moments without query failures.
 
+### 2025-12-20: Add DOCS references for moment graph modules
+
+- **What:** Added `DOCS:` references to the traversal and query modules.
+- **Why:** Ensure `ngram doctor` can link code back to this module's doc chain.
+- **Files:** `engine/moment_graph/traversal.py`, `engine/moment_graph/queries.py`
+
 ### 2025-12-19: Revalidated traversal helpers
 
 - **What:** Checked `make_dormant` and `process_wait_triggers` in

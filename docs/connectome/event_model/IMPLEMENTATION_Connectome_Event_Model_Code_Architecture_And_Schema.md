@@ -19,7 +19,7 @@ THIS:           IMPLEMENTATION_Connectome_Event_Model_Code_Architecture_And_Sche
 HEALTH:         ./HEALTH_Connectome_Event_Model_Runtime_Verification_And_Signal_Coverage.md
 SYNC:           ./SYNC_Connectome_Event_Model_Sync_Current_State.md
 
-IMPL:           app/connectome/lib/flow_event_schema_and_normalization_contract.ts (PROPOSED)
+IMPL:           app/connectome/lib/flow_event_schema_and_normalization_contract (planned) (PROPOSED)
 ```
 
 > **Contract:** Read docs before modifying. After changes: update IMPL or add TODO to SYNC. Run health.
@@ -32,9 +32,9 @@ IMPL:           app/connectome/lib/flow_event_schema_and_normalization_contract.
 app/
 └── connectome/
 ├── lib/
-│   ├── flow_event_schema_and_normalization_contract.ts     # exports FlowEvent + normalize_flow_event()
-│   ├── flow_event_duration_bucket_color_classifier.ts      # duration->(text,color) rules
-│   └── flow_event_trigger_and_calltype_inference_rules.ts  # mapping tables, kept deterministic
+│   ├── flow_event_schema_and_normalization_contract (planned)     # exports FlowEvent + normalize_flow_event()
+│   ├── flow_event_duration_bucket_color_classifier (planned)      # duration->(text,color) rules
+│   └── flow_event_trigger_and_calltype_inference_rules (planned)  # mapping tables, kept deterministic
 └── (other modules own rendering/store)
 ```
 
@@ -42,9 +42,9 @@ app/
 
 | File                                                                    | Purpose                                              | Key Functions/Classes                       | Lines | Status |
 | ----------------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------- | ----- | ------ |
-| `app/connectome/lib/flow_event_schema_and_normalization_contract.ts`    | Single source of truth for FlowEvent + normalization | `FlowEvent`, `normalize_flow_event()`       | ~200  | OK     |
-| `app/connectome/lib/flow_event_duration_bucket_color_classifier.ts`     | Duration formatting + threshold coloring             | `format_duration_for_log()`                 | ~120  | OK     |
-| `app/connectome/lib/flow_event_trigger_and_calltype_inference_rules.ts` | Deterministic mappings for trigger/callType          | `infer_trigger_kind()`, `infer_call_type()` | ~160  | OK     |
+| `app/connectome/lib/flow_event_schema_and_normalization_contract (planned)`    | Single source of truth for FlowEvent + normalization | `FlowEvent`, `normalize_flow_event()`       | ~200  | OK     |
+| `app/connectome/lib/flow_event_duration_bucket_color_classifier (planned)`     | Duration formatting + threshold coloring             | `format_duration_for_log()`                 | ~120  | OK     |
+| `app/connectome/lib/flow_event_trigger_and_calltype_inference_rules (planned)` | Deterministic mappings for trigger/callType          | `infer_trigger_kind()`, `infer_call_type()` | ~160  | OK     |
 
 **Size Thresholds:**
 
@@ -66,7 +66,7 @@ app/
 
 | Pattern              | Applied To                                           | Purpose                            |
 | -------------------- | ---------------------------------------------------- | ---------------------------------- |
-| Table-driven mapping | `flow_event_trigger_and_calltype_inference_rules.ts` | deterministic classification       |
+| Table-driven mapping | `flow_event_trigger_and_calltype_inference_rules (planned)` | deterministic classification       |
 | Pure functions       | `normalize_flow_event()`                             | testability + replay determinism   |
 | Strict types         | `FlowEvent`                                          | schema stability for agents and UI |
 
@@ -117,7 +117,7 @@ constraints:
 
 | Entry Point              | File:Line                                           | Triggered By                                   |
 | ------------------------ | --------------------------------------------------- | ---------------------------------------------- |
-| `normalize_flow_event()` | `flow_event_schema_and_normalization_contract.ts:?` | stepper release, SSE ingestion, derived events |
+| `normalize_flow_event()` | `flow_event_schema_and_normalization_contract (planned):?` | stepper release, SSE ingestion, derived events |
 
 ---
 
@@ -141,7 +141,7 @@ trigger: "Next step" | "SSE event" | "timer"
 side_effects: none
 - id: step_2_normalize
 description: Convert raw_envelope into FlowEvent using deterministic rules.
-file: app/connectome/lib/flow_event_schema_and_normalization_contract.ts
+file: app/connectome/lib/flow_event_schema_and_normalization_contract (planned)
 function: normalize_flow_event
 input: raw_envelope
 output: FlowEvent
@@ -164,7 +164,7 @@ available:
 - id: dock_normalize_flow_event_output
 type: event
 direction: output
-file: app/connectome/lib/flow_event_schema_and_normalization_contract.ts
+file: app/connectome/lib/flow_event_schema_and_normalization_contract (planned)
 function: normalize_flow_event
 trigger: direct call
 payload: FlowEvent
@@ -266,7 +266,7 @@ Stateless and synchronous. Concurrency handled by callers (store/adapter).
 
 | Config               | Location                                          | Default   | Description                        |
 | -------------------- | ------------------------------------------------- | --------- | ---------------------------------- |
-| `MIN_ANIMATION_MS`   | `flow_event_schema_and_normalization_contract.ts` | 200       | clamp for trustworthiness          |
+| `MIN_ANIMATION_MS`   | `flow_event_schema_and_normalization_contract (planned)` | 200       | clamp for trustworthiness          |
 | `STORE_RAW_PAYLOADS` | same                                              | false (?) | store raw payloads behind a toggle |
 | `RETENTION_POLICY`   | caller (state_store)                              | ?         | how many events to keep            |
 
@@ -280,15 +280,15 @@ To add during implementation:
 
 | File                                              | Line | Reference                                                         |
 | ------------------------------------------------- | ---- | ----------------------------------------------------------------- |
-| `flow_event_schema_and_normalization_contract.ts` | ?    | `# DOCS: docs/connectome/event_model/IMPLEMENTATION_...md` |
+| `flow_event_schema_and_normalization_contract (planned)` | ?    | planned docs reference (pending implementation) |
 
 ### Docs → Code
 
 | Doc Section                    | Implemented In                                                                 |
 | ------------------------------ | ------------------------------------------------------------------------------ |
-| ALGORITHM normalize_flow_event | `flow_event_schema_and_normalization_contract.ts:normalize_flow_event`         |
-| VALIDATION V1                  | `event_model_health_check_runner.ts:health_check_event_schema_conformance` (?) |
-| BEHAVIOR B3                    | `flow_event_duration_bucket_color_classifier.ts:format_duration_for_log`       |
+| ALGORITHM normalize_flow_event | `flow_event_schema_and_normalization_contract (planned):normalize_flow_event`         |
+| VALIDATION V1                  | `event_model_health_check_runner (planned):health_check_event_schema_conformance` (?) |
+| BEHAVIOR B3                    | `flow_event_duration_bucket_color_classifier (planned):format_duration_for_log`       |
 
 ---
 

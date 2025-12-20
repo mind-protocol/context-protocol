@@ -44,6 +44,16 @@ ngram context src/your_file.py
 
 # Generate bootstrap prompt for LLM
 ngram prompt
+
+# Expose local port 3005 via ngrok
+ngrok http 3005 --url trusted-magpie-social.ngrok-free.app
+
+# Run FalkorDB MCP server
+cd ~/FalkorDB-MCPServer
+npm run dev
+
+# Restart full stack (FalkorDB, BE, FE, MCP server, ngrok)
+tools/run_stack.sh
 ```
 
 After initialization:

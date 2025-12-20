@@ -18,6 +18,8 @@ Listeners receive events with:
 - data: Event-specific data
 """
 
+# DOCS: docs/physics/graph/PATTERNS_Graph.md
+
 import logging
 from datetime import datetime
 from typing import Dict, Any, List, Callable

@@ -19,7 +19,7 @@ THIS:            IMPLEMENTATION_Connectome_Log_Panel_Component_Structure_And_Ser
 HEALTH:          ./HEALTH_Connectome_Log_Panel_Runtime_Verification_Of_Log_Truth_And_Export_Integrity.md
 SYNC:            ./SYNC_Connectome_Log_Panel_Sync_Current_State.md
 
-IMPL:            app/connectome/components/unified_now_and_copyable_ledger_log_panel.tsx (PROPOSED)
+IMPL:            app/connectome/components/unified_now_and_copyable_ledger_log_panel (planned) (PROPOSED)
 ```
 
 ---
@@ -30,20 +30,20 @@ IMPL:            app/connectome/components/unified_now_and_copyable_ledger_log_p
 app/
 └── connectome/
 ├── components/
-│   ├── unified_now_and_copyable_ledger_log_panel.tsx
-│   ├── connectome_log_duration_formatting_and_threshold_color_rules.ts
-│   ├── connectome_log_trigger_and_calltype_badge_color_tokens.ts
-│   └── connectome_log_export_buttons_using_state_store_serializers.tsx
+│   ├── unified_now_and_copyable_ledger_log_panel (planned)
+│   ├── connectome_log_duration_formatting_and_threshold_color_rules (planned)
+│   ├── connectome_log_trigger_and_calltype_badge_color_tokens (planned)
+│   └── connectome_log_export_buttons_using_state_store_serializers (planned)
 ```
 
 ### File Responsibilities
 
 | File                                                              | Responsibility              | Key Exports                               |
 | ----------------------------------------------------------------- | --------------------------- | ----------------------------------------- |
-| `unified_now_and_copyable_ledger_log_panel.tsx`                   | main panel UI               | `LogPanel`                                |
-| `connectome_log_duration_formatting_and_threshold_color_rules.ts` | duration text + color class | `formatDuration`, `durationColorClass`    |
-| `connectome_log_trigger_and_calltype_badge_color_tokens.ts`       | badge palettes              | `triggerBadgeClass`, `callTypeBadgeClass` |
-| `connectome_log_export_buttons_using_state_store_serializers.tsx` | copy/export actions         | `ExportButtons`                           |
+| `unified_now_and_copyable_ledger_log_panel (planned)`                   | main panel UI               | `LogPanel`                                |
+| `connectome_log_duration_formatting_and_threshold_color_rules (planned)` | duration text + color class | `formatDuration`, `durationColorClass`    |
+| `connectome_log_trigger_and_calltype_badge_color_tokens (planned)`       | badge palettes              | `triggerBadgeClass`, `callTypeBadgeClass` |
+| `connectome_log_export_buttons_using_state_store_serializers (planned)` | copy/export actions         | `ExportButtons`                           |
 
 ---
 

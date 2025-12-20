@@ -12,6 +12,8 @@ Docs:
 - docs/infrastructure/async/IMPLEMENTATION_Async_Architecture.md — async queues + injection flow
 """
 
+# DOCS: docs/infrastructure/api/PATTERNS_Api.md
+
 import json
 import logging
 from datetime import datetime

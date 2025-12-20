@@ -19,7 +19,7 @@ THIS:            IMPLEMENTATION_Connectome_Edge_Kit_Component_Map_And_Render_Tok
 HEALTH:          ./HEALTH_Connectome_Edge_Kit_Runtime_Verification_Of_Link_Visibility_And_Semantic_Styling.md
 SYNC:            ./SYNC_Connectome_Edge_Kit_Sync_Current_State.md
 
-IMPL:            app/connectome/components/edge_kit/semantic_edge_components_with_directional_shine_and_pulses.tsx (PROPOSED)
+IMPL:            app/connectome/components/edge_kit/semantic_edge_components_with_directional_shine_and_pulses (planned) (PROPOSED)
 ```
 
 ---
@@ -31,24 +31,24 @@ app/
 └── connectome/
 ├── components/
 │   └── edge_kit/
-│       ├── semantic_edge_components_with_directional_shine_and_pulses.tsx
-│       ├── connectome_edge_style_tokens_for_trigger_and_calltype_mapping.ts
-│       ├── connectome_edge_label_renderer_with_halo_and_zoom_policy.tsx
-│       ├── connectome_edge_directional_shine_animation_helpers.ts
-│       ├── connectome_edge_pulse_particle_animation_and_boundary_clamp_helpers.ts
-│       └── connectome_node_boundary_intersection_geometry_helpers.ts
+│       ├── semantic_edge_components_with_directional_shine_and_pulses (planned)
+│       ├── connectome_edge_style_tokens_for_trigger_and_calltype_mapping (planned)
+│       ├── connectome_edge_label_renderer_with_halo_and_zoom_policy (planned)
+│       ├── connectome_edge_directional_shine_animation_helpers (planned)
+│       ├── connectome_edge_pulse_particle_animation_and_boundary_clamp_helpers (planned)
+│       └── connectome_node_boundary_intersection_geometry_helpers (planned)
 ```
 
 ### File Responsibilities
 
 | File                                                                     | Responsibility                      | Key Exports                             |
 | ------------------------------------------------------------------------ | ----------------------------------- | --------------------------------------- |
-| `semantic_edge_components_with_directional_shine_and_pulses.tsx`         | Edge components used by flow_canvas | `DirectEdge`, `StreamEdge`, `AsyncEdge` |
-| `connectome_edge_style_tokens_for_trigger_and_calltype_mapping.ts`       | strict mappings                     | `styleForTrigger`, `colorForCallType`   |
-| `connectome_edge_label_renderer_with_halo_and_zoom_policy.tsx`           | label rendering (not bold)          | `EdgeLabel`                             |
-| `connectome_edge_directional_shine_animation_helpers.ts`                 | shine animation definitions         | `makeShineStroke`                       |
-| `connectome_edge_pulse_particle_animation_and_boundary_clamp_helpers.ts` | pulses, magnitude scaling           | `renderPulse`, `computePulseDuration`   |
-| `connectome_node_boundary_intersection_geometry_helpers.ts`              | clamp endpoints at node edges       | `intersectWithRoundedRect`              |
+| `semantic_edge_components_with_directional_shine_and_pulses (planned)`         | Edge components used by flow_canvas | `DirectEdge`, `StreamEdge`, `AsyncEdge` |
+| `connectome_edge_style_tokens_for_trigger_and_calltype_mapping (planned)`       | strict mappings                     | `styleForTrigger`, `colorForCallType`   |
+| `connectome_edge_label_renderer_with_halo_and_zoom_policy (planned)`           | label rendering (not bold)          | `EdgeLabel`                             |
+| `connectome_edge_directional_shine_animation_helpers (planned)`                 | shine animation definitions         | `makeShineStroke`                       |
+| `connectome_edge_pulse_particle_animation_and_boundary_clamp_helpers (planned)` | pulses, magnitude scaling           | `renderPulse`, `computePulseDuration`   |
+| `connectome_node_boundary_intersection_geometry_helpers (planned)`              | clamp endpoints at node edges       | `intersectWithRoundedRect`              |
 
 ---
 

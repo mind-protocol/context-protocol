@@ -22,6 +22,15 @@ Increased the LARGE_DOC_MODULE threshold by 25% (62.5K chars) and re-ran doctor;
 Adjusted INCOMPLETE_IMPL detection to apply stub-only checks consistently (including end-of-file), clearing remaining false positives; latest doctor run shows warnings 278, info 138, critical 0.
 Updated CLI SYNC to record the doctor threshold + stub detection changes and re-ran doctor; latest health remains critical 0 with warnings 275, info 138.
 Moved `docs/connectome/module/*` into `docs/connectome/*` via `ngram refactor batch`; updated references, regenerated `map_docs.md`, and refreshed doctor (warnings 275, info 138).
+Added ngrok command to README and normalized planned connectome implementation file references to avoid broken impl links; re-ran doctor and cleared critical issues (warnings 266, info 137).
+Added FalkorDB MCP server dev command to README and re-ran doctor (warnings 266, info 137, critical 0).
+Added a `tools/run_stack.sh` helper to stop/restart FalkorDB, BE, FE, MCP server, and ngrok (configurable via env vars), plus added DOCS references to moment graph + health tooling files; re-ran doctor (warnings 281, info 131, critical 0).
+Added DOCS references for moment graph traversal/queries and health tooling, and updated moment-graph-engine SYNC to reflect the change; re-ran doctor (warnings 279, info 131, critical 0).
+Updated `tools/run_stack.sh` to append stderr to `./.ngram/error.log` and re-ran doctor (warnings 279, info 131, critical 0).
+Updated README to include the stack restart script and re-ran doctor (warnings 279, info 131, critical 0).
+Adjusted `tools/run_stack.sh` to use `setsid` so background services persist beyond the invoking shell; logs now land in `./logs/run_stack` with stderr appended to `./.ngram/error.log`.
+Normalized `.env` ngrok variables (`NGROK_URL`, `NGROK_PORT`, `NGROK_AUTH_TOKEN`) and MCP API key, updated `tools/run_stack.sh` to build the ngrok command from those env vars, and re-ran doctor (warnings 276, info 131, critical 0).
+Updated `tools/run_stack.sh` to skip frontend restart if it is already running (frontend auto-reloads).
 Added `tools/connectome_doc_bundle_splitter_and_fence_rewriter.py` and used it to split `data/connectome/1.md` through `data/connectome/5.md` into individual docs under `docs/connectome/`, rewriting `$$$` fences to Markdown ``` fences.
 Added `.ngram/views/SKILL_Collaborate_Pair_Program_With_Human.md` and a deprecated stub `VIEW_Collaborate_Pair_Program_With_Human.md` that points to the new SKILL guidance.
 Ran the connectome doc splitter on `data/connectome/6.md` and `data/connectome/7.md`, writing additional docs under `docs/connectome/` and rewriting `$$$` fences.

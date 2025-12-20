@@ -26,6 +26,12 @@ The CLI is in active use while fixes continue to land in the repair subsystem. A
 
 ## RECENT CHANGES
 
+### 2025-12-20: CLI escalation decision gap noted
+
+- **What:** Updated `docs/cli/SYNC_CLI_Development_State.md` to record the missing human decisions for the CLI escalation task.
+- **Why:** The escalation issue cannot be resolved without decisions; the gap is now documented.
+- **Impact:** No conflict resolution applied; task remains blocked on human input.
+
 ### 2025-12-20: Escape escalation marker in principles template
 
 - **What:** Replaced the literal `@ngram:escalation` token in `templates/ngram/PRINCIPLES.md` with an HTML entity to prevent doctor escalation detection in documentation.
@@ -44,6 +50,12 @@ The CLI is in active use while fixes continue to land in the repair subsystem. A
 - **Why:** The issue requires explicit decisions before conflicts can be resolved.
 - **Impact:** No doc changes made for this escalation; awaiting human input.
 
+### 2025-12-20: CLI algorithm escalation decision still missing
+
+- **What:** Reviewed the escalation task for `docs/cli/ALGORITHM_CLI_Command_Execution_Logic.md` and documented the missing decision in CLI SYNC.
+- **Why:** No human decision was provided to resolve the escalation marker conflict.
+- **Impact:** No changes to the algorithm doc; awaiting decision to proceed.
+
 ### 2025-12-20: Fix repair_core async SyntaxError
 
 - **What:** Wrapped `spawn_repair_agent_async` in a proper try/except, initialized retry counters, recorded Gemini fallback state, and imported `DoctorConfig` in `ngram/repair.py`.
@@ -56,6 +68,12 @@ The CLI is in active use while fixes continue to land in the repair subsystem. A
 - **Why:** TUI repair runs failed with "missing 1 required positional argument: config".
 - **Impact:** TUI repair flow should run without the config argument error.
 - **Follow-up:** Stored and reused DoctorConfig for queued agent spawns to avoid NameError in later steps.
+
+### 2025-12-20: Link Cybernetic Studio source into doc chain
+
+- **What:** Added the raw architecture source file to the Cybernetic Studio PATTERNS chain.
+- **Why:** Make the canonical source visible in the documentation chain.
+- **Impact:** Architecture readers can trace back to `data/ARCHITECTURE — Cybernetic Studio.md`.
 
 ### 2025-12-20: Resolved BROKEN_IMPL_LINK and STALE_IMPL issues
 
@@ -125,6 +143,9 @@ Confirm whether you want me to run `ngram --agents codex` now for verification.
 - Completed: Reviewed `AGENTS.md` escalation task; no decisions were provided to implement.
 - Remaining: Resolve the `AGENTS.md` escalation once decisions are supplied and update the CONFLICTS section accordingly.
 - Blocker: Human decisions missing for the escalation marker.
+- Completed: Reviewed `docs/cli/ALGORITHM_CLI_Command_Execution_Logic.md` escalation task; no decisions were provided to implement.
+- Remaining: Resolve the CLI algorithm escalation once decisions are supplied and update the CLI SYNC accordingly.
+- Blocker: Human decisions missing for the escalation marker conflict.
 
 ---
 

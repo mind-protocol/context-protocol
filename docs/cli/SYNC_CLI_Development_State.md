@@ -1,8 +1,8 @@
 # ngram Framework CLI — Sync: Current State
 
 ```
-LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (escalation rename)
+LAST_UPDATED: 2025-12-20
+UPDATED_BY: codex (repair escalation check)
 STATUS: CANONICAL
 ```
 
@@ -35,6 +35,18 @@ No active development at this time.
 ---
 
 ## RECENT CHANGES
+
+### 2025-12-20: Escalation decision gap noted
+
+- Logged missing human decisions for the CLI escalation resolution task.
+- No conflict changes applied; awaiting decisions before modifying docs/code.
+
+### 2025-12-20: Fix repair_core async syntax error and fallback retry state
+
+- Repaired `spawn_repair_agent_async` control flow so timeout/exception handling is aligned with the main try block.
+- Added retry counters and Gemini fallback state updates to avoid NameError and record fallback usage.
+- Keeps CLI agent spawn paths working for `ngram --agents` and repair flows.
+- Imported `DoctorConfig` in `ngram/repair.py` to avoid NameError during module import.
 
 ### 2025-12-19: Implementation of @ngram:proposition and solve-markers
 
@@ -140,6 +152,12 @@ No active development at this time.
 - Reasoning: Out of scope for CLI behavior changes.
 - Updated: `docs/cli/SYNC_CLI_State.md`
 
+## GAPS
+
+- Completed: Reviewed `SYNC_CLI_Development_State.md` for escalation markers and decisions.
+- Remaining: No human decisions provided to resolve the escalation task; no changes applied beyond this note.
+- Blocker: Human decisions missing for the escalation marker resolution.
+
 ---
 
 ## HANDOFF
@@ -170,6 +188,12 @@ No active development at this time.
 
 ---
 
+## GAPS
+
+- Completed: Reviewed `docs/cli/ALGORITHM_CLI_Command_Execution_Logic.md` for the escalation marker conflict.
+- Remaining: Resolve the escalation marker once a human decision is provided.
+- Blocker: No human decision was supplied for the escalation conflict, so no doc change was made.
+
 ## ARCHIVE
 
-Older content archived to: `SYNC_CLI_State_Archive_2025-12.md`
+Older content archived to: `archive/SYNC_CLI_State_Archive_2025-12.md`

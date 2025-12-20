@@ -51,34 +51,14 @@ modules:
 # YOUR MODULES
 # =============================================================================
 
-protocol:
-  code: "templates/ngram/**"
-  docs: "docs/protocol/"
-  maturity: CANONICAL
-  owner: human
-  notes: |
-    Core ngram protocol definition and templates.
+# Uncomment and modify as you create modules:
 
-cli:
-  code: "ngram/*.py"
-  docs: "docs/cli/"
-  maturity: CANONICAL
-  owner: human
-  notes: |
-    ngram CLI entry points and core logic.
+# types:
+#   code: "src/types/**"
+#   docs: "docs/core/types/"
+#   maturity: CANONICAL
+#   owner: human
+#   notes: |
+#     Core type definitions. Changes affect entire codebase.
 
-llm_agents:
-  code: "ngram/llms/**"
-  docs: "docs/llm_agents/"
-  maturity: DESIGNING
-  owner: human
-  notes: |
-    Adapter subprocesses for LLM providers (Claude, Gemini, Codex).
-
-tui:
-  code: "ngram/tui/**"
-  docs: "docs/tui/"
-  maturity: DESIGNING
-  owner: human
-  notes: |
-    Textual-based terminal user interface.
+# Add more modules as they emerge...

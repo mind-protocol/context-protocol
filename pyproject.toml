@@ -11,6 +11,7 @@ license = "MIT"
 requires-python = ">=3.9"
 dependencies = [
     "google-genai",
+    "pydantic>=2.0",
     "rich~=14.2.0",
     "protobuf>=3.19,<5.0",
     "python-dotenv",

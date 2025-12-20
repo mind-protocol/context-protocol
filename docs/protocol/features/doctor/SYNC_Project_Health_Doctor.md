@@ -1,8 +1,8 @@
 # SYNC: Project Health Doctor
 
 ```
-LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (doc checks)
+LAST_UPDATED: 2025-12-20
+UPDATED_BY: codex (escape marker refs)
 STATUS: CANONICAL
 ```
 
@@ -44,6 +44,7 @@ The command provides holistic project health analysis beyond pass/fail validatio
 - Non-standard doc type filenames
 - Doc template drift supports escalation tags to capture human questions.
 - Doctor now flags resolved escalation markers so they get applied and removed.
+- Escaped marker references in BEHAVIORS to avoid triggering escalation scans.
 
 Features:
 - Text and JSON output
@@ -137,6 +138,14 @@ Suggested order based on dependencies:
 - IDEA: Health score badge for README
 - IDEA: Integration with CI (GitHub Actions template)
 - IDEA: Trend tracking (score over time)
+
+---
+
+## GAPS
+
+- Completed: Reviewed `BEHAVIORS_Project_Health_Doctor.md` and module SYNC for escalation/conflict markers.
+- Remaining: No conflicts or escalation markers found to resolve for this module.
+- Blocker: Repair task references a decisionless escalation; needs confirmation of the intended conflict or missing marker.
 
 ---
 

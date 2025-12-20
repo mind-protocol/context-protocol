@@ -1,28 +1,36 @@
 # Project — Sync: Current State
 
 ```
-LAST_UPDATED: 2025-12-20
-UPDATED_BY: codex (verify TUI implementation link)
+LAST_UPDATED: {DATE}
+UPDATED_BY: {AGENT/HUMAN}
 ```
 
 ---
 
 ## CURRENT STATE
 
-The CLI is in active use while fixes continue to land in the repair subsystem. A SyntaxError in `ngram/repair_core.py` was blocking `ngram --agents` from importing; the function was repaired and retry state initialized. Verification of the CLI run is still pending. Escaped escalation markers in `docs/cli/SYNC_CLI_Development_State.md` to avoid false positive escalation detection. Escaped escalation markers in `docs/protocol/SYNC_Protocol_Current_State.md` for the same reason; other escalation tasks still await human decisions. Escaped doctor marker references in `docs/protocol/features/doctor/BEHAVIORS_Project_Health_Doctor.md` to prevent false escalation hits. Escaped the escalation marker token in `.ngram/GEMINI.md` to avoid false escalation detection. Updated `ngram init` to escape escalation/proposition markers when generating `.ngram/CLAUDE.md` and escaped the proposition marker in `templates/ngram/PRINCIPLES.md` to prevent future init output from tripping scans. Reviewed the AGENTS escalation task; no human decisions were provided, so no conflict updates were made. Reviewed the VIEW_Escalation_How_To_Handle_Vague_Task escalation repair; no human decisions were provided, so no conflict updates were applied. Ran `ngram validate`; remaining failures are the missing `VIEW_Collaborate_Pair_Program_With_Human.md` and broken CHAIN links in protocol HEALTH/doctor docs. Completed the Cybernetic Studio architecture doc chain and mapped it in `modules.yaml`. Added a CHAIN block to `docs/architecture/cybernetic_studio_architecture/SYNC_Cybernetic_Studio_Architecture_State.md` to fix the incomplete chain. Linked `data/ARCHITECTURE — Cybernetic Studio.md` to the doc chain with a DOCS pointer so `ngram context` resolves the architecture docs from the source artifact. Verified the INCOMPLETE_IMPL report for `ngram/doctor_files.py` was already resolved; no code changes were needed. Implemented case-insensitive issue lookup defaults in `ngram/repair_core.py` to avoid incomplete-impl false positives. Completed the core_utils documentation chain and updated the DOCS reference in `ngram/core_utils.py`. Consolidated the TUI archive SYNC docs by confirming the 2024-12 summary already lives in the 2025-12 archive and replacing the older file with a canonical reference. Ran `ngram validate` after the core_utils doc updates; remaining failures are outside core_utils (missing VIEW and protocol doc chain links). Repaired `docs/SYNC_Project_Repository_Map.md` to restore missing SYNC template sections without modifying the generated map body.
-TUI archive note: `docs/tui/archive/SYNC_Archive_2024-12.md` now points to the canonical `docs/tui/archive/SYNC_TUI_State_Archive_2025-12.md`.
-Refactored the TUI entry point by extracting `NgramApp` into `ngram/tui/app_core.py`, leaving `ngram/tui/app.py` as a small launcher. Extracted manager startup helpers into `ngram/tui/app_manager.py` to bring `ngram/tui/app_core.py` below the monolith threshold (724L). Ran `ngram validate`; it reports pre-existing VIEW/doc-chain issues outside this refactor. Added a scope note to the CLI archive and consolidated the TUI archive snapshot into the 2025-12 canonical file. Confirmed the async implementation plan stays in `blood-ledger` as a cross-repo pointer (no mirror in `ngram` docs). Updated TUI DOCS headers and structure doc references to use `docs/tui/PATTERNS_TUI_Modular_Interface_Design.md` in place of the missing `PATTERNS_TUI_Design.md`. Verified the TUI implementation structure doc references resolve to existing PATTERNS docs. Restored missing SYNC sections in `docs/SYNC_Project_Repository_Map.md` to resolve template drift.
+{Narrative of the project's current state. Not a feature list — the story of where things are.}
 
 ---
 
 ## ACTIVE WORK
 
-### Repair CLI import failure
+### {Work Stream}
 
-- **Area:** `cli/`
-- **Status:** completed (needs verification)
-- **Owner:** codex
-- **Context:** Fixed SyntaxError and missing retry state in `spawn_repair_agent_async` that prevented CLI startup.
+- **Area:** `{area}/`
+- **Status:** {in progress / blocked}
+- **Owner:** {agent/human}
+- **Context:** {what's happening, why it matters}
+
+---
+
+## RECENT CHANGES
+
+### {DATE}: {Summary}
+
+- **What:** {description}
+- **Why:** {motivation}
+- **Impact:** {what this affects}
 
 ---
 
@@ -30,38 +38,37 @@ Refactored the TUI entry point by extracting `NgramApp` into `ngram/tui/app_core
 
 | Issue | Severity | Area | Notes |
 |-------|----------|------|-------|
-| CLI fix not verified | warning | `cli/` | `ngram --agents codex` should be rerun to confirm import now succeeds |
-| Protocol validation failures | warning | docs | `ngram validate` reports missing VIEW, missing core_utils HEALTH, and broken CHAIN links |
+| {description} | {level} | `{area}/` | {context} |
 
 ---
 
 ## HANDOFF: FOR AGENTS
 
-**Likely VIEW for continuing:** `VIEW_Debug_Investigate_And_Fix_Issues.md`
+**Likely VIEW for continuing:** {which VIEW}
 
-**Current focus:** Verify CLI import (`ngram --agents codex`) and ensure repair agent flow still runs.
+**Current focus:** {what the project is working toward right now}
 
 **Key context:**
-`spawn_repair_agent_async` had a mismatched `except` and undefined retry variables; these were repaired.
+{The things an agent needs to know that aren't obvious from the code/docs}
 
 **Watch out for:**
-`spawn_repair_agent` in `ngram/repair.py` returns a coroutine; double-check sync call sites if issues persist.
+{Project-level gotchas}
 
 ---
 
 ## HANDOFF: FOR HUMAN
 
 **Executive summary:**
-Fixed a SyntaxError in `ngram/repair_core.py` that prevented `ngram --agents codex` from starting. The code now initializes retry counters and aligns exception handling, but the CLI run still needs verification.
+{2-3 sentences on project state}
 
 **Decisions made recently:**
-Added a single retry/fallback path for Gemini model selection when agent command setup fails.
+{Key choices with rationale}
 
 **Needs your input:**
-Confirm whether you want me to run `ngram --agents codex` now for verification.
+{Blocked items, strategic questions}
 
 **Concerns:**
-`spawn_repair_agent` returns the async coroutine directly; if any callers assume sync behavior, it may require follow-up.
+{Things that might be problems, flagged for awareness}
 
 ---
 
@@ -69,70 +76,25 @@ Confirm whether you want me to run `ngram --agents codex` now for verification.
 
 ### High Priority
 
-- [ ] Verify `ngram --agents codex` now runs without import errors.
+- [ ] {Must do}
 
 ### Backlog
 
-- [ ] Reconcile remaining placeholder entries in this SYNC file.
-- IDEA: Add a quick CLI smoke test for agent command imports.
-
-## GAPS
-
-- Completed: Reviewed `.ngram/CLAUDE.md` escalation task; no decisions were provided to implement.
-- Remaining: Resolve the `.ngram/CLAUDE.md` escalation once decisions are supplied and update the CONFLICTS section accordingly.
-- Blocker: Human decisions missing for the escalation marker.
-- Completed: Rechecked `.ngram/repairs/2025-12-20_04-01-48/00-ESCALATION-AGENTS/CLAUDE.md`; no conflicts or decisions were present to apply.
-- Remaining: Provide decisions for the escalation marker so the conflict resolution steps can be executed.
-- Blocker: Human decisions missing for the escalation marker.
-- Completed: Reviewed `AGENTS.md` escalation task (repair: 2025-12-20_04-58-44/17-ESCALATION-01-ESCALATION-ngram-PRINCIPLES-AGENTS); no decisions were provided to implement.
-- Remaining: Resolve the `AGENTS.md` escalation once decisions are supplied and update the CONFLICTS section accordingly.
-- Blocker: Human decisions missing for the escalation marker.
-- Completed: Reviewed `.ngram/PRINCIPLES.md` escalation task; no decisions were provided to implement.
-- Remaining: Resolve the `.ngram/PRINCIPLES.md` escalation once decisions are supplied and update any CONFLICTS section accordingly.
-- Blocker: Human decisions missing for the escalation marker.
-- Completed: Reviewed `docs/protocol/features/doctor/BEHAVIORS_Project_Health_Doctor.md` escalation task; no decisions or conflicts were present to implement.
-- Remaining: Confirm intended conflict or missing escalation marker for the doctor behaviors doc.
-- Blocker: Human decisions or clarification missing for the escalation marker reference.
-- Completed: Reviewed `docs/cli/ALGORITHM_CLI_Command_Execution_Logic.md` escalation task; no decisions were provided to implement.
-- Remaining: Resolve the CLI algorithm escalation once decisions are supplied and update the CLI SYNC accordingly.
-- Blocker: Human decisions missing for the escalation marker conflict.
-- Completed: Reviewed `docs/protocol/BEHAVIORS_Observable_Protocol_Effects.md` escalation task; no decisions were provided to implement.
-- Remaining: Resolve the protocol behaviors escalation once decisions are supplied and update the protocol SYNC accordingly.
-- Blocker: Human decisions missing for the escalation marker conflict.
-- Completed: Reviewed `docs/protocol/PATTERNS_Bidirectional_Documentation_Chain_For_AI_Agents.md` escalation task; no decisions were provided to implement.
-- Remaining: Resolve the protocol PATTERNS escalation once decisions are supplied and update the protocol SYNC accordingly.
-- Blocker: Human decisions missing for the escalation marker conflict.
-- Completed: Reviewed `.ngram/CLAUDE.md` escalation task; no decisions were provided to implement.
-- Remaining: Resolve the `.ngram/CLAUDE.md` escalation once decisions are supplied and update any CONFLICTS section accordingly.
-- Blocker: Human decisions missing for the escalation marker conflict.
-- Completed: Reviewed `.ngram/repairs/2025-12-20_04-01-48/02-ESCALATION-views-VIEW_Escalation_How_To_Handle_Vague_Task/CLAUDE.md`; no conflicts or decisions were present to apply.
-- Remaining: Provide decisions for the escalation marker if one is expected for the VIEW escalation doc.
-- Blocker: Human decisions missing for the escalation marker conflict.
-- Completed: Reviewed `/home/mind-protocol/ngram/.ngram/repairs/2025-12-20_04-58-44/19-ESCALATION-views-VIEW_Escalation_How_To_Handle_Vague_Task`; no decisions were provided, so no conflict updates were applied.
-- Remaining: Provide decisions for `.ngram/views/VIEW_Escalation_How_To_Handle_Vague_Tasks_Missing_Information_And_Complex_Non-Obvious_Problems.md` escalation markers.
-- Blocker: Human decisions missing for the escalation marker conflict.
-- Completed: Reviewed `.ngram/repairs/2025-12-20_04-58-44/19-ESCALATION-views-VIEW_Escalation_How_To_Handle_Vague_Task`; no decisions were provided, so no conflict updates were applied.
-- Remaining: Supply decisions for the VIEW escalation marker so conflicts can be resolved in `.ngram/views/VIEW_Escalation_How_To_Handle_Vague_Tasks_Missing_Information_And_Complex_Non-Obvious_Problems.md`.
-- Blocker: Human decisions missing for the escalation marker conflict.
-- Completed: Reviewed `.ngram/repairs/2025-12-20_04-01-48/01-ESCALATION-ngram-PRINCIPLES/CLAUDE.md`; no decisions were provided to implement.
-- Remaining: Resolve the escalation marker once human decisions are supplied for the ngram PRINCIPLES repair task.
-- Blocker: Human decisions missing for the escalation marker conflict.
-- Completed: Reviewed `templates/ngram/views/VIEW_Escalation_How_To_Handle_Vague_Tasks_Missing_Information_And_Complex_Non-Obvious_Problems.md` escalation task; no decisions were provided to implement.
-- Remaining: Resolve the escalation marker once decisions are supplied and update any CONFLICTS section accordingly.
-- Blocker: Human decisions missing for the escalation marker conflict.
+- [ ] {Should do}
+- IDEA: {Possibility}
 
 ---
 
 ## CONSCIOUSNESS TRACE
 
 **Project momentum:**
-Moving; recent fixes were focused on unblocking CLI usage.
+{Is the project moving well? Stuck? What's the energy like?}
 
 **Architectural concerns:**
-Mixed sync/async repair agent paths could be confusing if not documented.
+{Things that feel like they might become problems}
 
 **Opportunities noticed:**
-Add a lightweight smoke test for CLI imports to prevent regressions.
+{Ideas that came up during work}
 
 ---
 
@@ -140,8 +102,7 @@ Add a lightweight smoke test for CLI imports to prevent regressions.
 
 | Area | Status | SYNC |
 |------|--------|------|
-| `cli/` | active | `docs/cli/SYNC_CLI_Development_State.md` |
-| `architecture/` | designing | `docs/architecture/cybernetic_studio_architecture/SYNC_Cybernetic_Studio_Architecture_State.md` |
+| `{area}/` | {status} | `docs/{area}/SYNC_*.md` |
 
 ---
 
@@ -152,42 +113,10 @@ Check `modules.yaml` (project root) for full manifest.
 **Mapped modules:**
 | Module | Code | Docs | Maturity |
 |--------|------|------|----------|
-| cli | `ngram/` | `docs/cli/` | CANONICAL |
-| cybernetic_studio_architecture | `data/ARCHITECTURE — Cybernetic Studio.md` | `docs/architecture/cybernetic_studio_architecture/` | DESIGNING |
+| {module} | `{code_path}` | `{docs_path}` | {status} |
 
 **Unmapped code:** (run `ngram validate` to check)
-- Not reviewed in this change set.
+- {List any code directories without module mappings}
 
 **Coverage notes:**
-`modules.yaml` may still be template-only; reconcile in a dedicated task.
-
----
-
-## Review Observations
-
-### Remarks
-- Review of the reported `.ngram/PRINCIPLES.md` escalation found no commits touching that file; only SYNC updates were made.
-
-### Suggestions
-- [ ] Confirm whether the intended fix was to update `.ngram/PRINCIPLES.md` directly or to record the missing decision in SYNC only.
-
-### Propositions
-- If the escalation requires a doc change, supply the missing decision so the marker can be resolved in `.ngram/PRINCIPLES.md`.
-
----
-
-## Agent Observations
-
-### Remarks
-- Escaped the literal escalation marker in `.ngram/CLAUDE.md` to avoid false-positive doctor hits.
-- Extracted `NgramApp` into `ngram/tui/app_core.py` to shrink `ngram/tui/app.py`; app_core still needs further splitting.
-
-### Suggestions
-- [ ] Re-scan `.ngram/` reference docs for remaining literal escalation markers to prevent repeated scanner triggers.
-
-
----
-
-## ARCHIVE
-
-Older content archived to: `SYNC_Project_State_archive_2025-12.md`
+{Any notes about why certain code isn't mapped, or plans to add mappings}

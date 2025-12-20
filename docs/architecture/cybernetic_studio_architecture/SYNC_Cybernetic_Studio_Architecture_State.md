@@ -55,7 +55,7 @@ The Cybernetic Studio architecture docs are now a full chain (PATTERNS → BEHAV
 - **Started:** 2025-12-20
 - **By:** codex
 - **Status:** complete (documentation only)
-- **Context:** Fill missing chain docs and connect external implementation plans.
+- **Context:** Fill missing chain docs and clarify graph ownership.
 
 ---
 
@@ -66,7 +66,13 @@ The Cybernetic Studio architecture docs are now a full chain (PATTERNS → BEHAV
 - **What:** Added ALGORITHM, VALIDATION, IMPLEMENTATION, HEALTH, and SYNC docs.
 - **Why:** The architecture chain referenced these docs but they did not exist.
 - **Files:** `docs/architecture/cybernetic_studio_architecture/ALGORITHM_Cybernetic_Studio_Process_Flow.md`, `docs/architecture/cybernetic_studio_architecture/VALIDATION_Cybernetic_Studio_Architectural_Invariants.md`, `docs/architecture/cybernetic_studio_architecture/IMPLEMENTATION_Cybernetic_Studio_Code_Structure.md`, `docs/architecture/cybernetic_studio_architecture/HEALTH_Cybernetic_Studio_Health_Checks.md`, `docs/architecture/cybernetic_studio_architecture/SYNC_Cybernetic_Studio_Architecture_State.md`
-- **Struggles/Insights:** Kept implementation conceptual and pointed to the async implementation plan in `blood-ledger` rather than duplicating it.
+- **Struggles/Insights:** Kept implementation conceptual and avoided external plan references.
+
+### 2025-12-20: Documented graph ownership
+
+- **What:** Declared the graph service owned by `ngram` across raw source and chain docs.
+- **Why:** Ownership needed to be explicit to guide platform vs cartridge responsibilities.
+- **Files:** `data/ARCHITECTURE — Cybernetic Studio.md`, `docs/architecture/cybernetic_studio_architecture/PATTERNS_Cybernetic_Studio_Architecture.md`, `docs/architecture/cybernetic_studio_architecture/BEHAVIORS_Cybernetic_Studio_System_Behaviors.md`, `docs/architecture/cybernetic_studio_architecture/IMPLEMENTATION_Cybernetic_Studio_Code_Structure.md`
 
 ### 2025-12-20: Added missing CHAIN block to SYNC doc
 
@@ -97,10 +103,10 @@ The Cybernetic Studio architecture docs are now a full chain (PATTERNS → BEHAV
 
 **Your likely VIEW:** VIEW_Implement_Write_Or_Modify_Code
 
-**Where I stopped:** Completed the Cybernetic Studio doc chain and referenced the external async plan.
+**Where I stopped:** Completed the Cybernetic Studio doc chain and documented graph ownership.
 
 **What you need to understand:**
-Implementation details are still conceptual; use the external plan in `blood-ledger` for async wiring guidance.
+Implementation details are still conceptual; graph ownership is now explicitly assigned to `ngram`.
 
 **Watch out for:**
 Do not add parallel architecture docs; extend this chain instead.
@@ -113,11 +119,11 @@ Where should the Place registry live: in `ngram` or in the graph service?
 ## HANDOFF: FOR HUMAN
 
 **Executive summary:**
-Completed the missing Cybernetic Studio doc chain and linked the external async implementation plan from `blood-ledger`. No runtime code changes were made.
+Completed the Cybernetic Studio doc chain and documented graph ownership under `ngram`. No runtime code changes were made.
 
 **Decisions made:**
-Kept implementation sections conceptual and avoided duplicating the async plan.
-Confirmed the async plan stays in `blood-ledger` as a cross-repo pointer (no mirror in `ngram` docs).
+Graph service ownership is assigned to `ngram` (platform). `blood-ledger` remains a client.
+Kept implementation sections conceptual and avoided duplicating external plans.
 
 **Needs your input:**
 None for this change set.
@@ -153,10 +159,10 @@ None for this change set.
 Focused; the main risk is over-specifying implementation details before code exists.
 
 **Threads I was holding:**
-Cross-repo linkage, async plan ownership, and how to validate repo/graph separation.
+Graph ownership boundaries and how to validate repo/graph separation.
 
 **Intuitions:**
-Keep the plan centralized in `blood-ledger` until runtime wiring begins.
+Keep graph service responsibility centralized in `ngram` to avoid ambiguity.
 
 **What I wish I'd known at the start:**
 The chain already existed conceptually; only the missing docs needed creation.
@@ -168,4 +174,3 @@ The chain already existed conceptually; only the missing docs needed creation.
 | What | Where |
 |------|-------|
 | Raw architecture source | `data/ARCHITECTURE — Cybernetic Studio.md` |
-| Async implementation plan (partial) | `/home/mind-protocol/the-blood-ledger/docs/infrastructure/async/SYNC_Async_Architecture.md` |

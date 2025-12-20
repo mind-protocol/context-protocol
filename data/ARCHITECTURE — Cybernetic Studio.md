@@ -74,7 +74,10 @@ Owns the *what*:
 - cartridge orchestration (moment generation, mutation application, rendering transforms)
 - game-specific prompts, tone, and experience tests
 
-### 2.2 Optional Future Extraction (Only When Pain Appears)
+### 2.2 Graph Service Ownership
+The graph service is owned and operated by the `ngram` platform. `blood-ledger` is a client of the graph, but does not own the service.
+
+### 2.3 Optional Future Extraction (Only When Pain Appears)
 **Repo C: `graph-physics-core`**
 - Extract only if ngram becomes too entangled and you need a stable kernel:
   - ontology primitives, tick kernel, stimulus envelope contracts, gate utilities

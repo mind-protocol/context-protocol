@@ -51,7 +51,7 @@ blood-ledger/               # Game Cartridge (world content + player experience)
 |------|---------|---------------|--------|
 | `ngram` | Graph physics + stimuli ingestion + Places + agent orchestration | `ngram/`, `docs/` | DESIGNING |
 | `blood-ledger` | Game content + UI + cartridge orchestration | `engine/`, `frontend/`, `data/` | DESIGNING |
-| graph service | Graph storage + traversal + pressure computation | external service | DESIGNING |
+| graph service | Graph storage + traversal + pressure computation (owned by `ngram`) | external service | DESIGNING |
 
 ---
 
@@ -236,15 +236,7 @@ blood-ledger → graph service
 
 | Package/Service | Used For | Imported By |
 |-----------------|----------|-------------|
-| graph service | storage + physics | `ngram`, `blood-ledger` |
-
----
-
-## EXTERNAL IMPLEMENTATION PLANS
-
-The following plan is imported as a partial implementation reference for the cross-repo async flow:
-
-- `/home/mind-protocol/the-blood-ledger/docs/infrastructure/async/SYNC_Async_Architecture.md` (Async Architecture — State & Implementation Plan)
+| graph service (owned by `ngram`) | storage + physics | `ngram`, `blood-ledger` |
 
 ---
 

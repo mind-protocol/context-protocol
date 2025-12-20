@@ -2,14 +2,14 @@
 
 ```
 LAST_UPDATED: 2025-12-20
-UPDATED_BY: codex (principles escalation)
+UPDATED_BY: codex (claude escalation review)
 ```
 
 ---
 
 ## CURRENT STATE
 
-The CLI is in active use while fixes continue to land in the repair subsystem. A SyntaxError in `ngram/repair_core.py` was blocking `ngram --agents` from importing; the function was repaired and retry state initialized. Verification of the CLI run is still pending. Escaped escalation markers in `docs/cli/SYNC_CLI_Development_State.md` to avoid false positive escalation detection. Escaped escalation markers in `docs/protocol/SYNC_Protocol_Current_State.md` for the same reason; other escalation tasks still await human decisions. Escaped doctor marker references in `docs/protocol/features/doctor/BEHAVIORS_Project_Health_Doctor.md` to prevent false escalation hits. Escaped the escalation marker token in `.ngram/GEMINI.md` to avoid false escalation detection.
+The CLI is in active use while fixes continue to land in the repair subsystem. A SyntaxError in `ngram/repair_core.py` was blocking `ngram --agents` from importing; the function was repaired and retry state initialized. Verification of the CLI run is still pending. Escaped escalation markers in `docs/cli/SYNC_CLI_Development_State.md` to avoid false positive escalation detection. Escaped escalation markers in `docs/protocol/SYNC_Protocol_Current_State.md` for the same reason; other escalation tasks still await human decisions. Escaped doctor marker references in `docs/protocol/features/doctor/BEHAVIORS_Project_Health_Doctor.md` to prevent false escalation hits. Escaped the escalation marker token in `.ngram/GEMINI.md` to avoid false escalation detection. Ran `ngram validate`; it still reports missing VIEW and doc-chain gaps outside this task scope.
 
 ---
 
@@ -75,6 +75,9 @@ Confirm whether you want me to run `ngram --agents codex` now for verification.
 
 ## GAPS
 
+- Completed: Reviewed `.ngram/CLAUDE.md` escalation task; no decisions were provided to implement.
+- Remaining: Resolve the `.ngram/CLAUDE.md` escalation once decisions are supplied and update the CONFLICTS section accordingly.
+- Blocker: Human decisions missing for the escalation marker.
 - Completed: Reviewed `AGENTS.md` escalation task; no decisions were provided to implement.
 - Remaining: Resolve the `AGENTS.md` escalation once decisions are supplied and update the CONFLICTS section accordingly.
 - Blocker: Human decisions missing for the escalation marker.
@@ -92,6 +95,9 @@ Confirm whether you want me to run `ngram --agents codex` now for verification.
 - Blocker: Human decisions missing for the escalation marker conflict.
 - Completed: Reviewed `docs/protocol/PATTERNS_Bidirectional_Documentation_Chain_For_AI_Agents.md` escalation task; no decisions were provided to implement.
 - Remaining: Resolve the protocol PATTERNS escalation once decisions are supplied and update the protocol SYNC accordingly.
+- Blocker: Human decisions missing for the escalation marker conflict.
+- Completed: Reviewed `.ngram/CLAUDE.md` escalation task; no decisions were provided to implement.
+- Remaining: Resolve the `.ngram/CLAUDE.md` escalation once decisions are supplied and update any CONFLICTS section accordingly.
 - Blocker: Human decisions missing for the escalation marker conflict.
 
 ---

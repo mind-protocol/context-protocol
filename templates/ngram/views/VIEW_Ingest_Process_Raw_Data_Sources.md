@@ -159,3 +159,5 @@ After ingestion, you should have:
 **Conversations are gold.** Chat logs often contain decisions that never made it to formal docs. Extract them.
 
 **PDFs lie.** Old documents may describe intent that never got implemented, or old designs that changed. Cross-reference with reality.
+
+**Reference sources in PATTERNS.** Always list the processed data files, URLs, or other sources in the `# DATA` section of the relevant module's `PATTERNS_*.md` file. This maintains the provenance and allows future agents/humans to re-verify the design rationale.

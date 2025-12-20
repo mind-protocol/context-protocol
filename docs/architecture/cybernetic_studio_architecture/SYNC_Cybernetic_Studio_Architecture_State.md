@@ -8,6 +8,23 @@ STATUS: DESIGNING
 
 ---
 
+## CHAIN
+
+```
+PATTERNS:        ./PATTERNS_Cybernetic_Studio_Architecture.md
+BEHAVIORS:       ./BEHAVIORS_Cybernetic_Studio_System_Behaviors.md
+ALGORITHM:       ./ALGORITHM_Cybernetic_Studio_Process_Flow.md
+VALIDATION:      ./VALIDATION_Cybernetic_Studio_Architectural_Invariants.md
+IMPLEMENTATION:  ./IMPLEMENTATION_Cybernetic_Studio_Code_Structure.md
+HEALTH:          ./HEALTH_Cybernetic_Studio_Health_Checks.md
+THIS:            SYNC_Cybernetic_Studio_Architecture_State.md (you are here)
+
+IMPL:            N/A (Conceptual Architecture Document)
+SOURCE:          ../../../data/ARCHITECTURE — Cybernetic Studio.md
+```
+
+---
+
 ## MATURITY
 
 **What's canonical (v1):**
@@ -50,6 +67,12 @@ The Cybernetic Studio architecture docs are now a full chain (PATTERNS → BEHAV
 - **Why:** The architecture chain referenced these docs but they did not exist.
 - **Files:** `docs/architecture/cybernetic_studio_architecture/ALGORITHM_Cybernetic_Studio_Process_Flow.md`, `docs/architecture/cybernetic_studio_architecture/VALIDATION_Cybernetic_Studio_Architectural_Invariants.md`, `docs/architecture/cybernetic_studio_architecture/IMPLEMENTATION_Cybernetic_Studio_Code_Structure.md`, `docs/architecture/cybernetic_studio_architecture/HEALTH_Cybernetic_Studio_Health_Checks.md`, `docs/architecture/cybernetic_studio_architecture/SYNC_Cybernetic_Studio_Architecture_State.md`
 - **Struggles/Insights:** Kept implementation conceptual and pointed to the async implementation plan in `blood-ledger` rather than duplicating it.
+
+### 2025-12-20: Added missing CHAIN block to SYNC doc
+
+- **What:** Linked the full doc chain in this SYNC file.
+- **Why:** Fixes INCOMPLETE_CHAIN and keeps the chain bidirectional.
+- **Files:** `docs/architecture/cybernetic_studio_architecture/SYNC_Cybernetic_Studio_Architecture_State.md`
 
 ---
 

@@ -27,7 +27,8 @@ SYNC:                    ../SYNC_TUI_Development_Current_State.md
 ngram/tui/                           # TUI package root
 ngram/tui/__init__.py                # Package exports (11L)
 ngram/tui/app.py                     # TUI entry point (24L)
-ngram/tui/app_core.py                # Main Textual App (955L)
+ngram/tui/app_core.py                # Main Textual App (724L)
+ngram/tui/app_manager.py             # Manager startup helpers (257L)
 ngram/tui/state.py                   # Session state management (198L)
 ngram/tui/commands.py                # Slash command handlers (678L)
 ngram/tui/commands_agent.py          # Manager agent subprocess helpers (388L)
@@ -51,7 +52,8 @@ CHANGES tab header includes change/commit rates computed from recent git history
 | File | Lines | Status | Purpose | Key Functions/Classes |
 |------|-------|--------|---------|----------------------|
 | `ngram/tui/app.py` | 24L | OK | TUI entry point | `main()` |
-| `ngram/tui/app_core.py` | 955L | SPLIT | Main Textual application | `NgramApp`, `compose()`, `on_mount()` |
+| `ngram/tui/app_core.py` | 724L | OK | Main Textual application | `NgramApp`, `compose()`, `on_mount()` |
+| `ngram/tui/app_manager.py` | 257L | OK | Manager startup helpers | `start_manager_with_overview()`, `show_static_overview()` |
 | `ngram/tui/widgets/manager_panel.py` | 246L | EXISTS | Manager message display | `ManagerPanel`, `add_message()`, `add_thinking()` |
 | `ngram/tui/widgets/agent_panel.py` | 329L | EXISTS | Single agent output | `AgentPanel`, `append_output()` |
 | `ngram/tui/widgets/agent_container.py` | 361L | EXISTS | Multi-agent layout | `AgentContainer`, `add_agent()` |
@@ -74,7 +76,7 @@ CHANGES tab header includes change/commit rates computed from recent git history
 
 **Why:** Textual provides CSS-like styling, async support, and composable widgets. Matches agent CLI aesthetic.
 
-**Where:** All widget files in `ngram/tui/widgets/` compose into `ngram/tui/app.py`.
+**Where:** All widget files in `ngram/tui/widgets/` compose into `ngram/tui/app_core.py`.
 
 ### Code Patterns
 
@@ -83,11 +85,11 @@ CHANGES tab header includes change/commit rates computed from recent git history
 | Observer | Agent output callbacks | Stream output to panels |
 | Factory | `ngram/tui/commands.py` | Route commands to handlers |
 | State | `ngram/tui/state.py` | Centralized session state |
-| Composition | `ngram/tui/app.py` | Build UI from widgets |
+| Composition | `ngram/tui/app_core.py` | Build UI from widgets |
 
 ### Anti-Patterns to Avoid
 
-- Monolithic `ngram/tui/app.py` — keep logic delegated to widgets/helpers.
+- Monolithic `ngram/tui/app_core.py` — keep logic delegated to widgets/helpers.
 - Sync blocking — use async throughout.
 - Global state — use SessionState class, not module globals.
 - Hardcoded colors — all styling in `ngram/tui/styles/theme.tcss`.
@@ -147,6 +149,10 @@ ngram/tui/app_core.py
     └── imports → ngram/tui/state.py
     └── imports → ngram/tui/commands.py
     └── imports → ngram/tui/manager.py
+    └── imports → ngram/tui/app_manager.py
+
+ngram/tui/app_manager.py
+    └── imports → ngram/tui/commands_agent.py
 
 ngram/tui/commands.py
     └── imports → ngram/tui/commands_agent.py
@@ -162,7 +168,7 @@ ngram/cli.py
 
 | Package | Used For | Imported By |
 |---------|----------|-------------|
-| `textual` | TUI framework | `ngram/tui/app.py` and widget files |
+| `textual` | TUI framework | `ngram/tui/app_core.py` and widget files |
 | `asyncio` | Async subprocess | `ngram/tui/commands.py` |
 
 ---
@@ -265,12 +271,15 @@ IDLE -> RUNNING -> IDLE (complete/error/timeout)
 |------|------|-----------|
 | `ngram/tui/app_core.py` | 1 | DOCS reference to `docs/tui/PATTERNS_TUI_Modular_Interface_Design.md` |
 | `ngram/tui/app.py` | 1 | DOCS reference to `docs/tui/PATTERNS_TUI_Modular_Interface_Design.md` |
+| `ngram/tui/manager.py` | 1 | DOCS reference to `docs/tui/PATTERNS_TUI_Modular_Interface_Design.md` |
+| `ngram/tui/__init__.py` | 1 | DOCS reference to `docs/tui/PATTERNS_TUI_Modular_Interface_Design.md` |
+| `ngram/tui/app_manager.py` | 1 | DOCS reference to `docs/tui/IMPLEMENTATION_TUI_Code_Architecture.md` |
 | `ngram/tui/state.py` | 1 | DOCS reference to implementation docs |
 
 ### Docs → Code
 
 | Doc Section | Implemented In |
 |-------------|----------------|
-| ALGORITHM main loop | `ngram/tui/app.py:NgramApp.run()` |
+| ALGORITHM main loop | `ngram/tui/app_core.py:NgramApp.run()` |
 | BEHAVIOR B1 launch | `ngram/tui/app.py:main()`, `ngram/cli.py` |
 | BEHAVIOR B2 repair | `ngram/tui/commands.py:handle_repair()` |

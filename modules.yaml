@@ -87,9 +87,10 @@ modules:
     owner: agent
     internal:
       - "tui/app_core.py"
+      - "tui/app_manager.py"
     notes: |
       The Textual User Interface for interacting with ngram.
-      `ngram/tui/app_core.py` remains above the monolith threshold; further extraction needed.
+      Manager startup helpers extracted to `ngram/tui/app_manager.py`.
 
   tui_widgets:
     code: "ngram/tui/widgets/"

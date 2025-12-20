@@ -32,8 +32,9 @@ Textual-based TUI with a component layout: `NgramApp` composes widgets, `ngram/t
 ## QUICK STRUCTURE (Top-Level)
 
 ```
-ngram/tui/app.py            # Main Textual app
+ngram/tui/app.py            # TUI entry point
 ngram/tui/app_core.py       # Main Textual app implementation
+ngram/tui/app_manager.py    # Manager startup helpers
 ngram/tui/commands.py       # Slash command routing
 ngram/tui/commands_agent.py # Manager subprocess helpers
 ngram/tui/state.py          # Session state
@@ -48,7 +49,7 @@ ngram/tui/styles/theme.tcss # Theme
 | Entry Point | File:Line | Triggered By |
 |-------------|-----------|--------------|
 | `main()` | `ngram/tui/app.py:12` | `ngram` (no args) via `ngram/cli.py` |
-| `NgramApp.compose()` | `ngram/tui/app_core.py:106` | Textual mount |
+| `NgramApp.compose()` | `ngram/tui/app_core.py:107` | Textual mount |
 | `InputBar.action_submit()` | `ngram/tui/widgets/input_bar.py:60` | User Enter |
 
 ---

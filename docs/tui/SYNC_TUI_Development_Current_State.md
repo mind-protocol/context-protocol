@@ -1,8 +1,8 @@
 # ngram TUI — Sync: Current State
 
 ```
-LAST_UPDATED: 2025-12-19
-UPDATED_BY: codex (doctor false positives migration)
+LAST_UPDATED: 2025-12-20
+UPDATED_BY: codex (fix TUI doc links)
 STATUS: IMPLEMENTED
 ```
 
@@ -31,7 +31,8 @@ Recent fix:
 - Passed DoctorConfig into `spawn_repair_agent_async` from the TUI repair flow to avoid missing-argument errors.
 - Stored the repair DoctorConfig on the app and reused it when spawning queued agents.
 Refactor:
-- Extracted `NgramApp` into `ngram/tui/app_core.py` to shrink `ngram/tui/app.py` (app.py 969L → 24L; app_core.py 955L).
+- Extracted `NgramApp` into `ngram/tui/app_core.py` to shrink `ngram/tui/app.py` (app.py 969L → 24L; app_core.py became 955L).
+- Extracted manager startup helpers into `ngram/tui/app_manager.py` (app_core.py 955L → 724L).
 
 Recent stability work:
 - Conversation history guards (non-positive limits, copy-on-read)
@@ -59,8 +60,7 @@ Doc maintenance:
 - Implementation doc references normalized to avoid broken-link false positives
 - Implementation overview references now point to `ngram/repair_core.py` and full TUI command paths
 - Manager startup reference uses repo-root `.ngram/CLAUDE.md` and `.ngram/agents/manager/AGENTS.md` paths
-- Structure doc points to `docs/tui/PATTERNS_TUI_Design.md` for the `ngram/tui/app.py` DOCS reference
-- Structure doc CHAIN uses `../PATTERNS_TUI_Design.md` and plain `.ngram/...` paths to avoid broken-link detection
+- Structure doc and TUI DOCS headers point to `docs/tui/PATTERNS_TUI_Modular_Interface_Design.md` for core entry points
 - Data flow diagram uses full file paths for command and repair routing
 - Implementation details split into `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/` with an overview entry point
 - Runtime implementation content consolidated into `IMPLEMENTATION_TUI_Code_Architecture_Structure.md` to avoid duplicate docs
@@ -72,6 +72,7 @@ Doc maintenance:
 
 Archived detail:
 Older content archived to: `archive/SYNC_TUI_State_Archive_2025-12.md`
+Archive consolidation: confirmed the 2024-12 condensed snapshot lives in `archive/SYNC_TUI_State_Archive_2025-12.md` and replaced `archive/SYNC_Archive_2024-12.md` with a reference.
 
 ---
 
@@ -94,9 +95,16 @@ Older content archived to: `archive/SYNC_TUI_State_Archive_2025-12.md`
 
 - Tab layout for >3 agents not fully implemented
 - Agent queue processing (issues beyond first 3) not implemented
-- `ngram/tui/app_core.py` still exceeds the monolith threshold and needs further extraction (suggested: `_start_manager_with_overview`, `on_mount`).
 
 ---
+
+## CONFLICTS
+
+### DECISION: Monolith target file
+- Conflict: Repair task named `ngram/tui/app.py` as the monolith target, but current implementation places the main app in `ngram/tui/app_core.py` while `ngram/tui/app.py` is a thin entry point.
+- Resolution: Split `ngram/tui/app_core.py` by extracting manager startup helpers into `ngram/tui/app_manager.py`.
+- Reasoning: The monolithic logic lives in `ngram/tui/app_core.py`, so addressing the actual file restores code structure and aligns with the module layout.
+- Updated: `ngram/tui/app_core.py`, `ngram/tui/app_manager.py`, `docs/tui/IMPLEMENTATION_TUI_Code_Architecture/IMPLEMENTATION_TUI_Code_Architecture_Structure.md`, `docs/tui/IMPLEMENTATION_TUI_Code_Architecture.md`, `modules.yaml`.
 
 ## AGENT OBSERVATIONS
 
@@ -108,10 +116,10 @@ Older content archived to: `archive/SYNC_TUI_State_Archive_2025-12.md`
 - Verified `ngram/tui/commands.py` already implements `on_output` and `handle_doctor`; INCOMPLETE_IMPL report was stale.
 - Manager /repair issue lists now render without extra blank lines between items.
 - Extracted `NgramApp` into `ngram/tui/app_core.py` and left `ngram/tui/app.py` as the entry point.
+- Extracted manager startup helpers to `ngram/tui/app_manager.py` to reduce `ngram/tui/app_core.py`.
 
 ### Suggestions
 - [ ] Keep doctor-ignore and SYNC notes updated together to avoid drift.
-- [ ] Continue splitting `ngram/tui/app_core.py` (target `_start_manager_with_overview`, `on_mount`).
 
 ### Propositions
 - None

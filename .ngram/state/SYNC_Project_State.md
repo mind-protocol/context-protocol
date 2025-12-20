@@ -2,14 +2,14 @@
 
 ```
 LAST_UPDATED: 2025-12-20
-UPDATED_BY: codex (escaped CLAUDE escalation marker)
+UPDATED_BY: codex (cybernetic studio doc chain)
 ```
 
 ---
 
 ## CURRENT STATE
 
-The CLI is in active use while fixes continue to land in the repair subsystem. A SyntaxError in `ngram/repair_core.py` was blocking `ngram --agents` from importing; the function was repaired and retry state initialized. Verification of the CLI run is still pending. Escaped escalation markers in `docs/cli/SYNC_CLI_Development_State.md` to avoid false positive escalation detection. Escaped escalation markers in `docs/protocol/SYNC_Protocol_Current_State.md` for the same reason; other escalation tasks still await human decisions. Escaped doctor marker references in `docs/protocol/features/doctor/BEHAVIORS_Project_Health_Doctor.md` to prevent false escalation hits. Escaped the escalation marker token in `.ngram/GEMINI.md` to avoid false escalation detection. Escaped the escalation marker token in `.ngram/CLAUDE.md` to avoid false escalation detection. Reviewed the AGENTS escalation task; no human decisions were provided, so no conflict updates were made. Reviewed the VIEW_Escalation_How_To_Handle_Vague_Task escalation repair; no human decisions were provided, so no conflict updates were applied. Ran `ngram validate`; it still reports missing VIEW and doc-chain gaps outside this task scope.
+The CLI is in active use while fixes continue to land in the repair subsystem. A SyntaxError in `ngram/repair_core.py` was blocking `ngram --agents` from importing; the function was repaired and retry state initialized. Verification of the CLI run is still pending. Escaped escalation markers in `docs/cli/SYNC_CLI_Development_State.md` to avoid false positive escalation detection. Escaped escalation markers in `docs/protocol/SYNC_Protocol_Current_State.md` for the same reason; other escalation tasks still await human decisions. Escaped doctor marker references in `docs/protocol/features/doctor/BEHAVIORS_Project_Health_Doctor.md` to prevent false escalation hits. Escaped the escalation marker token in `.ngram/GEMINI.md` to avoid false escalation detection. Escaped the escalation marker token in `.ngram/CLAUDE.md` to avoid false escalation detection. Reviewed the AGENTS escalation task; no human decisions were provided, so no conflict updates were made. Reviewed the VIEW_Escalation_How_To_Handle_Vague_Task escalation repair; no human decisions were provided, so no conflict updates were applied. Ran `ngram validate`; it still reports missing VIEW and doc-chain gaps outside this task scope. Completed the Cybernetic Studio architecture doc chain and mapped it in `modules.yaml`.
 
 ---
 
@@ -105,6 +105,12 @@ Confirm whether you want me to run `ngram --agents codex` now for verification.
 - Completed: Reviewed `.ngram/repairs/2025-12-20_04-01-48/02-ESCALATION-views-VIEW_Escalation_How_To_Handle_Vague_Task/CLAUDE.md`; no conflicts or decisions were present to apply.
 - Remaining: Provide decisions for the escalation marker if one is expected for the VIEW escalation doc.
 - Blocker: Human decisions missing for the escalation marker conflict.
+- Completed: Reviewed `/home/mind-protocol/ngram/.ngram/repairs/2025-12-20_04-58-44/19-ESCALATION-views-VIEW_Escalation_How_To_Handle_Vague_Task`; no decisions were provided, so no conflict updates were applied.
+- Remaining: Provide decisions for `.ngram/views/VIEW_Escalation_How_To_Handle_Vague_Tasks_Missing_Information_And_Complex_Non-Obvious_Problems.md` escalation markers.
+- Blocker: Human decisions missing for the escalation marker conflict.
+- Completed: Reviewed `.ngram/repairs/2025-12-20_04-58-44/19-ESCALATION-views-VIEW_Escalation_How_To_Handle_Vague_Task`; no decisions were provided, so no conflict updates were applied.
+- Remaining: Supply decisions for the VIEW escalation marker so conflicts can be resolved in `.ngram/views/VIEW_Escalation_How_To_Handle_Vague_Tasks_Missing_Information_And_Complex_Non-Obvious_Problems.md`.
+- Blocker: Human decisions missing for the escalation marker conflict.
 - Completed: Reviewed `.ngram/repairs/2025-12-20_04-01-48/01-ESCALATION-ngram-PRINCIPLES/CLAUDE.md`; no decisions were provided to implement.
 - Remaining: Resolve the escalation marker once human decisions are supplied for the ngram PRINCIPLES repair task.
 - Blocker: Human decisions missing for the escalation marker conflict.
@@ -132,6 +138,7 @@ Add a lightweight smoke test for CLI imports to prevent regressions.
 | Area | Status | SYNC |
 |------|--------|------|
 | `cli/` | active | `docs/cli/SYNC_CLI_Development_State.md` |
+| `architecture/` | designing | `docs/architecture/cybernetic_studio_architecture/SYNC_Cybernetic_Studio_Architecture_State.md` |
 
 ---
 
@@ -143,6 +150,7 @@ Check `modules.yaml` (project root) for full manifest.
 | Module | Code | Docs | Maturity |
 |--------|------|------|----------|
 | cli | `ngram/` | `docs/cli/` | CANONICAL |
+| cybernetic_studio_architecture | `data/ARCHITECTURE — Cybernetic Studio.md` | `docs/architecture/cybernetic_studio_architecture/` | DESIGNING |
 
 **Unmapped code:** (run `ngram validate` to check)
 - Not reviewed in this change set.

@@ -101,6 +101,7 @@ Ran `npm run lint` after WebGL click handling (clean; TypeScript 5.5.4 unsupport
 - **What:** Simplified `docs/infrastructure/api/ALGORITHM_Playthrough_Creation.md` into a legacy alias that now directs readers to `docs/infrastructure/api/ALGORITHM_Api.md` and removed the duplicated technical narrative.
 - **Why:** Keep a single authoritative ALGORITHM for the API module while preserving the old path for backwards compatibility.
 - **Impact:** Agents should consult `ALGORITHM_Api.md` for the playthrough creation flow; the alias lives only to redirect.
+- **Files:** `docs/infrastructure/api/ALGORITHM_Playthrough_Creation.md`, `docs/infrastructure/api/SYNC_Api.md`
 - **Verification:** `ngram validate` (fails for unrelated existing module/CHAIN issues noted by the doctor).
 
 ### 2025-12-21: Split GraphReadOps into an isolated reader module

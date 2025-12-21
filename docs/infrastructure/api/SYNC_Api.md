@@ -24,6 +24,12 @@ The API module hosts the FastAPI application, including playthrough endpoints, m
 
 ## RECENT CHANGES
 
+### 2025-12-21: Consolidate playthrough algorithm docs
+
+- **What:** Simplified `ALGORITHM_Playthrough_Creation.md` into a legacy alias that points to `ALGORITHM_Api.md` instead of re-documenting the same flow.
+- **Why:** Remove duplication while keeping the old path alive for existing references, so there is one authoritative ALGORITHM doc for the API module.
+- **Impact:** Agents should consult `ALGORITHM_Api.md` for playthrough creation logic; the alias now serves as a redirect.
+
 ### 2025-12-20: Pending external implementation references
 
 - **What:** Replaced stub file paths with pending import notes in implementation docs.

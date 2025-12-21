@@ -1,7 +1,7 @@
 # Project — Sync: Current State
 
 ```
-LAST_UPDATED: 2025-12-26
+LAST_UPDATED: 2025-12-27
 UPDATED_BY: codex
 ```
 
@@ -139,6 +139,7 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 - **What:** Added the missing `OBJECTIVES AND BEHAVIORS` section, highlighted the `main()` entrypoint, and expanded the narrative so every template chunk now exceeds the 50+ character expectation.
 - **Why:** Anchor the `ALGORITHM_Gemini_Stream_Flow.md` story in `ngram/llms/gemini_agent.py` so the objective/behavior pairing explains how the adapter runs in practice and prevents further template drift.
+- **Trace:** Recorded that the entrypoint-centric explanation now spans `OBJECTIVES AND BEHAVIORS`, the `main()` narrative, and 50+ character guarantees so downstream agents can trust the template.
 - **Files:** `docs/llm_agents/ALGORITHM_Gemini_Stream_Flow.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(still fails because of existing `docs/connectome/health` gaps, membrane naming mismatches, and CHAIN/link warnings the doctor already tracks)*
 

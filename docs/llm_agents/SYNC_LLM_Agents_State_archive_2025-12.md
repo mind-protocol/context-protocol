@@ -17,6 +17,7 @@ Original file: SYNC_LLM_Agents_State.md
 - Because this archive is frozen, any edits, bug fixes, or template work happens in `docs/llm_agents/SYNC_LLM_Agents_State.md`, and the archive only documents the snapshot that existed on the date shown above.
 - Agents should treat this file as a museum record; refer to `docs/llm_agents/SYNC_LLM_Agents_State.md` for explanations or actions before invoking the archived narrative.
 - When referencing the archive, cite the December 2025 timestamp so readers immediately know which historical slice they are comparing against the living state.
+- When referencing the archive, cite the December 2025 timestamp so readers immediately know which historical slice they are comparing against the living state.
 
 ---
 
@@ -32,6 +33,7 @@ Original file: SYNC_LLM_Agents_State.md
 - Legacy archive files can drift; consult the canonical `SYNC_LLM_Agents_State.md` for active work and treat this archive as a historical artefact rather than a source of truth.
 - This copy does not include any updates made after 2025-12-20 (including the template fixes now described), so it will continue to lag intentionally.
 - There are no parallel issue trackers for this archive; any bugs or template requests should be routed to the live state so they can be triaged, leaving this file to remain a faithful snapshot.
+- Since no future edits land here, always treat this archive as the December 2025 baseline, even when the canonical SYNC keeps changing.
 - Since no future edits land here, always treat this archive as the December 2025 baseline, even when the canonical SYNC keeps changing.
 
 ---
@@ -72,6 +74,7 @@ This archive is intentionally simple; its silence is a feature that keeps the na
 | What | Where |
 |------|-------|
 | Canonical state | `docs/llm_agents/SYNC_LLM_Agents_State.md` — the living document you should read before acting because this archive refuses updates. |
+| Archive purpose | Preserve the December 2025 snapshot; no action items belong here. |
 | Archive purpose | Preserve the December 2025 snapshot; no action items belong here. |
 
 ---

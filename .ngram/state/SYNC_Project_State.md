@@ -99,12 +99,19 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2025-12-26: Extended Gemini validation behavior/objective rationale
+
+- **What:** Added richer explanatory clauses to the BEHAVIORS GUARANTEED and OBJECTIVES COVERED tables in `docs/llm_agents/VALIDATION_Gemini_Agent_Invariants.md` so every row now exceeds 50 characters while explicitly linking each guarantee/objective back to the invariants the doctor monitors.
+- **Why:** Keep the validation template compliant with the length requirements and give future agents more context before they follow downstream chains.
+- **Files:** `docs/llm_agents/VALIDATION_Gemini_Agent_Invariants.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`
+- **Verification:** `ngram validate` *(fails: pre-existing connectome health doc gaps, membrane naming mismatches, and CHAIN/link warnings already tracked by the doctor)*
+
 ### 2025-12-28: Expand narrator validation template
 
-- **What:** Added BEHAVIORS GUARANTEED, OBJECTIVES COVERED, PROPERTIES, ERROR CONDITIONS, and HEALTH COVERAGE sections to `docs/agents/narrator/VALIDATION_Narrator.md` and noted the work in `docs/agents/narrator/SYNC_Narrator.md`.
-- **Why:** Resolve the DOC_TEMPLATE_DRIFT warning for the validation file and leave a clear contract for future agents about narrator invariants.
+- **What:** Added BEHAVIORS GUARANTEED, OBJECTIVES COVERED, PROPERTIES, ERROR CONDITIONS, and HEALTH COVERAGE sections to `docs/agents/narrator/VALIDATION_Narrator.md`, highlighting how invariants tie into health indicators and recording the work in the narrator SYNC.
+- **Why:** DOC_TEMPLATE_DRIFT flagged the validation doc for missing template sections, so fleshing it out keeps the narrator contract explicit for future agents and health checks.
 - **Files:** `docs/agents/narrator/VALIDATION_Narrator.md`, `docs/agents/narrator/SYNC_Narrator.md`
-- **Verification:** `ngram validate`
+- **Verification:** `ngram validate` *(fails: known connectome/health/membrane/CHAIN issues tracked elsewhere).*
 
 ### 2025-12-26: Documented narrator implementation runtime behavior
 

@@ -26,7 +26,29 @@ IMPL:            agents/narrator/CLAUDE.md
 
 ---
 
-## INVARIANTS (Must Always Hold)
+## BEHAVIORS GUARANTEED
+
+| Behavior ID | Behavior | Why This Validation Matters |
+|-------------|----------|-----------------------------|
+| B1 | Major authored scenes release their canonical text and clickable layouts before any free-input fallback appears in the stream. | Guarantees deterministic storytelling so clients know when to stop generating their own continuations, giving health checks a fixed anchor to compare the stream shape against the graph state and preventing the player from seeing tentative drafts. |
+| B2 | Every clickable reference is emitted with its key, display span, and waitingMessage/response pairing before player action is accepted. | Keeps the UI mapping stable while reducing phantom clickables, ensuring downstream tooling never has to guess whether a highlight matches the visible prose and giving the doctor a concrete contract to validate before the scene resolves. |
+| B3 | Invented facts and mutations persist to the graph prior to the narrator closing the final chunk of the scene. | Makes the graph the single source of truth, so later narration can re-query the same facts without re-generating them and health monitors can verify the mutation batch before the stream presents those truths to the player. |
+
+---
+
+## OBJECTIVES COVERED
+
+| Objective | Validations | Rationale |
+|-----------|-------------|-----------|
+| Preserve narrative continuity and authorial intent across sessions | V1, V3, V4 | Keeping conversational scenes lightweight while routing significant beats through SceneTree payloads protects canon, and voice consistency ensures each character remains recognizable so the narrator stays aligned with the graph-derived story plan. |
+| Deliver responsive player interactions with valid clickables and timely streams | V2, V5 | Streaming the first chunk immediately and emitting clickable metadata before accepting input keeps the experience snappy and prevents dead UI targets, so every click feels intentional. |
+| Maintain graph integrity while sharing mutations with downstream services | V3, V6 | Persisting invented facts plus schema validation of every mutation prevents downstream ingestion from encountering malformed data, letting health tooling assert that narrative updates never break the canonical store. |
+
+---
+
+## INVARIANTS
+
+Narrator invariants must hold even when the graph is large, sessions persist for hours, and authorial prompts evolve; they are the contractual guardrails for every narrated scene.
 
 ### V1: Action Classification
 
@@ -66,6 +88,30 @@ IMPL:            agents/narrator/CLAUDE.md
 
 ---
 
+## PROPERTIES
+
+- `SceneTree` and `NarratorOutput` payloads are shaped by the same schema the renderer consumes, so clients can trust the stream without runtime coercion.
+- Clickable metadata pairs (key, span, waitingMessage/response) mirror the UI contract, keeping every highlight mapped to a visible segment before input is accepted.
+- Mutation batches are only persisted after being validated against the graph schemas, ensuring every invented fact joins the canonical memory with the right references.
+
+---
+
+## ERROR CONDITIONS
+
+- `MissingScenePayload`: emitted when a significant scene fails to include the SceneTree payload that downstream services require.
+- `ClickableMismatch`: raised if a clickable key or span is missing while the narration still references the highlighted text, preventing unusable UI targets.
+- `MutationSchemaViolation`: triggered by the schema validator in `Health` when a mutation batch contains unexpected fields, guarding the graph from malformed updates.
+
+---
+
+## HEALTH COVERAGE
+
+- `author_coherence` health indicator relies on `HEALTH_Narrator.md` checkers and traces back to invariants V1, V3, and V4 to keep story facts aligned with the graph.
+- `mutation_validity` depends on the `mutation_safety_checker`, which enforces V3 and V6 by running the schema validator before committing invented facts.
+- The Narrator health flows include manual `pytest engine/tests/test_narrator_integration.py` runs so the invariants stay validated whenever the health suite replays recent scenes.
+
+---
+
 ## VERIFICATION PROCEDURE
 
 ### Manual Checklist
@@ -98,6 +144,30 @@ python tools/validate_narrator_output.py --check clickables
 | V4 Voice consistency | Manual review during authoring sessions and QA. |
 | V5 Clickable validity | Spot-checked when reviewing generated scene text. |
 | V6 Mutation schema | Covered by schema validation and model tests. |
+
+---
+
+## PROPERTIES
+
+- Persisted mutations tie every authored beat to the graph before emitting the final chunk so downstream queries always see the same state.
+- Scene streaming always begins within a few seconds and ships each chunk with metadata so the CLI remains responsive while graph reads finish.
+- Clickable metadata includes keys, spans, and response references to keep UI mapping deterministic without fallback heuristics.
+
+---
+
+## ERROR CONDITIONS
+
+- `GraphMutationFailure`: When the engine rejects the mutation batch due to schema or constraint violations, the narrator must abort and report before streaming the mutated facts.
+- `MissingClickableMapping`: Triggered when a clickable key is missing from the emitted text, indicating a tooling bug that prevents the UI from resolving the click target.
+- `StreamTimeout`: Fires when the first chunk does not start within the expected latency window, implying a blocking graph read or prompt issue that needs investigation.
+
+---
+
+## HEALTH COVERAGE
+
+- `schema_validator` compares SceneTree outputs against `HEALTH_Narrator` expectations so V1–V6 remain schema-compliant and traceable to the health doc.
+- `mutation_safety_checker` asserts every invented fact obeys graph constraints before the narrator returns control, directly anchoring V3.
+- `pytest engine/tests/test_narrator_integration.py` is the manual entrypoint referenced in the health doc to confirm V2 latency, clickable sequencing, and streaming flows.
 
 ---
 

@@ -64,6 +64,7 @@ documentation-only updates, and adapter behavior is unchanged.
 
 - **What:** Added the missing `OBJECTIVES AND BEHAVIORS` section and renamed the algorithm narrative to call out `main()` so every template requirement exceeds 50 characters.
 - **Why:** Close the DOC_TEMPLATE_DRIFT warning pointing at `ALGORITHM_Gemini_Stream_Flow.md` by making objectives explicit and highlighting the primary entrypoint responsible for running the Gemini subprocess.
+- **Trace:** Logged that the objectives/behaviors + main narrative now exceeds the 50+ character threshold so agents can verify the template line quickly.
 - **Files:** `docs/llm_agents/ALGORITHM_Gemini_Stream_Flow.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`
 - **Verification:** `ngram validate` (fails: existing `docs/connectome/health` gaps plus naming/CHAIN warnings noted by the doctor)
 

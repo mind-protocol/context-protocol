@@ -27,17 +27,17 @@ SYNC:            ./SYNC_Connectome_Runtime_Engine_Sync_Current_State.md
 
 | Behavior ID | Behavior | Why This Validation Matters |
 |-------------|----------|-----------------------------|
-| B1 | Each Next command in stepper mode releases exactly one FlowEvent and then holds the gate closed until an explicit follow-up click occurs. | Validating this keeps every ledger entry tied to an intentional action, preserving deterministic replay and auditability even when UI jitter or retries happen. |
-| B2 | Adjusting the speed slider only tunes animation duration and presentation pacing, never the ledger length, cursor, or count of FlowEvents released in stepper mode. | This keeps authorization decisions separate from animation feel, so auditors and automations can trust that the speed control never secretly advances the script. |
-| B3 | Every release obeys the runtime’s 200ms minimum animation window so realtime playback cannot collapse into imperceptible bursts that disguise rapid autoplayer pulses. | The pacing guard ensures observers, telemetry, and downstream health probes see the same perceptible cadence, preventing autoplayer bursts from undermining trust. |
+| B1 | Next in stepper mode increments the ledger length and cursor by exactly one FlowEvent release, then keeps the gate closed until an explicit command arrives. | Validating this ties each ledger entry to a deliberate click, maintaining deterministic replay and preventing ghost steps from polluting the history when operators retry. |
+| B2 | Speed adjustments only change animation duration defaults and presentation pacing; they never mutate ledger length, cursor, or FlowEvent cadence in stepper mode. | Confirming this guarantees that the authorization boundary stays separate from animation tweaks so the runtime never stealthily advances while speeding up visual feedback. |
+| B3 | Every release obeys the 200ms minimum duration clamp so realtime playback cannot collapse into imperceptibly fast bursts that disguise rapid autoplayer pulses. | The pacing guard keeps telemetry, UIs, and health probes aligned with a perceptible flow, making it obvious when autoplayer bursts try to masquerade as valid steps. |
 
 ## OBJECTIVES COVERED
 
 | Objective | Validations | Rationale |
 |-----------|-------------|-----------|
-| Keep the Next button bounded to a single deterministic release so ledger updates, cursors, and log entries stay predictable before the loop continues. | V1, P1 | This objective prevents the runtime from producing multiple FlowEvents per command, making replay tests reproducible and analyses confident in the script ordering. |
-| Keep speed adjustments purely as duration knobs and block unauthorized autoplay so the runtime never advances without explicit user consent. | V2, E1, E2 | Verifying V2 plus the error conditions ensures downstream tooling can detect any boundary violation that would let autoplay leak past the gate when speed or telemetry shifts. |
-| Maintain human-scale pacing by enforcing the 200ms minimum duration clamp so viewers always perceive each release before the next command. | V3 | The clamp keeps pacing aligned with telemetry and narrative expectations, ensuring autoplayer bursts remain obvious and do not masquerade as legitimate rehearsals. |
+| Keep Next clicks deterministic by allowing exactly one release per press so ledger updates, cursors, and logs stay predictable before the loop continues. | V1, P1 | This objective prevents multiple FlowEvents per command, making the runtime reproducible and giving analysts confidence that identical scripts yield identical sequences. |
+| Keep speed adjustments purely as duration knobs and block autoplay leaks so stepper mode never advances without explicit user consent. | V2, E1, E2 | Validating the speed and error invariants ensures downstream tooling can detect any boundary violation that would let autoplay or unauthorized releases slip through. |
+| Maintain human-scale pacing by enforcing the 200ms minimum duration clamp so observers always see the same perceptible cadence before the next command. | V3 | The clamp keeps pacing aligned with telemetry and narrative expectations, preventing autoplayer bursts from rushing through events and confusing auditors. |
 
 ---
 

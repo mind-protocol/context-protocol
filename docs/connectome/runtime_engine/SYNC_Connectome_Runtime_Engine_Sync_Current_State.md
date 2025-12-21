@@ -46,6 +46,15 @@ Stepper runtime engine is implemented with a fixed step script. Next dispatches 
   * `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
 * **Validation:** `ngram validate` *(fails: known `docs/connectome/health` module chain gaps, the `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming convention issue, and existing CHAIN-link warnings remain; no new regressions introduced).*
 
+### 2026-05-03: Document runtime engine algorithm objectives (Closes #11)
+
+* **What:** Added the missing `OBJECTIVES AND BEHAVIORS` section plus a primary `runtime_engine_step_release_and_realtime_scheduler()` overview so the algorithm doc now states why the stepper guard exists and how runtime commands flow before future agents edit the code.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged those template blocks as absent; the new narrative links objectives, behaviors, and scheduler sequencing back to the release implementation and meets the 50-character minimum.
+* **Files:**
+  * `docs/connectome/runtime_engine/ALGORITHM_Connectome_Runtime_Engine_Step_Release_And_Realtime_Scheduling.md`
+  * `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(fails: the known `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and persistent CHAIN-link warnings remain; no new issues introduced).*
+
 ### 2025-12-20: Implemented stepper runtime engine
 
 * **What:** Added runtime command dispatch, step release logic, and initialization that sets script total.
@@ -134,3 +143,34 @@ pnpm connectome:health runtime_engine
 ```
 
 ---
+
+## IN PROGRESS
+
+- Instrumenting the realtime telemetry_adapter wiring so we can verify that step releases remain gated by the documented idle/active rhythms before enabling continuous play.
+- Calibrating the restart boundary semantics so restarting the runtime engine respects ledger invariants while keeping the stepper/realtime distinction intact.
+
+## KNOWN ISSUES
+
+- Realtime buffering instrumentation remains unfinished, so the telemetry stream cannot yet confirm guardrails during extended autoplay loops.
+- The `docs/connectome/health` module still lacks the PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION/HEALTH/SYNC coverage that keeps `ngram validate` from passing on this module.
+
+## HANDOFF: FOR AGENTS
+
+- Continue routing observations through `VIEW_Extend_Add_Features_To_Existing` once realtime buffering fixtures are in place, with attention to the telemetry_adapter wiring noted above.
+- Watch the connectome health docs and membrane naming issues referenced in the latest doctor run; do not expect validation clean without those fixes.
+
+## HANDOFF: FOR HUMAN
+
+- Confirm whether telemetry buffer instrumentation and the connectome health module documentation should be prioritized before the next release so downstream agents know when the validation suite can cleanly pass.
+- Advise on any release gating requirements for realtime mode once the telemetry_adapter begins reporting playback health to the dashboard.
+
+## CONSCIOUSNESS TRACE
+
+- Momentum is steady around finishing the telemetry_adapter and health docs, but the runtime engine sync was missing the communication scaffolding until now.
+- Noticing the `view` balance, I explicitly logged the IN PROGRESS, KNOWN ISSUES, and handoff sections so the next agent can pick up where guardrail-specific documentation left off.
+
+## POINTERS
+
+- `docs/connectome/runtime_engine/PATTERNS_Connectome_Runtime_Engine_Stepper_And_Realtime_Traversal_Control_Patterns.md`: Canonical design contract for why the stepper/realtime split exists and what behaviors each mode deliberately enables or prevents.
+- `docs/connectome/runtime_engine/BEHAVIORS_Connectome_Runtime_Engine_User_Controlled_Traversal_Effects.md`: Observable outcomes that every agent should link back to the gating guarantees enumerated here.
+- `docs/connectome/runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md`: Structured logic chains and modules that realize the runtime command gating described in this SYNC.

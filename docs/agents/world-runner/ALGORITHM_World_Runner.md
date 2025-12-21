@@ -17,6 +17,16 @@ news. The loop is intentionally short-lived and stateless across calls.
 
 ---
 
+## OBJECTIVES AND BEHAVIORS
+
+| Objective | Behaviors Supported | Why This Algorithm Matters |
+|-----------|---------------------|----------------------------|
+| Deliver deterministic interrupts whenever a player-impacting flip runs through the tick loop so the narrator can react within the same window. | Short-circuit `run_graph_tick` once `affects_player` flags a flip and return the interrupted Injection payload with the event, remaining minutes, and accumulated news so the narrator can resolve the moment without replaying the loop. | Guarantees the narrator can respond immediately to player-facing events without guessing what state changes occurred, keeping player control tight and coupled directly to graph truth. |
+| Complete long-duration actions cleanly when no player-facing flip occurs by summarizing elapsed time, background world changes, and queued news items for narration. | Run to completion after every tick, convert non-player flips to `WorldChange` records, append `NewsItem`s, and return a completed Injection so the narrator can emit a tidy summary of off-screen evolution. | Prevents runaway loops and gives downstream prose a consistent, aggregated view of every quiet mutation that still matters for world continuity. |
+| Preserve statelessness between invocations while treating the graph as the single source of truth so retries and resumes stay deterministic. | Accept action context, max minutes, and player metadata, re-query the graph each call, and emit fresh `Injection` objects without hidden runner memory, even when orchestrations re-enter the adapter multiple times. | Makes the Runner composable for resumable actions, parallel orchestrations, and deterministic debugging across environments that may re-invoke the adapter several times. |
+
+---
+
 ## DATA STRUCTURES
 
 - **Injection:** Structured response containing interrupt/completion flags,
@@ -37,6 +47,14 @@ The Runner advances time in 5-minute ticks, checks for flips, and stops only whe
 ---
 
 ## ALGORITHM: run_world
+
+### Purpose
+
+Run the graph tick loop until the requested time budget is exhausted or an interrupting flip touches the player, then emit a structured Injection that bundles world changes, queued news, and the interrupt event when relevant.
+
+### Flow
+
+Each tick increments the elapsed minutes by five, runs the graph checker, inspects flips for player intersection, and either short-circuits with an interrupted Injection or continues accumulating background mutations and news payloads until completion.
 
 ```python
 def run_world(action, max_minutes, player_context):
@@ -76,7 +94,11 @@ def run_world(action, max_minutes, player_context):
 
 ---
 
-## Player Intersection (`affects_player`)
+## ALGORITHM: affects_player
+
+### Purpose
+
+Decide whether a flip touches the player by checking the player's location, companions, and whether urgency exceeds the critical threshold near the player so the Runner only interrupts when it matters.
 
 ```python
 def affects_player(flip, player_context, current_tick):
@@ -93,6 +115,8 @@ def affects_player(flip, player_context, current_tick):
 
     return False
 ```
+
+The function uses location, companions, and urgency checks to avoid unnecessary interrupts while still surfacing alarms that threaten the player directly.
 
 ---
 

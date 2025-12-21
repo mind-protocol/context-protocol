@@ -62,7 +62,7 @@ documentation-only updates, and adapter behavior is unchanged.
 
 ### 2025-12-25: Filled Gemini algorithm template length requirements
 
-- **What:** Added the missing `OBJECTIVES AND BEHAVIORS` section, renamed the algorithm narrative to call out `main()`, and clarified how the entrypoint's stages satisfy the 50+ character template requirement.
+- **What:** Added the missing `OBJECTIVES AND BEHAVIORS` section, spun up the `main()` narrative, and spelled out how the entrypoint’s stages satisfy the 50+ character template requirement.
 - **Why:** Close the DOC_TEMPLATE_DRIFT warning pointing at `ALGORITHM_Gemini_Stream_Flow.md` by making objectives explicit and highlighting the primary entrypoint responsible for running the Gemini subprocess.
 - **Trace:** Logged that the objectives/behaviors + main narrative now exceeds the 50+ character threshold so agents can verify the template line quickly.
 - **Files:** `docs/llm_agents/ALGORITHM_Gemini_Stream_Flow.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`
@@ -87,6 +87,7 @@ documentation-only updates, and adapter behavior is unchanged.
 - **What:** Noted in the `IMPLEMENTATION_LLM_Agent_Code_Architecture.md` GAPS section that tracking helper execution timestamps could surface helpers that block the stream unexpectedly, keeping the concurrency narrative visible for future diagnostics.
 - **Why:** DOC_TEMPLATE_DRIFT highlighted missing explanatory sections, and this open question anchors the remaining concurrency concerns inside the Implementation doc while the SYNC points agents at the right follow-up.
 - **Files:** `docs/llm_agents/IMPLEMENTATION_LLM_Agent_Code_Architecture.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`
+- **Trace:** Copying the helper execution timestamp question into the SYNC remarks keeps the concurrency concern visible even if surrounding sections move later.
 - **Verification:** `ngram validate` *(fails for the known docs/connectome/health gaps, membrane naming mismatch, and CHAIN/link warnings already tracked elsewhere)*
 
 ### 2025-12-21: Added objectives and lengthened Gemini behaviors text

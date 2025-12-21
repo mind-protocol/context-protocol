@@ -46,10 +46,10 @@ Tracking the flipped node signal source and the unbounded versus 0..1 energy sca
 
 ## RECENT CHANGES
 
-### 2026-03-25: Update algorithm template coverage
+### 2026-03-25: Deepen algorithm template coverage
 
-- **What:** Rebuilt the algorithm doc so OBJECTIVES AND BEHAVIORS, KEY DECISIONS, DATA FLOW, HELPER FUNCTIONS, and INTERACTIONS sections now exist with 50+ character narratives, expanded the render_node steps into prose, and documented the helper algorithms for energy mapping and wait progress to complete the required template chain.
-- **Why:** DOC_TEMPLATE_DRIFT #11 continued to flag missing sections in this ALGORITHM doc, so this entry records the completion and prevents future drift before downstream agents rely on the rendering contract.
+- **What:** Added palette governance notes, selector instrumentation context, flipped ring + energy formatting helper coverage, and a health trace linking stage so KEY DECISIONS, DATA FLOW, HELPER FUNCTIONS, and INTERACTIONS now include the richer prose required by DOC_TEMPLATE_DRIFT #11.
+- **Why:** The doctor still expects each section to tie rendering logic back to PATTERNS, selectors, helpers, and VALIDATION, so these sentences keep the doc traceable and prevent drift before styling or pager calls change.
 - **Files:** `docs/connectome/node_kit/ALGORITHM_Connectome_Node_Kit_Node_Rendering_Spec_And_Energy_Glow_Mapping.md`, `docs/connectome/node_kit/SYNC_Connectome_Node_Kit_Sync_Current_State.md`
 - **Verification:** `ngram validate` *(fails: known `docs/connectome/health` PATTERNS/SYNC gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings already recorded elsewhere).*
 

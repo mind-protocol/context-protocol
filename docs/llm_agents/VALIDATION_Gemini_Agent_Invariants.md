@@ -22,6 +22,26 @@ SYNC:            ./SYNC_LLM_Agents_State.md
 
 ---
 
+## BEHAVIORS GUARANTEED
+
+| Behavior ID | Behavior | Why This Validation Matters |
+|-------------|----------|-----------------------------|
+| B1 | Missing credentials produce a structured JSON error plus exit code 1 before any Gemini request is sent. | Ensures credential gating stays deterministic so downstream consumers never parse ambiguous streams or partial payloads when authentication is absent. |
+| B2 | Stream-json mode emits assistant/result messages that match the TUI contract, capturing chunk content and final response packets. | Keeping the envelope intact guarantees downstream parsers always see the expected fields and that tooling relying on the format keeps working. |
+| B3 | Plain text mode prints only the raw response text when requested, never mixing in JSON wrappers or tool metadata. | Protects the human-readable output from becoming tangled with structured elements, keeping the observable response legible for users. |
+| B4 | Model listings and diagnostic logs remain on stderr so stdout stays parseable even during debugging. | Prevents the streaming channel from being corrupted by diagnostic data, which is critical for deterministic parsing and downstream tooling. |
+| B5 | Tool invocations emit paired `tool_code`/`tool_result` JSON objects (with errors encoded) rather than raising exceptions. | Guarantees tool handlers always receive predictable messages so they can report structured failures without splitting the stream. |
+---
+## OBJECTIVES COVERED
+
+| Objective | Validations | Rationale |
+|-----------|-------------|-----------|
+| LLM Agents correctness — preserve the adapter’s core invariants around credential gating and streaming contracts | V1, V2, V4, V5 | Validating credential gating, stream shape, debug isolation, and structured tool error handling keeps the adapter deterministic and prevents silent contract violations. |
+| LLM Agents clarity — keep observable outputs legible for humans and orchestrators | V2, V3, V4 | Enforcing the JSON/text modes and stderr isolation protects downstream parsers and observers from mixed formats, keeping observable behavior easy to interpret. |
+| LLM Agents performance — stay within intended budgets by avoiding redundant retries or malformed streams | V2, V5 | Constraining the stream envelope and tool messages avoids unnecessary replays or parsing differences that could blow budgets or trigger extra API calls. |
+
+---
+
 ## INVARIANTS
 
 ### V1: Missing Credentials Fail Fast

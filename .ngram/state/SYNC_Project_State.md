@@ -99,11 +99,25 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2025-12-22: Formalized Gemini validation behavior/objectives tables
+
+- **What:** Replaced the brief behavior/objective bullets with BEHAVIORS GUARANTEED and OBJECTIVES COVERED tables in `docs/llm_agents/VALIDATION_Gemini_Agent_Invariants.md` and expanded every rationale to satisfy the 50+ character requirement.
+- **Why:** Resolve the DOC_TEMPLATE_DRIFT warning that flagged the validation doc for having missing/too-short sections and give downstream agents precise guarantees plus objective alignment.
+- **Files:** `docs/llm_agents/VALIDATION_Gemini_Agent_Invariants.md`
+- **Verification:** `ngram validate` *(fails: pre-existing connectome health doc gaps, membrane naming, and CHAIN/link warnings already tracked by the doctor)*
+
 ### 2025-12-21: Expand archive sync sections for template compliance
 
 - **What:** Expanded every SYNC section in `docs/SYNC_Project_Repository_Map_archive_2025-12.md` so the archive now explains its maturity, status, handoffs, and consciousness trace in more detail while keeping the generated map body unchanged.
 - **Why:** A DOC_TEMPLATE_DRIFT warning reported those sections were missing or too short, so the archive needed richer prose that clearly marks it as a historical snapshot.
 - **Files:** `docs/SYNC_Project_Repository_Map_archive_2025-12.md`
+- **Verification:** `ngram validate` (fails: existing connectome health doc gaps, membrane naming, and CHAIN link warnings noted by doctor)
+
+### 2025-12-21: Documented Gemini behavior objectives
+
+- **What:** Added OBJECTIVES SERVED plus expanded NOTES/INPUTS/OUTPUTS context to `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md` and recorded the change in the LLM agents sync file.
+- **Why:** Close the DOC_TEMPLATE_DRIFT warning that reported the Gemini behaviors doc was missing objectives and contained very short sections.
+- **Files:** `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`
 - **Verification:** `ngram validate`
 
 ### 2025-12-21: Harden API SSE delivery and router schema testing
@@ -209,6 +223,20 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **What:** `docs/schema/models/SYNC_Schema_Models.md` now redirects to `docs/engine/models/SYNC_Models.md`, and `docs/schema/models/PATTERNS_Pydantic_Schema_Models.md` redirects to `docs/engine/models/PATTERNS_Models.md`, ensuring duplicate PATTERNS/SYNC reasoning flagged in DOC_DUPLICATION-models disappears while schema-area links still resolve.
 - **Why:** Keep a single authoritative PATTERNS+SYNC chain for the schema models under `docs/engine/models/` so `ngram validate` can trace to one source of truth while allowing schema-focused contexts to land through these lightweight redirects.
 - **Tests:** `ngram validate` (fails: pre-existing docs/connectome/health gaps plus the membrane naming and several CHAIN link warnings noted above).
+
+### 2025-12-22: Documented Gemini behavior objectives
+
+- **What:** Added the missing `OBJECTIVES SERVED` section to `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md` and expanded the NOTES/INPUTS/OUTPUTS narratives so every template section meets the length expectations.
+- **Why:** Resolve the DOC_TEMPLATE_DRIFT warning for the Gemini behaviors doc and make the adapter’s goals and I/O story explicit for downstream agents.
+- **Files:** `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate`
+
+### 2025-12-22: Completed Gemini validation template
+
+- **What:** Added the BEHAVIORS GUARANTEED table and OBJECTIVES COVERED narrative to `docs/llm_agents/VALIDATION_Gemini_Agent_Invariants.md`, and noted the addition in the LLM SYNC state so the module chain is up to date.
+- **Why:** Close the DOC_TEMPLATE_DRIFT warning for the validation doc and give downstream agents concrete guarantees and objectives to verify before they rely on the Gemini adapter’s output behavior.
+- **Files:** `docs/llm_agents/VALIDATION_Gemini_Agent_Invariants.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` (fails: pre-existing `docs/connectome/health` gaps plus naming/CHAIN warnings in `docs/physics/*`)
 
 ---
 

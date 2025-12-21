@@ -75,9 +75,23 @@ AND:    A tool_result JSON message is emitted with either data or an error
 
 Input shaping for system prompts and tool use is documented in the ALGORITHM/VALIDATION docs to avoid duplication here.
 
+We lean on those algorithm and validation references because they capture the request templates, tool schema, and fallback logic that underpin the streaming behaviors described below.
+
+---
+
+## OBJECTIVES SERVED
+
+This adapter is tuned to measurable outputs that keep the CLI, TUI, and automation tooling aligned:
+
+- Provide a fully parseable JSON stream whenever `--output-format stream-json` is selected so downstream tooling can consume assistant, tool, and result messages without brittle parsing workarounds.
+- Offer a clean plain-text fallback when `--output-format text` is requested so scripts and humans that do not want JSON still receive only the assistant response text while diagnostics stay on stderr.
+- Surface tool execution metadata (`tool_code`/`tool_result`) and credential errors alongside assistant messages so automation orchestrators can correlate each conversational step with its side effects and respond to missing keys promptly.
+
 ---
 
 ## INPUTS / OUTPUTS
+
+Before sending a request, these inputs determine credential sourcing, output formatting, and which tooling primitives are allowed to run, keeping the adapter behavior predictable.
 
 ### Inputs
 
@@ -89,6 +103,8 @@ Input shaping for system prompts and tool use is documented in the ALGORITHM/VAL
 - Stdout: JSON stream (`tool_code`, `tool_result`, `assistant`, `result`) for `stream-json`, or plain response text for `text`.
 - Stderr: model listing output and model listing errors, leaving stdout parseable.
 - Exit code: `1` on missing credentials; otherwise `0` on success.
+
+The adapter keeps stdout stable for programmatic parsing and reserves stderr strictly for diagnostics so nothing interferes with the expected stream format.
 
 ---
 

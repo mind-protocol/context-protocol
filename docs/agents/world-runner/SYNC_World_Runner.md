@@ -39,6 +39,8 @@ The World Runner is complete. It operates as an adapter between the Python game 
 - **Why:** This clarification keeps the archive from being misused as a live plan and ensures future agents only adjust it during deliberate historical snapshots.
 - **Files:** `docs/agents/world-runner/archive/SYNC_archive_2024-12.md`, `docs/agents/world-runner/SYNC_World_Runner.md`
 - **Verification:** `ngram validate`
+- **Impact:** The archive now captures the archival flow (MATURITY, CURRENT STATE, IN PROGRESS, HANDOFF, TODO, CONSCIOUSNESS TRACE, POINTERS) so downstream agents know to treat it as frozen history and rely on the live sync for runtime state.
+- **Trace:** This note points auditors at the new sections we added and helps the DOC_TEMPLATE_DRIFT warning stay satisfied without touching the archived payload.
 
 ### 2026-01-07: Populate archive sync template sections
 

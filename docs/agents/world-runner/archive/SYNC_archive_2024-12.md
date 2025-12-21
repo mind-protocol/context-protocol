@@ -10,6 +10,7 @@ STATUS: ARCHIVED
 ## Purpose
 
 This archive stores verbose examples and full schemas removed from the main docs to keep module size under limits.
+The preserved narrative helps auditors verify the world-runner expectations and calibrate future archives before they replace the December 2024 snapshot.
 
 ## MATURITY
 

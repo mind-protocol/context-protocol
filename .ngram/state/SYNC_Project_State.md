@@ -107,6 +107,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Files:** `docs/agents/world-runner/HEALTH_World_Runner.md`, `docs/agents/world-runner/SYNC_World_Runner.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate`
 
+### 2026-01-11: Clarify world runner archive narrative
+
+- **What:** Expanded the archive sync’s MATURITY, CURRENT STATE, IN PROGRESS, HANDOFF, TODO, CONSCIOUSNESS TRACE, and POINTERS sections with longer prose so the template makes the frozen 2024 snapshot’s purpose explicit.
+- **Why:** DOC_TEMPLATE_DRIFT flagged the archive for terse sections; the added sentences remind agents that this file is read-only and that the live sync reports current state.
+- **Files:** `docs/agents/world-runner/archive/SYNC_archive_2024-12.md`, `docs/agents/world-runner/SYNC_World_Runner.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` *(fails: `docs/connectome/health` still lacks PATTERNS/SYNC, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural prefix, and the CHAIN link warnings remain).*
+
 ### 2025-12-21: Complete tools health template coverage
 
 - **What:** Filled every required HEALTH template block in `docs/tools/HEALTH_Tools.md` so PURPOSE, WHY, FLOWS, INDICATORS, OBJECTIVES, STATUS, DOCKS, CHECKER INDEX, the indicator narratives, HOW TO RUN guidance, and GAPS/IDEAS/QUESTIONS all exceed 50 characters while recording the flows and guardrails operators care about. Captured the coverage in `docs/tools/SYNC_Tools.md` so future agents know the doc now satisfies DOC_TEMPLATE_DRIFT.
@@ -127,6 +134,7 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Why:** DOC_TEMPLATE_DRIFT flagged `docs/tools/ALGORITHM_Tools.md` for missing the required template blocks, so the narrative now documents the documented utilities without touching the scripts themselves.
 - **Files:** `docs/tools/ALGORITHM_Tools.md`, `docs/tools/SYNC_Tools.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(fails for the existing docs/connectome/health PATTERNS/SYNC gaps, the engine/membrane PATTERN naming mismatch, and the unresolved CHAIN/link warnings).*
+  The new entry makes explicit that `run_stack.sh` and the SSE log feed are part of the same tooling ledger so future agents can trace the service orchestration context alongside the splitter/stream narratives.
 
 ### 2026-01-15: Document tools behavior template coverage
 

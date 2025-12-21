@@ -127,36 +127,6 @@ pnpm connectome:health edge_kit
 
 ## IN PROGRESS
 
-Working with the Connectome health tooling to ensure the edge kit probe captures the latest dash/color palette assertions and hover tooltip metadata, since those animations changed after the template drift fix.
-
-## KNOWN ISSUES
-
-| Issue | Severity | Notes |
-|-------|----------|-------|
-| Edge kit health automation | medium | `pnpm connectome:health edge_kit` still needs a CI hook; the probe runs only on-demand and is not referenced by the broader telemetry suite.
-| Suppressed hover details | medium | Heavy-graph rendering hides labels/pulses; the rationale and manual override guidance remain undocumented outside this sync.
-
-## HANDOFF: FOR AGENTS
-
-Check whether CI automation or telemetry already calls `pnpm connectome:health edge_kit`, and if so add a runnable note plus concrete status observations here; link the label suppression behavior to any new graph-level performance heuristics.
-
-## HANDOFF: FOR HUMAN
-
-Should we automate the edge kit health probe and publish its output? Also confirm whether we need a design decision about when label/pulse suppression triggers so behaviors/PATTERNS can cite the policy.
-
-## CONSCIOUSNESS TRACE
-
-Edge kit state now records the DOC_TEMPLATE_DRIFT fix but still expects telemetry automation and clarity on suppressed animations; watching for updates before claiming the module is ship-ready.
-
-## POINTERS
-
-- `app/connectome/components/edge_kit/semantic_edge_components_with_directional_shine_and_pulses.tsx` (current animation/defaults)
-- `app/connectome/components/edge_kit/connectome_edge_style_tokens_for_trigger_and_calltype_mapping.ts` (palette mapping)
-- `docs/connectome/edge_kit/PATTERNS_Connectome_Edge_Kit_Color_Coded_Trigger_Typed_Directional_Link_Styling_Patterns.md` (pattern rationale)
-
-
-## IN PROGRESS
-
 Document completeness continues: verifying the edge kit template sections remain aligned with the runtime graph behavior while ensuring dash/color prose references the latest palette and animation policies in the canvas docs.
 
 ## KNOWN ISSUES

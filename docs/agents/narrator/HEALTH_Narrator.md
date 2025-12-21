@@ -169,11 +169,9 @@ representation:
     - float_0_1
 semantics:
   float_0_1: Ratio of author-coherence passes versus total scene generations in the latest integration run.
-aggregation:
-  method: Minimum-of-weighted-indicators so a single dropped connection drags the score instead of being averaged away.
-  display: Surface the score through the narrator health banner and the doctor log so agents spot regressions quickly.
-```
-
+  aggregation:
+    method: Minimum-of-weighted-indicators so a single dropped connection drags the score instead of being averaged away.
+    display: Surface the score through the narrator health banner and the doctor log so agents spot regressions quickly.
 ```
 
 ### ALGORITHM / CHECK MECHANISM
@@ -258,13 +256,10 @@ pytest engine/tests/test_narrator_integration.py -v
 
 ---
 
-## KNOWN GAPS
+## GAPS / IDEAS / QUESTIONS
 
 - [ ] Automated check for voice consistency across long threads so the narrator does not drift in tone during marathon play sessions.
 - [ ] Hallucination detection for unprompted entity creation so unexpected characters or locations fail early instead of polluting the graph.
-
-## GAPS / IDEAS / QUESTIONS
-
 - [ ] Trigger a sanity run that compares narrator health scores with the CLI health banner to keep scoring aligned with human perception.
 - [ ] Could we automatically diff every scene against the previous SceneTree so the doctor flags contradictions before the player notices?
 - [ ] Explore instrumentation that correlates mutation_validity failures with the specific graph edges touched to speed up debugging.

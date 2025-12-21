@@ -28,6 +28,13 @@ Documentation stays current after the template alignment work, with the module i
 
 ## RECENT CHANGES
 
+### 2025-12-31: Expand narrator validation coverage
+
+- **What:** Added the PROPERTIES, ERROR CONDITIONS, and HEALTH COVERAGE sections to `docs/agents/narrator/VALIDATION_Narrator.md` and removed the redundant PROPERTIES/ERROR/HEALTH block before VERIFICATION so only a single canonical summary remains near TEST COVERAGE.
+- **Why:** DOC_TEMPLATE_DRIFT flagged both the missing sections and the duplicate copy, so this entry keeps the narrator validation contract explicit and well-ordered for future agents.
+- **Files:** `docs/agents/narrator/VALIDATION_Narrator.md`, `docs/agents/narrator/SYNC_Narrator.md`
+- **Verification:** `ngram validate` *(still reporting the existing connectome/health and membrane naming warnings).*
+
 ### 2025-12-30: Document narrator behavior objectives
 
 - **What:** Added an `OBJECTIVES SERVED` section that spells out the streaming timing requirement, canonical mutation guarantees, SceneTree signaling expectations, and mutation telemetry the narrator must emit so this behaviors doc now meets the template’s length requirements with actionable goals.

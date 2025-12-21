@@ -111,7 +111,7 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **What:** Added the missing `OBJECTIVES AND BEHAVIORS` block, expanded the `run_world` explanation, and documented `affects_player` under distinct `ALGORITHM: {function}` headings so the world-runner algorithm doc meets the template expectations.
 - **Why:** DOC_TEMPLATE_DRIFT warned that `docs/agents/world-runner/ALGORITHM_World_Runner.md` lacked the required objectives table and function narratives; enriching the doc keeps the chain authoritative while leaving runtime code untouched.
 - **Files:** `docs/agents/world-runner/ALGORITHM_World_Runner.md`, `docs/agents/world-runner/SYNC_World_Runner.md`, `.ngram/state/SYNC_Project_State.md`
-- **Verification:** `ngram validate` *(fails: pre-existing connectome/health SIG warnings, the membrane naming mismatch, and the CLIN/chain issues already tracked by the doctor)*.
+- **Verification:** `ngram validate` *(fails: the pre-existing connectome/health gaps, membrane naming mismatch, and CHAIN warnings already tracked by the doctor)*.
 
 ### 2025-12-27: Documented narrator archive metadata
 

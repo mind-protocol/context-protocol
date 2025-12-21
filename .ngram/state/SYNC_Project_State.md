@@ -96,6 +96,12 @@ Ran `npm run lint` after WebGL click handling (clean; TypeScript 5.5.4 unsupport
 
 ## RECENT CHANGES
 
+### 2025-12-21: Harden API SSE delivery and router schema testing
+
+- **What:** Added a burst-load SSE regression test in `engine/tests/test_moments_api.py` and created `engine/tests/test_router_schema_validation.py` to assert that the playthroughs and tempo routers reject malformed payloads.
+- **Why:** Prevent regressions when SSE queues back up under sustained clicking and ensure router Pydantic models keep protecting the graph layer.
+- **Verification:** `pytest engine/tests/test_moments_api.py engine/tests/test_router_schema_validation.py`, `ngram validate`
+
 ### 2025-12-21: Reorganized moment graph validation docs
 
 - **What:** Relocated the Player DMZ, Simultaneity/CONTRADICTS, and Void Tension validation stubs into their own subfolders under `docs/engine/moment-graph-engine/validation/` to eliminate duplicate VALIDATION files in the root.

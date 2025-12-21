@@ -21,6 +21,19 @@ HEALTH:          ./HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_
 SYNC:            ./SYNC_Connectome_Flow_Canvas_Sync_Current_State.md
 ```
 
+## BEHAVIORS SUPPORTED
+
+* Interactive pan, zoom, fit-to-view, and reset controls keep camera motion responsive so analysts can zoom into dense clusters without losing the context of the current step in the runtime engine.
+* Deterministic zone placement and label decluttering keep the FE/BE/GRAPH/AGENTS backdrops visible so focus transitions highlight the right region without hiding adjacent lanes.
+* Stable edge glow, hover persistence, and node click hooks surface the current focus so the canvas reinforces runtime intent rather than merely showing a static projection.
+* Camera transforms are limited to explicit UI actions so the navigation experience always matches the user's recent input and never drifts to an unexpected orientation.
+
+## BEHAVIORS PREVENTED
+
+* Prevents edges from disappearing by keying each connector to a stable identifier and factoring camera transforms out of the render loop so step transitions never drop or flicker lines.
+* Prevents label overcrowding by decluttering noisy text until users zoom in, avoiding bold reflows that would overwhelm the tracing narrative when thousands of nodes spill into view.
+* Prevents inadvertent layout jumps by only updating camera state via the dedicated controls, so stepper advances never trigger abrupt pan/zoom resets that would tear the spatial memory.
+
 ### Bidirectional Contract
 
 ```
@@ -58,13 +71,13 @@ The current failure modes (already observed):
 * player vs UI vs hook nodes are not distinguishable
 * no pan/zoom means you choose between “readable” and “fits on screen”
 
-We need a canvas pattern that stays readable as complexity increases.
+We need a canvas pattern that stays readable as complexity increases and can scale to thousands of nodes.
 
 ---
 
 ## THE PATTERN
 
-**Zoned system map projection with deterministic layout and interactive camera.**
+**Force-directed projection with interactive camera (zones as optional context).**
 
 * “Zones” are explicit containers:
 
@@ -72,7 +85,8 @@ We need a canvas pattern that stays readable as complexity increases.
   * BACKEND
   * GRAPH
   * AGENTS
-* Nodes live inside zones; edges route across zones
+* Nodes are placed by a force-directed layout that scales to large graphs
+* Zones remain as optional, low-contrast contextual backdrops
 * Camera supports:
 
   * pan
@@ -82,8 +96,8 @@ We need a canvas pattern that stays readable as complexity increases.
 
 Key insight:
 
-> If the diagram is a projection of a ledger, layout must be stable and predictable.
-> Force graphs are great for exploration but bad for deterministic debugging.
+> If the diagram is a projection of a ledger, the layout must remain legible as the graph grows.
+> We accept force layout to preserve scalability, then rely on zoom + hover for precision.
 
 ---
 
@@ -97,14 +111,13 @@ A readable diagram needs:
 * pan/zoom to inspect without shrinking labels into noise
 * “reset camera” to recover orientation
 
-### Principle 2: Deterministic layout (not physics) for the main pipeline
+### Principle 2: Force layout for scale, stepper for semantics
 
-The connectome “main data flow” is a system diagram:
+The connectome “main data flow” is a system diagram, but the graph must scale to thousands of nodes:
 
-* stable positions help users build mental models
-* stepper mode relies on spatial memory
-
-Force layout can exist as a secondary exploration mode later, but v1 should be deterministic.
+* force layout preserves legibility under growth
+* stepper semantics remain deterministic (one step per click)
+* spatial memory is supported by consistent force parameters
 
 ### Principle 3: Label readability over style bravado
 
@@ -126,7 +139,7 @@ Edges must not disappear:
 
 | Data           | Description                                                              |
 | -------------- | ------------------------------------------------------------------------ |
-| `nodes[]`      | UI nodes with positions and zone membership                              |
+| `nodes[]`      | UI nodes with force-directed positions and zone membership               |
 | `edges[]`      | Flow edges derived from FlowEvents (or a base map + active highlighting) |
 | `active_focus` | which node/edge is active; glow persists                                 |
 | `camera`       | x,y,zoom (view state)                                                    |
@@ -230,7 +243,7 @@ docking_points:
 
 ## GAPS / IDEAS / QUESTIONS
 
-* [ ] Confirm whether we lock node positions in code or compute via a lightweight layout algorithm (recommended: fixed for v1).
+* [ ] Tune force parameters for very large graphs (nodes > 1k).
 * IDEA: optional “declutter toggle” hides secondary labels until zoom > threshold.
 * QUESTION: do we need minimap in v1? (nice-to-have)
 

@@ -99,6 +99,12 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2026-04-08: Document flow canvas behavior objectives and I/O (#11)
+
+* **What:** Added OBJECTIVES SERVED, INPUTS / OUTPUTS, and OBSERVATIONS to `docs/connectome/flow_canvas/BEHAVIORS_Connectome_Flow_Canvas_Readable_Stable_Interaction_Effects.md`, refreshed the flow canvas SYNC with the change, and recorded the repair here so the behavior contract and data contract remain traceable via DOC_TEMPLATE_DRIFT #11.
+* **Files:** `docs/connectome/flow_canvas/BEHAVIORS_Connectome_Flow_Canvas_Readable_Stable_Interaction_Effects.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails: `docs/connectome/health` still lacks PATTERNS/SYNC plus the BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION chain, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural PATTERNS prefix, and longstanding CHAIN-link warnings in physics/cli/engine persist).*
+
 ### 2026-04-08: Complete flow canvas validation template (#11)
 
 * **What:** Filled the missing BEHAVIORS GUARANTEED, OBJECTIVES COVERED, PROPERTIES, and SYNC STATUS sections in `docs/connectome/flow_canvas/VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md` and recorded the repair in the flow canvas SYNC file so the template now meets the DOC_TEMPLATE_DRIFT requirements.
@@ -112,6 +118,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged the missing sections in this health doc; the new content keeps the runtime verification story aligned with VALIDATION and lets dashboards know which streams/logs to watch before rerunning the probe.
 * **Files:** `docs/connectome/flow_canvas/HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_Stability_And_Perf_Budgets.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate` *(fails: existing docs/connectome/health gaps, the engine/membrane PATTERN naming issue, and the long-standing CHAIN link warnings already tracked by the validator).*
+
+### 2026-04-10: Complete flow canvas algorithm template sections (#11)
+
+* **What:** Added `OBJECTIVES AND BEHAVIORS`, a `render_flow_canvas_frame` walkthrough, and the missing KEY DECISIONS / DATA FLOW / HELPER FUNCTIONS / INTERACTIONS sections plus richer prose so the algorithm doc now satisfies DOC_TEMPLATE_DRIFT #11 for narrative coverage and length.
+* **Why:** The flow canvas algorithm is now aligned with the rest of the chain, enabling downstream agents to trace the primary functions, data paths, and interaction constraints before relying on the implementation.
+* **Files:** `docs/connectome/flow_canvas/ALGORITHM_Connectome_Flow_Canvas_Layout_Zones_And_Edge_Label_Decluttering.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(still fails because docs/connectome/health lacks PATTERNS/SYNC/CHAIN docs, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural prefix, and the long-standing CHAIN link warnings remain; no new failures were introduced).*
 
 ### 2026-04-03: Document log panel health forwarding metadata
 

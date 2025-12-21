@@ -28,9 +28,25 @@ SYNC:            ./SYNC_Connectome_Flow_Canvas_Sync_Current_State.md
 The canvas renders a stable projection:
 
 * zones are rectangles with titles
-* nodes are positioned inside zones deterministically
+* nodes are positioned by force-directed layout (seeded by zones)
 * edges route between nodes with stable ids
 * label placement is consistent and avoids overlap as much as possible
+
+---
+
+## OBJECTIVES AND BEHAVIORS
+
+The connectome flow canvas must feel like a reliable operating console: readout labels stay legible while zooming, simultaneous pan/zoom gestures keep the focus locked to the current step, and the projection keeps the runtime intent explicit instead of fading into a static graph. By honoring these objectives we reinforce the BEHAVIORS contract (readability, stable glow, anti-disappearance) and allow the canvas to behave predictably whenever the engine state changes or the user commands a reset.
+
+---
+
+## ALGORITHM: `render_flow_canvas_frame(store_state, camera, interaction_queue)`
+
+1. Read the latest `nodes`, `edges`, `zones`, and `active_focus` from `store_state` selectors so the projection matches the runtime stepper.
+2. Invoke `compute_zone_layout(viewport)` to anchor the contextual backdrops, then call `place_nodes_with_force_layout` with zonal seeds to compute stable node coordinates.
+3. Run `route_edges_and_place_labels` so every connector has a deterministic curve and label candidate, applying declutter offsets before the renderer touches the edge layer.
+4. Apply `apply_camera_transform(camera, world_coords)` to produce screen coordinates, draw zones first, then nodes, and finally edges so interactions hit nodes last while lines remain visible.
+5. Feed `interaction_queue` events (pan/zoom/resets) back to the state store so the next tick starts with updated camera deltas and the proven objectives continue to hold.
 
 ---
 
@@ -88,21 +104,27 @@ These are tuned for readability and spacing; they scale with viewport.
 
 ---
 
-## ALGORITHM: `place_nodes_within_zones(nodes, zones)`
+## ALGORITHM: `place_nodes_with_force_layout(nodes, edges, zones)`
 
-* each node has a preferred slot (row/column)
-* spacing constant ensures “nodes more far away”
+* seed nodes near their zone (optional)
+* run force-directed layout with Barnes-Hut acceleration
+* iteration count scales with node count for performance
 
 ```
-slot_spacing_x = 260
-slot_spacing_y = 180
-node_padding   = 24
+forceManyBody.strength = -240
+forceLink.distance = 220
+forceLink.strength = 0.08
+iterations =
+  if nodes > 800: 120
+  else if nodes > 300: 180
+  else: 260
 ```
 
 Place nodes by:
 
-* zone_id grouping
-* stable ordering by node_id or explicit “pipeline order” list
+* initial positions from zone seeds
+* force simulation ticks to settle
+* clamp to view bounds if needed (optional v1)
 
 ---
 
@@ -133,17 +155,46 @@ Must preserve:
 
 ---
 
+## KEY DECISIONS
+
+* Deterministic zone rectangles keep semantic context consistent across renders, reinforcing analytics workflows and preventing the layout from jumping when nodes shuffle.
+* Force-directed placement seeded near zone centers allows density to grow while still keeping the camera focus predictable, so we do not rely on manual drag-and-drop.
+* Label decluttering is handled by adaptive offsets with a final visibility gate rather than hiding entire connections, so the invariant that edges remain readable under zoom is upheld.
+
+---
+
+## DATA FLOW
+
+Canvas rendering is driven by a narrow data pipeline: the runtime engine updates `state_store` with `nodes/edges/zones/active_focus`, selectors expose that snapshot to the canvas component, and the algorithm chain here transforms it through layout + routing before the rendering layer writes the results into the WebGL context and overlay DOM labels. Camera events flow back through the same store, keeping the feedback loop tight and traceable.
+
+---
+
+## HELPER FUNCTIONS
+
+* `compute_zone_layout(viewport)` returns anchored rectangles that are reused by both the layout simulation and the WebGL backdrop so zone geometry never drifts.
+* `nudge_colliding_labels(active_labels)` tracks recent offsets and applies small vertical shifts until proximity constraints are satisfied, handing off the final text placement to the renderer.
+* `project_world_to_screen(world_point, camera)` encapsulates the pan/zoom math so every consumer consistently applies the same transform stack.
+* `sync_hover_and_focus(node_or_edge, active_focus)` maintains the glowing state tied to the current runtime step, ensuring interactions match the documented BEHAVIORS.
+
+---
+
+## INTERACTIONS
+
+User interactions are constrained to pan, zoom, fit-to-view, reset, and focus clicks so the algorithm can preserve the invariants: pointer drags update camera pan/zoom, double-tap resets the viewport through `fit_view_to_zones()`, and node clicks forward the focus event to the runtime engine so the canvas reacts with a glow and logs the selection without rearranging geometry.
+
+---
+
 ## COMPLEXITY
 
-* layout compute: O(n + m)
+* layout compute: O(n log n + m) (Barnes-Hut force)
 * collision offset: O(m) with small constant factor
 
 ---
 
 ## GAPS / IDEAS / QUESTIONS
 
-* IDEA: use dagre layout for v2 but pin main pipeline nodes
-* QUESTION: do we allow user to drag nodes? (v1: no, to preserve determinism)
+* IDEA: allow per-zone gravity centers to keep clusters readable at 10k nodes
+* QUESTION: do we allow user to drag nodes? (v1: no, to preserve stability)
 
 ---
 

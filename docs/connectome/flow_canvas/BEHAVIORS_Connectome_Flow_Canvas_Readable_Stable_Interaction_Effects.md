@@ -25,21 +25,17 @@ SYNC:            ./SYNC_Connectome_Flow_Canvas_Sync_Current_State.md
 
 ## OBJECTIVES SERVED
 
-- Keep the entire Flow Canvas readable and stable even when the graph scales to thousands of nodes so the highlighted step and zone storytelling stay legible without flickering chaos.
-- Anchor navigation cues, zone labeling, and focus pulses to the deterministic layout so the canvas becomes a single source of truth for the Connectome stepper rather than a transient debug view.
+- Keep the canvas readable even as the graph scales to thousands of nodes so operators can reason about emerging flow patterns before looking at instrumentation or logs.
+- Surface camera state transitions, zone labels, and focus glows so navigation feels deterministic even when the runtime stepper pulses the graph between stages.
+- Anchor every visual transition to validated store signals so the flow canvas remains a trustworthy debugging instrument rather than a speculative render.
 
 ## INPUTS / OUTPUTS
 
-### INPUTS
+**Inputs:** The flow canvas consumes state_store selectors for nodes[], edges[], zone definitions, camera transforms, active_focus, active_edge_ids, and layout metadata (label thresholds and LOD breakpoints), plus event_model enrichments such as call_type and step_key so every visible cue is rooted in canonical signals.
 
-- `state_store.current_graph.nodes` and `.edges`, plus the computed `state_store.zones`, feed the zone renderers, edge shaders, and tooltip data so the canvas always reflects the canonical graph.
-- `state_store.step_cursor`, `state_store.active_focus`, and `state_store.active_edge_ids` supply the stepper focus, glow pulses, and labels that keep navigation consistent with the ledger.
+**Outputs:** The renderer emits layered draw calls (zones, edges, labels), tooltip summaries, glow/pulse states, camera resets, and deterministic pan/zoom recordings that downstream overlays, instrumentation, or playback tools can reuse without re-computing the underlying graph.
 
-### OUTPUTS
-
-- The canvas produces stable camera transforms, zone layers, and tooltip summaries that downstream overlays reuse to explain active steps, previews, and hover details without re-computing the graph.
-- Panning, zooming, fit-to-view, and focus transitions emit deterministic layout snapshots and camera bounds that instrumentation or recordings can replay for debugging or tutorials.
-
+**Documentation note:** Inputs are purely declarative stores and event_model metadata; outputs are visual and camera-state reflections of those validated signals.
 ## BEHAVIORS
 
 ### B1: Pan/zoom makes dense diagrams inspectable without shrinking labels to noise
@@ -119,6 +115,11 @@ INSTEAD: label placement rules and spacing prevent collisions by default
 
 * QUESTION: should labels fade when zoomed out? (likely yes, but must be predictable)
 * IDEA: show only active edge label when zoom < threshold
+
+## OBSERVATIONS
+
+- Completing the objectives and I/O sections resolves DOC_TEMPLATE_DRIFT #11 for the flow canvas chain and keeps the behavior contract in line with the canonical doc template.
+- Keep tuning label declutter thresholds and zoom-based detail toggles so the readability guarantees documented in PATTERNS and VALIDATION stay true as graphs grow; the TODO list still calls this out.
 
 ---
 

@@ -42,7 +42,7 @@ Implemented LogPanel with a “Now” section, ledger list, duration color rules
 
 ### 2026-04-03: Document log panel health streaming metadata
 
-* **What:** Added a note about the `connectome.health.log_panel` stream metadata, the Forwarding & Displays block, and the dual tagging of CLI log + stream so this SYNC references the same indicator/event/duration metadata that the health doc now describes.
+* **What:** Added a note about the `connectome.health.log_panel` stream metadata, the Forwarding & Displays block, the dual tagging of CLI log + stream, and the `session_id`/`schema_version` metadata so this SYNC references the same indicator/event/duration metadata that the health doc now describes.
 * **Why:** Operators and dashboards needed a pointer linking the binary health result to the streaming metadata, so recording it in the SYNC keeps the log panel chain traceable from the doc to the runtime stream.
 * **Files:** `docs/connectome/log_panel/HEALTH_Connectome_Log_Panel_Runtime_Verification_Of_Log_Truth_And_Export_Integrity.md`, this SYNC file
 * **Validation:** `ngram validate` *(fails: docs/connectome/health PATTERNS/SYNC gaps plus docs/physics naming/CHAIN warnings already logged elsewhere).*

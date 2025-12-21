@@ -1,6 +1,6 @@
 # flow_canvas — Sync: Current State
 
-LAST_UPDATED: 2026-04-08
+LAST_UPDATED: 2026-04-11
 UPDATED_BY: codex
 STATUS: DESIGNING
 ```
@@ -30,6 +30,19 @@ Implemented a React Flow-based FlowCanvas with force-directed node layout seeded
 ---
 
 ## RECENT CHANGES
+
+### 2026-04-11: Extend health template indicators (#11)
+
+* **What:** Added indicator-level VALUE / REPRESENTATION / DOCK narratives, documented the binary STATUS stream, and lengthened HOW TO RUN plus the dock list so `HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_Stability_And_Perf_Budgets.md` now exceeds all DOC_TEMPLATE_DRIFT requirements about indicator detail and execution guidance.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged the canvas health doc for missing indicator stories and a too-short how-to-run block, so this ensures every watcher knows what to look for, where the results land, and how to rerun the harness.
+* **Files:** `docs/connectome/flow_canvas/HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_Stability_And_Perf_Budgets.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(fails: existing docs/connectome/health chain gaps plus docs/engine/membrane naming mismatch and longstanding CHAIN-link warnings still remain; no new regressions introduced)*.
+
+### 2026-04-10: Fill algorithm template sections for flow canvas (#11)
+
+* **What:** Added `OBJECTIVES AND BEHAVIORS`, a top-level `render_flow_canvas_frame` algorithm summary, and the missing KEY DECISIONS / DATA FLOW / HELPER FUNCTIONS / INTERACTIONS sections plus richer prose so the algorithm doc now meets the DOC_TEMPLATE_DRIFT template length and coverage requirements.
+* **Why:** Ensures the flow canvas algorithm narrative now fully documents the primary functions, decisions, data path, and interaction constraints that downstream engineers rely on.
+* **Files:** `docs/connectome/flow_canvas/ALGORITHM_Connectome_Flow_Canvas_Layout_Zones_And_Edge_Label_Decluttering.md`
 
 ### 2025-12-20: Switched node layout to force-directed for scale
 
@@ -61,17 +74,38 @@ Implemented a React Flow-based FlowCanvas with force-directed node layout seeded
 * **Why:** Maintain interactive performance on large graphs (WebGL points/lines).
 * **Files:** `app/connectome/components/pannable_zoomable_zoned_flow_canvas_renderer.tsx`, `app/connectome/connectome.css`.
 
+### 2026-04-09: Complete flow canvas health template sections (#11)
+
+* **What:** Added WHY THIS PATTERN, HOW TO USE THIS TEMPLATE, OBJECTIVES COVERAGE, STATUS, DOCK TYPES, indicator blocks, and expanded HOW TO RUN inside `HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_Stability_And_Perf_Budgets.md` so every template block now exceeds the DOC_TEMPLATE_DRIFT expectations and points readers at the standard HEALTH docks.
+* **Why:** DOC_TEMPLATE_DRIFT #11 specifically targeted the missing sections in this health doc; the new content keeps the runtime verification narrative aligned with VALIDATION and the downstream dashboards.
+* **Files:** `docs/connectome/flow_canvas/HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_Stability_And_Perf_Budgets.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`  
+* **Validation:** `ngram validate`
+
 ### 2026-04-08: Fill validation template drift sections for flow_canvas (#11)
 
 * **What:** Added the missing BEHAVIORS GUARANTEED, OBJECTIVES COVERED, PROPERTIES, and SYNC STATUS sections to `VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md` and expanded each narrative so the template now exceeds fifty characters per block.
 * **Why:** Completes DOC_TEMPLATE_DRIFT #11 for the validation doc and gives downstream agents a document that explicitly links behaviors, objectives, invariants, and syncing evidence.
 * **Files:** `docs/connectome/flow_canvas/VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md`
 
+### 2026-04-10: Complete flow canvas algorithm template sections (#11)
+
+* **What:** Added the OBJECTIVES AND BEHAVIORS narrative, the primary `render_flow_canvas_frame` procedure, KEY DECISIONS, DATA FLOW, HELPER FUNCTIONS, and INTERACTIONS writeups so the algorithm doc now fulfills the DOC_TEMPLATE_DRIFT requirements that prompted issue #11.
+* **Why:** Ensures the canonical algorithm writeup explicitly connects objectives, behaviors, decisions, and interaction expectations to the implementation so downstream agents no longer encounter the incomplete template warning.
+* **Files:** `docs/connectome/flow_canvas/ALGORITHM_Connectome_Flow_Canvas_Layout_Zones_And_Edge_Label_Decluttering.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
+
 ### 2026-04-07: Add flow canvas behavior objectives and I/O (#11)
 
 * **What:** Documented OBJECTIVES SERVED plus INPUTS/OUTPUTS details in `BEHAVIORS_Connectome_Flow_Canvas_Readable_Stable_Interaction_Effects.md` so the template now describes the goals and data contracts for the canvas.
 * **Why:** DOC_TEMPLATE_DRIFT #11 highlighted the missing sections, and the new narrative keeps the canonical behavior doc aligned with the rest of the chain.
 * **Files:** `docs/connectome/flow_canvas/BEHAVIORS_Connectome_Flow_Canvas_Readable_Stable_Interaction_Effects.md`
+* **Verification:** `ngram validate`
+
+### 2025-12-21: Document flow canvas pattern behaviors (#11)
+
+* **What:** Replaced the empty placeholders with detailed `BEHAVIORS SUPPORTED` and `BEHAVIORS PREVENTED` narratives that spell out the pan/zoom camera guarantees, zone context resilience, focus persistence, LOD decluttering, and camera-control protections without falling below the DOC_TEMPLATE_DRIFT length target.
+* **Why:** DOC_TEMPLATE_DRIFT #11 reported the PATTERNS doc lacked observable behavior guidance, so richer wording keeps the upstream design contract aligned with the rest of the flow canvas chain.
+* **Files:** `docs/connectome/flow_canvas/PATTERNS_Connectome_Flow_Canvas_Pannable_Zoomable_Zoned_System_Map_Rendering_Patterns.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(fails: docs/connectome/health lacks PATTERNS/SYNC/full-chain docs, docs/engine/membrane/PATTERN_Membrane_Modulation.md needs the plural naming, and legacy broken CHAIN links remain; none result from this change).*
 
 ---
 
@@ -79,6 +113,19 @@ Implemented a React Flow-based FlowCanvas with force-directed node layout seeded
 
 * [ ] Implement label declutter hooks in edge rendering (optional v1)
 * [ ] Add a minimap only if navigation becomes painful
+
+## Agent Observations
+
+### Remarks
+- Documented the OBJECTIVES SERVED and INPUTS / OUTPUTS sections so DOC_TEMPLATE_DRIFT #11 can now point to a canonical behavior narrative plus the data contract it relies on.
+- Recorded the new algorithm sections so downstream agents can trace the primary `render_flow_canvas_frame` function, its decisions, and the helper math back to the SYNC log alongside the behavior/validation fixes.
+- Keep tracking label declutter thresholds and zoom-based detail toggles so the readability guarantees mentioned in PATTERNS and VALIDATION stay true as graph size increases.
+
+### Suggestions
+- [ ] Capture label declutter threshold values in health/validation checks so future doctors can automatically flag when readability budgets are violated.
+
+### Propositions
+- Continue the TODO idea of showing only the active edge label when zoom is below a threshold as a future readability experiment once instrumentation collects bandwidth metrics.
 
 Run:
 

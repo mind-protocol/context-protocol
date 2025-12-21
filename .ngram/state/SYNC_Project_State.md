@@ -99,6 +99,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2026-04-03: Document log panel health forwarding metadata
+
+* **What:** Added a paragraph describing how the `connectome.health.log_panel` stream metadata (indicator name, event id, duration bucket) mirrors the CLI failure log and introduced a `Forwarding & Displays` block so the health doc explicitly maps the binary `0` result to instrumentation outputs.
+* **Why:** Without this guidance, dashboards cannot correlate the streaming binary result with the log panel indicator that stopped the run, so the new narrative makes the metadata traceable before the next agent reruns the probes.
+* **Files:** `docs/connectome/log_panel/HEALTH_Connectome_Log_Panel_Runtime_Verification_Of_Log_Truth_And_Export_Integrity.md`, `docs/connectome/log_panel/SYNC_Connectome_Log_Panel_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails: docs/connectome/health still lacks PATTERNS/SYNC, docs/engine/membrane naming mismatch, and the outstanding CHAIN warnings).* 
+
 ### 2026-04-01: Reaffirm node kit behavior template fix
 
 - **What:** Logged the OBJECTIVES/INPUTS/Status/Notes/Impact/Trace content added to `docs/connectome/node_kit/BEHAVIORS_Connectome_Node_Kit_Visible_Clarity_And_Trust_Effects.md` so every agent following the RECENT CHANGES trail immediately finds the issue #11 repair.
@@ -132,6 +139,7 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Why:** DOC_TEMPLATE_DRIFT #11 flagged the missing sync blocks, so the enriched narrative keeps the state story auditable and traceable before downstream agents declare this module canonical.
 - **Files:** `docs/connectome/log_panel/SYNC_Connectome_Log_Panel_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Validation:** `ngram validate` (still fails: existing docs/connectome/health chain gaps, docs/physics naming/CHAIN warnings, and lingering CHAIN issues already tracked elsewhere)
+ - **Trace:** Tagged the log panel sync with `<!-- ISSUE_11_LOG_PANEL_SYNC -->` and the canonical pointer list so downstream agents can follow this fix back to issue #11 via the project state ledger.
 
 ### 2026-03-28: Complete log panel patterns behavior sections
 

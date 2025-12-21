@@ -40,6 +40,13 @@ Implemented LogPanel with a “Now” section, ledger list, duration color rules
 * **Files:** `docs/connectome/log_panel/ALGORITHM_Connectome_Log_Panel_Log_Rendering_Duration_Coloring_And_Export.md`
 * **Validation:** `ngram validate` *(still fails for the pre-existing `docs/connectome/health` PATTERNS/SYNC gaps, the `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the legacy CHAIN link warnings tracked by the doctor).*
 
+### 2025-12-21: Expand behavior doc objectives and I/O coverage
+
+* **What:** Added rich OBJECTIVES SERVED plus INPUTS / OUTPUTS sections so the behavior document now lays out the canonical goals, audited signals, and copy/export payload expectations for the log panel.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged these sections as missing, so spelling them out keeps the document in sync with the rest of the chain before downstream agents rely on the UI behaviors.
+* **Files:** `docs/connectome/log_panel/BEHAVIORS_Connectome_Log_Panel_Step_Clarity_And_Copyable_Audit_Trail_Effects.md`, this SYNC file
+* **Validation:** `ngram validate` *(fails: existing docs/connectome/health PATTERNS/SYNC gaps plus docs/physics naming and CHAIN warnings already tracked elsewhere).*
+
 ### 2025-12-21: Complete log panel validation template trace
 
 * **What:** Added BEHAVIORS GUARANTEED, OBJECTIVES COVERED, PROPERTIES, and SYNC STATUS to the validation doc so every template block preserves the ledger, duration, and export invariants that keep the audit trail honest, and logged the audit in this SYNC entry so future agents see the verification chain for the log panel invariants.
@@ -49,7 +56,7 @@ Implemented LogPanel with a “Now” section, ledger list, duration color rules
 
 ### 2026-03-31: Expand log panel health template coverage
 
-* **What:** Added the missing WHY THIS PATTERN, HOW TO USE THIS TEMPLATE, OBJECTIVES COVERAGE, STATUS, DOCK TYPES, and indicator/value/representation/docks/mechanism/manual-run narratives to the health doc, documented the failure log plus dock metadata, and lengthened HOW TO RUN so every block now exceeds the DOC_TEMPLATE_DRIFT expectation.
+* **What:** Added the missing WHY THIS PATTERN, HOW TO USE THIS TEMPLATE, OBJECTIVES COVERAGE, STATUS, DOCK TYPES, and indicator/value/representation/docks/mechanism/manual-run narratives to the health doc, documented the failure log plus dock metadata, described the stream metadata forwarded to `connectome.health.log_panel`, and lengthened HOW TO RUN so every block now exceeds the DOC_TEMPLATE_DRIFT expectation.
 * **Why:** The doctor flagged those sections as missing or too brief, so the new prose keeps the log panel health harness explicit about the selectors, validation IDs, and manual runner before release.
 * **Files:** `docs/connectome/log_panel/HEALTH_Connectome_Log_Panel_Runtime_Verification_Of_Log_Truth_And_Export_Integrity.md`
 * **Validation:** `ngram validate` *(fails: existing docs/connectome/health PATTERNS/SYNC gaps plus docs/physics naming/CHAIN warnings already tracked by the doctor).*
@@ -138,35 +145,38 @@ pnpm connectome:health log_panel
 
 ## IN PROGRESS
 
-Polishing the planned filter, search, and export telemetry so the log panel can highlight filtered ledger entries, keep duration coloring tied to the serialized state_store ledger, and prove the copy/export paths remain faithful before declaring this module canonical.
+- Steering the ledger filter/search matrix and export serialization telemetry so the panel can highlight filtered rows, keep the duration palette tied to the stored state, and prove the copy/export pipelines remain faithful before changing any derived charts.
+- Reviewing how the ledger search selectors impact neighbor highlights and ledger export order so the UI behavior stays traceable to the state_store serializer before this module is marked canonical.
 
 ## KNOWN ISSUES
 
-- Ledger filter controls remain unimplemented, so the list still exposes the entire event stream rather than letting reviewers narrow rows by trigger, call, or duration slices, which could misrepresent the promised experience.
-- The manual `pnpm connectome:health log_panel` run is currently the only verification for duration color fidelity and export integrity, leaving the module without automated health coverage and susceptible to unnoticed regressions.
-- `ngram validate` continues to cite the broader `docs/connectome/health` chain gaps plus unrelated physics naming/link warnings, so this sync records those persistent alerts even while the log panel sections now satisfy the template.
+- The filter controls still expose the entire trace, turning the ledger into a broad stream that may mislead reviewers until the planned scoping/trigger/call filters land and the export preview matches filtered output.
+- Validation still leans entirely on `pnpm connectome:health log_panel`, so without automated probes we risk missing regressions in duration coloring or export fidelity; the pending health doc updates must land before automation replaces the manual run.
+- `ngram validate` maintains the long-standing warnings for `docs/connectome/health` PATTERNS/SYNC gaps and the `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, so this sync records those external blockers rather than letting today's fix hide them.
 
 ## HANDOFF: FOR AGENTS
 
-Continue from `VIEW_Implement_Write_Or_Modify_Code.md`, tracking the pending filter/search experience, export telemetry, and automated health probes while keeping every DOC_TEMPLATE_DRIFT narrative refreshed before claiming canonical status.
+- Continue under `VIEW_Implement_Write_Or_Modify_Code.md`, intentionally pairing ledger filters, search, and copy/export telemetry so references in `PATTERNS` and `IMPLEMENTATION` stay accurate; flag any drift in this sync before you ship further behavior changes.
+- Validate that each pointer in this section still maps to a living doc before touching the panel so future agents can start with the same narrative map you now depend on.
 
 ## HANDOFF: FOR HUMAN
 
-Please confirm the desired filter scope, export format expectations, and health probe automation plans so this module can be marked canonical after the manual `pnpm connectome:health log_panel` guidance is codified and the doc chain matches runtime reality.
+- Please confirm the desired filter scope, export format expectations, and health probe automation plan so this module can be declared canonical once `pnpm connectome:health log_panel` is formalized and the health narrative matches the panel's runtime state.
+- Share any remaining concerns about duration palettes or ledger export fidelity so this module does not ship while the DOC_TEMPLATE_DRIFT constraints still linger at the bottom of the validator.
 
 ## CONSCIOUSNESS TRACE
 
-**Momentum:** Documenting the missing sync sections closes the log panel's DOC_TEMPLATE_DRIFT checklist so the design, implementation, and health chains now reference rich narratives for downstream agents to follow.
+**Momentum:** Recording the missing IN PROGRESS, KNOWN ISSUES, handoffs, and pointers closes the DOC_TEMPLATE_DRIFT checklist for the log panel sync and makes the panel story traceable to future agents and reviewers.
 
-**Architectural concerns:** Filters, search interactions, and automated health probes remain pending, so avoid declaring this module canonical until ledger scoping responds correctly and duration/export fidelity stays true.
+**Architectural concerns:** Filters, search interactions, and health automation remain unresolved, so do not mark this module canonical until ledger scoping, duration coloring telemetry, and exports align with the documented narratives.
 
-**Opportunities noticed:** The manual `pnpm connectome:health log_panel` command could anchor future automation, and the expanded pointers now make it easy to trace state_store serializer exports back to the UI.
+**Opportunities noticed:** The manual `pnpm connectome:health log_panel` command could be an anchor for future automation, and the new pointer list makes it easy to trace state_store serializer exports back to the UI while keeping the doc chain canonical.
 
 ## POINTERS
 
-- `docs/connectome/log_panel/PATTERNS_Connectome_Log_Panel_Unified_Explain_And_Copyable_Event_Ledger_View_Patterns.md` for the design intent, allowed behaviors, and inspirations that motivated this sync.
-- `docs/connectome/log_panel/IMPLEMENTATION_Connectome_Log_Panel_Component_Structure_And_Serializer_Integration.md` for the component structure, serializer wiring, and export connectors that the new pointer list now tracks.
-- `docs/connectome/log_panel/HEALTH_Connectome_Log_Panel_Runtime_Verification_Of_Log_Truth_And_Export_Integrity.md` for the duration color, export, and truth checks that the TODO command targets.
-- `docs/connectome/log_panel/SYNC_Connectome_Log_Panel_Sync_Current_State.md` for this overview, the new handoff narratives, and the pointer list that shows where DOC_TEMPLATE_DRIFT compliance now lives.
+- `docs/connectome/log_panel/PATTERNS_Connectome_Log_Panel_Unified_Explain_And_Copyable_Event_Ledger_View_Patterns.md` for the allowed/blocked behaviors, data dependencies, and inspirations that justify these syncing narratives.
+- `docs/connectome/log_panel/IMPLEMENTATION_Connectome_Log_Panel_Component_Structure_And_Serializer_Integration.md` for the component structure, serialization flow, and async hooks that the log panel sync now references explicitly.
+- `docs/connectome/log_panel/HEALTH_Connectome_Log_Panel_Runtime_Verification_Of_Log_Truth_And_Export_Integrity.md` for the duration/extract/export indicators, checkers, and manual procedures that this sync still tracks.
+- `docs/connectome/log_panel/SYNC_Connectome_Log_Panel_Sync_Current_State.md` for this overview, the renewed handoff narratives, and the pointer list that ties DOC_TEMPLATE_DRIFT compliance to the rest of the chain.
 
 <!-- ISSUE_11_LOG_PANEL_SYNC -->

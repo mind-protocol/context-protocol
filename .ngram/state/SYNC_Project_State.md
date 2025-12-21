@@ -99,6 +99,20 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2026-01-01: Align World Runner SYNC template
+
+- **What:** Added IN PROGRESS, KNOWN ISSUES, HANDOFF: FOR HUMAN, and CONSCIOUSNESS TRACE sections to `docs/agents/world-runner/SYNC_World_Runner.md` so the template warning is satisfied and every section now provides a 50+ character narrative.
+- **Why:** DOC_TEMPLATE_DRIFT flagged those missing sections, so enriching the SYNC keeps the canonical state document accurate without touching runtime code.
+- **Files:** `docs/agents/world-runner/SYNC_World_Runner.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` *(still reports the pre-existing connectome health, membrane naming, and CHAIN warnings already tracked elsewhere)*.
+
+### 2025-12-21: Align World Runner algorithm doc with template guidance
+
+- **What:** Added the missing `OBJECTIVES AND BEHAVIORS` block, expanded the `run_world` explanation, and documented `affects_player` under distinct `ALGORITHM: {function}` headings so the world-runner algorithm doc meets the template expectations.
+- **Why:** DOC_TEMPLATE_DRIFT warned that `docs/agents/world-runner/ALGORITHM_World_Runner.md` lacked the required objectives table and function narratives; enriching the doc keeps the chain authoritative while leaving runtime code untouched.
+- **Files:** `docs/agents/world-runner/ALGORITHM_World_Runner.md`, `docs/agents/world-runner/SYNC_World_Runner.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` *(fails: pre-existing connectome/health SIG warnings, the membrane naming mismatch, and the CLIN/chain issues already tracked by the doctor)*.
+
 ### 2025-12-27: Documented narrator archive metadata
 
 - **What:** The narrator archive now includes longer MATURITY, CURRENT STATE, IN PROGRESS, KNOWN ISSUES, and POINTERS sections so the template drift warning is satisfied while still pointing future agents at the canonical SYNC before they make changes.

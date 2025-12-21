@@ -56,6 +56,16 @@ THEN:   no event releases without an explicit Next click
 
 ---
 
+## OBJECTIVES SERVED
+
+| Behavior ID | Objective | Why It Matters |
+|-------------|-----------|----------------|
+| B1 | Keep the stepper release gate deterministic and explicit. | Prevents accidental replay or skipped nodes by ensuring that control stays strictly in user hands while the runtime engine honors a single FlowEvent at a time. |
+| B2 | Let speed (pause/1x/2x/3x) only tune animation pacing. | Ensures the UI pulse stays synchronized with the commanded cadence without compromising the authorization constraint that one click equals a single release. |
+| B3 | Separate realtime autoplay from the manual stepper flow. | Keeps the auto stream observable and controllable while the manual path remains blocked until the user explicitly advances.
+
+These objectives connect the behavior IDs to traversal goals so downstream agents can map observable effects to the runtime engine duties before touching the code.
+
 ## INPUTS / OUTPUTS
 
 ### Primary Function: `dispatch_runtime_command()`
@@ -72,6 +82,13 @@ THEN:   no event releases without an explicit Next click
 | -------- | -------------------- | ------------------------------ |
 | `result` | RuntimeReleaseResult | released/blocked/end_of_script |
 
+**Side Effects**
+
+- Coordinates animation, highlight, and glow state so every manual release visibly matches the ledger progression and the cursor flicker stays locked to the next node.
+- Emits the release banking telemetry that the UI uses to surface paused/buffered indicators and to guard the colored duration pulses from drifting.
+
+This function therefore both gates release events and keeps downstream UI telemetry listeners synchronized with the command history, which is critical for replay and debugging visibility.
+
 ---
 
 ## EDGE CASES
@@ -85,6 +102,8 @@ THEN:   result=end_of_script and no new event is appended
 AND:    UI explanation states “end reached”
 ```
 
+This makes sure the UI feeds a positive conclusion rather than letting operators chase invisible events once the script is exhausted.
+
 ### E2: Realtime burst while locally paused (deferred)
 
 ```
@@ -93,6 +112,8 @@ WHEN:   many events arrive quickly
 THEN:   events are buffered with bounded retention (policy in state_store ?)
 AND:    buffer size is visible as a health signal
 ```
+
+Buffering also preserves ordering so the runtime_engine can decide when to release while the UI stays consistent with the human pause toggle.
 
 ---
 
@@ -105,12 +126,16 @@ MUST NOT: releasing multiple events because speed=3x
 INSTEAD: speed only modifies animation duration + nominal rate text
 ```
 
+That guard keeps the stepper deterministic even if a user cranks the slider while expecting single-click control.
+
 ### A2: UI bypasses runtime_engine and appends to ledger directly
 
 ```
 MUST NOT: components append events without runtime_engine release
 INSTEAD: all user-facing releases go through runtime_engine gate
 ```
+
+Requiring every release to pass through runtime_engine preserves the ledger invariants and avoids duplicated state updates from rogue components.
 
 ---
 

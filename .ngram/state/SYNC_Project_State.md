@@ -99,6 +99,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2026-04-22: Expand runtime engine behavior template prose (#11)
+
+* **What:** Expanded the runtime engine BEHAVIORS doc with a full `OBJECTIVES SERVED` table, richer `Side Effects`, and more descriptive `EDGE CASES` and `ANTI-BEHAVIORS` explanations so every DOC_TEMPLATE_DRIFT block now explains why the stepper/realtime guards exist.
+* **Why:** DOC_TEMPLATE_DRIFT #11 noted missing or sub-50-character behavior sections; the new narrative ties each behavior, input, and anti-behavior guard back to traversal control goals so downstream agents can trace observable effects to runtime expectations.
+* **Files:** `docs/connectome/runtime_engine/BEHAVIORS_Connectome_Runtime_Engine_User_Controlled_Traversal_Effects.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails because `docs/connectome/health` still lacks PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION/HEALTH coverage, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural prefix, and the longstanding CHAIN-link warnings remain; no new regressions were introduced).*
+
 ### 2026-05-01: Document runtime engine validation guarantees (#11)
 
 * **What:** Filled the missing BEHAVIORS GUARANTEED and OBJECTIVES COVERED sections in `docs/connectome/runtime_engine/VALIDATION_Connectome_Runtime_Engine_Invariants_For_Stepper_And_Realtime.md` and recorded the fix inside the runtime engine SYNC so the template now meets DOC_TEMPLATE_DRIFT length and mapping requirements.

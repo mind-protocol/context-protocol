@@ -58,6 +58,17 @@ Stepper runtime engine is implemented with a fixed step script. Next dispatches 
 
 ---
 
+### 2025-12-21: Expand runtime engine implementation template (#11)
+
+* **What:** Rewrote the `LOGIC CHAINS` and `MODULE DEPENDENCIES` sections in `IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md` with explicit concrete chains and dependency narratives so each block now exceeds the DOC_TEMPLATE_DRIFT 50-character guidance.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged the implementation doc for missing logic chains and dependency context, so the new prose makes the deterministic gating invariants and inter-module collaborations traceable before future agents touch the runtime wiring.
+* **Files:**
+  * `docs/connectome/runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md`
+  * `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(fails: known `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings remain; no new regressions introduced).* 
+
+---
+
 ### 2026-04-22: Expand runtime engine behavior template prose (#11)
 
 * **What:** Added the missing `Side Effects` section plus elaborated the `OBJECTIVES SERVED` table, `EDGE CASES`, and `ANTI-BEHAVIORS` narratives so every behavior template block now explains why the manual stepper and realtime traversal guards matter while keeping each passage longer than fifty characters.
@@ -89,6 +100,13 @@ Stepper runtime engine is implemented with a fixed step script. Next dispatches 
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged the absence of this section; documenting the objectives keeps downstream agents aligned with how traversal control protects deterministic playback and autplay boundaries.
 * **Files:** `docs/connectome/runtime_engine/BEHAVIORS_Connectome_Runtime_Engine_User_Controlled_Traversal_Effects.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
 * **Validation:** `ngram validate` (still reports pre-existing `docs/connectome/health` chain gaps and membrane naming issues)
+
+### 2026-04-26: Complete runtime_engine PATTERNS behavior sections (#11)
+
+* **What:** Added the required `BEHAVIORS SUPPORTED` and `BEHAVIORS PREVENTED` narratives to the runtime_engine patterns doc, spelling out the gating guarantees and the UI/BMS guardrails so each template block satisfies the 50-character minimum and links back to the behavior expectations.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged those sections as missing; filling them keeps the design intent traceable before agents edit runtime_engine code.
+* **Files:** `docs/connectome/runtime_engine/PATTERNS_Connectome_Runtime_Engine_Stepper_And_Realtime_Traversal_Control_Patterns.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
+* **Validation:** `ngram validate`
 
 ---
 

@@ -174,6 +174,7 @@ pnpm connectome:health state_store
 * Confirmed the schema, flow-by-flow docking, logic chains, module dependencies, runtime behavior, and concurrency sections remain the canonical coverage referenced by this sync so future agents can trace the entire chain before updating the store.
 * The POINTERS block now explicitly names the PATTERNS, IMPLEMENTATION, BEHAVIORS, and HEALTH docs that feed this sync so downstream agents can follow the canonical chain without hunting for the references.
 * Added explicit narrative paragraphs after the edge case, anti-behavior, and inputs/outputs sections so the behavior doc now demonstrates compliance with the 50-character DOC_TEMPLATE_DRIFT requirement that originally triggered the repair request.
+* Logged that the new sentences after the edge cases, anti-behavior, and inputs/outputs blocks keep the behavior doc verbose enough for the doctor to recognize the state_store contract’s guardrails before downstream agents rely on it.
 
 ## HANDOFF: FOR AGENTS
 

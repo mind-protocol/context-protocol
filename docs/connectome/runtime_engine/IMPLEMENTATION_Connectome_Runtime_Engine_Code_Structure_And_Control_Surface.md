@@ -174,6 +174,70 @@ notes: "HEALTH observes one-click-one-event"
 
 ---
 
+## LOGIC CHAINS
+
+### LC1: Stepper release authorization chain
+
+**Purpose:** Guarantee that a Next button click triggers a single normalized `FlowEvent`, updates focus/explanation, and writes the event into the ledger so downstream panels, telemetry, and the health suite all see the same deterministic story.
+
+```
+Next button handler in `app/connectome/page.tsx`
+  → `dispatch_runtime_command({ kind: "next_step" })`
+    → `release_next_step()`
+      → `make_stepper_event_id()` + `normalize_flow_event(raw_event)`
+        → `compute_animation_duration_ms()` (speed + min clamp)
+          → `commit_step_release_append_event_and_set_focus_and_explanation()` on `state_store`
+            → Ledger/focus/explanation slices update (visible to `log_panel`, canvas, health observers)
+              → `RuntimeReleaseResult` returns released event id for callers such as telemetry adapters or health checks
+```
+
+**Data transformation:**
+- Input: `RuntimeCommand` from the UI — Next clicks launch the deterministic gating logic that owns authorization.
+- After step 1: `FlowEvent` gains a replay-safe id plus normalized fields, guaranteeing the same payload for UI, exports, and telemetry even on reruns.
+- After step 2: Duration is clamped by `minimum_duration_clamp_and_speed_based_default_policy` using the current speed setting so pacing stays readable.
+- Output: `RuntimeReleaseResult` plus a committed ledger entry, updated `cursor`, and new `active_focus`/`current_explanation` that downstream viewers render immediately.
+
+### LC2: Pace and mode adjustment chain
+
+**Purpose:** Keep speed, mode, and local-pause commands aligned with the store’s tick display, wait timers, and boundary services so playback remains consistent without accidentally releasing extra steps.
+
+```
+Playback control (speed/mode/pause) in the UI
+  → `dispatch_runtime_command({ kind: "set_speed"|"set_mode"|"set_local_pause", payload })`
+    → `set_speed_and_update_nominal_tick_interval()` or `set_mode_and_reset_buffers_if_needed()` or `set_local_pause()`
+      → `state_store` updates `speed`, `mode`, `tick_display`, and `wait_progress`
+        → Health runners and tick indicators read the new values and adjust pacing meters
+          → Future `release_next_step()` calls reuse the updated settings without violating the “one event per click” guardrail
+```
+
+**Data transformation:**
+- Input: playback control commands capture user intent (pause, faster speed, realtime mode) without releasing FlowEvents themselves.
+- After step 1: `speed`, `mode`, and `wait_progress` store slices change, causing the tick display to recompute nominal intervals and the health runners to reset their heartbeat checks.
+- Output: pacing metadata that downstream timers and indicators read so the runtime engine orchestrates release cadence with the updated configuration.
+
+---
+
+## MODULE DEPENDENCIES
+
+| Module                                                                                                    | Dependency Type     | Why It Matters                                                                                                                                    |
+| --------------------------------------------------------------------------------------------------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/connectome/state_store`                                                                               | runtime dependency  | Persists cursor, mode, speed, ledger, and focus metadata; every release writes through the store so the runtime engine never duplicates its view. |
+| `app/connectome/lib/step_script_cursor_and_replay_determinism_helpers`                                     | helper module       | Supplies deterministic event ids and cursor helpers that ensure `release_next_step()` can advance scripts without replay drift.                       |
+| `app/connectome/lib/connectome_step_script_sample_sequence.ts`                                             | helper module       | Provides the ordered `CONNECTOME_STEP_SCRIPT` and `CONNECTOME_STEP_TOTAL` that the runtime gate consumes to know what event to release next.         |
+| `app/connectome/lib/flow_event_schema_and_normalization_contract`                                         | helper module       | Normalizes raw script steps (call, trigger, duration) into canonical `FlowEvent` objects that every downstream consumer shares.                     |
+| `app/connectome/lib/minimum_duration_clamp_and_speed_based_default_policy`                                 | helper module       | Centralizes duration clamping and speed defaults so stepper pulses, replay, and planned realtime streaming all share pacing invariants.              |
+| `app/connectome/lib/connectome_session_boundary_and_restart_policy_controller`                             | helper module       | Lets `restart` commands either clear the ledger or insert session boundaries, which ties the runtime engine to session-aware health and export logic. |
+| `app/connectome/log_panel`                                                                                 | consumer module     | Reads the ledger, focus, explanation, and pacing fields that `commit_step_release_*` updates so the runtime engine’s releases are immediately visible. |
+| `app/connectome/lib/connectome_wait_timer_progress_and_tick_display_signal_selectors.ts`                    | observer module     | Reads the runtime store slices (wait progress, tick display, speed) to drive health meters and pacing indicators that confirm gating invariants.   |
+
+### External Dependencies
+
+| Package | Used For | Imported By |
+| ------- | -------- | ----------- |
+| `zustand` | Provides the shared store hook consumed by `dispatch_runtime_command()` via `useConnectomeStore`. | `app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine.ts` |
+
+---
+
 ## BIDIRECTIONAL LINKS
 
 ### Code → Docs

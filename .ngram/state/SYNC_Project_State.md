@@ -1,7 +1,7 @@
 # Project — Sync: Current State
 
 ```
-LAST_UPDATED: 2026-04-15
+LAST_UPDATED: 2026-05-01
 UPDATED_BY: codex
 ```
 
@@ -112,6 +112,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged the empty behavior and objective blocks, and the new narratives now make it clear which runtime engine controls are guaranteed and why each invariant exists before downstream agents rely on the doc chain.
 * **Files:** `docs/connectome/runtime_engine/VALIDATION_Connectome_Runtime_Engine_Invariants_For_Stepper_And_Realtime.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate` *(fails: pre-existing `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings remain; no new issues introduced).*
+
+### 2025-12-21: Expand runtime engine implementation template (#11)
+
+* **What:** Rewrote the `LOGIC CHAINS` and `MODULE DEPENDENCIES` sections in `docs/connectome/runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md` with explicit deterministic chains and dependency narratives so every block now exceeds the DOC_TEMPLATE_DRIFT 50-character requirement.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged the implementation doc for missing logic chains and dependency context; the new prose clarifies how command gating flows into the store and which helpers the runtime engine relies on before future agents edit the runtime wiring.
+* **Files:** `docs/connectome/runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails: known `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings remain; no new regressions introduced).*
 
 ### 2026-04-18: Expand runtime_engine health documentation (#11)
 

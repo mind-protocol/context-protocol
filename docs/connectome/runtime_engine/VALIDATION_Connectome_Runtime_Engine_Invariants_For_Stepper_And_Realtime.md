@@ -27,17 +27,17 @@ SYNC:            ./SYNC_Connectome_Runtime_Engine_Sync_Current_State.md
 
 | Behavior ID | Behavior | Why This Validation Matters |
 |-------------|----------|-----------------------------|
-| B1 | Stepper Next clicks gate the runtime so a single FlowEvent release occurs, then the gate stays closed until the user explicitly advances again. | Guarantees researchers can trace every ledger entry back to an intentional click, preserving determinism and preventing ghost steps from polluting playback logs. |
-| B2 | Speed selection only adjusts animation duration and presentation pacing, never the count or timing of released events when the runtime is in stepper mode. | Ensures temporal fidelity stays separate from authorization decisions, keeping approvals narrowly scoped to Next commands while still letting the UI feel responsive. |
-| B3 | Minimum duration clamping forces each acknowledged release into a visible 200ms+ animation window even when upstream telemetry reports near-zero delays. | Keeps the runtime feeling “real” for observers, so rapid telemetry cannot collapse animations into imperceptible flashes that undermine trust in scenario playback. |
+| B1 | Each Next command in stepper mode releases exactly one FlowEvent and then holds the gate closed until an explicit follow-up click occurs. | Validating this keeps every ledger entry tied to an intentional action, preserving deterministic replay and auditability even when UI jitter or retries happen. |
+| B2 | Adjusting the speed slider only tunes animation duration and presentation pacing, never the ledger length, cursor, or count of FlowEvents released in stepper mode. | This keeps authorization decisions separate from animation feel, so auditors and automations can trust that the speed control never secretly advances the script. |
+| B3 | Every release obeys the runtime’s 200ms minimum animation window so realtime playback cannot collapse into imperceptible bursts that disguise rapid autoplayer pulses. | The pacing guard ensures observers, telemetry, and downstream health probes see the same perceptible cadence, preventing autoplayer bursts from undermining trust. |
 
 ## OBJECTIVES COVERED
 
 | Objective | Validations | Rationale |
 |-----------|-------------|-----------|
-| Keep each Next-driven step deterministic by tying ledger updates to a single click and preserving the replay sequence before the loop continues. | V1, V2, P1 | Prevents analysts from chasing multiple concurrent releases and makes regression tests reliable by ensuring the same script always yields the same FlowEvent ordering. |
-| Block autoplay leaks and unauthorized releases so stepper mode never advances without explicit user consent even when speed controls are touched. | V2, E1, E2 | Forces the runtime to catch all boundary violations, so downstream dashboards and health probes can sound the alarm before autoplay undermines debug storytelling. |
-| Keep perceived playback durations trustworthy by enforcing the minimum animation window regardless of how fast inputs or telemetry arrive. | V3 | Maintains human-scale timing, giving observers a stable pacing window for annotations and explanations even when the engine could render infinitely fast otherwise. |
+| Keep the Next button bounded to a single deterministic release so ledger updates, cursors, and log entries stay predictable before the loop continues. | V1, P1 | This objective prevents the runtime from producing multiple FlowEvents per command, making replay tests reproducible and analyses confident in the script ordering. |
+| Keep speed adjustments purely as duration knobs and block unauthorized autoplay so the runtime never advances without explicit user consent. | V2, E1, E2 | Verifying V2 plus the error conditions ensures downstream tooling can detect any boundary violation that would let autoplay leak past the gate when speed or telemetry shifts. |
+| Maintain human-scale pacing by enforcing the 200ms minimum duration clamp so viewers always perceive each release before the next command. | V3 | The clamp keeps pacing aligned with telemetry and narrative expectations, ensuring autoplayer bursts remain obvious and do not masquerade as legitimate rehearsals. |
 
 ---
 

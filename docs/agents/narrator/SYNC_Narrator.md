@@ -35,6 +35,8 @@ Documentation stays current after the template alignment work, with the module i
 - **Files:** `docs/agents/narrator/VALIDATION_Narrator.md`, `docs/agents/narrator/SYNC_Narrator.md`
 - **Verification:** `ngram validate` *(still reporting the existing connectome/health and membrane naming warnings).*
 
+- **Trace:** Points future agents at the updated validation health coverage paragraphs so the contract stays traceable to the sync entry even after subsequent edits.
+
 ### 2025-12-30: Document narrator behavior objectives
 
 - **What:** Added an `OBJECTIVES SERVED` section that spells out the streaming timing requirement, canonical mutation guarantees, SceneTree signaling expectations, and mutation telemetry the narrator must emit so this behaviors doc now meets the template’s length requirements with actionable goals.
@@ -73,6 +75,13 @@ Documentation stays current after the template alignment work, with the module i
 - **Why:** DOC_TEMPLATE_DRIFT complained about missing objectives, usage guidance, and indicator writeups, so the fix keeps the canonical health ledger aligned without touching any runtime code.
 - **Files:** `docs/agents/narrator/HEALTH_Narrator.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(still reports pre-existing connectome/health and membrane naming warnings)*
+
+### 2025-12-31: Clarify narrator health usage guidance
+
+- **What:** Added a usage reminder about logging each indicator update in `.ngram/state/SYNC_Project_Health.md`, explained how each checker run feeds the health score, and enriched the GAPS section with a CLI-warning catalog idea so the doc connects to observable tooling.
+- **Why:** Keeping the health template traceable requires linking the prose to the actual tooling runs that generate the indicators, so future agents can follow the signal without guessing what boundary they are watching.
+- **Files:** `docs/agents/narrator/HEALTH_Narrator.md`, `docs/agents/narrator/SYNC_Narrator.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` *(fails: still the known connectome/health and membrane naming warnings)*
 
 ### 2025-12-27: Expand Narrator sync coverage
 

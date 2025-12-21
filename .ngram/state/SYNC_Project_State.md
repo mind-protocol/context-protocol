@@ -99,6 +99,20 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2025-12-21: Document world-runner implementation template sections
+
+- **What:** Added explicit `LOGIC CHAINS`, `RUNTIME BEHAVIOR`, `CONFIGURATION`, `BIDIRECTIONAL LINKS`, and `GAPS / IDEAS / QUESTIONS` sections to the world-runner implementation document so the DOC_TEMPLATE_DRIFT warning for this path is satisfied.
+- **Why:** The doctor flagged `docs/agents/world-runner/IMPLEMENTATION_World_Runner_Service_Architecture.md` as missing those template blocks; enriching the prose keeps the canonical implementation narrative intact without touching runtime code.
+- **Files:** `docs/agents/world-runner/IMPLEMENTATION_World_Runner_Service_Architecture.md`, `docs/agents/world-runner/SYNC_World_Runner.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` *(reloads the existing connectome/health and membrane naming warnings the doctor tracks)*.
+
+### 2025-12-31: Expand world-runner algorithm objectives
+
+- **What:** Added the missing `OBJECTIVES AND BEHAVIORS` table to `docs/agents/world-runner/ALGORITHM_World_Runner.md`, fleshed out the `run_world` and `affects_player` algorithm callouts, and logged the doc fix inside `docs/agents/world-runner/SYNC_World_Runner.md`.
+- **Why:** DOC_TEMPLATE_DRIFT flagged the absence of the objectives block and `ALGORITHM: {Primary Function Name}` prose; expanding those sections brings the module back into template compliance without touching runtime behavior.
+- **Files:** `docs/agents/world-runner/ALGORITHM_World_Runner.md`, `docs/agents/world-runner/SYNC_World_Runner.md`
+- **Verification:** `ngram validate` *(fails: existing warnings remain—`docs/connectome/health` lacks PATTERNS/SYNC/chain documentation, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural prefix, and multiple CHAIN links across connectome/physics/CLI docs remain broken; these predate this repair).*
+
 ### 2026-01-01: Align World Runner SYNC template
 
 - **What:** Added IN PROGRESS, KNOWN ISSUES, HANDOFF: FOR HUMAN, and CONSCIOUSNESS TRACE sections to `docs/agents/world-runner/SYNC_World_Runner.md` so the template warning is satisfied and every section now provides a 50+ character narrative.
@@ -119,6 +133,7 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Why:** DOC_TEMPLATE_DRIFT flagged the archive’s sections as missing, so enriching them with contextual prose and handoff reminders keeps this historical snapshot accurate without changing the live stream.
 - **Files:** `docs/agents/narrator/SYNC_Narrator_archive_2025-12.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(still fails for the known connectome health and membrane naming warnings already tracked by the doctor, so the archival note only documents the existing risk list)*
+- **Trace:** Noted that the doctor’s health/chain warnings remain unresolved so future agents know this archive preserves the December 2025 baseline.
 
 ### 2025-12-30: Document narrator behavior objectives
 
@@ -133,6 +148,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Why:** DOC_TEMPLATE_DRIFT flagged the narrator health doc for missing subsections; enriching the prose keeps the canonical health contract compliant without touching runtime code.
 - **Files:** `docs/agents/narrator/HEALTH_Narrator.md`, `docs/agents/narrator/SYNC_Narrator.md`
 - **Verification:** `ngram validate` *(fails: pre-existing connectome/health and membrane naming warnings already tracked elsewhere)*
+
+### 2025-12-31: Clarify narrator health usage guidance
+
+- **What:** Added a usage reminder about logging indicator updates in `.ngram/state/SYNC_Project_Health.md`, highlighted how the schema and mutation checkers update the health scores, and expanded the GAPS sections with a CLI-warning catalog so the doc stays tied to tooling outcomes.
+- **Why:** Future agents need to know which tooling runs correspond to each indicator; connecting the print narrative with `ngram doctor` and the CLI warnings prevents guesswork if the doctor alarms later.
+- **Files:** `docs/agents/narrator/HEALTH_Narrator.md`, `docs/agents/narrator/SYNC_Narrator.md`
+- **Verification:** `ngram validate` *(fails: the known connectome/health and membrane naming warnings still exist)*
 
 ### 2025-12-29: Document narrator implementation stream nuance
 

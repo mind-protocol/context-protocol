@@ -174,3 +174,27 @@ engine/infrastructure/orchestration/orchestrator.py
 | Component | Model | Notes |
 |-----------|-------|-------|
 | Agent Call | Sync/Subprocess | Blocks worker until agent returns or times out |
+
+## LOGIC CHAINS
+
+The `WorldRunnerService` chain starts inside `Orchestrator._process_flips` whenever `GraphTick.run` reports flips and hands the tension list, player context, and time span to the service. `process_flips` then orchestrates `_build_prompt`, pulls the detailed tension and character data through `GraphQueries`, and funnels the assembled prompt into `_call_claude`. After `parse_claude_json_output` yields the `WorldRunnerOutput`, `GraphOps.apply` persists the mutations, `_apply_wr_mutations` consolidates them with the orchestrator state, and any returned `world_injection` is queued for the next narrator invocation.
+
+## RUNTIME BEHAVIOR
+
+At runtime the service behaves as a stateless adapter: each `process_flips` invocation begins by querying the graph for tension metadata, character locations, and strained beliefs, then emits a YAML prompt that includes the flips, the enriched graph context, and the provided player snapshot. `_call_claude` runs the CLI via `run_agent` with `output_format="json"`, guards against timeouts, parse failures, and missing binaries, and only then lets `_fallback_response` surface a minimal injection if anything goes wrong. When the agent returns cleanly, `process_flips` applies `graph_mutations` with `GraphOps`, logs how many narratives or beliefs changed, and hands the parsed output back to the orchestrator along with any saved `world_injection`.
+
+## CONFIGURATION
+
+`WorldRunnerService` is instantiated by the orchestrator with the writer `GraphOps` and reader `GraphQueries` so it can mutate and inspect the same FalkorDB context that triggered the flips. The service uses the optional `working_dir` (defaulting to `Path.cwd()`) so tests or container setups can isolate the CLI invocation, and its `timeout` defaults to 600 seconds but can be shortened to keep agent calls from stalling the main loop. The CLI wrapper relies on `run_agent`, which in turn honours the agent prompt stored in `agents/world_runner/CLAUDE.md`, so adjusting agent expectations or the CLI entry point also propagates to how this service is configured at boot time.
+
+## BIDIRECTIONAL LINKS
+
+- `engine/infrastructure/orchestration/world_runner.py` declares `# DOCS: docs/agents/world-runner/PATTERNS_World_Runner.md`, keeping the code-to-docs link explicit so any code refactor knows to revisit the documented pattern.
+- This implementation doc points to `HEALTH_World_Runner.md` and `SYNC_World_Runner.md`, while the SYNC references it under `CHAIN`, ensuring future agents can jump back into the runtime contract from the service state summary.
+- The CLI instructions in `agents/world_runner/CLAUDE.md` are effectively linked bidirectionally because this doc captures how the prompt ducks into `_build_prompt`, and the CLAUDE doc can cite this implementation file to ground expectations for the JSON schema and fallback behavior.
+
+## GAPS / IDEAS / QUESTIONS
+
+- Instrument `process_flips` to emit a structured trace (flip IDs, prompt length, timestep) so long-running ticks can be profiled without replaying the full narrative cycle.
+- Introduce resilience around `GraphQueries.query` calls (circuit breaker, caching, or retry) so a slow or missing context query does not cascade into a fallback world injection.
+- Define a small schema validator in this module for `world_injection` so the fallback payload and real injections share explicit optional fields before the narrator processes them.

@@ -129,6 +129,8 @@ python tools/validate_narrator_output.py --check clickables
 - Scene streaming always begins within a few seconds and ships each chunk with metadata so the CLI remains responsive while graph reads finish.
 - Clickable metadata includes keys, spans, and response references to keep UI mapping deterministic without fallback heuristics.
 
+These properties keep the narrator output predictable for downstream monitors and maintainers so they can trace behaviour without guessing which bundle of text matters, especially when the health coverage is evaluating the same invariants later in the flow.
+
 ---
 
 ## ERROR CONDITIONS
@@ -137,6 +139,8 @@ python tools/validate_narrator_output.py --check clickables
 - `MissingClickableMapping`: Triggered when a clickable key is missing from the emitted text, indicating a tooling bug that prevents the UI from resolving the click target.
 - `StreamTimeout`: Fires when the first chunk does not start within the expected latency window, implying a blocking graph read or prompt issue that needs investigation.
 
+These labels keep diagnostics consistent whenever the health suite replays the narrator, so alerts cite the same failure modes across CLI, doc checks, and any automated error reporting surfaces.
+
 ---
 
 ## HEALTH COVERAGE
@@ -144,6 +148,8 @@ python tools/validate_narrator_output.py --check clickables
 - `schema_validator` compares SceneTree outputs against `HEALTH_Narrator` expectations so V1–V6 remain schema-compliant and traceable to the health doc.
 - `mutation_safety_checker` asserts every invented fact obeys graph constraints before the narrator returns control, directly anchoring V3.
 - `pytest engine/tests/test_narrator_integration.py` is the manual entrypoint referenced in the health doc to confirm V2 latency, clickable sequencing, and streaming flows.
+
+Linking these indicators to the same invariants keeps the doctor focused on the same guarantees that the validation doc outlines while feeding back to the new health coverage narrative for repeatable verification. These paragraphs now point back to the newly logged sync entries so future agents see the same contract in both branches, and they prime the health monitors for the same failures when the doc changes again.
 
 ---
 

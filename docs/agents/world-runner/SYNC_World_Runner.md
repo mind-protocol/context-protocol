@@ -19,6 +19,13 @@ The World Runner is complete. It operates as an adapter between the Python game 
 
 ## RECENT CHANGES
 
+### 2025-12-21: Expand implementation doc template coverage
+
+- **What:** Added explicit `LOGIC CHAINS`, `RUNTIME BEHAVIOR`, `CONFIGURATION`, `BIDIRECTIONAL LINKS`, and `GAPS / IDEAS / QUESTIONS` sections to the World Runner implementation doc so every required template block exceeds the length threshold.
+- **Why:** DOC_TEMPLATE_DRIFT for `IMPLEMENTATION_World_Runner_Service_Architecture.md` reported the missing sections, so we enriched the prose while keeping the runtime behavior unchanged.
+- **Files:** `docs/agents/world-runner/IMPLEMENTATION_World_Runner_Service_Architecture.md`, `docs/agents/world-runner/SYNC_World_Runner.md`
+- **Verification:** `ngram validate`
+
 ### 2025-12-21: Align runner algorithm doc with template
 
 - **What:** Added the missing `OBJECTIVES AND BEHAVIORS` block, expanded the `run_world` narrative, and documented `affects_player` under the canonical `ALGORITHM: {function name}` headings so template compliance is restored.

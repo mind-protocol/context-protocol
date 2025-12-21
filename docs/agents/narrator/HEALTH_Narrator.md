@@ -115,6 +115,7 @@ status:
 - Link indicators back to validation IDs in `VALIDATION_Narrator.md` and describe the dock types and cadence to make the check repeatable without rerunning the code search.
 - Capture what each checker observes, how often the indicator is sampled, and any gap reminders in the same narrative length so the validator’s minimum-character guardrail never flags the doc.
 - Once the health flow is defined, describe how to run the check in practice (integration test, CLI exercise, manual replay) so human operators can reproduce the runtime signal before blaming the doctor.
+- Finally, record how each indicator is updated in `.ngram/state/SYNC_Project_Health.md` so the doctor can trace degraded scores back to concrete log entries during manual reviews.
 
 ## CHECKER INDEX
 
@@ -129,6 +130,8 @@ checkers:
     status: active
     priority: high
 ```
+
+In practice these checkers drive the `author_coherence` and `mutation_validity` indicators, so rerunning them during `ngram doctor` or the narrator integration test keeps the signal anchored to measurable tooling.
 
 ---
 
@@ -263,4 +266,5 @@ pytest engine/tests/test_narrator_integration.py -v
 - [ ] Trigger a sanity run that compares narrator health scores with the CLI health banner to keep scoring aligned with human perception.
 - [ ] Could we automatically diff every scene against the previous SceneTree so the doctor flags contradictions before the player notices?
 - [ ] Explore instrumentation that correlates mutation_validity failures with the specific graph edges touched to speed up debugging.
+- [ ] Add a catalog that maps each indicator failure to the CLI warning it emits so future agents can triage alerts without guessing the root cause.
 - QUESTION: Should the health indicator include runtime telemetry from SSE logs so we can correlate latency spikes with schema violations?

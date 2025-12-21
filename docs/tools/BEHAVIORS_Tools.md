@@ -55,6 +55,9 @@ the SSE reader, CLI log, and replay archives all observe the same sequence of
 - Make narrated playthroughs reproducible for debugging and visualization while
   anchoring each streamed event to the FalkorDB graph via consistent metadata,
   clickable annotations, and the shared JSONL feed.
+- Translate the stack runner outputs into documented objectives so operators and
+  auditors can match every `tools/run_stack.sh` restart log to the behavior ledger
+  that lists its goals, expected services, and log destinations.
 
 ## INPUTS / OUTPUTS
 

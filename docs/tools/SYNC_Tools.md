@@ -33,21 +33,37 @@ What's canonical (v1):
 What's still being designed:
 - The front-end start command, ngrok defaults, and stack restart orchestration continue to evolve, so the tools module remains in designing status until those flows stabilize.
 
+
+Maintaining the canonical coverage keeps the ledger defensible, yet the module stays DESIGNING until the helper scripts and their documentation are certified by handoff comments and the new indicators.
+
 ## CURRENT STATE
 
 Documented the tools module so utility scripts are tracked in the protocol and so the doc templates, streaming helpers, and stack restart assistants share a single canonical narrative. Added systemd user unit templates under `tools/systemd/user/`, a v3 ngrok config at `tools/ngrok.yml`, and a WSL autostart guide at `docs/infrastructure/wsl-autostart.md`. Added `.ngram/logs/` plus the `.ngram/systemd.env` placeholder to wire frontend commands into systemd, documented the blood-fe service wiring and `ngram-stack.target`, captured the `tools/run_stack.sh` logging behavior, and expanded the algorithm, validation, health, and behaviors docs so the entire chain satisfies the DOC_TEMPLATE_DRIFT narrative requirements while the implementation ledger tracks the required logic chains.
+Filled the PATTERNS template with the required BEHAVIORS SUPPORTED, BEHAVIORS PREVENTED, PRINCIPLES, DATA, DEPENDENCIES, INSPIRATIONS, SCOPE, and GAPS / IDEAS / QUESTIONS sections so the module's intent, dependencies, and guardrails are traceable before touching the helper scripts.
 This sync now explicitly mentions the run_stack restart context so the Implementation ledger traces the same operations the doc describes, keeping the canonical chain auditable when the helpers get refactored.
 
 ## IN PROGRESS
 
 Steady verification that the expanded documentation chain now passes DOC_TEMPLATE_DRIFT while the helper scripts continue to satisfy their described behaviors, the front-end start commands finish their final pathing, and the ngrok runner honors the planned environment variables.
 
+
+Documenting additional connectors and linking them to their tests ensures future doc drift is visible in this sync entry and can be flagged before the helpers graduate to canonical status.
 ## KNOWN ISSUES
 
 - The front-end start command remains undefined in `.ngram/systemd.env`, so `ngram-fe.service` cannot yet start the expected process without confirmation of the canonical command string.
 - The ngrok helper still assumes environment variables that are only described in high-level guides, which makes local runs brittle until the `.env` template is verified by someone with access to the production config.
 
+- `ngram validate` still cites docs/connectome/health chain gaps and the engine/membrane PATTERNS naming mismatch; those warnings remain even if the tools module is compliant.
+- CHAIN references to `./ALGORITHM_Tools.md` expect a canonical path that requires periodic verification to avoid validator fatigue.
+
 ## RECENT CHANGES
+
+### 2026-01-26: Document tools pattern template coverage
+
+- **What:** Added the missing BEHAVIORS SUPPORTED, BEHAVIORS PREVENTED, PRINCIPLES, DATA, DEPENDENCIES, INSPIRATIONS, SCOPE, and GAPS / IDEAS / QUESTIONS sections to `docs/tools/PATTERNS_Tools.md` so every required PATTERN block now exceeds the 50-character threshold and captures the guardrails for the helper scripts.
+- **Why:** DOC_TEMPLATE_DRIFT flagged those PATTERN sections as missing or too brief, so the expanded narrative keeps the module’s intent and dependencies explicit without touching runtime helpers.
+- **Files:** `docs/tools/PATTERNS_Tools.md`, `docs/tools/SYNC_Tools.md`
+- **Verification:** `ngram validate` *(fails for the known docs/connectome/health PATTERNS/SYNC gaps, the `docs/engine/membrane` PATTERN naming mismatch, and the existing CHAIN/link warnings).*
 
 ### 2026-01-27: Complete tools sync template coverage
 
@@ -55,6 +71,13 @@ Steady verification that the expanded documentation chain now passes DOC_TEMPLAT
 - **Why:** DOC_TEMPLATE_DRIFT flagged this sync file for missing those sections, so the richer narrative keeps the state ledger traceable while leaving the helper scripts untouched.
 - **Files:** `docs/tools/SYNC_Tools.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(fails: known docs/connectome/health PATTERNS/SYNC gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and existing CHAIN/link warnings).* 
+
+### 2026-01-16: Complete tools implementation template coverage
+
+- **What:** Expanded `docs/tools/IMPLEMENTATION_Tools.md` to describe the code structure, design patterns, schema, entry points, flow-by-flow docking, logic chains, module dependencies, state management, runtime behavior, concurrency model, configuration, bidirectional links, and gaps list so every blocking section exceeds the DOC_TEMPLATE_DRIFT minimum while leaving the helper scripts untouched.
+- **Why:** DOC_TEMPLATE_DRIFT flagged the implementation doc for missing CODE STRUCTURE, DESIGN PATTERNS, SCHEMA, ENTRY POINTS, DATA FLOW, LOGIC CHAINS, MODULE DEPENDENCIES, STATE MANAGEMENT, RUNTIME BEHAVIOR, CONCURRENCY MODEL, CONFIGURATION, BIDIRECTIONAL LINKS, and GAPS sections, so the new narrative restores the canonical coverage.
+- **Files:** `docs/tools/IMPLEMENTATION_Tools.md`, `docs/tools/SYNC_Tools.md`
+- **Verification:** `ngram validate` *(fails: known docs/connectome/health PATTERNS/SYNC gaps, the `docs/engine/membrane` PATTERN naming mismatch, and the longstanding CHAIN/link warnings).*
 
 ### 2026-01-15: Complete tools behavior template coverage
 
@@ -116,17 +139,18 @@ Steady verification that the expanded documentation chain now passes DOC_TEMPLAT
 
 ## HANDOFF: FOR AGENTS
 
-Use `VIEW_Implement_Write_Or_Modify_Code.md` for future work on this module, and keep in mind that every doc change must also refresh the DOC_TEMPLATE_DRIFT checklist so the next agent inherits a fully stated sync.
+Use `VIEW_Implement_Write_Or_Modify_Code.md` for future work on this module, and keep in mind that every doc change must also refresh the DOC_TEMPLATE_DRIFT checklist so the next agent inherits a fully stated sync. When you extend a helper script, double-check that the CHAIN and POINTERS sections point at the updated docs so the next agent can trace behavior to implementations quickly.
 
 ## HANDOFF: FOR HUMAN
 
-Please confirm the canonical front-end start command, the blood frontend port/command, and the ngrok environment defaults before another agent considers the module ready for canonical status.
+Please confirm the canonical front-end start command, the blood frontend port/command, and the ngrok environment defaults before another agent considers the module ready for canonical status. Also ensure that any runtime or systemd updates include explicit NOTES in this sync so humans can track when the helper scripts change mode or expose new ports.
 
 ## POINTERS
 
 - `docs/tools/IMPLEMENTATION_Tools.md` for the code architecture, entry points, and stack runner wiring that this sync now references explicitly.
 - `docs/tools/HEALTH_Tools.md` for the flows, indicators, and checkers that validate the helper scripts and connect to this module's behavior and validation narratives.
 - `docs/tools/BEHAVIORS_Tools.md` for the updated behavior ledger, including the OUTPUTS (stack runner) note describing which `tools/run_stack.sh` restarts wrote to `./logs/run_stack` and `./.ngram/error.log`.
+- The behavior objectives now spell out the stack runner outputs, so auditors can trace the helper logs back to the documented objectives and confirm the helper flows meet issue #11.
 
 ## CONSCIOUSNESS TRACE
 

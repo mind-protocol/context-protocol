@@ -28,6 +28,13 @@ Documentation stays current after the template alignment work, with the module i
 
 ## RECENT CHANGES
 
+### 2025-12-29: Expand narrator validation coverage
+
+- **What:** Added the PROPERTIES, ERROR CONDITIONS, and HEALTH COVERAGE sections to `docs/agents/narrator/VALIDATION_Narrator.md` and noted the completion inside this SYNC entry so future agents see the full template compliance.
+- **Why:** The DOC_TEMPLATE_DRIFT warning demands these sections be spelled out for clarity, so we documented them alongside the invariants to keep the narrator contract explicit.
+- **Files:** `docs/agents/narrator/VALIDATION_Narrator.md`, `docs/agents/narrator/SYNC_Narrator.md`
+- **Verification:** `ngram validate` *(still reporting the existing connectome/health and membrane naming warnings).*
+
 ### 2025-12-28: Expand narrator patterns template compliance
 
 - **What:** Added the missing PATTERNS sections (Problem, Pattern, behaviors,

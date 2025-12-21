@@ -226,6 +226,8 @@ engine/infrastructure/orchestration/narrator.py
 3. Parsed `NarratorOutput` flows through `engine/physics/graph/graph_ops.py:apply_mutations` before the orchestrator streams the updated scene, elapsed time, and clickables back to the UI and logs success.
 ```
 
+The output is streamed back through `tools/stream_dialogue.py`'s SSE wiring, which buffers narrator packets, annotates clickables, and records the final JSON payload in the health logs before the UI consumes it; thinking of the stream as two layers (chunk emitter + health logger) helps keep the CLI steady when applying backpressure.
+
 ### Shutdown
 
 ```
@@ -272,6 +274,7 @@ engine/infrastructure/orchestration/narrator.py
 
 - IDEA: Log narrator prompt contexts and outcomes to a dedicated audit trail so debugging continuity breaks does not require parsing raw CLAUDE output.
 - IDEA: Surface narrator mutation summaries in the health dashboard with toggles for scene drift, SSE lag, and graph updates to speed up telemetric checks.
+- IDEA: Publish narrator SSE progress summaries (scene hash, click count, and latency) into the health log so the doctor can spot streaming stalls without replaying the full conversation.
 
 ### Questions
 

@@ -99,6 +99,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2025-12-26: Documented narrator implementation runtime behavior
+
+- **What:** Added the missing RUNTIME BEHAVIOR, BIDIRECTIONAL LINKS, and GAPS sections to `docs/agents/narrator/IMPLEMENTATION_Narrator.md`.
+- **Why:** Close the DOC_TEMPLATE_DRIFT warning so the narrator implementation doc matches the template and explicates the runtime story.
+- **Files:** `docs/agents/narrator/IMPLEMENTATION_Narrator.md`, `docs/agents/narrator/SYNC_Narrator.md`
+- **Verification:** `ngram validate`
+
 ### 2025-12-26: Supplemented LLM archive guidance
 
 - **What:** Added extra sentences to the CURRENT STATE, IN PROGRESS, and KNOWN ISSUES sections of `docs/llm_agents/SYNC_LLM_Agents_State_archive_2025-12.md` so the archive explains its read-only role and points readers at the live SYNC before they follow any instructions.
@@ -112,6 +119,7 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Why:** The DOC_TEMPLATE_DRIFT warning highlighted missing content for this doc (code structure, flows, state, concurrency, links), so the fleshed-out narrative restores architectural clarity for downstream agents.
 - **Files:** `docs/llm_agents/IMPLEMENTATION_LLM_Agent_Code_Architecture.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(fails: pre-existing docs/connectome/health gaps, membrane naming, and CHAIN/link warnings noted by the doctor)*
+- **Trace:** The new GAPS/IDEAS/QUESTIONS and bidirectional link notes tie the implementation narrative back to the observed state so future agents can trace assumptions, concerns, and open investigations.
 
 ### 2025-12-25: Completed Gemini algorithm template compliance
 
@@ -286,6 +294,7 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Files:** `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate`
 - **Trace:** The new objective-led prose clarifies the parseable stream goal, the plain text escape hatch, and stderr isolation so future agents understand the adapter’s real outcomes.
+- **Trace:** The additional closing sentence in the behaviors doc now links the prose back to the validation guarantees, making the contract traceable from behavior to verification.
 
 ### 2025-12-22: Completed Gemini validation template
 
@@ -294,6 +303,7 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Files:** `docs/llm_agents/VALIDATION_Gemini_Agent_Invariants.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` (fails: pre-existing `docs/connectome/health` gaps plus naming/CHAIN warnings in `docs/physics/*`)
 - **Trace:** Captured the Gemini validation guarantees/objectives addition so the next agent sees the explicit doc fix and can follow up if the doctor returns.
+- **Notes:** Reference the new BEHAVIORS GUARANTEED table and OBJECTIVES COVERED narrative when verifying streaming contracts so agents know which validation file to check first.
 
 ---
 

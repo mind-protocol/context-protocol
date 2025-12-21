@@ -205,3 +205,80 @@ engine/infrastructure/orchestration/narrator.py
 | Config | Location | Default | Description |
 |--------|----------|---------|-------------|
 | `AGENTS_MODEL` | env | `claude` | Model provider for narrator |
+
+---
+
+## RUNTIME BEHAVIOR
+
+### Initialization
+
+```
+1. NarratorService instantiates with a working directory over the agents/narrator prompt bundle, sets the timeout, and flags that no session has started yet so CLI continuation only kicks in after the first call.
+2. Logging, env reads (e.g., `AGENTS_MODEL`), and helper imports complete before the manager hands over the first scene context so the agent is ready when RunNarrator begins.
+3. When the engine bootstraps, any CLI invocation or server endpoint that needs narration constructs NarratorService and acknowledges that the fallback path is available before attempting to stream text.
+```
+
+### Main Loop / Request Cycle
+
+```
+1. A caller (playthrough loop or manual CLI) invokes `NarratorService.generate`, supplying scene context, optional world injections, and any specific instruction string, which immediately triggers `_build_prompt` to serialize the data into the YAML-backed prompt.
+2. `_call_claude` runs `run_agent` inside `agent_cli`, optionally continuing an existing session, enforces the JSON output contract, and falls back to the minimal scene when the subprocess fails, times out, or the response cannot be parsed.
+3. Parsed outputs (scene tree, time_elapsed, optional mutations/seeds) are returned, while `NarratorService` keeps the `session_started` flag true so future calls will resume the ongoing session instead of restarting each time.
+```
+
+### Shutdown
+
+```
+1. When the playthrough ends or the CLI is told to stop, the orchestrator calls `NarratorService.reset_session` to drop the continuation flag and allow the next run to start fresh.
+2. There is no background thread to tear down; simply resetting the flag and logging the reset is sufficient because the CLI is synchronous and short-lived per scene.
+3. After reset, the next generate call rebuilds the prompt from scratch, reinitializes logging context if needed, and reuses the working directory path without lingering state.
+```
+
+---
+
+## BIDIRECTIONAL LINKS
+
+### Code → Docs
+
+Files that reference this documentation:
+
+| File | Line | Reference |
+|------|------|-----------|
+| `engine/infrastructure/orchestration/narrator.py` | 7 | `DOCS: docs/agents/narrator/IMPLEMENTATION_Narrator.md` |
+
+### Docs → Code
+
+| Doc Section | Implemented In |
+|-------------|----------------|
+| DATA FLOW AND DOCKING (step 1: prompt build) | `engine/infrastructure/orchestration/narrator.py:build_prompt` |
+| DATA FLOW AND DOCKING (step 2: agent call) | `engine/infrastructure/orchestration/narrator.py:_call_claude` |
+| DATA FLOW AND DOCKING (step 3: mutation apply) | `engine/physics/graph/graph_ops.py:apply_mutation` |
+| LOGIC CHAINS (Invention to Canon) | `engine/physics/graph/graph_ops.py:apply_mutation` |
+| CONCURRENCY MODEL | `engine/infrastructure/orchestration/agent_cli.py:run_agent` |
+
+---
+
+## GAPS / IDEAS / QUESTIONS
+
+### Extraction Candidates
+
+Files approaching WATCH/SPLIT status - identify what can be extracted:
+
+| File | Current | Target | Extract To | What to Move |
+|------|---------|--------|------------|--------------|
+| `engine/infrastructure/orchestration/narrator.py` | ~200L | <400L | n/a | Already lean; no extract candidate yet |
+
+### Missing Implementation
+
+- [ ] Capture narrator health metrics (prompt timing, CLI latency, JSON parsing success) and feed them into the existing health tooling so runtime regressions surface automatically.
+- [ ] Document how the narrator fallback scene mutations should be reconciled into the world graph instead of silently returning empty mutation lists.
+
+### Ideas
+
+- IDEA: Surface a table-driven prompt template so new injection fields can be added without editing `_build_prompt`.
+- IDEA: Extend NarratorService with an opt-in instrumentation hook that posts raw JSON responses to the health dashboard for easier debugging.
+
+### Questions
+
+- QUESTION: Should NarratorService expose a hook that validates mutation lists against the schema before returning, or is the downstream caller responsible for schema enforcement?
+- QUESTION: When fallback scenes fire repeatedly, should the orchestrator halt play-throughs to block potential sandbox loops instead of returning minimal scenes forever?

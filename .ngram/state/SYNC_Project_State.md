@@ -99,11 +99,11 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
-### 2026-01-27: Document tools sync template coverage
+### 2026-02-01: Document state store implementation detail
 
-- **What:** Added MATURITY, IN PROGRESS, KNOWN ISSUES, HANDOFFS, CONSCIOUSNESS TRACE, and POINTERS sections to `docs/tools/SYNC_Tools.md` so the sync now records every template block, and future agents see both the maturity reasoning and the handoff guidance.
-- **Why:** DOC_TEMPLATE_DRIFT had flagged this SYNC for missing narrative chunks, so the richer ledger keeps the module traceable while leaving the helper scripts untouched.
-- **Files:** `docs/tools/SYNC_Tools.md`, `.ngram/state/SYNC_Project_State.md`
+- **What:** Added SCHEMA, DATA FLOW AND DOCKING (FLOW-BY-FLOW), LOGIC CHAINS, MODULE DEPENDENCIES, RUNTIME BEHAVIOR, and CONCURRENCY MODEL sections to the Connectome state_store implementation doc and traced the change in the module SYNC so the doc chain now satisfies DOC_TEMPLATE_DRIFT #11.
+- **Why:** The doctor reported the implementation doc as missing those template blocks, so the expanded articulation keeps the chain aligned with patterns, behaviors, and validation expectations.
+- **Files:** `docs/connectome/state_store/IMPLEMENTATION_Connectome_State_Store_Code_Structure_And_Zustand_Actions.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate`
 
 ### 2026-01-26: Document tools pattern template coverage
@@ -185,7 +185,7 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Why:** DOC_TEMPLATE_DRIFT flagged the tools behaviors ledger for missing sections, so the expanded prose keeps the ledger canonical while leaving the helper scripts untouched.
 - **Files:** `docs/tools/BEHAVIORS_Tools.md`, `docs/tools/SYNC_Tools.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(fails for the existing `docs/connectome/health` PATTERNS/SYNC gaps, the `docs/engine/membrane` PATTERN naming mismatch, and the longstanding CHAIN/link warnings already tracked in the state file).*
-- **Trace:** The sync now calls out how the behavior doc connects B1/B2 to `tools/run_stack.sh` restarts, log outputs, and the dedicated OUTPUTS (stack runner) memo so future agents know exactly which helpers deliver which artifacts, which files capture the restarts, and that they should inspect `./logs/run_stack` and `./.ngram/error.log` when replaying the service recovery logs.
+- **Trace:** The sync now calls out how the behavior doc connects B1/B2 to `tools/run_stack.sh` restarts, log outputs, and the dedicated OUTPUTS (stack runner) memo so future agents know exactly which helpers deliver which artifacts, which files capture the restarts, and that they should inspect `./logs/run_stack` and `./.ngram/error.log` when replaying the service recovery logs; it also points to the service pattern, timestamp, and command metadata so auditors can map those restarts back to the helper invocation that ran the bundle splitter or streamer.
 
 ### 2025-12-31: Reconfirm world runner health template coverage
 

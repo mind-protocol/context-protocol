@@ -72,6 +72,7 @@ Both scripts execute in a single thread per invocation and complete their work b
 ## CONFIGURATION
 
 `connectome_doc_bundle_splitter_and_fence_rewriter.py` accepts `input` (default `data/connectome/1.md`) and `--root` (default repo root) arguments, while `stream_dialogue.py` requires `-p/--playthrough`, `-t/--type`, optional `--tone`, `-s/--speaker`, and message text; the streamer sets `PROJECT_ROOT` to the repo root so `GraphOps`/`GraphQueries` imports resolve, while each playthrough can override its FalkorDB graph name via `playthroughs/{id}/player.yaml`.
+Operators adjusting these flags should rerun `ngram validate` so the documentation chain confirms their configuration changes before any doc release.
 
 ## BIDIRECTIONAL LINKS
 

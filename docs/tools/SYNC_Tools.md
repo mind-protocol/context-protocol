@@ -36,6 +36,7 @@ What's still being designed:
 ## CURRENT STATE
 
 Documented the tools module so utility scripts are tracked in the protocol and so the doc templates, streaming helpers, and stack restart assistants share a single canonical narrative. Added systemd user unit templates under `tools/systemd/user/`, a v3 ngrok config at `tools/ngrok.yml`, and a WSL autostart guide at `docs/infrastructure/wsl-autostart.md`. Added `.ngram/logs/` plus the `.ngram/systemd.env` placeholder to wire frontend commands into systemd, documented the blood-fe service wiring and `ngram-stack.target`, captured the `tools/run_stack.sh` logging behavior, and expanded the algorithm, validation, health, and behaviors docs so the entire chain satisfies the DOC_TEMPLATE_DRIFT narrative requirements while the implementation ledger tracks the required logic chains.
+This sync now explicitly mentions the run_stack restart context so the Implementation ledger traces the same operations the doc describes, keeping the canonical chain auditable when the helpers get refactored.
 
 ## IN PROGRESS
 
@@ -125,6 +126,7 @@ Please confirm the canonical front-end start command, the blood frontend port/co
 
 - `docs/tools/IMPLEMENTATION_Tools.md` for the code architecture, entry points, and stack runner wiring that this sync now references explicitly.
 - `docs/tools/HEALTH_Tools.md` for the flows, indicators, and checkers that validate the helper scripts and connect to this module's behavior and validation narratives.
+- `docs/tools/BEHAVIORS_Tools.md` for the updated behavior ledger, including the OUTPUTS (stack runner) note describing which `tools/run_stack.sh` restarts wrote to `./logs/run_stack` and `./.ngram/error.log`.
 
 ## CONSCIOUSNESS TRACE
 

@@ -99,13 +99,6 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
-### 2026-02-01: Document state store implementation detail
-
-- **What:** Added SCHEMA, DATA FLOW AND DOCKING (FLOW-BY-FLOW), LOGIC CHAINS, MODULE DEPENDENCIES, RUNTIME BEHAVIOR, and CONCURRENCY MODEL sections to the Connectome state_store implementation doc and traced the change in the module SYNC so the doc chain now satisfies DOC_TEMPLATE_DRIFT #11.
-- **Why:** The doctor reported the implementation doc as missing those template blocks, so the expanded articulation keeps the chain aligned with patterns, behaviors, and validation expectations.
-- **Files:** `docs/connectome/state_store/IMPLEMENTATION_Connectome_State_Store_Code_Structure_And_Zustand_Actions.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
-- **Verification:** `ngram validate`
-
 ### 2026-01-26: Document tools pattern template coverage
 
 - **What:** Filled the missing BEHAVIORS SUPPORTED, BEHAVIORS PREVENTED, PRINCIPLES, DATA, DEPENDENCIES, INSPIRATIONS, SCOPE, and GAPS / IDEAS / QUESTIONS sections of `docs/tools/PATTERNS_Tools.md`, ensuring every block now exceeds the DOC_TEMPLATE_DRIFT minimum while anchoring the helper intent, dependencies, and risks before editing the runtime scripts.

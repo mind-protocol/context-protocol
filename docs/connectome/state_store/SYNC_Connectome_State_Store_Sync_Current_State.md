@@ -1,11 +1,8 @@
-```
-
 # state_store — Sync: Current State
 
-LAST_UPDATED: 2025-12-20
-UPDATED_BY: Marco "Salthand" (agent)
+LAST_UPDATED: 2026-02-01
+UPDATED_BY: codex
 STATUS: DESIGNING
-```
 
 ---
 
@@ -19,7 +16,6 @@ STATUS: DESIGNING
 
 **In design:**
 
-* restart policy (clear vs boundary)
 * realtime retention policy (max N vs time window)
 
 **Deferred:**
@@ -31,49 +27,35 @@ STATUS: DESIGNING
 
 ## CURRENT STATE
 
-state_store docs are defined; implementation does not exist yet. This module is the intended single authority to prevent “links disappear” and “log/explain drift” bugs.
+Implemented a Zustand store with explicit long-named actions. Step releases use a single atomic commit that appends to the ledger, sets focus, updates explanation, and adjusts wait timers. Restart currently appends a session boundary event and resets focus/timers. The implementation doc now enumerates schema, docking flows, logic chains, dependencies, runtime behavior, and the concurrency guarantees so human agents can follow the canonical design without encountering DOC_TEMPLATE_DRIFT.
 
 ---
 
 ## RECENT CHANGES
 
-### 2025-12-20: Initialized state_store chain docs
+### 2026-02-01: Expand state store implementation collateral
 
-* Defined append-only ledger + atomic commit semantics
-* Defined wait timer and tick display signals as store-owned semantics
+* **What:** Added SCHEMA, DATA FLOW AND DOCKING (FLOW-BY-FLOW), LOGIC CHAINS, MODULE DEPENDENCIES, RUNTIME BEHAVIOR, and CONCURRENCY MODEL sections to the implementation doc and recorded the Observations trace so the doc chain satisfies DOC_TEMPLATE_DRIFT (#11).
+* **Why:** The doctor flagged the implementation doc for missing atlas sections; expanding it keeps the store chain aligned with the PATTERNS/ALGORITHM expectations before we ship.
+* **Files:** `docs/connectome/state_store/IMPLEMENTATION_Connectome_State_Store_Code_Structure_And_Zustand_Actions.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`
+* **Verification:** `ngram validate`
 
----
+### 2025-12-20: Implemented state store with atomic commits
 
-## KNOWN ISSUES
-
-### Restart policy unresolved
-
-* Issue: whether restart clears ledger or starts a new session boundary
-* Impact: affects export format and determinism
-* Current handling: documented as A/B, must be decided and locked
-
----
-
-## HANDOFF: FOR AGENTS
-
-* Implement in Zustand with explicit long action names
-* Ensure each Next release is one atomic action (append+focus+explain)
-* Do not allow components to keep shadow copies of ledger/focus
-
----
-
-## HANDOFF: FOR HUMAN
-
-* Please decide: Restart clears ledger OR creates a boundary (prefer boundary for auditability)
-* Please decide retention policy for realtime mode (cap N vs time window)
+* **What:** Added store state, atomic commit action, restart policy, and serializer utilities.
+* **Why:** Provide a single source of truth to prevent UI/log drift.
+* **Files:**
+  * `app/connectome/lib/zustand_connectome_state_store_with_atomic_commit_actions.ts`
+  * `app/connectome/lib/connectome_session_boundary_and_restart_policy_controller.ts`
+  * `app/connectome/lib/connectome_wait_timer_progress_and_tick_display_signal_selectors.ts`
+  * `app/connectome/lib/connectome_export_jsonl_and_text_log_serializer.ts`
 
 ---
 
 ## TODO
 
-* [ ] Implement store state + actions with long descriptive filenames
-* [ ] Implement export function used by log_panel
-* [ ] Add state_store health runner (pending)
+* [ ] Decide retention cap for realtime mode
+* [ ] Add health harness to verify atomic commit invariants
 
 Run:
 
@@ -83,4 +65,8 @@ pnpm connectome:health state_store
 
 ---
 
----
+## AGENT OBSERVATIONS
+
+### Remarks
+
+* The implementation doc now lists the missing schema, flow, logic, dependency, runtime, and concurrency guidance so the chain is doc-template-compliant.

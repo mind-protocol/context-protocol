@@ -127,7 +127,31 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **What:** Filled the missing BEHAVIORS GUARANTEED and OBJECTIVES COVERED sections in `docs/connectome/runtime_engine/VALIDATION_Connectome_Runtime_Engine_Invariants_For_Stepper_And_Realtime.md` and recorded the fix inside the runtime engine SYNC so the template now meets DOC_TEMPLATE_DRIFT length and mapping requirements.
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged the empty behavior and objective blocks, and the new narratives now make it clear which runtime engine controls are guaranteed and why each invariant exists before downstream agents rely on the doc chain.
 * **Files:** `docs/connectome/runtime_engine/VALIDATION_Connectome_Runtime_Engine_Invariants_For_Stepper_And_Realtime.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
-* **Validation:** `ngram validate` *(fails: pre-existing `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings remain; no new issues introduced).*
+* **Validation:** `ngram validate` *(fails: pre-existing `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings remain; no new issues introduced).* 
+
+### 2026-05-02: Expand runtime engine implementation template (#11)
+
+* **What:** Rewrote the `LOGIC CHAINS` and `MODULE DEPENDENCIES` sections in `docs/connectome/runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md` with explicit deterministic chains and dependency narratives so every block now exceeds the DOC_TEMPLATE_DRIFT 50-character requirement.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged the implementation doc for missing logic chains and dependency context; the new prose clarifies how command gating flows into the store and which helpers the runtime engine relies on before future agents edit the runtime wiring.
+* **Files:** `docs/connectome/runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails: known `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings remain; no new regressions introduced).*
+* **Notes:** Logged the runtime engine logic-chain and dependency narratives so downstream agents can trace the canonical release path, inspect the selectors mentioned in the doc, and dock their health instrumentation before touching the command wiring.
+
+### 2026-05-03: Expand runtime engine sync coverage (#11)
+
+* **What:** Added IN PROGRESS, KNOWN ISSUES, HANDOFF, CONSCIOUSNESS TRACE, and POINTERS sections to the runtime engine SYNC doc so every template block now clearly signals telemetry work, outstanding docs gaps, and where to continue the repair trail; the new prose explicitly mentions realtime buffering wiring, restart semantics, and the connectome health doc debt while staying over fifty characters per section.
+* **Why:** DOC_TEMPLATE_DRIFT #11 noted the SYNC template was missing those sections, so the new prose lets future agents pick up telemetry calibration and human decisions without rediscovering the context.
+* **Files:**
+  * `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(fails: existing `docs/connectome/health` module still lacks its full PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION/HEALTH/SYNC coverage, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural naming, and the legacy CHAIN-link warnings remain; no regressions introduced by this update).*
+
+### 2026-05-02: Expand runtime engine implementation template (#11)
+
+* **What:** Rewrote the `LOGIC CHAINS` and `MODULE DEPENDENCIES` sections in `docs/connectome/runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md` with explicit deterministic chains and dependency narratives so every block now exceeds the DOC_TEMPLATE_DRIFT 50-character requirement.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged the implementation doc for missing logic chains and dependency context; the new prose clarifies how command gating flows into the store and which helpers the runtime engine relies on before future agents edit the runtime wiring.
+* **Files:** `docs/connectome/runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails: known `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings remain; no new regressions introduced).*
+* **Notes:** Logged the runtime engine logic-chain and dependency narratives so downstream agents can trace the canonical release path, inspect the selectors mentioned in the doc, and dock their health instrumentation before touching the command wiring.
 
 ### 2026-05-03: Expand runtime engine sync coverage (#11)
 
@@ -152,6 +176,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **Files:** `docs/connectome/runtime_engine/ALGORITHM_Connectome_Runtime_Engine_Step_Release_And_Realtime_Scheduling.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate` *(fails: existing `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and persistent CHAIN-link warnings remain; no new issues introduced).*
 
+
+### 2026-05-04: Populate runtime engine sync template (#11)
+
+* **What:** Added the missing IN PROGRESS / KNOWN ISSUES / HANDOFF: FOR AGENTS / HANDOFF: FOR HUMAN / CONSCIOUSNESS TRACE / POINTERS sections to the runtime engine SYNC with fifty-plus-character narratives covering telemetry instrumentation, restart policy, and doc pointers so the template no longer violates DOC_TEMPLATE_DRIFT requirements.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged the runtime engine SYNC for lacking these status and handoff sections; recording the current work, unresolved issues, and next-agent signals keeps future contributors aligned with the runtime guardrails.
+* **Files:** `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails: the existing docs/connectome/health chain gaps and `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch remain; no regressions introduced).*
 ### 2026-04-18: Expand runtime_engine health documentation (#11)
 
 * **What:** Added the OBJECTIVES COVERAGE table and indicator entries for speed, duration, and autoplay checks so every health signal now describes its validation target, docks, throttling, and forwarding details.

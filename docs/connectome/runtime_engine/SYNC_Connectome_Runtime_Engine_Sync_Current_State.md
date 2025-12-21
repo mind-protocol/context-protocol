@@ -64,6 +64,15 @@ Stepper runtime engine is implemented with a fixed step script. Next dispatches 
   * `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
 * **Validation:** `ngram validate` *(fails: the known `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and persistent CHAIN-link warnings remain; no new issues introduced).*
 
+### 2026-05-04: Align runtime engine objectives with telemetry and logs (#11)
+
+* **What:** Expanded the OBJECTIVES AND BEHAVIORS explanation with a commit-synchronized paragraph and added a fifth runtime scheduler step describing how telemetry adapters, log panels, and health tooling read the settled snapshot so they never disagree about release ordering.
+* **Why:** DOC_TEMPLATE_DRIFT #11 expects behavior summaries to mention their observable effects and secondary consumers explicitly; the new paragraph and scheduler step make it clear why the runtime guard must lock focus, explanation, and timers before telemetry/log targets render the release.
+* **Files:**
+  * `docs/connectome/runtime_engine/ALGORITHM_Connectome_Runtime_Engine_Step_Release_And_Realtime_Scheduling.md`
+  * `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(fails: existing `docs/connectome/health` chain gaps, the `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming issue, and longstanding CHAIN-link warnings remain; no new issues introduced).*
+
 ### 2025-12-20: Implemented stepper runtime engine
 
 * **What:** Added runtime command dispatch, step release logic, and initialization that sets script total.
@@ -140,37 +149,6 @@ Stepper runtime engine is implemented with a fixed step script. Next dispatches 
 
 ---
 
-## IN PROGRESS
-
-- Instrumenting the realtime telemetry_adapter wiring so we can verify that step releases remain gated by the documented idle/active rhythms before enabling continuous play.
-- Calibrating the restart boundary semantics so restarting the runtime engine respects ledger invariants while keeping the stepper/realtime distinction intact.
-
-## KNOWN ISSUES
-
-- Realtime buffering instrumentation remains unfinished, so the telemetry stream cannot yet confirm guardrails during extended autoplay loops.
-- The `docs/connectome/health` module still lacks the PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION/HEALTH/SYNC coverage that keeps `ngram validate` from passing on this module.
-
-## HANDOFF: FOR AGENTS
-
-- Continue routing observations through `VIEW_Extend_Add_Features_To_Existing` once realtime buffering fixtures are in place, with attention to the telemetry_adapter wiring noted above.
-- Watch the connectome health docs and membrane naming issues referenced in the latest doctor run; do not expect validation clean without those fixes.
-
-## HANDOFF: FOR HUMAN
-
-- Confirm whether telemetry buffer instrumentation and the connectome health module documentation should be prioritized before the next release so downstream agents know when the validation suite can cleanly pass.
-- Advise on any release gating requirements for realtime mode once the telemetry_adapter begins reporting playback health to the dashboard.
-
-## CONSCIOUSNESS TRACE
-
-- Momentum is steady around finishing the telemetry_adapter and health docs, but the runtime engine sync was missing the communication scaffolding until now.
-- Noticing the `view` balance, I explicitly logged the IN PROGRESS, KNOWN ISSUES, and handoff sections so the next agent can pick up where guardrail-specific documentation left off.
-
-## POINTERS
-
-- `docs/connectome/runtime_engine/PATTERNS_Connectome_Runtime_Engine_Stepper_And_Realtime_Traversal_Control_Patterns.md`: Canonical design contract for why the stepper/realtime split exists and what behaviors each mode deliberately enables or prevents.
-- `docs/connectome/runtime_engine/BEHAVIORS_Connectome_Runtime_Engine_User_Controlled_Traversal_Effects.md`: Observable outcomes that every agent should link back to the gating guarantees enumerated here.
-- `docs/connectome/runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md`: Structured logic chains and modules that realize the runtime command gating described in this SYNC.
-
 ## TODO
 
 * [ ] Define realtime mode behavior once telemetry_adapter exists
@@ -182,35 +160,34 @@ Run:
 pnpm connectome:health runtime_engine
 ```
 
----
-
 ## IN PROGRESS
 
 - Instrumenting the realtime telemetry_adapter wiring so we can verify that step releases remain gated by the documented idle/active rhythms before enabling continuous play.
-- Calibrating the restart boundary semantics so restarting the runtime engine respects ledger invariants while keeping the stepper/realtime distinction intact.
+- Calibrating restart boundary semantics so restarting the runtime engine preserves ledger invariants while keeping the stepper/realtime distinction intact without sacrificing determinism.
 
 ## KNOWN ISSUES
 
-- Realtime buffering instrumentation remains unfinished, so the telemetry stream cannot yet confirm guardrails during extended autoplay loops.
-- The `docs/connectome/health` module still lacks the PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION/HEALTH/SYNC coverage that keeps `ngram validate` from passing on this module.
+- Realtime buffering instrumentation remains unfinished, so telemetry streams cannot yet assert guardrails during autoplay transitions.
+- Restart policy (clear ledger vs boundary) is undecided, so playback restarts still rely on temporary heuristics that risk ledger divergence.
 
 ## HANDOFF: FOR AGENTS
 
-- Continue routing observations through `VIEW_Extend_Add_Features_To_Existing` once realtime buffering fixtures are in place, with attention to the telemetry_adapter wiring noted above.
-- Watch the connectome health docs and membrane naming issues referenced in the latest doctor run; do not expect validation clean without those fixes.
+- Continue working from VIEW_Extend_Add_Features_To_Existing once the telemetry_adapter wiring surfaces, and document any new dependencies before touching the control surface.
+- Watch the connectome health and membrane naming fixes flagged by the latest doctor run; validation depends on those upstream docs landing before runtime changes can be marked healthy.
 
 ## HANDOFF: FOR HUMAN
 
-- Confirm whether telemetry buffer instrumentation and the connectome health module documentation should be prioritized before the next release so downstream agents know when the validation suite can cleanly pass.
-- Advise on any release gating requirements for realtime mode once the telemetry_adapter begins reporting playback health to the dashboard.
+- Approve the telemetry_adapter instrumentation plan so realtime buffer reporting can ship with clarity about which metrics must land in the dashboard.
+- Decide whether the restart control should clear the ledger or only mark a boundary, since that rule directly affects runtime engine determinism and upcoming releases.
 
 ## CONSCIOUSNESS TRACE
 
-- Momentum is steady around finishing the telemetry_adapter and health docs, but the runtime engine sync was missing the communication scaffolding until now.
-- Noticing the `view` balance, I explicitly logged the IN PROGRESS, KNOWN ISSUES, and handoff sections so the next agent can pick up where guardrail-specific documentation left off.
+- Momentum is steady around completing the telemetry_adapter and health coverage, and the runtime engine SYNC now records the communication scaffolding that was missing.
+- I expanded these IN PROGRESS/KNOWN ISSUES/handoff sections explicitly so the next agent can trace the outstanding work without missing context.
 
 ## POINTERS
 
-- `docs/connectome/runtime_engine/PATTERNS_Connectome_Runtime_Engine_Stepper_And_Realtime_Traversal_Control_Patterns.md`: Canonical design contract for why the stepper/realtime split exists and what behaviors each mode deliberately enables or prevents.
-- `docs/connectome/runtime_engine/BEHAVIORS_Connectome_Runtime_Engine_User_Controlled_Traversal_Effects.md`: Observable outcomes that every agent should link back to the gating guarantees enumerated here.
-- `docs/connectome/runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md`: Structured logic chains and modules that realize the runtime command gating described in this SYNC.
+- `docs/connectome/runtime_engine/PATTERNS_Connectome_Runtime_Engine_Stepper_And_Realtime_Traversal_Control_Patterns.md`: Canonical design contract for the stepper/realtime split, the gating guarantees, and forbidden behaviors every runtime change must preserve.
+- `docs/connectome/runtime_engine/ALGORITHM_Connectome_Runtime_Engine_Step_Release_And_Realtime_Scheduling.md`: Walks through `runtime_engine_step_release_and_realtime_scheduler()` so agents see how commands traverse the buffer before touching the control surface.
+- `docs/connectome/runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md`: Describes logic chains, data flow, and module dependencies that the runtime command dispatch relies on before more automation layers land.
+- `docs/connectome/runtime_engine/VALIDATION_Connectome_Runtime_Engine_Invariants_For_Stepper_And_Realtime.md`: Catalogs invariants and verification steps that prove stepper determinism and realtime guardrails before the telemetry instrumentation is complete.

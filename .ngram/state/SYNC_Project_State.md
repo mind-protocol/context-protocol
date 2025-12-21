@@ -99,12 +99,26 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2026-05-04: Expand edge kit behavior template (#11)
+
+* **What:** Added the missing `OBJECTIVES SERVED` and `INPUTS / OUTPUTS` sections so the edge behavior narrative now states its goals and contract-level I/O story in prose exceeding 50 characters per block.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged those missing sections; the new prose explains what winning edge visuals look like and how canonical signals flow through the renderer before future edits happen.
+* **Files:** `docs/connectome/edge_kit/BEHAVIORS_Connectome_Edge_Kit_Readable_Directional_And_Truthful_Link_Effects.md`, `docs/connectome/edge_kit/SYNC_Connectome_Edge_Kit_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(fails: the existing `docs/connectome/health` module still lacks its PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION/HEALTH/SYNC chain, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural naming, and the longstanding CHAIN-link warnings remain; no new regressions introduced).*
+
 ### 2025-12-21: Fill edge kit pattern template sections (#11)
 
 * **What:** Added BEHAVIORS SUPPORTED/PREVENTED narratives plus DATA/INSPIRATIONS sections so the edge styling pattern doc satisfies DOC_TEMPLATE_DRIFT minimum prose requirements.
 * **Why:** Issue #11 flagged the empty template blocks; supplying explicit behaviors/data keeps downstream agents aligned with the strict trigger/call_type styling plan.
 * **Files:** `docs/connectome/edge_kit/PATTERNS_Connectome_Edge_Kit_Color_Coded_Trigger_Typed_Directional_Link_Styling_Patterns.md`, `docs/connectome/edge_kit/SYNC_Connectome_Edge_Kit_Sync_Current_State.md`
 * **Validation:** `ngram validate` *(fails: existing docs/connectome/health chain gaps, docs/engine/membrane naming mismatch, and longstanding CHAIN warnings remain; no new regressions introduced).*
+
+### 2025-12-21: Fill edge kit sync template sections (#11)
+
+* **What:** Added the missing IN PROGRESS, KNOWN ISSUES, HANDOFF, CONSCIOUSNESS TRACE, and POINTERS sections so the edge kit SYNC now records ongoing work, outstanding blockers, and guidance for the next agent.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged those SYNC template blocks; filling them keeps the current-state traceable before future edits.
+* **Files:** `docs/connectome/edge_kit/SYNC_Connectome_Edge_Kit_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(fails: known docs/connectome/health chain gaps, docs/engine/membrane naming mismatch, and longstanding CHAIN-link warnings remain; no new issues introduced).*
 
 ### 2025-12-21: Expand runtime engine algorithm coverage (#11)
 
@@ -135,6 +149,7 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged the implementation doc for missing logic chains and dependency context; the new prose clarifies how command gating flows into the store and which helpers the runtime engine relies on before future agents edit the runtime wiring.
 * **Files:** `docs/connectome/runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate` *(fails: known `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings remain; no new regressions introduced).*
+* **Notes:** Logged the runtime engine logic-chain and dependency narratives so downstream agents can trace the canonical release path, inspect the selectors mentioned in the doc, and dock their health instrumentation before touching the command wiring.
 * **Notes:** Logged the runtime engine logic-chain and dependency narratives so downstream agents can trace the canonical release path, inspect the selectors mentioned in the doc, and dock their health instrumentation before touching the command wiring.
 
 ### 2026-05-03: Expand runtime engine sync coverage (#11)
@@ -183,6 +198,14 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged the runtime engine SYNC for lacking these status and handoff sections; recording the current work, unresolved issues, and next-agent signals keeps future contributors aligned with the runtime guardrails.
 * **Files:** `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate` *(fails: the existing docs/connectome/health chain gaps and `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch remain; no regressions introduced).*
+### 2026-05-04: Tie runtime engine objectives to telemetry and logs (#11)
+
+* **What:** Added a paragraph linking the behavior guarantees to the state_store commit and introduced a fifth scheduler step that describes how telemetry adapters, the log panel, and health tooling see the settled snapshot so downstream observers never disagree about ledger/focus/timer order.
+* **Why:** DOC_TEMPLATE_DRIFT #11 expects the behavior and algorithm narratives to mention their observable side effects and downstream consumers; the new prose makes it explicit why the runtime guard must lock focus, explanation, and timers before telemetry/log health targets render a release.
+* **Files:** `docs/connectome/runtime_engine/ALGORITHM_Connectome_Runtime_Engine_Step_Release_And_Realtime_Scheduling.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails: the known `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings remain; no new failures introduced).*
+
+
 ### 2026-04-18: Expand runtime_engine health documentation (#11)
 
 * **What:** Added the OBJECTIVES COVERAGE table and indicator entries for speed, duration, and autoplay checks so every health signal now describes its validation target, docks, throttling, and forwarding details.

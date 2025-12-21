@@ -134,6 +134,7 @@ health_indicators:
 | Keep each manual step release deterministic so single-step debugging and logging remain trustworthy. | runtime_stepper_single_step_integrity, runtime_min_duration_enforced | These indicators verify the ledger/cursor deltas and animation duration clamp stay aligned with VALIDATION V1 and V3, preventing confusing double releases or blinking timelines. |
 | Ensure speed selections are purely presentation controls so playback experiments never alter the ledger or cursor without user consent. | runtime_speed_authorization_separation | This signal proves that changing speed leaves the authorization boundary intact and only adjusts animation defaults, protecting VALIDATION V2 from regressions. |
 | Prevent autoplay leaks so the stepper experience cannot drift into hidden automation that silently modifies the ledger. | runtime_autoplay_leak_detector | This indicator catches any event append that occurs without an explicit Next command, keeping the STEP/NO-STEP semantics intact for analysts and telemetry consumers. |
+| Keep instrumentation and log streams aligned so runtime gating telemetry never falls out of sync with Next commands. | runtime_autoplay_leak_detector | This column documents that autoplay detection is the definitive indicator dashboards consult before trusting runtime_state, so the telemetry, log panel, and health badges all share the same grounding signal. |
 
 ## STATUS (RESULT INDICATOR)
 
@@ -511,6 +512,7 @@ validation:
   criteria: "In stepper mode, events are only emitted when Next is dispatched and not when other controls fire."
 - validation_id: V1
   criteria: "Ledger_length and cursor deltas reflect the Next commands seen by the player."
+context: "Dashboards consult this indicator so telemetry, logs, and health badges share an explicit Next command anchor before trusting runtime state."
 ```
 
 ### HEALTH REPRESENTATION

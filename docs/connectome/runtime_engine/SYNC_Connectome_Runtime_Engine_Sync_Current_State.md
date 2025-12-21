@@ -67,7 +67,7 @@ Stepper runtime engine is implemented with a fixed step script. Next dispatches 
 ### 2026-05-04: Align runtime engine objectives with telemetry and logs (#11)
 
 * **What:** Expanded the OBJECTIVES AND BEHAVIORS explanation with a commit-synchronized paragraph tying the narrative back to the state_store atomic commit and added a fifth runtime scheduler step describing how telemetry adapters, log panels, and health tooling read the settled snapshot so they never disagree about release ordering.
-* **Why:** DOC_TEMPLATE_DRIFT #11 expects behavior summaries to mention their observable effects and secondary consumers explicitly; the new paragraph and scheduler step make it clear why the runtime guard must lock focus, explanation, and timers before telemetry/log targets render the release, keeping downstream observers aligned.
+* **Why:** DOC_TEMPLATE_DRIFT #11 expects behavior summaries to mention their observable effects and secondary consumers explicitly; the new paragraph and scheduler step make it clear why the runtime guard must lock focus, explanation, and timers before telemetry/log targets render the release, keeping downstream observers aligned and gives them a concrete snapshot to verify before the next command.
 * **Files:**
   * `docs/connectome/runtime_engine/ALGORITHM_Connectome_Runtime_Engine_Step_Release_And_Realtime_Scheduling.md`
   * `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`

@@ -211,6 +211,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **Files:** `docs/connectome/log_panel/BEHAVIORS_Connectome_Log_Panel_Step_Clarity_And_Copyable_Audit_Trail_Effects.md`, `docs/connectome/log_panel/SYNC_Connectome_Log_Panel_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 * **Verification:** `ngram validate` *(fails: docs/connectome/health PATTERNS/SYNC still missing, docs/engine/membrane naming issue persists, and the legacy CHAIN warnings remain; no new failures introduced)*.
 
+### 2026-04-12: Document log panel behavior template repair (#11)
+
+* **What:** Noted that the behavior doc now includes OBJECTIVES SERVED and INPUTS / OUTPUTS while tagging this sync entry so future agents can find the exact section that satisfied DOC_TEMPLATE_DRIFT #11 instead of hunting across files.
+* **Why:** The template drift warning required explicit linkage between the behavior narrative and the state ledger, so recording the update here keeps the sync ledger in sync with the document before downstream consumers rely on the panel.
+* **Files:** `docs/connectome/log_panel/BEHAVIORS_Connectome_Log_Panel_Step_Clarity_And_Copyable_Audit_Trail_Effects.md`, `docs/connectome/log_panel/SYNC_Connectome_Log_Panel_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Verification:** `ngram validate` *(fails: docs/connectome/health PATTERNS/SYNC still missing, docs/engine/membrane naming issue persists, and the legacy CHAIN warnings remain; no new failures introduced)*.
+
 ### 2026-04-01: Reaffirm node kit behavior template fix
 
 - **What:** Logged the OBJECTIVES/INPUTS/Status/Notes/Impact/Trace content added to `docs/connectome/node_kit/BEHAVIORS_Connectome_Node_Kit_Visible_Clarity_And_Trust_Effects.md` so every agent following the RECENT CHANGES trail immediately finds the issue #11 repair.

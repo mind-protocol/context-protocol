@@ -2,7 +2,7 @@
 
 # node_kit — Sync: Current State
 
-LAST_UPDATED: 2025-12-20
+LAST_UPDATED: 2026-03-25
 UPDATED_BY: codex
 STATUS: DESIGNING
 ```
@@ -46,12 +46,12 @@ Tracking the flipped node signal source and the unbounded versus 0..1 energy sca
 
 ## RECENT CHANGES
 
-### 2026-03-24: Fill algorithm template sections
+### 2026-03-25: Update algorithm template coverage
 
-* **What:** Added the missing OBJECTIVES AND BEHAVIORS, KEY DECISIONS, DATA FLOW, HELPER FUNCTIONS, and INTERACTIONS sections to the node kit algorithm doc so every template block now exceeds the 50-character threshold and ties the rendering logic back to store selectors and health checks.
-* **Why:** DOC_TEMPLATE_DRIFT #11 flagged that this algorithm doc was missing the sections that explain its purpose, decisions, helpers, data flow, and interactions, so filling them keeps the chain canonical before further energy bucket tuning touches the same doc.
-* **Files:** `docs/connectome/node_kit/ALGORITHM_Connectome_Node_Kit_Node_Rendering_Spec_And_Energy_Glow_Mapping.md`, this SYNC file
-* **Verification:** `ngram validate` *(fails: known `docs/connectome/health` PATTERNS/SYNC gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN link warnings already recorded elsewhere).*
+- **What:** Rebuilt the algorithm doc so OBJECTIVES AND BEHAVIORS, KEY DECISIONS, DATA FLOW, HELPER FUNCTIONS, and INTERACTIONS sections now exist with 50+ character narratives, expanded the render_node steps into prose, and documented the helper algorithms for energy mapping and wait progress to complete the required template chain.
+- **Why:** DOC_TEMPLATE_DRIFT #11 continued to flag missing sections in this ALGORITHM doc, so this entry records the completion and prevents future drift before downstream agents rely on the rendering contract.
+- **Files:** `docs/connectome/node_kit/ALGORITHM_Connectome_Node_Kit_Node_Rendering_Spec_And_Energy_Glow_Mapping.md`, `docs/connectome/node_kit/SYNC_Connectome_Node_Kit_Sync_Current_State.md`
+- **Verification:** `ngram validate` *(fails: known `docs/connectome/health` PATTERNS/SYNC gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings already recorded elsewhere).*
 
 ### 2026-03-24: Document node kit behavior objectives and I/O
 

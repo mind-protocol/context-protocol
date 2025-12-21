@@ -99,6 +99,21 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2025-12-22: Expand llm agents archive sync narrative
+
+- **What:** Expanded the archive copy of `SYNC_LLM_Agents_State` so every section (CURRENT STATE, IN PROGRESS, KNOWN ISSUES, the handoff notes, and the consciousness trace) now includes sentences instead of terse bullets.
+- **Why:** Address the DOC_TEMPLATE_DRIFT warning that marked the archive’s IN PROGRESS and surrounding sections as too short, keeping the historical snapshot intelligible while noting that the canonical SYNC remains the source of truth.
+- **Files:** `docs/llm_agents/SYNC_LLM_Agents_State_archive_2025-12.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` (fails: pre-existing `docs/connectome/health` doc chain gaps plus numerous physics naming/CHAIN warnings that already existed before today’s change)
+
+### 2025-12-21: Physics docs shrunk into foldered fragments
+
+- **What:** Split `docs/physics/BEHAVIORS_Physics.md` into an overview + advanced doc and moved the verbs into `docs/physics/BEHAVIORS_Physics/`; replaced `IMPLEMENTATION_Physics.md` with a brief entry file plus three focused fragments and archived the prior implementation write-up under `docs/physics/archive/IMPLEMENTATION_Physics_archive_2025-12.md`.
+- **Why:** The module hit a LARGE_DOC_MODULE warning, so moving the heavy narrative into subfolders (plus the validation fragments) keeps each top-level doc under 300 lines while preserving the full story.
+- **Impact:** Every doc chain now points to the new fragments/archives, and the physics SYNC updates reflect the trimmed state.
+- **Verification:** `ngram validate` (still fails for the pre-existing connectome/health CHAIN gaps tracked by the doctor).
+
+
 ### 2025-12-22: Formalized Gemini validation behavior/objectives tables
 
 - **What:** Replaced the brief behavior/objective bullets with BEHAVIORS GUARANTEED and OBJECTIVES COVERED tables in `docs/llm_agents/VALIDATION_Gemini_Agent_Invariants.md` and expanded every rationale to satisfy the 50+ character requirement.
@@ -112,13 +127,6 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Why:** A DOC_TEMPLATE_DRIFT warning reported those sections were missing or too short, so the archive needed richer prose that clearly marks it as a historical snapshot.
 - **Files:** `docs/SYNC_Project_Repository_Map_archive_2025-12.md`
 - **Verification:** `ngram validate` (fails: existing connectome health doc gaps, membrane naming, and CHAIN link warnings noted by doctor)
-
-### 2025-12-21: Documented Gemini behavior objectives
-
-- **What:** Added OBJECTIVES SERVED plus expanded NOTES/INPUTS/OUTPUTS context to `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md` and recorded the change in the LLM agents sync file.
-- **Why:** Close the DOC_TEMPLATE_DRIFT warning that reported the Gemini behaviors doc was missing objectives and contained very short sections.
-- **Files:** `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`
-- **Verification:** `ngram validate`
 
 ### 2025-12-21: Harden API SSE delivery and router schema testing
 
@@ -230,6 +238,7 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Why:** Resolve the DOC_TEMPLATE_DRIFT warning for the Gemini behaviors doc and make the adapter’s goals and I/O story explicit for downstream agents.
 - **Files:** `docs/llm_agents/BEHAVIORS_Gemini_Agent_Output.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate`
+- **Trace:** The new objective-led prose clarifies the parseable stream goal, the plain text escape hatch, and stderr isolation so future agents understand the adapter’s real outcomes.
 
 ### 2025-12-22: Completed Gemini validation template
 

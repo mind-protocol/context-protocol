@@ -1,6 +1,6 @@
 # flow_canvas — Sync: Current State
 
-LAST_UPDATED: 2026-04-16
+LAST_UPDATED: 2026-04-18
 UPDATED_BY: codex
 STATUS: DESIGNING
 ```
@@ -30,6 +30,13 @@ Implemented a React Flow-based FlowCanvas with force-directed node layout seeded
 ---
 
 ## RECENT CHANGES
+
+### 2026-04-18: Reaffirm flow canvas health template coverage (#11)
+
+* **What:** Re-wrote the recent health sync entry to stress the indicator-level VALUE/REPRESENTATION/DOCK narratives, documented the binary STATUS stream, and clarified the HOW TO RUN guidance so the health doc now maps every indicator to the VALIDATION invariants before dashboards consume the binary flag.
+* **Why:** DOC_TEMPLATE_DRIFT #11 still demands each health doc explain indicator inputs, outputs, and execution guidance; the fresh wording and metadata references keep the flow canvas health chain canonical for downstream agents and dashboards.
+* **Files:** `docs/connectome/flow_canvas/HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_Stability_And_Perf_Budgets.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(fails: existing docs/connectome/health chain gaps plus docs/engine/membrane naming mismatch and lingering CHAIN-link warnings; no new regressions introduced)*.
 
 ### 2026-04-11: Extend health template indicators (#11)
 

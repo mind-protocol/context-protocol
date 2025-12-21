@@ -77,6 +77,7 @@ app/connectome/components/edge_label_declutter_and_visibility_policy_helpers.ts
 | `revealed_edge_ids` | Edge IDs whose labels/pulses stay active despite camera zooming; shared with `node_kit` helpers |
 
 Schema definitions live alongside `connectome_system_map_node_edge_manifest` and the `flow_canvas` helpers so every renderer shares the same canonical contract.
+`FlowCanvasProps` is declared inside `pannable_zoomable_zoned_flow_canvas_renderer.tsx` and pulls its schema directly from the store selectors so the render loop never invents a view that the runtime does not already own.
 
 ## DATA FLOW AND DOCKING (FLOW-BY-FLOW)
 
@@ -95,6 +96,20 @@ steps:
 docking_points:
 - `dock_canvas_rendered_edge_ids` (metric) lets HEALTH confirm no edges vanish post-render.
 - `dock_camera_sync_changes` ensures navigation controls and camera state stay in lockstep.
+
+### camera_control_events_to_store
+
+```
+flow:
+name: camera_control_events_to_store
+purpose: keep UI control surface gestures aligned with runtime camera state outbound from HEALTH dashboards.
+steps:
+- control surface actions dispatch camera deltas via the same helper that runtime focus updates use to set `camera`.
+- throttled commits push those deltas into the store at most once per frame to avoid rattle.
+- telemetry observers subscribe to the camera store slice and emit `dock_camera_user_event` when users repeatedly adjust view within a tick budget.
+docking_points:
+- `dock_camera_user_event` (telemetry) proves the UI control surface never jams the render loop or breaks the zoom throttle.
+```
 ```
 
 ### focus_updates_to_camera
@@ -133,6 +148,7 @@ docking_points:
 * Runtime stepper advances → `state_store` updates focus and graph metadata → FlowCanvas reuses cached positions, updates glow/pulses, and optionally calls `fit_to_view`.
 * Camera control clicks funnel through the same handlers that runtime focus updates use, so UI gestures follow the same logic path.
 * LOD overrides chain `revealed_*` slices into the label helpers so zoom thresholds only remove decorations after camera movement completes.
+* Health and telemetry observers replay the rendered edge IDs and camera deltas so downstream dashboards can trace jitter, latency, or dropped labels back to the precise FlowCanvas cycle that produced them.
 
 ## MODULE DEPENDENCIES
 
@@ -144,18 +160,22 @@ docking_points:
 | `app/connectome/components/page_shell_control_surface` | Camera control buttons and stepper wiring that trigger the same handlers as runtime focus updates. |
 | `engine/runtime_engine` adapters | Emit FlowEvents that update the graph projection and focus data consumed by FlowCanvas via `state_store`. |
 | `app/connectome/lib/connectome_system_map_node_edge_manifest` | Defines `ConnectomeNodeDefinition`/`ConnectomeEdgeDefinition` schema referenced across helpers. |
+| `app/connectome/components/telemetry_camera_controls.ts` | Synthesizes camera deltas and health pings so the FlowCanvas loops stay observable to dashboards. |
 
 ## STATE MANAGEMENT
 
 FlowCanvas does not own application state; it only reads from the shared Zustand store. The store tracks graph metadata, focus targets, camera transforms, search results, and `revealed_*` toggles. All mutations flow through atomic commit actions so each transition (step advances, search, camera control, telemetry hits) leaves the data in a consistent bundle before FlowCanvas renders. Selective selectors keep rerenders scoped to the actual slices that change, and the atomic nature prevents half-applied focus/camera updates midway through a frame.
+The store exposes `subscribeWithSelector` so the camera and focus slices can emit telemetry events without expensive re-renders, and every action that touches `revealed_*` or `camera` uses the same atomic dispatcher to avoid delta races.
 
 ## RUNTIME BEHAVIOR
 
 Stepper advances write new `active_focus` records and edge pulses to the store, prompting FlowCanvas to highlight the updated node/edge, animate pulses, and optionally adjust the camera with `fitCameraToNode`. Zooming alters label density through `edge_label_declutter_*` helpers, yet `revealed_*` overrides keep critical nodes visible. Search hits reuse the same animation loops to avoid double renders, and camera controls share handler chains with runtime focus updates so the UX remains deterministic across telemetry, user input, and stepper-driven flows.
+The runtime also throttles LOD transitions when the canvas reports heavy draw loads so the CL-5 indicator remains under budget while human analysts still see the right highlight and focus cues.
 
 ## CONCURRENCY MODEL
 
 Rendering is single-threaded but orchestrated to avoid blocking. Layout computations (`computeNodePositions`, `computeZones`) are memoized and skip rerunning unless previews change, allowing React to commit before WebGL draws. The WebGL renderer consumes the latest camera state only on `requestAnimationFrame` to avoid tearing, and camera/focus updates queue through the store before React flushes to keep the DOM + canvas in sync. Health docking points observe the render completion and camera sync events, ensuring instrumentation can detect any race between state updates and visual commits.
+Because the FlowCanvas work happens in the React commit phase, the concurrency surface is limited to synchronous commits and the async `requestAnimationFrame` draw; there are no background threads touching the mesh or label overlay, which keeps the model deterministic and easy to reason about.
 
 ---
 

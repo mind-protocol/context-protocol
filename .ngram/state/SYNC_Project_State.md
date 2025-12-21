@@ -96,6 +96,13 @@ Ran `npm run lint` after WebGL click handling (clean; TypeScript 5.5.4 unsupport
 
 ## RECENT CHANGES
 
+### 2025-12-21: Alias API playthrough algorithm doc to canonical reference
+
+- **What:** Simplified `docs/infrastructure/api/ALGORITHM_Playthrough_Creation.md` into a legacy alias that now directs readers to `docs/infrastructure/api/ALGORITHM_Api.md` and removed the duplicated technical narrative.
+- **Why:** Keep a single authoritative ALGORITHM for the API module while preserving the old path for backwards compatibility.
+- **Impact:** Agents should consult `ALGORITHM_Api.md` for the playthrough creation flow; the alias lives only to redirect.
+- **Verification:** `ngram validate` (fails for unrelated existing module/CHAIN issues noted by the doctor).
+
 ### 2025-12-21: Split GraphReadOps into an isolated reader module
 
 - **What:** Extracted `GraphReadOps` and `get_graph_reader` into `engine/physics/graph/graph_ops_read_only_interface.py`, re-exported them from `graph_ops.py`, recorded the new structure in the implementation/module docs and graph SYNC, and noted the line counts (799L vs. 246L) so the write facade stays under 800 lines.
@@ -121,6 +128,7 @@ Ran `npm run lint` after WebGL click handling (clean; TypeScript 5.5.4 unsupport
 - **What:** Moved the CLI IMPLEMENTATION sections into `overview/`, `structure/`, `runtime/`, and `schema/` subfolders, updated CHAIN/DOCS references, and refreshed map assets so each folder hosts a single IMPLEMENTATION doc tied to a canonical path.
 - **Why:** Resolves the duplicate IMPLEMENTATION warning and keeps every consumer tracing to the same canonical doc without ambiguity, while preventing future splits from drifting.
 - **Files:** `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/overview/IMPLEMENTATION_Overview.md`, `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/structure/IMPLEMENTATION_Code_Structure.md`, `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/runtime/IMPLEMENTATION_Runtime_And_Dependencies.md`, `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/schema/IMPLEMENTATION_Schema.md`, `docs/cli/modules.md`, `map.md`, `docs/map.md`, `map_docs.md`, `map_docs_cli.md`
+- **Validation:** `ngram validate` (existing warnings unrelated to this doc move still persist)
 
 ### 2025-12-21: Mechanism map folded into canonical physics algorithm
 
@@ -136,10 +144,10 @@ Ran `npm run lint` after WebGL click handling (clean; TypeScript 5.5.4 unsupport
 - **Files:** `docs/cli/archive/SYNC_CLI_State_Archive_2025-12.md`, `docs/cli/archive/SYNC_CLI_Development_State_archive_2025-12.md`, `docs/cli/archive/SYNC_archive_2024-12.md`, `.ngram/state/SYNC_Project_State.md`
 - **Tests:** `ngram validate`
 
-### 2025-12-21: Redirected schema-model SYNC to the engine canonical doc
+### 2025-12-21: Redirected schema-model docs to the engine canonical chain
 
-- **What:** `docs/schema/models/SYNC_Schema_Models.md` now redirects to `docs/engine/models/SYNC_Models.md` and `docs/schema/models/PATTERNS_Pydantic_Schema_Models.md` points at the canonical SYNC path; this removes the duplicate SYNC content flagged by DOC_DUPLICATION-models-SYNC_Schema_Models.
-- **Why:** Keep a single authoritative SYNC for the schema models while allowing the schema-focused docs to link into it; the canonical chain remains under `docs/engine/models/`.
+- **What:** `docs/schema/models/SYNC_Schema_Models.md` now redirects to `docs/engine/models/SYNC_Models.md`, and `docs/schema/models/PATTERNS_Pydantic_Schema_Models.md` redirects to `docs/engine/models/PATTERNS_Models.md`, ensuring duplicate PATTERNS/SYNC reasoning flagged in DOC_DUPLICATION-models disappears while schema-area links still resolve.
+- **Why:** Keep a single authoritative PATTERNS+SYNC chain for the schema models under `docs/engine/models/` so `ngram validate` can trace to one source of truth while allowing schema-focused contexts to land through these lightweight redirects.
 - **Tests:** `ngram validate` (fails: pre-existing docs/connectome/health gaps plus the membrane naming and several CHAIN link warnings noted above).
 
 ---

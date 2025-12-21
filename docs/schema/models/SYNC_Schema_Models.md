@@ -10,13 +10,15 @@ UPDATED_BY: codex
 
 ## WHAT CHANGED
 
-The canonical schema-model SYNC now lives under `docs/engine/models/SYNC_Models.md`. This file has been rewritten into a lightweight redirect so that any references inside `docs/schema/` continue to resolve while the duplicated material stays in the primary location. All future updates, handoffs, and validation notes should happen inside the canonical file.
+- The canonical schema-model SYNC now lives under `docs/engine/models/SYNC_Models.md`; this file redirects schema-area references while channeling edits to the engine module.
+- `PATTERNS_Pydantic_Schema_Models.md` now points at `docs/engine/models/PATTERNS_Models.md`, so all design reasoning for the Pydantic schema models is authored from one location even though schema-area links still have a landing spot.
 
 ---
 
 ## TRANSITION NOTES
 
 - Canonical location: `docs/engine/models/SYNC_Models.md`
+- Schema PATTERNS now use: `docs/engine/models/PATTERNS_Models.md` (via the redirect in `PATTERNS_Pydantic_Schema_Models.md`)
 - Doc chain to follow: `docs/engine/models/PATTERNS_Models.md`, `docs/engine/models/BEHAVIORS_Models.md`, `docs/engine/models/IMPLEMENTATION_Models.md`
 - Reason: DOC_DUPLICATION-models-SYNC_Schema_Models flagged the schema and engine SYNC docs as redundant, so this sheet now points to the engine module.
 

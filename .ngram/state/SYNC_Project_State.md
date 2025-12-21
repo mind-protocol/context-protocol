@@ -127,6 +127,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **Files:** `docs/connectome/runtime_engine/BEHAVIORS_Connectome_Runtime_Engine_User_Controlled_Traversal_Effects.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
 * **Validation:** `ngram validate` *(still reports the pre-existing `docs/connectome/health` chain gaps and membrane naming issues).*
 
+### 2026-04-26: Complete runtime_engine PATTERNS behavior template (#11)
+
+* **What:** Added the missing `BEHAVIORS SUPPORTED` and `BEHAVIORS PREVENTED` sections to `docs/connectome/runtime_engine/PATTERNS_Connectome_Runtime_Engine_Stepper_And_Realtime_Traversal_Control_Patterns.md` and recorded the change in the runtime_engine SYNC entry so the documentation chain now spells out the gating guarantees, runtime/time separation, and UI guardrails with ≥50-character prose.
+* **Why:** DOC_TEMPLATE_DRIFT #11 insisted on fully populated PATTERNS blocks; capturing the supported behaviors and forbidden interactions ensures downstream agents understand the permitted rhythm before adjusting the engine.
+* **Files:** `docs/connectome/runtime_engine/PATTERNS_Connectome_Runtime_Engine_Stepper_And_Realtime_Traversal_Control_Patterns.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(fails for the existing `docs/connectome/health` module chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN link warnings unrelated to this fix).*
+
 ### 2026-04-17: Solidify flow canvas sync sections (#11)
 
 * **What:** Added `IN PROGRESS`, `KNOWN ISSUES`, `HANDOFF: FOR AGENTS`, `HANDOFF: FOR HUMAN`, `CONSCIOUSNESS TRACE`, and `POINTERS` sections to `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`, each with narratives exceeding fifty characters so the SYNC template now matches the DOC_TEMPLATE_DRIFT requirements.

@@ -77,6 +77,17 @@ Key insight:
 > “Speed” is a **presentation rate**, not an authorization to advance state.
 > The authorization to advance in stepper mode is only the Next button.
 
+## BEHAVIORS SUPPORTED
+
+- **B1:** Each Next click dispatches exactly one normalized FlowEvent into the ledger so the scripted cursor and highlight progression stay deterministic regardless of presentation rate changes.
+- **B2:** Speed settings only alter animation duration and rate widgets while the gate logic keeps authorization limited to the Next command, preventing accidental multi-event releases in stepper mode.
+- **B3:** Realtime mode continues to consume arriving telemetry streams automatically while stepper mode remains silent until an explicit Next command, preserving the two separate truth rhythms.
+
+## BEHAVIORS PREVENTED
+
+- **A1:** Speed adjustments do not trigger autoplay or multi-event releases, so increasing the rate to 3x still leaves the gate firmly at one FlowEvent per Next press.
+- **A2:** UI components cannot bypass runtime_engine to append ledger entries directly, keeping all focus/highlight and log updates traceable through the same controlled release pipeline.
+
 ---
 
 ## PRINCIPLES

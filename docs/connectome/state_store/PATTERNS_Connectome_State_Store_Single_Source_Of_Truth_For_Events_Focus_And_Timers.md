@@ -81,14 +81,14 @@ Key insight:
 
 ## BEHAVIORS SUPPORTED
 
-- Pushes every ledger append, focus update, timer reset, and explanatory sentence through a single explicit action so stepper releases, log exports, and realtime watches observe the same canonical commit that the state_store owns.
-- Keeps the active focus, explanation sentence, and cursor index aligned with the ledger tail so renderers can highlight the current node/edge pair and narration text without chasing asynchronous updates that would otherwise desynchronize the UI from the ledger.
-- Tracks wait-progress and tick-display signals alongside the ledger cursor so the UI surfaces countdown bars, cron node fills, and replay timers with the precise semantics emitted by the store rather than inventing their own clocks.
+- Pushes ledger appends, focus updates, timer resets, and explanation sentences through a single explicit action so stepper releases, log exports, and realtime/watch panels share the same canonical commit that the state_store owns, preventing racey duplicates.
+- Keeps the active focus identifiers, explanation sentence, and cursor index aligned with the ledger tail so renderers can highlight the current node/edge pair and narration text without chasing asynchronous updates that would desynchronize the UI from the ledger.
+- Tracks wait-progress and tick-display signals alongside the ledger cursor so countdown bars, cron node fills, and replay timers render with the precise semantics emitted by the store instead of inventing independent clocks.
 
 ## BEHAVIORS PREVENTED
 
-- Blocks render slices or helper utilities from mutating focus, timers, or explanation text directly by routing every change through the store action pipeline, preventing racey multi-focus states or stale bar values in the UI.
-- Prevents ledger snapshots from diverging between copy/export flows and the live UI by keeping every append-only write centralized, so logging clients always match the store’s sequence even when rendering is deferred or the stepper is paused.
+- Blocks render slices or helper utilities from mutating focus, timers, or explanation text directly by routing every change through the store action pipeline, eliminating racey multi-focus states and stale bar values in the UI.
+- Prevents ledger snapshots from diverging between copy/export flows and the live UI by centralizing every append-only write so logging clients always match the store’s sequence even when rendering is deferred or the stepper is paused.
 
 ---
 

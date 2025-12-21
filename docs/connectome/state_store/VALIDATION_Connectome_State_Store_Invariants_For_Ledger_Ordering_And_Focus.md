@@ -23,6 +23,23 @@ SYNC:            ./SYNC_Connectome_State_Store_Sync_Current_State.md
 
 ---
 
+## BEHAVIORS GUARANTEED
+
+| Behavior ID | Behavior | Why This Validation Matters |
+|-------------|----------|-----------------------------|
+| B1 | Ledger remains append-only within each session so entries never shrink or rewrite once committed, even as new steps arrive. | Prevents exported logs, replay tooling, and telemetry panels from seeing phantom edits and keeps explanations aligned with the recorded timeline. |
+| B2 | The active focus data holds only one node_id or edge_id at a time (or null), never presenting parallel actives unless an explicit focus-shift flow is invoked. | Keeps UI indicators, narration, and automation heuristics consistent by ensuring no contradictory focus states escape validation. |
+| B3 | Each step commit appends to the ledger, updates focus, and refreshes explanation together so no intermediate state leaks to listeners. | Guarantees subscribers never observe mid-commit partial data and lets tooling treat the triple update as a single atomic contract. |
+| B4 | Wait timer metrics clamp elapsed seconds to [0, 4.0], record a started_at_ms that is <= now_ms, and display progress with one decimal precision. | Ensures countdown widgets and diagnostics never report negative periods or overly granular precision, keeping timer behavior predictable for humans and tests. |
+
+## OBJECTIVES COVERED
+
+| Objective | Validations | Rationale |
+|-----------|-------------|-----------|
+| Preserve ledger integrity while keeping exports faithful to the current store contents. | V1, P1 | Confirming append-only ledger behavior plus export equality prevents downstream tooling from replaying altered histories and gives humans confidence in the recorded evidence. |
+| Enforce single-focus plus atomic commits so concurrent UI actors cannot see conflicting active targets. | V2, V3 | Keeping the single-active-focus and atomic commit invariants together defends against flashes of inconsistent UI state and prevents action sequencing bugs. |
+| Clamp and present wait timer data so pacing guarantees match the human-facing countdown meters. | V4 | Limiting timer progress to the documented bounds and precision keeps experience pacing stable and ensures diagnostics catch drift before sessions rely on faulty timing. |
+
 ## INVARIANTS
 
 ### V1: Ledger is append-only within a session
@@ -57,6 +74,22 @@ started_at_ms <= now_ms
 Elapsed seconds are clamped to [0, 4.0]
 Display uses 1 decimal precision
 ```
+
+---
+
+## BEHAVIORS GUARANTEED
+
+| Behavior | Guarantee |
+| -------- | --------- |
+| Ledger order integrity | Every commit appends a new ledger entry so the sequence strictly grows and never rewrites past history, ensuring playback and audit trails see the original ordering. |
+| Single focus authority | The store can only mark one active node _or_ edge per step release, so the UI never shows competing focus atoms or spurious multi-focus states. |
+| Atomic commit visibility | Ledger growth, focus updates, and explanation text switch together with no observable intermediate frame, which keeps subscribers from reading partial commits. |
+| Wait timer boundaries | Wait progress values always clamp to the [0, 4.0] span while started timestamps do not exceed `now_ms`, preventing timer drift or backward jumps in the UI. |
+
+## OBJECTIVES COVERED
+
+1. Verify that append-only ledger behavior, focus singletons, atomic commits, and timer clamps align with the `store_*` health indicators so failing tests highlight which invariant slipped.
+2. Confirm that exports and restarts obey the restart policies, ensuring `store_export_equals_ledger` and `store_restart_policy_consistency` remain traceable in exporter telemetry and session boundary events.
 
 ---
 

@@ -127,6 +127,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Files:** `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(fails: still reports the known `docs/connectome/health` PATTERNS/SYNC/chain gaps, the `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the longstanding CHAIN-link warnings).*
 
+### 2026-03-11: Document validation behavior guarantees
+
+- **What:** Added the BEHAVIORS GUARANTEED table and OBJECTIVES COVERED narrative to the validation doc and referenced the change in the state SYNC so the ledger/focus/timer contract is explicitly named before downstream agents rely on it.
+- **Why:** DOC_TEMPLATE_DRIFT #11 still flagged the validation template, so these extra sections keep the doc chain aligned even while the connectome health coverage gap remains for other docs.
+- **Files:** `docs/connectome/state_store/VALIDATION_Connectome_State_Store_Invariants_For_Ledger_Ordering_And_Focus.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` *(fails: existing docs/connectome/health PATTERNS/SYNC gaps, docs/engine/membrane PATTERN naming, and the longstanding CHAIN warnings already reported by the doctor).*
+
 ### 2026-02-28: Record state store behavior guardrails
 
 - **What:** Documented the BEHAVIORS SUPPORTED and BEHAVIORS PREVENTED sections for the connectome state_store PATTERN and recorded the change in the state_store SYNC so the module chain now explicitly explains which ledger/focus/timer outcomes are allowed and blocked.

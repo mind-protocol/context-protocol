@@ -1,6 +1,6 @@
 # state_store — Sync: Current State
 
-LAST_UPDATED: 2026-02-11
+LAST_UPDATED: 2026-03-12
 UPDATED_BY: codex
 STATUS: DESIGNING
 
@@ -42,6 +42,13 @@ Confirming that the newly written handoff, pointer, and consciousness prose cont
 - Running `pnpm connectome:health state_store` remains a manual step because the harness automation is not yet wired into CI, leaving that verification as a human gating item.
 
 ## RECENT CHANGES
+
+### 2026-03-12: Document sync template coverage
+
+- **What:** Added IN PROGRESS, KNOWN ISSUES, HANDOFF, POINTERS, and CONSCIOUSNESS TRACE narrative blocks to the sync so each DOC_TEMPLATE_DRIFT section now explains the active work, issues, handoffs, and trace links before the module is marked canonical.
+- **Why:** DOC_TEMPLATE_DRIFT #11 flagged this SYNC for missing template sections, so the expanded prose ensures the ledger records the checkpoints for future agents without touching the runtime store code.
+- **Files:** `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`
+- **Verification:** `ngram validate`
 
 ### 2026-03-11: Document validation behavior guarantees
 

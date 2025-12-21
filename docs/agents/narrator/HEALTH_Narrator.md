@@ -248,6 +248,61 @@ mechanism:
   failure_mode: Mutations sneak past validation, leaving downstream services with inconsistent edges or nodes that cannot be rendered.
 ```
 
+## INDICATOR: stream_latency
+
+### VALUE TO CLIENTS & VALIDATION MAPPING
+
+```yaml
+value_and_validation:
+  indicator: stream_latency
+  client_value: Ensures the narrator’s SSE response reaches streaming listeners before the player loses patience.
+  validation:
+    - validation_id: V8 (Narrator)
+      criteria: Every narrator chunk is issued within the latency budget so the SSE/CLI handshake remains responsive.
+```
+
+### HEALTH REPRESENTATION
+
+```yaml
+representation:
+  allowed:
+    - float_0_1
+  selected:
+    - float_0_1
+semantics:
+  float_0_1: Ratio of narrator chunks emitted within the 800ms budget versus total chunks over the last session.
+aggregation:
+  method: Weighted-minimum so one slow chunk flags the indicator instead of being averaged with faster ones.
+  display: The narrator health dashboard bursts amber/red when latency spikes exceed the budgeted ratio.
+```
+
+### DOCKS SELECTED
+
+```yaml
+docks:
+  input:
+    id: narrator_stream_request
+    method: engine.infrastructure.orchestration.narrator.NarratorService.stream_scene
+    location: engine/infrastructure/orchestration/narrator.py:140-180
+  output:
+    id: narrator_stream_events
+    method: agents/narrator/stream_dialogue.py:send
+    location: agents/narrator/stream_dialogue.py
+```
+
+### ALGORITHM / CHECK MECHANISM
+
+```yaml
+mechanism:
+  summary: Measure the wall-clock between event generation and SSE emission so ops know when a chunk leaves the narrator stream.
+  steps:
+    - Timestamp each chunk inside `NarratorService` before the SSE dispatcher takes ownership.
+    - Capture the matcher timestamp on emission and compute the delta per chunk.
+    - Mark the indicator as failed if the session’s weighted 90th percentile latency exceeds 800ms and log the offending chunk id.
+  data_required: Chunk timestamps from narrator output, SSE dispatcher telemetry, and the current SSE session identifier.
+  failure_mode: A slow chunk delays the entire stream, so downstream listeners see jittery, unresponsive narration.
+```
+
 ---
 
 ## HOW TO RUN
@@ -267,4 +322,5 @@ pytest engine/tests/test_narrator_integration.py -v
 - [ ] Could we automatically diff every scene against the previous SceneTree so the doctor flags contradictions before the player notices?
 - [ ] Explore instrumentation that correlates mutation_validity failures with the specific graph edges touched to speed up debugging.
 - [ ] Add a catalog that maps each indicator failure to the CLI warning it emits so future agents can triage alerts without guessing the root cause.
+- [ ] Instrument SSE latency tracking so the stream_latency indicator can point back to the exact chunk or network hop that introduced the delay.
 - QUESTION: Should the health indicator include runtime telemetry from SSE logs so we can correlate latency spikes with schema violations?

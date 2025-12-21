@@ -231,7 +231,7 @@ Playback control (speed/mode/pause) in the UI
 | `app/connectome/log_panel`                                                                                 | consumer module     | Reads the ledger, focus, explanation, and pacing fields that `commit_step_release_*` updates so the runtime engine’s releases are immediately visible. |
 | `app/connectome/lib/connectome_wait_timer_progress_and_tick_display_signal_selectors.ts`                    | observer module     | Reads the runtime store slices (wait progress, tick display, speed) to drive health meters and pacing indicators that confirm gating invariants.   |
 
-`initialize_connectome_runtime()` uses the same manifest to reveal the instrumentation nodes/edges listed in `connectome_system_map_node_edge_manifest.ts`, guaranteeing that the runtime gate, log panel, and telemetry health signals share the same canonical node/edge graph before any Next click runs.
+`initialize_connectome_runtime()` uses this manifest to reveal the instrumentation nodes/edges listed in `connectome_system_map_node_edge_manifest.ts`, guaranteeing the runtime gate, log panel, and telemetry health signals share the same canonical node/edge graph before any Next click runs.
 
 ### External Dependencies
 
@@ -239,8 +239,9 @@ Playback control (speed/mode/pause) in the UI
 | ------- | -------- | ----------- |
 | `zustand` | Provides the shared store hook consumed by `dispatch_runtime_command()` via `useConnectomeStore`. | `app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine.ts` |
 
----
+The `zustand` binding drives the shared store hook so both the logic chain and UI snapshot consumers (log panel, telemetry adapters, health monitors) read from the same orchestrated runtime state.
 
+---
 ## BIDIRECTIONAL LINKS
 
 ### Code → Docs

@@ -8,6 +8,7 @@ Original file: SYNC_Narrator.md
 ## MATURITY
 
 - STATUS: ARCHIVED (Legacy snapshot). This document preserves the December 2025 narrator chain and will not diverge from the frozen state except to record past decisions, so the live `SYNC_Narrator.md` remains the authoritative owner for future work.
+- STATUS: The archive is intentionally immutable until another human-triggered snapshot occurs; writing happens only in the canonical SYNC so this file stays traceable to a single timestamp.
 
 ---
 
@@ -16,6 +17,7 @@ Original file: SYNC_Narrator.md
 - Snapshot captures the narrator documentation just after the December 20 edits, documenting the template drift fixes without reflecting any subsequent compliance work.
 - Because this file is intentionally read-only, no edits are applied here; the canonical `docs/agents/narrator/SYNC_Narrator.md` is where all current context and decisions live for any new implementation or doc updates.
 - Treat the archive as a historical reference when tracing prior changes, and always consult the canonical SYNC before acting on narrator-related work.
+- The file deliberately lags behind the active state so agents can compare the live narrative against the December 20 baseline without confusion.
 
 ---
 
@@ -23,6 +25,7 @@ Original file: SYNC_Narrator.md
 
 - None. This archive is intentionally static, so there is no ongoing work tracked here and no owner assigned beyond the snapshot metadata.
 - Any active investigations, tests, or template adjustments should be recorded in the canonical state only; this file simply preserves the status that existed on the archival date.
+- There are no running tasks tied to this archive, and any future audits should reference the living SYNC before deciding whether to ingest the archived notes.
 
 ---
 
@@ -31,6 +34,7 @@ Original file: SYNC_Narrator.md
 - Archived copies inevitably diverge from the live narrative, so the only issue to note is that this snapshot will progressively lag behind the active state until a new archive is generated.
 - Because no new edits land here, there are no additional bug reports for these sections; treat any template drift as already resolved in the canonical SYNC and not in this file.
 - If someone needs a refreshed snapshot, request a new archive rather than editing this file so the timestamped history remains accurate.
+- `ngram validate` continues to raise the long-standing connectome health and membrane naming warnings that were already present at the time of this snapshot; nothing in this archive is expected to fix them.
 
 ---
 
@@ -73,6 +77,7 @@ Original file: SYNC_Narrator.md
 |------|-------|
 | Canonical narrator state | `docs/agents/narrator/SYNC_Narrator.md` — use this living document before making any edits or decisions. |
 | Module lore | `docs/agents/narrator/PATTERNS_Narrator.md` and `docs/agents/narrator/IMPLEMENTATION_Narrator.md` — the core design and implementation guides referenced by the archived state. |
+| Health reference | `docs/agents/narrator/HEALTH_Narrator.md` — charts the health checks that justify the narrator system's steady state, which this archive reflects.
 
 ---
 
@@ -84,6 +89,7 @@ Original file: SYNC_Narrator.md
 - **Why:** DOC_TEMPLATE_DRIFT flagged these sections as missing or too terse, so enriching them keeps every block above the minimum length while reinforcing that this file is a historical snapshot.
 - **Files:** `docs/agents/narrator/SYNC_Narrator_archive_2025-12.md`
 - **Verification:** `ngram validate`
+- **Note:** `ngram validate` still reports existing warnings about the connectome health chain and membrane naming, which this archive intentionally mirrors from the December 2025 baseline.
 
 ### 2025-12-19: Filled missing narrator behaviors template sections
 

@@ -5,46 +5,15 @@ Scope: Legacy CLI notes consolidated for size reduction.
 
 ---
 
-## MATURITY
+## STATUS
 
-- STATUS: ARCHIVED (legacy snapshot, not part of active work)
+- STATUS: ARCHIVED (legacy snapshot)
 
-## CURRENT STATE
+This legacy overview is preserved inside `docs/cli/archive/SYNC_CLI_State_Archive_2025-12.md` under the **Legacy snapshot (2024-12)** section. Refer there for the condensed history and pointer to the active CLI archive.
 
-- Captures the CLI doc history preceding 2025; no active items remain.
+## CHAIN
 
-## IN PROGRESS
-
-- None; this archive is read-only.
-
-## RECENT CHANGES (ARCHIVED)
-
-- Historical CLI refactor notes and extraction history were rolled into the 2025 snapshot for context.
-- No 2024 items remain active; the file keeps a placeholder for legacy imports.
-
-## KNOWN ISSUES
-
-- None; the file only records historical notes and should not drive current decisions.
-
-## HANDOFF: FOR AGENTS
-
-- Refer to `docs/cli/core/SYNC_CLI_Development_State.md` for anything actionable; this file provides legacy context only.
-
-## HANDOFF: FOR HUMAN
-
-- No action required unless auditing legacy CLI doc decisions.
-
-## TODO
-
-- [ ] Archive future CLI snapshots in the same folder once the active structure stabilizes.
-
-## CONSCIOUSNESS TRACE
-
-- Retain this archive only while comparing pre-2025 doc choices; drop once the 2024 history is referenced elsewhere.
-
-## POINTERS
-
-| What | Where |
-|------|-------|
-| Active CLI SYNC | `docs/cli/core/SYNC_CLI_Development_State.md` |
-| 2025 CLI archive | `docs/cli/archive/SYNC_CLI_State_Archive_2025-12.md` |
+```
+THIS: ./SYNC_archive_2024-12.md
+CANONICAL: ./SYNC_CLI_State_Archive_2025-12.md
+```

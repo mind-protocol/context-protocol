@@ -110,12 +110,31 @@ Ran `npm run lint` after WebGL click handling (clean; TypeScript 5.5.4 unsupport
 - **Impact:** Documentation only; physics sync and pointer lists now reference the new path.
 - **Trace:** CHAIN entries in `docs/physics/SYNC_Physics.md` + this state log now affirm the algorithm subfolder as the authoritative location for mechanism-level mappings.
 
+### 2025-12-21: Consolidated CLI command algorithms
+
+- **What:** Merged the `init`, `validate`, `doctor`, `repair`, `markers`, `refactor`, and `docs-fix` algorithm writeups into `docs/cli/core/ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md`, deleted the redundant command-specific ALGORITHM docs, and refreshed the CLI SYNC/map assets to point at the canonical location.
+- **Why:** Keeps one authoritative CLI algorithm doc so the doctor/repair tooling has a single source of truth and prevents drift from duplicate copies.
+- **Files:** `docs/cli/core/ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md`, `docs/cli/core/SYNC_CLI_Development_State.md`, `docs/cli/modules.md`, `map.md`, `docs/map.md`, `map_docs.md`, `map_docs_cli.md`, `ngram/docs_fix.py`
+
+### 2025-12-21: Consolidated CLI implementation docs
+
+- **What:** Moved the CLI IMPLEMENTATION sections into `overview/`, `structure/`, `runtime/`, and `schema/` subfolders, updated CHAIN/DOCS references, and refreshed map assets so each folder hosts a single IMPLEMENTATION doc tied to a canonical path.
+- **Why:** Resolves the duplicate IMPLEMENTATION warning and keeps every consumer tracing to the same canonical doc without ambiguity, while preventing future splits from drifting.
+- **Files:** `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/overview/IMPLEMENTATION_Overview.md`, `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/structure/IMPLEMENTATION_Code_Structure.md`, `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/runtime/IMPLEMENTATION_Runtime_And_Dependencies.md`, `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/schema/IMPLEMENTATION_Schema.md`, `docs/cli/modules.md`, `map.md`, `docs/map.md`, `map_docs.md`, `map_docs_cli.md`
+
 ### 2025-12-21: Mechanism map folded into canonical physics algorithm
 
 - **What:** Added the mechanism-level function map to `ALGORITHM_Physics_Energy_Mechanics_And_Link_Semantics.md` and converted `docs/physics/algorithms/ALGORITHM_Physics_Mechanisms.md` into a deprecated stub that points readers to the consolidated section while keeping implementation references intact.
 - **Why:** Keep a single canonical ALGORITHM doc while still letting mechanism-level lookups succeed through the algorithms folder.
 - **Impact:** Documentation only; physics doc layout now has one canonical algorithm with an accessible stub path.
 - **Validation:** `ngram validate`
+
+### 2025-12-21: Consolidated CLI archive SYNC docs
+
+- **What:** Merged the 2025 development snapshot and the 2024 legacy summary into `docs/cli/archive/SYNC_CLI_State_Archive_2025-12.md` and turned the original archive files into pointers so the `archive/` folder now hosts a single SYNC history.
+- **Why:** Eliminates duplicate SYNC documents while keeping the preserved insights accessible from the canonical archive.
+- **Files:** `docs/cli/archive/SYNC_CLI_State_Archive_2025-12.md`, `docs/cli/archive/SYNC_CLI_Development_State_archive_2025-12.md`, `docs/cli/archive/SYNC_archive_2024-12.md`, `.ngram/state/SYNC_Project_State.md`
+- **Tests:** `ngram validate`
 
 ---
 

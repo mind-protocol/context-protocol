@@ -59,10 +59,30 @@ Original file: SYNC_CLI_State.md
 - TUI archive: `../../tui/archive/SYNC_TUI_State_Archive_2025-12.md`
 ---
 
+## MERGED SNAPSHOTS
+
+This file now subsumes the historical snapshots that were previously stored in the other `SYNC` documents below; those files now point readers here so the archive history stays centralized.
+
+### Development snapshot (2025-12-20)
+
+- Escaped literal escalation/proposition markers across the CLI docs to keep doc scanners honest and kept the archive focused on the same `context` as the active work.
+- Repaired `spawn_repair_agent_async`, added the missing `DoctorConfig` import, and documented the improved retry/control flow.
+- Added proposition support (`solve-markers`), LOG_ERROR health checks for `.log` issues, and externalized repo-overview scan length plus the SVG namespace config.
+- Updated `modules.yaml` with the cleaned CLI module mapping, simplified `docs/cli` content to trim size, and verified `ngram/repair_core.py` no longer trips INCOMPLETE_IMPL false positives.
+
+### Legacy snapshot (2024-12)
+
+- Captures the CLI history that preceded the 2025 rework and confirms that no active work items remain in that era.
+- Retains a lightweight summary of the pre-2025 features and instruction to treat the file as read-only legacy context.
+
+The original files `SYNC_CLI_Development_State_archive_2025-12.md` and `SYNC_archive_2024-12.md` now act as pointers to this canonical archive while the content above preserves their highlights.
+
 ## CHAIN
 
 ```
 THIS: ./SYNC_CLI_State_Archive_2025-12.md
+ARCHIVE_DEV: ./SYNC_CLI_Development_State_archive_2025-12.md
+ARCHIVE_LEGACY: ./SYNC_archive_2024-12.md
 ```
 
 ---

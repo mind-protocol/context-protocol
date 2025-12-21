@@ -34,11 +34,11 @@ Implemented node component variants with consistent theming, energy badges, step
 
 ## IN PROGRESS
 
-Tracking the flipped node signal source and the unbounded versus 0..1 energy scale quibble while the node kit styling stays stable so downstream agents can land on the canonical wiring before the module is marked ready.
+Tracking the flipped node signal source and the unbounded versus 0..1 energy scale quibble while the node kit styling stays stable so downstream agents can land on the canonical wiring before the module is marked ready. The signal source story is paired with energy badge telemetry reviews so that the energy bucket mapping can be locked and the canonical status can be claimed without visual drift.
 
 ## KNOWN ISSUES
 
-- Node energy bucket mappings remain under review because the flipped signal source is still in design and may relabel buckets until the wiring is finalized.
+- Node energy bucket mappings remain under review because the flipped signal source is still in design and may relabel buckets until the wiring is finalized, so every future story that surfaces bucket translations needs to reference this sync entry.
 - `ngram validate` continues to surface DOC_TEMPLATE_DRIFT warnings for the broader `docs/connectome/health` stack, so the node kit sync now documents its own compliance while the health docs stay on the radar.
 - The only verification for node visibility, energy, and timer truths is the manual `pnpm connectome:health node_kit` run, so automation is still needed before this module can be assumed canonical.
 

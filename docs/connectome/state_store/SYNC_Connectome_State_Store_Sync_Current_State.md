@@ -181,7 +181,7 @@ pnpm connectome:health state_store
 
 * The implementation doc now lists the missing schema, flow, logic, dependency, runtime, and concurrency guidance so the chain is doc-template-compliant.
 * Completed the PATTERNS behaviors template so the guardrail summary now lives next to the problem/pattern narrative.
-* Logged that the health doc now orders indicator decisions in AGENT OBSERVATIONS so downstream agents know which dock types feed each signal.
+* Logged that the health doc now orders indicator decisions in AGENT OBSERVATIONS and explicitly references the dock taxonomy so downstream agents know which signal sources to trust.
 * Confirmed the schema, flow-by-flow docking, logic chains, module dependencies, runtime behavior, and concurrency sections remain the canonical coverage referenced by this sync so future agents can trace the entire chain before updating the store.
 * Confirmed the schema, flow-by-flow docking, logic chains, module dependencies, runtime behavior, and concurrency sections remain the canonical coverage referenced by this sync so future agents can trace the entire chain before updating the store.
 * Confirmed the schema, flow-by-flow docking, logic chains, module dependencies, runtime behavior, and concurrency sections remain the canonical coverage referenced by this sync so future agents can trace the entire chain before updating the store.

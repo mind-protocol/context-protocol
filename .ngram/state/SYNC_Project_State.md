@@ -106,15 +106,19 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Files:** `docs/connectome/node_kit/IMPLEMENTATION_Connectome_Node_Kit_Component_Map_And_Styling_Tokens.md`, `docs/connectome/node_kit/SYNC_Connectome_Node_Kit_Sync_Current_State.md`
 - **Validation:** `ngram validate` *(fails: pre-existing `docs/connectome/health` doc gaps, the `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and existing CHAIN-link warnings already reported to the doctor)*
 
+### 2026-03-22: Expand node kit implementation template coverage
+
+- **What:** Added DESIGN PATTERNS, SCHEMA, LOGIC CHAINS, MODULE DEPENDENCIES, STATE MANAGEMENT, RUNTIME BEHAVIOR, CONCURRENCY MODEL, and DATA FLOW AND DOCKING content to `docs/connectome/node_kit/IMPLEMENTATION_Connectome_Node_Kit_Component_Map_And_Styling_Tokens.md` so every required template block now satisfies the DOC_TEMPLATE_DRIFT warning for this file.
+- **Why:** The doctor reported `docs/connectome/node_kit/IMPLEMENTATION_Connectome_Node_Kit_Component_Map_And_Styling_Tokens.md` as missing those sections; filling them keeps the implementation chain canonical for future runtime changes.
+- **Files:** `docs/connectome/node_kit/IMPLEMENTATION_Connectome_Node_Kit_Component_Map_And_Styling_Tokens.md`, `docs/connectome/node_kit/SYNC_Connectome_Node_Kit_Sync_Current_State.md`
+- **Validation:** `ngram validate` *(fails: pre-existing `docs/connectome/health` doc gaps, the `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and existing CHAIN-link warnings already reported to the doctor)*
+
 ### 2026-03-19: Fill node kit sync template sections
 
-- **What:** Added the IN PROGRESS, KNOWN ISSUES, handoff, consciousness trace, agent observations, and pointer narratives to `docs/connectome/node_kit/SYNC_Connectome_Node_Kit_Sync_Current_State.md` so the DOC_TEMPLATE_DRIFT #11 template now describes the active work and canonical doc map for this module.
+- **What:** Added the IN PROGRESS, KNOWN ISSUES, handoff, consciousness trace, agent observations, and pointer narratives to `docs/connectome/node_kit/SYNC_Connectome_Node_Kit_Sync_Current_State.md` so the DOC_TEMPLATE_DRIFT #11 template now describes the active work, verification gaps, and canonical doc map for this module.
 - **Why:** The doctor flagged the node kit sync as missing these sections, so the new entry preserves the template compliance story before any further node kit work proceeds.
 - **Files:** `docs/connectome/node_kit/SYNC_Connectome_Node_Kit_Sync_Current_State.md`
 - **Verification:** `ngram validate`
--- **Notes:** `ngram validate` still reports pre-existing `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the legacy CHAIN link warnings tracked by the doctor.
--- **Notes:** `ngram validate` still reports pre-existing `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the legacy CHAIN link warnings tracked by the doctor.
--- **Notes:** `ngram validate` still reports pre-existing `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the legacy CHAIN link warnings tracked by the doctor.
 
 ### 2026-03-22: Enrich node kit HEALTH verification narrative
 

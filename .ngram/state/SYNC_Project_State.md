@@ -106,6 +106,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **Files:** `docs/connectome/log_panel/HEALTH_Connectome_Log_Panel_Runtime_Verification_Of_Log_Truth_And_Export_Integrity.md`, `docs/connectome/log_panel/SYNC_Connectome_Log_Panel_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate` *(fails: docs/connectome/health still lacks PATTERNS/SYNC, docs/engine/membrane naming mismatch, and the outstanding CHAIN warnings).* 
 
+### 2025-12-21: Log panel behavior doc objectives and I/O added
+
+- **What:** Added OBJECTIVES SERVED plus INPUTS / OUTPUTS coverage to the log panel behavior doc and recorded the update here so downstream agents know the narrative now spells out the canonical goals, store signals, and copy/export outputs for the unified ledger experience.
+- **Why:** DOC_TEMPLATE_DRIFT #11 flagged those sections as missing, so this record keeps the project history aligned with the doc chain before other agents rely on the log panel behavior contract.
+- **Files:** `docs/connectome/log_panel/BEHAVIORS_Connectome_Log_Panel_Step_Clarity_And_Copyable_Audit_Trail_Effects.md`, `docs/connectome/log_panel/SYNC_Connectome_Log_Panel_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` *(fails: still reports docs/connectome/health PATTERNS/SYNC gaps plus docs/physics naming and CHAIN warnings tracked by the doctor)*.
+
 ### 2026-04-01: Reaffirm node kit behavior template fix
 
 - **What:** Logged the OBJECTIVES/INPUTS/Status/Notes/Impact/Trace content added to `docs/connectome/node_kit/BEHAVIORS_Connectome_Node_Kit_Visible_Clarity_And_Trust_Effects.md` so every agent following the RECENT CHANGES trail immediately finds the issue #11 repair.

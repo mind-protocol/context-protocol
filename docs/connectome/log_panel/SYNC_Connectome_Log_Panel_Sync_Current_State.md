@@ -40,6 +40,13 @@ Implemented LogPanel with a “Now” section, ledger list, duration color rules
 * **Files:** `docs/connectome/log_panel/ALGORITHM_Connectome_Log_Panel_Log_Rendering_Duration_Coloring_And_Export.md`
 * **Validation:** `ngram validate` *(still fails for the pre-existing `docs/connectome/health` PATTERNS/SYNC gaps, the `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the legacy CHAIN link warnings tracked by the doctor).*
 
+### 2026-04-03: Document log panel health streaming metadata
+
+* **What:** Added a note about the `connectome.health.log_panel` stream metadata and the Forwarding & Displays block so this SYNC references the same indicator/event/duration metadata that the health doc now describes.
+* **Why:** Operators and dashboards needed a pointer linking the binary health result to the streaming metadata, so recording it in the SYNC keeps the log panel chain traceable from the doc to the runtime stream.
+* **Files:** `docs/connectome/log_panel/HEALTH_Connectome_Log_Panel_Runtime_Verification_Of_Log_Truth_And_Export_Integrity.md`, this SYNC file
+* **Validation:** `ngram validate` *(fails: docs/connectome/health PATTERNS/SYNC gaps plus docs/physics naming/CHAIN warnings already logged elsewhere).*
+
 ### 2025-12-21: Expand behavior doc objectives and I/O coverage
 
 * **What:** Added rich OBJECTIVES SERVED plus INPUTS / OUTPUTS sections so the behavior document now lays out the canonical goals, audited signals, and copy/export payload expectations for the log panel.

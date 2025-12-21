@@ -38,6 +38,8 @@ The canvas renders a stable projection:
 
 The connectome flow canvas must feel like a reliable operating console: readout labels stay legible while zooming, simultaneous pan/zoom gestures keep the focus locked to the current step, and the projection keeps the runtime intent explicit instead of fading into a static graph. By honoring these objectives we reinforce the BEHAVIORS contract (readability, stable glow, anti-disappearance) and allow the canvas to behave predictably whenever the engine state changes or the user commands a reset.
 
+The surface should also reflect instrumentation demand: rendering refreshes log the active camera state so health checks can replay where edges *should* be, while focus glows & energy pulses keep the runtime traceable to the steps listed in the stepper panel.
+
 ---
 
 ## ALGORITHM: `render_flow_canvas_frame(store_state, camera, interaction_queue)`
@@ -47,6 +49,8 @@ The connectome flow canvas must feel like a reliable operating console: readout 
 3. Run `route_edges_and_place_labels` so every connector has a deterministic curve and label candidate, applying declutter offsets before the renderer touches the edge layer.
 4. Apply `apply_camera_transform(camera, world_coords)` to produce screen coordinates, draw zones first, then nodes, and finally edges so interactions hit nodes last while lines remain visible.
 5. Feed `interaction_queue` events (pan/zoom/resets) back to the state store so the next tick starts with updated camera deltas and the proven objectives continue to hold.
+
+Each step also emits telemetry events (`flow_canvas.render.commit`, `flow_canvas.camera.delta`) so the health probes have a docking point when verifying no edges disappeared or camera resets jump.
 
 ---
 
@@ -160,12 +164,15 @@ Must preserve:
 * Deterministic zone rectangles keep semantic context consistent across renders, reinforcing analytics workflows and preventing the layout from jumping when nodes shuffle.
 * Force-directed placement seeded near zone centers allows density to grow while still keeping the camera focus predictable, so we do not rely on manual drag-and-drop.
 * Label decluttering is handled by adaptive offsets with a final visibility gate rather than hiding entire connections, so the invariant that edges remain readable under zoom is upheld.
+* Every render step emits telemetry (camera, nodes, labels) tied to `flow_canvas.render.commit` and `flow_canvas.camera.delta` so downstream health checks can assert the surface stays within the documented invariants.
 
 ---
 
 ## DATA FLOW
 
 Canvas rendering is driven by a narrow data pipeline: the runtime engine updates `state_store` with `nodes/edges/zones/active_focus`, selectors expose that snapshot to the canvas component, and the algorithm chain here transforms it through layout + routing before the rendering layer writes the results into the WebGL context and overlay DOM labels. Camera events flow back through the same store, keeping the feedback loop tight and traceable.
+
+Telemetry flushes (`flow_canvas.render.commit`, `flow_canvas.camera.delta`) latch onto this pipeline so the health layer can replay the same store snapshot when verifying no edges vanished during a step change.
 
 ---
 
@@ -175,12 +182,13 @@ Canvas rendering is driven by a narrow data pipeline: the runtime engine updates
 * `nudge_colliding_labels(active_labels)` tracks recent offsets and applies small vertical shifts until proximity constraints are satisfied, handing off the final text placement to the renderer.
 * `project_world_to_screen(world_point, camera)` encapsulates the pan/zoom math so every consumer consistently applies the same transform stack.
 * `sync_hover_and_focus(node_or_edge, active_focus)` maintains the glowing state tied to the current runtime step, ensuring interactions match the documented BEHAVIORS.
+* `report_render_metrics(render_id, camera, nodes_count)` tags each frame with a telemetry payload so downstream health dashboards can assert the layout did not drop edges or camera fidelity.
 
 ---
 
 ## INTERACTIONS
 
-User interactions are constrained to pan, zoom, fit-to-view, reset, and focus clicks so the algorithm can preserve the invariants: pointer drags update camera pan/zoom, double-tap resets the viewport through `fit_view_to_zones()`, and node clicks forward the focus event to the runtime engine so the canvas reacts with a glow and logs the selection without rearranging geometry.
+User interactions are constrained to pan, zoom, fit-to-view, reset, and focus clicks so the algorithm can preserve the invariants: pointer drags update camera pan/zoom, double-tap resets the viewport through `fit_view_to_zones()`, and node clicks forward the focus event to the runtime engine so the canvas reacts with a glow and logs the selection without rearranging geometry. Interaction events that would mutate the stable layout (dragging nodes, editing edges) are ignored so the canvas never breaks the deterministic projection.
 
 ---
 

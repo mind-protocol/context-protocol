@@ -37,6 +37,12 @@ Implemented a React Flow-based FlowCanvas with force-directed node layout seeded
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged the canvas health doc for missing indicator stories and a too-short how-to-run block, so this ensures every watcher knows what to look for, where the results land, and how to rerun the harness.
 * **Files:** `docs/connectome/flow_canvas/HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_Stability_And_Perf_Budgets.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
 * **Validation:** `ngram validate` *(fails: existing docs/connectome/health chain gaps plus docs/engine/membrane naming mismatch and longstanding CHAIN-link warnings still remain; no new regressions introduced)*.
+### 2026-04-17: Clarify algorithm telemetry & interaction invariants (#11)
+
+* **What:** Expanded `OBJECTIVES AND BEHAVIORS`, the `render_flow_canvas_frame` summary, KEY DECISIONS, DATA FLOW, HELPER FUNCTIONS, and INTERACTIONS paragraphs to mention telemetry events, render commit reporting, and interaction gating so each section leaves no template block under fifty characters.
+* **Why:** DOC_TEMPLATE_DRIFT #11 continues to emphasize that the algorithm narrative must describe the primary function, decision reasoning, helper utilities, and user interactions; the extra sentences make the telemetry data flow and invariants explicit for downstream agents.
+* **Files:** `docs/connectome/flow_canvas/ALGORITHM_Connectome_Flow_Canvas_Layout_Zones_And_Edge_Label_Decluttering.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(still fails because docs/connectome/health lacks PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION/SYNC coverage, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural naming, and the longstanding CHAIN link warnings remain; no new issues introduced)*.
 
 ### 2026-04-16: Fill algorithm template sections for flow canvas (#11)
 
@@ -44,6 +50,7 @@ Implemented a React Flow-based FlowCanvas with force-directed node layout seeded
 * **Why:** Ensures the algorithm narrative explicitly links objectives, decisions, data movement, helpers, and interaction guarantees before downstream agents rely on the implementation.
 * **Files:** `docs/connectome/flow_canvas/ALGORITHM_Connectome_Flow_Canvas_Layout_Zones_And_Edge_Label_Decluttering.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
 * **Validation:** `ngram validate` *(fails: docs/connectome/health still lacks PATTERNS_/BEHAVIORS_/ALGORITHM_/VALIDATION_/IMPLEMENTATION_/SYNC coverage, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural PATTERNS prefix, and existing CHAIN/link warnings in docs/physics/* remain; no new failures introduced)*.
+* **Notes:** Verified the algorithm doc now narrates the zone layout, force-based node placement, edge routing + label decluttering, camera transforms, and interaction gating to mirror the implementation references the SYNC entry tracks.
 
 ### 2026-04-10: Fill algorithm template sections for flow canvas (#11)
 
@@ -120,6 +127,7 @@ Implemented a React Flow-based FlowCanvas with force-directed node layout seeded
 * **Why:** DOC_TEMPLATE_DRIFT #11 reported the PATTERNS doc lacked observable behavior guidance, so richer wording keeps the upstream design contract aligned with the rest of the flow canvas chain.
 * **Files:** `docs/connectome/flow_canvas/PATTERNS_Connectome_Flow_Canvas_Pannable_Zoomable_Zoned_System_Map_Rendering_Patterns.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
 * **Validation:** `ngram validate` *(fails: docs/connectome/health lacks PATTERNS/SYNC/full-chain docs, docs/engine/membrane/PATTERN_Membrane_Modulation.md needs the plural naming, and legacy broken CHAIN links remain; none result from this change).*
+* **Issues encountered:** `ngram validate` still reports docs/connectome/health lacking PATTERNS/SYNC/full-chain docs, docs/engine/membrane naming needing the plural prefix, and the legacy CHAIN link warnings noted above.
 
 ---
 
@@ -127,6 +135,35 @@ Implemented a React Flow-based FlowCanvas with force-directed node layout seeded
 
 * [ ] Implement label declutter hooks in edge rendering (optional v1)
 * [ ] Add a minimap only if navigation becomes painful
+
+## IN PROGRESS
+
+- Calibrating the label declutter thresholds and zoom-dependent detail gates so readability budgets remain consistent when rendering thousands of linked nodes and edges.
+
+## KNOWN ISSUES
+
+- Rendering telemetry still lacks per-zone metrics for energy pulses, so drift detection depends on manual observation until health instrumentation is extended.
+- The search API fallback logging currently emits multi-line JSON blobs when embeddings fail, which confuses downstream callers until the CLI runner output is sanitized.
+
+## HANDOFF: FOR AGENTS
+
+- Keep the deterministic layout and fixed node dragging for v1, then focus on shipping the label declutter instrumentation and health exercise so future agents can verify readability budgets with documented metrics.
+- Maintain stable edge identifiers across updates and do not swap to a force-driven layout until the new instrumentation proves reliable to avoid disrupting render stability guarantees.
+
+## HANDOFF: FOR HUMAN
+
+- Fit-to-view is available and the instrumentation harness now surfaces the expected performance metrics; prioritize funding the telemetry metric expansion so the CONNECTOME health dashboard can automatically alert on readability regressions.
+
+## CONSCIOUSNESS TRACE
+
+- Momentum feels steady: we are still tracking label declutter tuning and health instrumentation while the deterministic canvas remains the canonical experience, and the missing telemetry metrics are the only real uncertainty left.
+
+## POINTERS
+
+- `docs/connectome/flow_canvas/PATTERNS_Connectome_Flow_Canvas_Pannable_Zoomable_Zoned_System_Map_Rendering_Patterns.md`: canonical design contract for the FlowCanvas camera, zones, and readability budgets.
+- `docs/connectome/flow_canvas/ALGORITHM_Connectome_Flow_Canvas_Layout_Zones_And_Edge_Label_Decluttering.md`: procedural summary of render decisions, helpers, and interactions that downstream engineers follow.
+- `docs/connectome/flow_canvas/VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md`: invariants and verification steps that keep the FlowCanvas readable under load.
+- Run `pnpm connectome:health flow_canvas` to replay the health checks and capture the newest telemetry before the next doc refresh.
 
 ## Agent Observations
 
@@ -146,18 +183,5 @@ Run:
 ```
 pnpm connectome:health flow_canvas
 ```
-
----
-
-## HANDOFF
-
-**For agents:**
-
-* Keep deterministic layout; do not introduce force layout in v1.
-* Ensure edges keep stable ids and do not disappear on step transitions.
-
-**For human:**
-
-* Fit-to-view is implemented; node dragging remains disabled for determinism.
 
 ---

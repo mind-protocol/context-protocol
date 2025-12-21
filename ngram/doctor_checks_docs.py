@@ -8,7 +8,7 @@ Health checks that analyze documentation quality:
 - Large doc modules
 - Incomplete doc chains
 
-DOCS: docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md
+DOCS: docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/overview/IMPLEMENTATION_Overview.md
 """
 
 import re

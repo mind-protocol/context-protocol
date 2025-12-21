@@ -136,6 +136,12 @@ Ran `npm run lint` after WebGL click handling (clean; TypeScript 5.5.4 unsupport
 - **Files:** `docs/cli/archive/SYNC_CLI_State_Archive_2025-12.md`, `docs/cli/archive/SYNC_CLI_Development_State_archive_2025-12.md`, `docs/cli/archive/SYNC_archive_2024-12.md`, `.ngram/state/SYNC_Project_State.md`
 - **Tests:** `ngram validate`
 
+### 2025-12-21: Redirected schema-model SYNC to the engine canonical doc
+
+- **What:** `docs/schema/models/SYNC_Schema_Models.md` now redirects to `docs/engine/models/SYNC_Models.md` and `docs/schema/models/PATTERNS_Pydantic_Schema_Models.md` points at the canonical SYNC path; this removes the duplicate SYNC content flagged by DOC_DUPLICATION-models-SYNC_Schema_Models.
+- **Why:** Keep a single authoritative SYNC for the schema models while allowing the schema-focused docs to link into it; the canonical chain remains under `docs/engine/models/`.
+- **Tests:** `ngram validate` (fails: pre-existing docs/connectome/health gaps plus the membrane naming and several CHAIN link warnings noted above).
+
 ---
 
 ## ACTIVE WORK

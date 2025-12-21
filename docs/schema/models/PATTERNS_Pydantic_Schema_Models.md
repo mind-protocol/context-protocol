@@ -11,7 +11,7 @@ CREATED: 2025-12-19
 
 ```
 THIS:  PATTERNS_Pydantic_Schema_Models.md
-SYNC:  ./SYNC_Schema_Models.md
+SYNC:  ../../engine/models/SYNC_Models.md
 IMPL:  engine/models/__init__.py
 ```
 

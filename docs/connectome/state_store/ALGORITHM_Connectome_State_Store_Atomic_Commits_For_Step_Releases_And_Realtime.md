@@ -57,6 +57,11 @@ Every rendered release, telemetry export, and realtime tick now aligns to this
 store so downstream readers never chase divergent focus or timer values while
 observability surfaces relay the same ledger sequence recorded here.
 
+Health and telemetry dashboards rely on these objectives so they can replay the
+same ordering, cursor, and timer signals before any analyst raises a consistency
+flag, keeping inspectors confident that the commit they review matches the live
+stepper story.
+
 ---
 
 ## DATA STRUCTURES
@@ -190,6 +195,9 @@ Mark the chosen policy in SYNC once decided.
   materialize logs that mirror the committed sequence.
 - UI selectors rely on `active_focus`, `wait_progress`, `tick_display`, and
   `cursor` without writing back, trusting the store for focus/timer consistency.
+- Health harness listeners tie into the docking events emitted after each
+  commit so the manual `pnpm connectome:health state_store` check always reads a
+  complete ledger/focus/timer bundle before asserting invariants.
 
 ## HELPER FUNCTIONS
 
@@ -203,6 +211,9 @@ Mark the chosen policy in SYNC once decided.
   JSONL/text outputs without reordering or filtering events.
 - `notify_retention_policy(store)` checks eviction thresholds and trims `ledger`
   entries without mutating focus or explanation state prematurely.
+- `log_commit_transition(store, release)` records the action identifiers used by
+  telemetry and documentation exports so analysts can correlate commits with the
+  stepper release that produced them.
 
 ## INTERACTIONS
 
@@ -216,6 +227,9 @@ Mark the chosen policy in SYNC once decided.
   documentation and replay tools consistent with releases.
 - Connectome CLI helpers that snapshot the store expect these helper functions
   to keep serialization, export, and retention semantics predictable.
+- The manual `pnpm connectome:health state_store` harness watches the docking
+  events emitted after this algorithm’s commits so that health assertions only
+  run against fully consistent ledgers and timer signals.
 
 ## ALGORITHM: wait progress computation (selector)
 

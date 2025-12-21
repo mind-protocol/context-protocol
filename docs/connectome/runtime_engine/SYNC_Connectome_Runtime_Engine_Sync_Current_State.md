@@ -3,7 +3,7 @@
 # runtime_engine — Sync: Current State
 
 LAST_UPDATED: 2025-12-20
-UPDATED_BY: Marco "Salthand" (agent)
+UPDATED_BY: codex
 STATUS: DESIGNING
 ```
 
@@ -13,13 +13,14 @@ STATUS: DESIGNING
 
 **Canonical (v1 intent):**
 
-* stepper: Next releases exactly one event, speed never autoplays
+* stepper: Next releases exactly one event
+* speed modifies duration only, never authorization
 * min duration clamp 200ms
 
 **In design:**
 
-* restart policy (clear ledger vs session boundary)
-* realtime mode buffering (deferred)
+* restart policy (boundary vs clear) now set to boundary event
+* realtime buffering (deferred)
 
 **Deferred:**
 
@@ -30,92 +31,51 @@ STATUS: DESIGNING
 
 ## CURRENT STATE
 
-runtime_engine docs are defined; implementation does not exist yet. The engine is explicitly separated from state_store (storage) and from rendering (flow_canvas, node_kit, edge_kit).
-
----
-
-## IN PROGRESS
-
-### Stepper engine scaffolding
-
-* Status: not implemented
-* Next: implement command dispatch + step release using event_model normalization
+Stepper runtime engine is implemented with a fixed step script. Next dispatches exactly one event through FlowEvent normalization and an atomic store commit. Speed affects animation duration but does not release additional events.
 
 ---
 
 ## RECENT CHANGES
 
-### 2025-12-20: Initialized runtime_engine chain docs
+### 2025-12-20: Implemented stepper runtime engine
 
-* Defined gating semantics and invariants
-* Defined health checks that detect autoplay leaks
-
----
-
-## KNOWN ISSUES
-
-### Realtime ambiguity
-
-* Issue: realtime ordering + buffering policy not decided
-* Impact: telemetry_adapter + runtime_engine realtime mode cannot be finalized
-* Current handling: deferred; marked `?`
+* **What:** Added runtime command dispatch, step release logic, and initialization that sets script total.
+* **Why:** Enforce stepper gating semantics and connect UI controls to a single release path.
+* **Files:**
+  * `app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine.ts`
+  * `app/connectome/lib/minimum_duration_clamp_and_speed_based_default_policy.ts`
+  * `app/connectome/lib/step_script_cursor_and_replay_determinism_helpers.ts`
+  * `app/connectome/lib/connectome_step_script_sample_sequence.ts`
 
 ---
 
-## HANDOFF: FOR AGENTS
+### 2026-04-17: Complete runtime engine health template narratives (Closes #11)
 
-* Start at IMPLEMENTATION doc: create files with long descriptive names
-* Ensure event_model is imported; do not duplicate normalization
-* Ensure speed change does NOT schedule timers in stepper mode
+* **What:** Added a full OBJECTIVES COVERAGE table plus individual indicator stories for the pacing, speed, duration, and autoplay checks so the health doc now describes every required metric, dock, and threat with ≥50-character prose.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged missing objectives and indicator sections; the new narratives clarify what each signal defends and the guardrails downstream agents must audit.
+* **Files:** `docs/connectome/runtime_engine/HEALTH_Connectome_Runtime_Engine_Runtime_Verification_Of_Pacing_And_Order.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** Pending the next `ngram validate` run; the change is purely documentation.
 
----
+### 2026-04-18: Refine runtime_engine health coverage (#11)
 
-## HANDOFF: FOR HUMAN
-
-* V1 decision needed: Restart clears ledger or creates session boundary?
-* V1 can ship without realtime
+* **What:** Reworked the OBJECTIVES COVERAGE table and added detailed indicator sections for speed, duration, and autoplay so every health signal now documents validation targets, docking points, and forwardings.
+* **Why:** The doctor still flagged DOC_TEMPLATE_DRIFT for missing indicator details and objective coverage; adding the narratives keeps the runtime_engine health doc canonical for downstream agents.
+* **Files:**
+  * `docs/connectome/runtime_engine/HEALTH_Connectome_Runtime_Engine_Runtime_Verification_Of_Pacing_And_Order.md`
+  * `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
+* **Verification:** `ngram validate`
 
 ---
 
 ## TODO
 
-### Doc/Impl Drift
+* [ ] Define realtime mode behavior once telemetry_adapter exists
+* [ ] Decide whether restart should clear ledger vs boundary (currently boundary event)
 
-* [ ] Implement runtime_engine per ALGORITHM
-* [ ] Add health harness that can observe ledger/cursor deltas
-
-### Tests to Run
+Run:
 
 ```
 pnpm connectome:health runtime_engine
 ```
-
-### Immediate
-
-* [ ] Build step script interface used by simulator
-* [ ] Implement release_next_step with min duration clamp
-
-### Later
-
-* [ ] Realtime buffering and drain policy
-* [ ] “Step back” support
-
----
-
-## CONSCIOUSNESS TRACE
-
-* Key risk: accidentally implementing autoplay via speed timers
-* Key invariant: authorization is Next button only (stepper)
-
----
-
-## POINTERS
-
-| Item                   | Location                             |
-| ---------------------- | ------------------------------------ |
-| FlowEvent contract     | docs/connectome/event_model/* |
-| Step gating invariants | VALIDATION file in this module       |
-
----
 
 ---

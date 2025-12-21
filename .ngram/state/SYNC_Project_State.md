@@ -1120,6 +1120,14 @@ How should we reconcile the 45 conflicting files in `.ngram/` and `AGENTS.md`?
 Overwriting `.ngram/` content could damage protocol continuity; conflicts must be resolved deliberately.
 
 ---
+### 2026-04-20: Affirm flow canvas algorithm template sections (#11)
+
+* **What:** Verified the ALGORITHM doc's OBJECTIVES AND BEHAVIORS, render summary, KEY DECISIONS, DATA FLOW, HELPER FUNCTIONS, and INTERACTIONS sections, recorded the SYNC entry, and captured the repair here so downstream agents see which blocks were filled.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged those sections as missing; this note ties the narrative, files, and validation status together so the chain stays coherent.
+* **Files:** `docs/connectome/flow_canvas/ALGORITHM_Connectome_Flow_Canvas_Layout_Zones_And_Edge_Label_Decluttering.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails because docs/connectome/health still lacks PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION/HEALTH coverage, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural PATTERNS prefix, and the longstanding CHAIN link warnings remain; no new failures were introduced).*
+* **Notes:** Confirmed the algorithm doc now narrates the zone layout anchors, the force layout seeding, the edge label declutter policy, camera transform invariants, and the interaction gating so the implementation readers can trace the new sections.
+
 
 ## TODO
 

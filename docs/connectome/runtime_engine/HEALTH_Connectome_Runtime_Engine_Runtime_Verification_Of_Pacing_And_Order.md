@@ -127,11 +127,19 @@ health_indicators:
 
 ---
 
+## OBJECTIVES COVERAGE
+
+| Objective | Indicators | Why These Signals Matter |
+|-----------|------------|--------------------------|
+| Keep each manual step release deterministic so single-step debugging and logging remain trustworthy. | runtime_stepper_single_step_integrity, runtime_min_duration_enforced | These indicators verify the ledger/cursor deltas and animation duration clamp stay aligned with VALIDATION V1 and V3, preventing confusing double releases or blinking timelines. |
+| Ensure speed selections are purely presentation controls so playback experiments never alter the ledger or cursor without user consent. | runtime_speed_authorization_separation | This signal proves that changing speed leaves the authorization boundary intact and only adjusts animation defaults, protecting VALIDATION V2 from regressions. |
+| Prevent autoplay leaks so the stepper experience cannot drift into hidden automation that silently modifies the ledger. | runtime_autoplay_leak_detector | This indicator catches any event append that occurs without an explicit Next command, keeping the STEP/NO-STEP semantics intact for analysts and telemetry consumers. |
+
 ## STATUS (RESULT INDICATOR)
 
 ```
 status:
-stream_destination: "file:?/var/connectome/health/runtime_engine_status.json"
+  stream_destination: "file:?/var/connectome/health/runtime_engine_status.json"
 result:
 representation: enum
 value: UNKNOWN
@@ -280,6 +288,623 @@ signal: "OK/WARN/ERROR badge with tooltip counts"
 ```
 manual_run:
 command: "pnpm connectome:health runtime_engine"
+```
+
+--- 
+## INDICATOR: runtime_speed_authorization_separation
+
+### VALUE TO CLIENTS & VALIDATION MAPPING
+
+```
+value_and_validation:
+indicator: runtime_speed_authorization_separation
+client_value: "Operators can adjust playback speed without accidentally releasing runtime events."
+validation:
+- validation_id: V2
+criteria: "Speed changes must not alter ledger_length or cursor or release events in stepper mode."
+```
+
+### HEALTH REPRESENTATION
+
+```
+representation:
+selected: [enum]
+semantics:
+enum: "OK=speed change only affects duration defaults; WARN=duration drift observed; ERROR=unexpected ledger/cursor change"
+aggregation:
+method: "worst_state"
+```
+
+### DOCKS SELECTED
+
+```
+docks:
+input:
+- id: dock_speed_setting_updated
+type: event
+location: connectome/runtime_engine:speed_setting_selector(?)
+output:
+- id: dock_ledger_cursor_after_speed_change
+type: metric
+location: connectome/state_store:ledger_and_cursor_metrics(?)
+```
+
+### ALGORITHM / CHECK MECHANISM
+
+```
+mechanism:
+steps:
+- "Before applying a speed change, snapshot ledger_length and cursor."
+- "Apply new duration defaults and wait for the animation timer to settle."
+- "Ensure ledger_length and cursor remained unchanged; any delta is an alert."
+- "Emit OK/WARN/ERROR accordingly."
+```
+
+### INDICATOR
+
+```
+indicator:
+warning:
+- name: speed_duration_deviation_detected
+linked_validation: [V2]
+meaning: "Animation duration delta deviates from configured clamp, possible drift."
+default_action: warn/log
+error:
+- name: speed_triggers_event
+linked_validation: [V2]
+meaning: "Ledger_length or cursor changed after speed adjustment."
+default_action: page
+info:
+- name: speed_change_ok
+linked_validation: [V2]
+meaning: "Speed update touched duration defaults only."
+default_action: log
+```
+
+### THROTTLING STRATEGY
+
+```
+throttling:
+trigger: event
+max_frequency: "10/second"   # handle rapid slider movement
+burst_limit: 50
+backoff: "throttle after WARN"
+```
+
+### FORWARDINGS & DISPLAYS
+
+```
+forwarding:
+targets:
+- location: "/connectome UI status badge — runtime_engine"
+transport: event
+display:
+locations:
+- surface: UI
+location: "Speed control tooltip"
+signal: "enum badge explaining why speed changes are safe"
+```
+
+### MANUAL RUN
+
+```
+manual_run:
+command: "pnpm connectome:health runtime_engine --checker health_check_speed_does_not_release_steps"
+```
+
+---
+
+## INDICATOR: runtime_min_duration_enforced
+
+### VALUE TO CLIENTS & VALIDATION MAPPING
+
+```
+value_and_validation:
+indicator: runtime_min_duration_enforced
+client_value: "Every step release respects the readable minimum animation duration for visual clarity."
+validation:
+- validation_id: V3
+criteria: "Released events feature animation_duration_ms >= 200ms; early finishes are blocked."
+```
+
+### HEALTH REPRESENTATION
+
+```
+representation:
+selected: [enum]
+semantics:
+enum: "OK=duration >=200ms; WARN=marginally below clamp; ERROR=fast release"
+aggregation:
+method: "worst_state"
+```
+
+### DOCKS SELECTED
+
+```
+docks:
+input:
+- id: dock_release_animation_config
+type: config
+location: connectome/runtime_engine:animation_duration_config(?)
+output:
+- id: dock_animation_actual_duration
+type: metric
+location: connectome/log_panel:latest_release_duration(?)
+```
+
+### ALGORITHM / CHECK MECHANISM
+
+```
+mechanism:
+steps:
+- "When runtime_engine prepares a release, clamp duration to the MIN_ANIMATION_MS constant."
+- "After release, measure actual animation_duration_ms and compare it to the clamp limit."
+- "If below clamp, escalate immediately, otherwise emit OK."
+```
+
+### INDICATOR
+
+```
+indicator:
+warning:
+- name: duration_clamp_slipping
+linked_validation: [V3]
+meaning: "Detected duration slightly under the 200ms floor."
+default_action: warn/log
+error:
+- name: duration_fast_release
+linked_validation: [V3]
+meaning: "Animation finishes before MIN_ANIMATION_MS; playback feels like autoplay."
+default_action: page
+info:
+- name: duration_clamp_ok
+linked_validation: [V3]
+meaning: "Clamp maintained."
+default_action: log
+```
+
+### THROTTLING STRATEGY
+
+```
+throttling:
+trigger: event
+max_frequency: "1/0s"
+burst_limit: 100
+backoff: "none"
+```
+
+### FORWARDINGS & DISPLAYS
+
+```
+forwarding:
+targets:
+- location: "/connectome UI duration indicator"
+transport: event
+display:
+locations:
+- surface: UI
+location: "Right-hand timing indicator"
+signal: "enum summarizing clamp compliance"
+```
+
+### MANUAL RUN
+
+```
+manual_run:
+command: "pnpm connectome:health runtime_engine --checker health_check_min_duration_clamp_applied"
+```
+
+---
+
+## INDICATOR: runtime_autoplay_leak_detector
+
+### VALUE TO CLIENTS & VALIDATION MAPPING
+
+```
+value_and_validation:
+indicator: runtime_autoplay_leak_detector
+client_value: "Auditors can trust that only explicit Next commands release events in stepper mode."
+validation:
+- validation_id: E2
+criteria: "No events are appended when mode==stepper unless command==Next; autoplay leaks are banned."
+```
+
+### HEALTH REPRESENTATION
+
+```
+representation:
+selected: [enum]
+semantics:
+enum: "OK=no hidden releases; WARN=suspected leak; ERROR=confirmed event without Next"
+aggregation:
+method: "worst_state"
+```
+
+### DOCKS SELECTED
+
+```
+docks:
+input:
+- id: dock_mode_and_command_stream
+type: event
+location: connectome/runtime_engine:runtime_command_bus(?)
+output:
+- id: dock_ledger_append_events
+type: metric
+location: connectome/state_store:append_event(?)
+```
+
+### ALGORITHM / CHECK MECHANISM
+
+```
+mechanism:
+steps:
+- "Track runtime_command_bus events and ledger append operations."
+- "Whenever append_event occurs, verify the latest command was Next in stepper mode."
+- "Any violation transitions the indicator from WARN to ERROR."
+```
+
+### INDICATOR
+
+```
+indicator:
+warning:
+- name: autoplay_leak_suspected
+linked_validation: [E2]
+meaning: "Ledger append occurred without a recorded Next command, might be telemetry."
+default_action: warn/log
+error:
+- name: autoplay_leak_confirmed
+linked_validation: [E2]
+meaning: "Confirmed event appended when runtime was in stepper without Next."
+default_action: page
+info:
+- name: no_autoplay_leak
+linked_validation: [E2]
+meaning: "No anomalies detected."
+default_action: log
+```
+
+### THROTTLING STRATEGY
+
+```
+throttling:
+trigger: event
+max_frequency: "1/0s"
+burst_limit: 100
+backoff: "pause until Next"
+```
+
+### FORWARDINGS & DISPLAYS
+
+```
+forwarding:
+targets:
+- location: "/connectome health stream"
+transport: stream
+display:
+locations:
+- surface: UI
+location: "Autoplay shield badge"
+signal: "yellow/red badge when WARN/ERROR"
+```
+
+### MANUAL RUN
+
+```
+manual_run:
+command: "pnpm connectome:health runtime_engine --checker health_check_autoplay_leak_in_stepper_mode"
+```
+
+---
+
+## INDICATOR: runtime_speed_authorization_separation
+
+### VALUE TO CLIENTS & VALIDATION MAPPING
+
+```
+value_and_validation:
+indicator: runtime_speed_authorization_separation
+client_value: "Speed controls stay presentation-only so analysts can ramp playback faster without ledger drift or cursor jumps."
+validation:
+- validation_id: V2
+  criteria: "In stepper mode, toggling speed leaves ledger_length and cursor untouched while only animation duration defaults adjust."
+```
+
+### HEALTH REPRESENTATION
+
+```
+representation:
+selected: [enum]
+semantics:
+enum: "OK=speed change is presentation only; WARN=ledger/cursor shifted but release is recoverable; ERROR=extra release occurred."
+aggregation:
+method: "worst_state"
+```
+
+### DOCKS SELECTED
+
+```
+docks:
+input:
+- id: dock_speed_change_command_received
+  type: event
+  location: app/connectome/lib/minimum_duration_clamp_and_speed_based_default_policy.ts:32-75
+output:
+- id: dock_ledger_cursor_snapshot_after_speed_change
+  type: metric
+  location: app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine.ts:90-150
+```
+
+### ALGORITHM / CHECK MECHANISM
+
+```
+mechanism:
+steps:
+- "When the speed selector fires, capture ledger_length_before, cursor_before, and requested_duration_ms."
+- "After the runtime_engine applies the new speed, sample ledger_length_after and cursor_after."
+- "Assert deltas remain zero and the applied animation duration respects the computed defaults."
+- "Emit OK/WARN/ERROR depending on the ledger/cursor drift."
+```
+
+### INDICATOR
+
+```
+indicator:
+error:
+- name: speed_change_triggered_release
+  linked_validation: [V2]
+  meaning: "Ledger or cursor changed simply because speed changed."
+  default_action: page
+warning:
+- name: speed_change_cursor_drift
+  linked_validation: [V2]
+  meaning: "Cursor moved without logging an explicit release."
+  default_action: warn/log
+info:
+- name: presentation_only_speed_change
+  linked_validation: [V2]
+  meaning: "Speed change left ledger/cursor untouched."
+  default_action: log
+```
+
+### THROTTLING STRATEGY
+
+```
+throttling:
+trigger: event
+max_frequency: "1/0s"
+burst_limit: 60
+backoff: "linear"
+```
+
+### FORWARDINGS & DISPLAYS
+
+```
+forwarding:
+targets:
+- location: "/connectome UI badge — runtime_engine"
+  transport: event
+display:
+locations:
+- surface: UI
+  location: "Speed controls tooltip + log panel badge"
+  signal: "OK/WARN/ERROR description with last cursor/legal change"
+```
+
+### MANUAL RUN
+
+```
+manual_run:
+command: "pnpm connectome:health runtime_engine --checker health_check_speed_does_not_release_steps"
+```
+
+---
+
+## INDICATOR: runtime_min_duration_enforced
+
+### VALUE TO CLIENTS & VALIDATION MAPPING
+
+```
+value_and_validation:
+indicator: runtime_min_duration_enforced
+client_value: "Every released event respects the 200ms clamp so visual pacing stays readable and avoids stutter for storytellers."
+validation:
+- validation_id: V3
+  criteria: "Animation duration for each release is at least 200 milliseconds regardless of the speed selector."
+```
+
+### HEALTH REPRESENTATION
+
+```
+representation:
+selected: [enum]
+semantics:
+enum: "OK=clamp satisfied; WARN=duration nudged below 200ms but clamped; ERROR=clamp violation registered."
+aggregation:
+method: "worst_state"
+```
+
+### DOCKS SELECTED
+
+```
+docks:
+input:
+- id: dock_requested_duration_ms
+  type: config
+  location: app/connectome/lib/minimum_duration_clamp_and_speed_based_default_policy.ts:12-48
+output:
+- id: dock_applied_duration_ms
+  type: metric
+  location: app/connectome/lib/runtime_stepper_duration_clamp.ts:10-42
+```
+
+### ALGORITHM / CHECK MECHANISM
+
+```
+mechanism:
+steps:
+- "Record the requested animation_duration when a release command starts."
+- "After duration normalization, read the applied animation_duration from the runtime engine."
+- "Assert applied duration >= MIN_ANIMATION_MS (200ms) and clamp values are stable under repeated quick clicks."
+- "Emit OK if clamped properly, WARN if we nudged the clamp back up, ERROR when the clamp is ignored."
+```
+
+### INDICATOR
+
+```
+indicator:
+error:
+- name: duration_clamp_violated
+  linked_validation: [V3]
+  meaning: "Released animation finished faster than the 200ms minimum."
+  default_action: page
+warning:
+- name: duration_clamp_edge_case
+  linked_validation: [V3]
+  meaning: "Clamp nudging detected but result remains above the minimum."
+  default_action: warn/log
+info:
+- name: duration_clamp_respected
+  linked_validation: [V3]
+  meaning: "Every release met the minimum duration."
+  default_action: log
+```
+
+### THROTTLING STRATEGY
+
+```
+throttling:
+trigger: event
+max_frequency: "1/0s"
+burst_limit: 50
+backoff: "none"
+```
+
+### FORWARDINGS & DISPLAYS
+
+```
+forwarding:
+targets:
+- location: "logs/connectome_health/runtime_engine_duration.log"
+  transport: file
+display:
+locations:
+- surface: UI
+  location: "Log panel duration section + badge"
+  signal: "WARN/ERROR when duration clamp is not satisfied"
+```
+
+### MANUAL RUN
+
+```
+manual_run:
+command: "pnpm connectome:health runtime_engine --checker health_check_min_duration_clamp_applied"
+```
+
+---
+
+## INDICATOR: runtime_autoplay_leak_detector
+
+### VALUE TO CLIENTS & VALIDATION MAPPING
+
+```
+value_and_validation:
+indicator: runtime_autoplay_leak_detector
+client_value: "Runtime never appends an event without an explicit Next click so the stepper experience cannot silently autoplay."
+validation:
+- validation_id: E2
+  criteria: "In stepper mode, events are only emitted when Next is dispatched and not when other controls fire."
+- validation_id: V1
+  criteria: "Ledger_length and cursor deltas reflect the Next commands seen by the player."
+```
+
+### HEALTH REPRESENTATION
+
+```
+representation:
+selected: [enum]
+semantics:
+enum: "OK=no extra appends; WARN=unexpected append detected but reverted; ERROR=event committed without Next."
+aggregation:
+method: "worst_state"
+```
+
+### DOCKS SELECTED
+
+```
+docks:
+input:
+- id: dock_runtime_mode_and_command_state
+  type: event
+  location: app/connectome/lib/runtime_command_dispatch.ts:1-68
+output:
+- id: dock_ledger_append_event
+  type: metric
+  location: connectome/state_store:append_event (TODO: file reference pending)
+```
+
+### ALGORITHM / CHECK MECHANISM
+
+```
+mechanism:
+steps:
+- "When the runtime mode is stepper, watch for ledger_length increments."
+- "Correlate each increment with the most recent command event."
+- "If an increment occurs without a Next command, flag WARN and later ERROR if repeated."
+- "Forward the status to the health stream and log panel, and keep an evidence blob for reviewing race conditions."
+```
+
+### INDICATOR
+
+```
+indicator:
+error:
+- name: autoplay_leak_detected
+  linked_validation: [E2]
+  meaning: "Ledger advanced without a Next press."
+  default_action: page
+warning:
+- name: autoplay_leak_possible
+  linked_validation: [V1, E2]
+  meaning: "Command/ledger alignment suspicious but reversible."
+  default_action: warn/log
+info:
+- name: stepper_no_autoplay
+  linked_validation: [V1]
+  meaning: "No autop events tracked."
+  default_action: log
+```
+
+### THROTTLING STRATEGY
+
+```
+throttling:
+trigger: metric
+max_frequency: "1/0s"
+burst_limit: 20
+backoff: "conservative"
+```
+
+### FORWARDINGS & DISPLAYS
+
+```
+forwarding:
+targets:
+- location: "connectome.health.runtime_engine stream"
+  transport: stream
+display:
+locations:
+- surface: UI
+  location: "Log panel + runtime badge"
+  signal: "ERROR when autoplay detected, WARN if suspicious cursor drift occurs"
+```
+
+### MANUAL RUN
+
+```
+manual_run:
+command: "pnpm connectome:health runtime_engine --checker health_check_autoplay_leak_in_stepper_mode"
 ```
 
 ---

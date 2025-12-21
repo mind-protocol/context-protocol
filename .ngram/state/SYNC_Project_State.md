@@ -112,8 +112,16 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Why:** The doctor flagged the node kit sync as missing these sections, so the new entry preserves the template compliance story before any further node kit work proceeds.
 - **Files:** `docs/connectome/node_kit/SYNC_Connectome_Node_Kit_Sync_Current_State.md`
 - **Verification:** `ngram validate`
-- **Notes:** `ngram validate` still reports pre-existing `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the legacy CHAIN link warnings tracked by the doctor.
-- **Notes:** `ngram validate` still reports pre-existing `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the legacy CHAIN link warnings tracked by the doctor.
+-- **Notes:** `ngram validate` still reports pre-existing `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the legacy CHAIN link warnings tracked by the doctor.
+-- **Notes:** `ngram validate` still reports pre-existing `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the legacy CHAIN link warnings tracked by the doctor.
+-- **Notes:** `ngram validate` still reports pre-existing `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the legacy CHAIN link warnings tracked by the doctor.
+
+### 2026-03-22: Enrich node kit HEALTH verification narrative
+
+- **What:** Rebuilt the node kit HEALTH doc so WHY THIS PATTERN, HOW TO USE THIS TEMPLATE, OBJECTIVES COVERAGE, STATUS, DOCK TYPES, health indicators, indicator-specific value/validation/docks/mechanisms, throttling, forwarding, and manual-run guidance now exist and exceed 50 characters per section.
+- **Why:** DOC_TEMPLATE_DRIFT #11 still flagged those sections as missing or too terse, so the richer health narrative now anchors each indicator directly to the VALIDATION invariants before downstream agents rely on the manual health harness.
+- **Files:** `docs/connectome/node_kit/HEALTH_Connectome_Node_Kit_Runtime_Verification_Of_Node_State_And_Visual_Signal_Truth.md`, `docs/connectome/node_kit/SYNC_Connectome_Node_Kit_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` *(fails: existing docs/connectome/health PATTERN/SYNC gaps, docs/physics/attention naming issues, and the longstanding CHAIN link warnings already tracked by the doctor).*
 
 ### 2026-03-08: Complete node kit PATTERNS behavior/data sections
 

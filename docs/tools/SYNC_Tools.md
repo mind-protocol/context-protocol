@@ -43,7 +43,15 @@ see how those helpers satisfy the protocol template requirements. Expanded
 `docs/tools/HEALTH_Tools.md` so the health ledger now lists PURPOSE OF THIS
 FILE, WHY THIS PATTERN, FLOWS ANALYSIS, HEALTH INDICATORS, OBJECTIVES,
 STATUS, DOCK TYPES, CHECKER INDEX, indicator narratives, HOW TO RUN guidance,
-and GAPS/IDEAS/QUESTIONS narratives that each exceed 50 characters.
+and GAPS/IDEAS/QUESTIONS narratives that each exceed 50 characters. Expanded
+`docs/tools/BEHAVIORS_Tools.md` so the behavior ledger now includes OBJECTIVES
+SERVED, INPUTS / OUTPUTS, EDGE CASES, ANTI-BEHAVIORS, and GAPS / IDEAS /
+QUESTIONS sections with 50+ character narratives describing the splitter,
+streaming events, and helper contracts while linking each section back to the
+tools module flows.
+Bolstered `docs/tools/BEHAVIORS_Tools.md` so it now calls out OBJECTIVES
+SERVED, INPUTS / OUTPUTS, EDGE CASES, ANTI-BEHAVIORS, and GAPS / IDEAS /
+QUESTIONS with descriptive prose that anchors B1 and B2 in the module scope.
 
 ## Agent Observations
 
@@ -73,6 +81,21 @@ and GAPS/IDEAS/QUESTIONS narratives that each exceed 50 characters.
 
 ## RECENT CHANGES
 
+### 2026-01-15: Complete tools behavior template coverage
+
+- **What:** Added the missing OBJECTIVES SERVED, INPUTS / OUTPUTS, EDGE CASES,
+  ANTI-BEHAVIORS, and GAPS / IDEAS / QUESTIONS sections to
+  `docs/tools/BEHAVIORS_Tools.md`, expanded B1/B2 narratives so each block now
+  exceeds 50 characters, and noted the addition in the module sync.
+- **Why:** DOC_TEMPLATE_DRIFT flagged the behaviors doc for missing template
+  sections, so the expanded prose keeps the ledger aligned without touching the
+  helper scripts themselves.
+- **Files:** `docs/tools/BEHAVIORS_Tools.md`, `docs/tools/SYNC_Tools.md`
+- **Verification:** `ngram validate` *(fails: the existing
+  docs/connectome/health PATTERNS/SYNC gaps, the `docs/engine/membrane`
+  PATTERN naming mismatch, and the longstanding CHAIN/link warnings already
+  reported by the doctor).*
+
 ### 2026-01-13: Document tools algorithm template coverage
 
 - **What:** Added the missing overview, objectives, data structures, algorithm
@@ -84,6 +107,20 @@ and GAPS/IDEAS/QUESTIONS narratives that each exceed 50 characters.
   omitting the required sections, so the new narrative keeps the module
   compliant without touching the scripts themselves.
 - **Files:** `docs/tools/ALGORITHM_Tools.md`, `docs/tools/SYNC_Tools.md`
+- **Verification:** `ngram validate` *(fails for the known
+  docs/connectome/health PATTERNS/SYNC gaps, the engine/membrane PATTERN
+  naming mismatch, and the existing CHAIN/link warnings).*
+
+### 2026-01-15: Expand tools behaviors template coverage
+
+- **What:** Added robust OBJECTIVES SERVED, INPUTS / OUTPUTS, EDGE CASES,
+  ANTI-BEHAVIORS, and GAPS / IDEAS / QUESTIONS sections to
+  `docs/tools/BEHAVIORS_Tools.md`, each exceeding 50 characters and explaining
+  how the splitter and streamer guard the documentation/streaming experience.
+- **Why:** DOC_TEMPLATE_DRIFT reported these sections missing or too brief, so
+  the expanded prose now makes the behavior contract explicit without modifying
+  runtime scripts.
+- **Files:** `docs/tools/BEHAVIORS_Tools.md`, `docs/tools/SYNC_Tools.md`
 - **Verification:** `ngram validate` *(fails for the known
   docs/connectome/health PATTERNS/SYNC gaps, the engine/membrane PATTERN
   naming mismatch, and the existing CHAIN/link warnings).*

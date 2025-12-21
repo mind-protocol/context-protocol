@@ -19,6 +19,13 @@ The World Runner is complete. It operates as an adapter between the Python game 
 
 ## RECENT CHANGES
 
+### 2026-01-07: Populate archive sync template sections
+
+- **What:** Documented MATURITY, CURRENT STATE, KNOWN ISSUES, TODO, CONSCIOUSNESS TRACE, and POINTERS inside `docs/agents/world-runner/archive/SYNC_archive_2024-12.md` so the ledger now satisfies the DOC_TEMPLATE_DRIFT requirements while leaving the archived payloads untouched.
+- **Why:** The archive previously lacked the mandatory template sections and could not be parsed as a complete state snapshot; the new sections now clarify its intent and structure for downstream agents.
+- **Files:** `docs/agents/world-runner/archive/SYNC_archive_2024-12.md`, `docs/agents/world-runner/SYNC_World_Runner.md`
+- **Verification:** `ngram validate`
+
 ### 2025-12-21: Document world-runner behavior objectives
 
 - **What:** Added an `OBJECTIVES SERVED` table for the behaviors doc and expanded the `Injection Interface` paragraph so every template block exceeds the 50+ character guidance and the objective story is explicit.
@@ -43,8 +50,8 @@ The World Runner is complete. It operates as an adapter between the Python game 
 
 ### 2026-01-03: Reconfirm world runner health template coverage
 
-- **What:** Verified `HEALTH_World_Runner.md` explicitly documents purpose, WHY THIS PATTERN, HOW TO USE THIS TEMPLATE, FLOWS ANALYSIS, HEALTH INDICATORS, OBJECTIVES COVERAGE, STATUS, DOCK TYPES, CHECKER INDEX, indicator narratives, HOW TO RUN instructions, and gap catalog entries so every template requirement now surfaces for future agents, and spelled out which flows, cadence, and indicator definitions feed the validation checks, capping the entry with the explicit list of indicator names so the doctor can map them back to VALIDATION.
-- **Why:** DOC_TEMPLATE_DRIFT previously flagged the health doc for missing or underspecified blocks; this reaffirmation keeps the ledger explicit before another agent edits the runner flows and gives the next agent a reference point for which sections satisfy the template guardrails.
+- **What:** Verified `HEALTH_World_Runner.md` explicitly documents purpose, WHY THIS PATTERN, HOW TO USE THIS TEMPLATE, FLOWS ANALYSIS, HEALTH INDICATORS, OBJECTIVES COVERAGE, STATUS, DOCK TYPES, CHECKER INDEX, indicator narratives, HOW TO RUN instructions, and gap catalog entries so every template requirement now surfaces for future agents, spelled out the original and interrupted flow cadence (0.5/min expected, 5/min bursts), and called out `background_consistency` plus `adapter_resilience` so the doctor can map them directly to VALIDATION.
+- **Why:** DOC_TEMPLATE_DRIFT previously flagged the health doc for missing or underspecified blocks; this reaffirmation keeps the ledger explicit before another agent edits the runner flows and notes the indicator list and execution rates so the guardrails stay traceable.
 - **Files:** `docs/agents/world-runner/HEALTH_World_Runner.md`, `docs/agents/world-runner/SYNC_World_Runner.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate`
 

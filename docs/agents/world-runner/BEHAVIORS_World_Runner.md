@@ -11,6 +11,7 @@ STATUS: Canonical
 ## Injection Interface
 
 The Runner returns a structured **Injection** for the Narrator.
+This interface is the only observable contract the Narrator consumes after a long action, so every call must describe what mutated, why time stopped, and how much duration remains before the next scene.
 
 ## BEHAVIORS
 
@@ -22,6 +23,17 @@ The Runner returns a structured **Injection** for the Narrator.
   world changes and news for narration context.
 - Emits low-urgency beats to the injection queue without interrupting the
   current scene, keeping narration flow smooth.
+
+## OBJECTIVES SERVED
+
+| Behavior ID | Objective | Why It Matters |
+|-------------|-----------|----------------|
+| B1 | Keep injection payloads grounded in deterministic evaluation of the canonical graph and tension flips so narrators see the same reality every run. | Ensures follow-up narration can rely on consistent world state instead of guessing what the runner did during the tick loop. |
+| B2 | Interrupt immediately when a player-facing flip occurs and surface the triggering payload along with the remaining duration for resumption. | Lets the narrator split long actions cleanly so players always react to interrupts with faithful context about why time stopped. |
+| B3 | Complete the requested duration when no player-facing flips arise, summarizing background changes and elapsed minutes for scene continuity. | Supplies narrators with the quiet aftermath data they need to keep world news and tension updates in sync without rerunning the simulation. |
+| B4 | Append low-urgency beats to the injection queue without interrupting the current scene, documenting supplemental reactions for optional narration. | Gives narrators optional hooks for flavor beats while preserving the smooth pacing of the ongoing scene and the deterministic interrupt contract. |
+
+The table above spells out how each observable behavior ties back to the runner contract so the narrator can audit interrupts, completions, and queued beats against explicit objectives before weaving the Injection into prose.
 
 ## INPUTS / OUTPUTS
 

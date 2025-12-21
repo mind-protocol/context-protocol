@@ -607,6 +607,7 @@ The refactor command can standardize doc moves once the import is staged.
 - Pointed the attention behavior/validation chains and `docs/physics/SYNC_Physics.md` at the canonical doc and recorded the cleanup in the physics sync trace.
 
 - Completed `docs/agents/world-runner/HEALTH_World_Runner.md` so every template section now exists; `ngram validate` still fails for known connectome/health doc gaps, the engine/membrane PATTERN naming issue, and existing broken CHAIN links.
+- Added the missing template sections to `docs/agents/world-runner/archive/SYNC_archive_2024-12.md` and recorded the update in `docs/agents/world-runner/SYNC_World_Runner.md`; `ngram validate` still fails for the pre-existing connectome/health, membrane naming, and CHAIN link issues but reports no new archive drift.
 
 ## ARCHIVE
 

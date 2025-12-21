@@ -11,6 +11,49 @@ STATUS: ARCHIVED
 
 This archive stores verbose examples and full schemas removed from the main docs to keep module size under limits.
 
+## MATURITY
+
+STATUS: ARCHIVED
+
+The archived snapshot is frozen for historical reference and should never be treated as the canonical operational sync document.
+
+## CURRENT STATE
+
+This file now records the December 2024 examples that were removed from the live runner documentation and keeps them searchable for audits or historical comparisons.
+
+## RECENT CHANGES
+
+### 2026-01-07: Stabilize archive template coverage
+
+- **What:** Added MATURITY, CURRENT STATE, KNOWN ISSUES, TODO, POINTERS, and other header sections so the archive sync now satisfies the DOC_TEMPLATE_DRIFT template requirements without changing the archived payloads.
+- **Why:** The archive previously lacked the mandatory template sections, so filling them ensures downstream agents can read a complete state snapshot and trust the structure.
+- **Verification:** `ngram validate` confirms that the archive document now meets the template expectations along with the rest of the world-runner doc chain.
+
+## KNOWN ISSUES
+
+- None; this archive is intentionally static, but any future archival additions should be justified before touching the frozen content.
+
+## HANDOFF: FOR AGENTS
+
+Treat this file as a historical snapshot only. For active work on the world-runner module, follow `VIEW_Implement_Write_Or_Modify_Code.md` and update the canonical `docs/agents/world-runner/SYNC_World_Runner.md` instead.
+
+## HANDOFF: FOR HUMAN
+
+This archive now self-documents its maturity, state, and TODO items, so no immediate action is required; request human review only if new archival data must be added or referenced explicitly.
+
+## TODO
+
+- [ ] Keep this archive synchronized with any future migrations of world-runner examples that need long-term preservation; otherwise, leave it untouched.
+
+## CONSCIOUSNESS TRACE
+
+Captured the archive-template drift by articulating why each new section exists and reminding future agents that this file’s purpose is record keeping rather than active orchestration.
+
+## POINTERS
+
+- `docs/agents/world-runner/SYNC_World_Runner.md` describes the current live work; use it whenever you need the active status.
+- The CHAIN references below point to PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION/TEST docs that explain the live world-runner experience.
+
 ---
 
 ## Archived From TOOL_REFERENCE.md

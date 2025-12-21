@@ -113,6 +113,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Files:** `docs/agents/world-runner/PATTERNS_World_Runner.md`, `docs/agents/world-runner/SYNC_World_Runner.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate`
 
+### 2026-01-03: Expand world-runner validation coverage
+
+- **What:** Added `BEHAVIORS GUARANTEED`, `OBJECTIVES COVERED`, and `HEALTH COVERAGE` sections to `docs/agents/world-runner/VALIDATION_World_Runner_Invariants.md` so every template block now exceeds 50 characters while tracing each guarantee back to the invariants and error conditions.
+- **Why:** DOC_TEMPLATE_DRIFT flagged those validation template blocks as missing, so populating them keeps the canonical validation ledger compliant without touching runtime behavior.
+- **Files:** `docs/agents/world-runner/VALIDATION_World_Runner_Invariants.md`, `docs/agents/world-runner/SYNC_World_Runner.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` *(reports the same pre-existing connectome/health and membrane naming warnings that preceded this repair).*
+
 ### 2025-12-21: Expand world runner health template coverage
 
 - **What:** Rebuilt `docs/agents/world-runner/HEALTH_World_Runner.md` so every template block (purpose, why, flows, objectives, indicators, docks, checkers, instructions, and gaps) now meets the 50+ character requirement.
@@ -147,13 +154,6 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Why:** DOC_TEMPLATE_DRIFT flagged the absence of the objectives block and `ALGORITHM: {Primary Function Name}` prose; expanding those sections brings the module back into template compliance without touching runtime behavior.
 - **Files:** `docs/agents/world-runner/ALGORITHM_World_Runner.md`, `docs/agents/world-runner/SYNC_World_Runner.md`
 - **Verification:** `ngram validate` *(fails: existing warnings remain—`docs/connectome/health` lacks PATTERNS/SYNC/chain documentation, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural prefix, and multiple CHAIN links across connectome/physics/CLI docs remain broken; these predate this repair).*
-
-### 2026-01-02: Expand world-runner validation coverage
-
-- **What:** Added `BEHAVIORS GUARANTEED`, `OBJECTIVES COVERED`, and `HEALTH COVERAGE` sections to `docs/agents/world-runner/VALIDATION_World_Runner_Invariants.md` so every template block now exceeds 50 characters while tracing each guarantee back to the invariants and error conditions.
-- **Why:** DOC_TEMPLATE_DRIFT flagged those validation template blocks as missing, so populating them keeps the canonical validation ledger compliant without touching runtime behavior.
-- **Files:** `docs/agents/world-runner/VALIDATION_World_Runner_Invariants.md`, `docs/agents/world-runner/SYNC_World_Runner.md`, `.ngram/state/SYNC_Project_State.md`
-- **Verification:** `ngram validate` *(reports the same pre-existing connectome/health and membrane naming warnings that preceded this repair).*
 
 ### 2026-01-01: Align World Runner SYNC template
 

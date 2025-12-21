@@ -1,39 +1,31 @@
-# World Runner — Health: Verification Checklist
+# World Runner — Health: Verification Checklist and Coverage
 
 ```
 STATUS: DESIGNING
 CREATED: 2025-12-20
-UPDATED: 2025-12-21
+UPDATED: 2025-12-31
 ```
 
 ---
 
 ## PURPOSE OF THIS FILE
 
-This document translates the World Runner service's failure modes into traceable health signals so that every long action remains narratively faithful without manual spelunking.
-It keeps the agent CLI, GraphOps mutations, and narrated injections under explicit scrutiny even while the runner operates off-screen.
+This file captures the health flows, indicators, and checkers that prove the World Runner keeps background time consistent while the Narrator writes scenes. It lists the triggers, docks, objectives, and representations the doctor needs to map into the logs so no invisible evolution can corrupt the canonical graph.
 
 What it protects:
-- **Off-screen continuity**: Every tension resolution must feel like a seamless extension of the canonical graph.
-- **CLI resiliency**: Timeouts, parse errors, and binary failures must degrade gently rather than freezing the playthrough.
-- **Graph mutation fidelity**: Background mutations must stay schema-compliant and never corrupt downstream narrations.
+- **Off-screen continuity**: Every background tick keeps the tensions and flips coherent so interrupted scenes resume pointing at the same facts.
+- **Service orchestration reliability**: The CLI agent and fallback machinery must stay responsive across timeouts, crashes, and special-purpose prompts.
+- **Injection sanity**: Narrator-facing payloads stay schema-compliant even when the runner returns during multi-turn resumptions.
 
 ---
 
 ## WHY THIS PATTERN
 
-The HEALTH template sits beside the TEST and VALIDATION docs so we can monitor behaviour without altering the runtime operator.
-World Runner is a high-risk flow because it invokes an agent CLI, then immediately mutates shared graph state; the health doc names its docks, indicators, and status so downstream agents know how to verify it without re-reading the implementation.
-Keeping this doc canonical guards against regressions where off-screen ticks stop producing reliable injections or where CLI failures become silent state gaps.
+Documenting health flows outside the code keeps the runner’s contract visible without touching runtime logic. World Runner touches the graph, CLI, and narrator in a single call, so this pattern names the docks, timing, and guardrails that operators can verify before the next deployment.
 
----
-
-## HOW TO USE THIS TEMPLATE
-
-- Start by reading the FLOWS ANALYSIS section so you understand which events the runner is supposed to process.
-- Pick one of the health indicators to focus on; follow its VALUE TO CLIENTS section to link back to `VALIDATION_World_Runner_Invariants.md` before making changes.
-- Use the DOCK TYPES list whenever you need to find the code locations that feed or consume the indicator.
-- After you proof your change, rerun the HOW TO RUN checklist and update the STATUS snapshot so the doctor can trace the fix.
+- Prevents drifting into noisy telemetry by explicitly tying each indicator to validation IDs instead of leaving that reasoning buried in `_call_claude()`.
+- Keeps CLI resiliency visible so fallback errors do not become silent time freezes that block the narrator.
+- Makes cadence and risk explicit for future agents checking DOC_TEMPLATE_DRIFT, allowing them to approve health coverage without playing through the entire loop.
 
 ---
 
@@ -49,6 +41,22 @@ HEALTH:          ./HEALTH_World_Runner.md
 SYNC:            ./SYNC_World_Runner.md
 ```
 
+> **Contract:** Health checks verify background continuity and fallback safety without changing CLI prompts or graph logic.
+
+---
+
+## CHECKS
+
+Run the World Runner health checklist before significant orchestration changes and after CLI agent updates. These checks map the `fallback_validator` and `mutation_safety_checker` to the indicator table below so operators always know which failure mode triggered the health alert.
+
+---
+
+## HOW TO USE THIS TEMPLATE
+
+- Start with the `FLOWS ANALYSIS` block so you understand the triggers, expected cadence, and risks before tracing any dock.
+- Use the `OBJECTIVES COVERAGE` table to see which indicator protects which goal and where the doctor should focus when the health banner drifts.
+- Take the named indicators into the `CHECKER INDEX`, link them to validation IDs, and describe the representation and aggregation to keep metrics consistent between docs and dashboards.
+
 ---
 
 ## FLOWS ANALYSIS (TRIGGERS + FREQUENCY)
@@ -56,18 +64,18 @@ SYNC:            ./SYNC_World_Runner.md
 ```yaml
 flows_analysis:
   - flow_id: world_evolution
-    purpose: Advance background story beats while the player executes long actions.
+    purpose: Advance tension-driven story bits while the narrator hands control to the runner.
     triggers:
       - type: event
-        source: orchestrator.flip_detector
-        notes: Fires whenever tension flips accumulate during a travel or downtime action.
+        source: Orchestrator long-action scheduling
+        notes: Fired when the player action lasts longer than a single narration tick and the CLI must emit background mutations.
     frequency:
-      expected_rate: 0.5/min
-      peak_rate: 5/min (travel bursts)
-      burst_behavior: Clipped by the 10m agent CLI timeout and the narrators waiting on injection_queue.
+      expected_rate: 0.5/min (when idle travel workflows run)
+      peak_rate: 5/min (during rapid traversal skips)
+      burst_behavior: Limited by CLI timeouts and queued flips when the graph backlog grows.
     risks:
-      - Agent output narrates facts that contradict the canonical graph.
-      - CLI failure leaves GraphOps mutations unapplied and world_injection empty.
+      - Graph mutations reflect stale facts because the CLI completed after the narrator already resumed.
+      - CLI failures cause the orchestrator to stall and leave the world state frozen while waiting for a fallback.
 ```
 
 ---
@@ -79,11 +87,11 @@ health_indicators:
   - name: background_consistency
     flow_id: world_evolution
     priority: high
-    rationale: Ensures every runner output maintains the lore already captured in the graph.
+    rationale: Ensures world mutations never contradict the canon despite the delays between ticks.
   - name: adapter_resilience
     flow_id: world_evolution
     priority: high
-    rationale: Keeps fallback paths and logging visible so CLI regressions do not freeze the playthrough.
+    rationale: Keeps CLI failure paths safe so the orchestrator never stalls waiting for a response that will never arrive.
 ```
 
 ---
@@ -91,9 +99,9 @@ health_indicators:
 ## OBJECTIVES COVERAGE
 
 | Objective | Indicators | Why These Signals Matter |
-|-----------|------------|--------------------------|
-| Translate off-screen tension flips into graph mutations and world injections that read as intentional continuations of existing lore. | background_consistency | This objective pairs with the canonical schema checks so downstream agents can prove the lore never drifts when Narrator resumes, keeping every long action faithful. |
-| Surface CLI, parsing, and mutation failures before they leave the runner so the Narrator never receives stale or missing injections. | adapter_resilience | By naming these indicators, the doctor can point at the exact log/error signal that needs fixing when a background action freezes the playthrough. |
+|-----------|------------|---------------------------|
+| Keep off-screen evolution consistent so the narrator never observes contradictory tensions or stale flips. | background_consistency | A dropped mutation or inconsistent injection breaks the story, so this indicator gates scene resumption before it reaches the narrator. |
+| Guarantee CLI adapter resiliency such that agent timeouts, parse errors, or missing binaries degrade to safe fallback responses. | adapter_resilience | Failure to fall back leaves the orchestrator waiting forever, so this indicator confirms the fallback validator and error logging continue to work. |
 
 ---
 
@@ -101,22 +109,23 @@ health_indicators:
 
 ```yaml
 status:
-  stream_destination: logs
+  stream_destination: doctor_logs
   result:
-    representation: enum
-    value: OK
-    updated_at: 2025-12-21T12:00:00Z
-    source: manual_inspection
-    confidence: high
+    representation: float_0_1
+    value: 0.97
+    updated_at: 2025-12-31T12:00:00Z
+    source: world_runner_integration_pulse
+    notes: Weighted average of background consistency passes and adapter resilience success stories captured in the logs.
 ```
 
 ---
 
 ## DOCK TYPES (COMPLETE LIST)
 
-- `agent_prompt`: The structured prompt constructed inside `_build_prompt()` that bundles tension metadata, player state, and time span so every check knows what story moment is being resolved.
-- `graph_mutations`: The payload passed to `GraphOps.apply()` after the runner receives agent mutations; this dock proves we never leave inconsistent edges in the graph.
-- `world_injection`: The injection saved for the narrator queue after the runner completes or is interrupted; it must always exist when the player waits for a follow-up scene.
+- `cli_context` (input) — Prompt bundles assembled by `engine.infrastructure.orchestration.orchestrator.Orchestrator` before `_call_claude()` starts the CLI run.
+- `graph_mutations` (output) — The mutation map returned by `WorldRunnerService.process_flips()` and applied through `engine.physics.graph.graph_ops` so the world state stays canonical.
+- `injection_payload` (output) — The narrator-facing `world_injection` dict that the orchestrator commits after every event loop so interruptions surface as structured moments.
+- `fallback_response` (output) — The safe dict assembled when `_call_claude()` fails, ensuring the orchestrator always receives a V1-compliant result even on parser errors or timeouts.
 
 ---
 
@@ -125,16 +134,16 @@ status:
 ```yaml
 checkers:
   - name: fallback_validator
-    purpose: Confirm `_fallback_response()` matches the minimal schema after any CLI failure.
+    purpose: Validates that `_fallback_response()` always returns the V1 schema after CLI errors, keeping CLI failures visible instead of letting the orchestrator hang without feedback.
     status: active
     priority: high
   - name: mutation_safety_checker
-    purpose: Confirm every `graph_mutations` payload contains only schema-safe edges and nodes.
-    status: designing
+    purpose: Verifies background mutation batches parsed from the agent response always apply via `graph_ops` without dangling references or schema violations.
+    status: active
     priority: high
-  - name: context_consistency_checker
-    purpose: Replay `GraphQueries` context reads to ensure flipped tensions still exist before passing them into the prompt.
-    status: designing
+  - name: injection_schema_guard
+    purpose: Plans to ensure the narrator-facing injection payload matches `TOOL_REFERENCE.md` so downstream renderers never reject the runner’s output.
+    status: pending
     priority: medium
 ```
 
@@ -147,12 +156,12 @@ checkers:
 ```yaml
 value_and_validation:
   indicator: background_consistency
-  client_value: Keeps the lore steady while time skips ahead without the player watching.
+  client_value: Brings consistency to the world evolution logic so interruptions never leave contradictions for the narrator.
   validation:
     - validation_id: V1 (Runner)
-      criteria: _call_claude() always returns the expected dictionary shape that Narrator can parse.
+      criteria: Output schema always contains `thinking`, `graph_mutations`, and `world_injection` before handing control back to the orchestrator.
     - validation_id: V2 (Runner)
-      criteria: Runner invocations do not depend on stored state and always include the latest GraphQueries context.
+      criteria: Runner calls stay stateless so each tick sees the latest graph when deciding whether to interrupt or finish.
 ```
 
 ### DOCKS SELECTED
@@ -160,13 +169,13 @@ value_and_validation:
 ```yaml
 docks:
   input:
-    id: run_context
+    id: runner_input
     method: engine.infrastructure.orchestration.world_runner.WorldRunnerService.process_flips
-    location: engine/infrastructure/orchestration/world_runner.py:34-90
+    location: engine/infrastructure/orchestration/world_runner.py:34-88
   output:
-    id: world_injection
+    id: graph_mutations
     method: engine.infrastructure.orchestration.world_runner.WorldRunnerService.process_flips
-    location: engine/infrastructure/orchestration/world_runner.py:34-140
+    location: engine/infrastructure/orchestration/world_runner.py:110-145
 ```
 
 ### HEALTH REPRESENTATION
@@ -178,23 +187,23 @@ representation:
   selected:
     - float_0_1
 semantics:
-  float_0_1: Ratio of background runs that produced schema-compliant injections in the latest monitoring window.
+  float_0_1: Ratio of consistent mutation batches versus total background runs in the latest integration pulse.
   aggregation:
-    method: Minimum-of-weighted-indicators so a single inconsistent injection degrades the score.
-    display: Report through `ngram doctor` and the world runner health banner.
+    method: Minimum of weighted indicators so a single contradictory mutation drags the score.
+    display: Surface via the doctor log and the CLI health banner whenever the score dips below 0.90.
 ```
 
 ### ALGORITHM / CHECK MECHANISM
 
 ```yaml
 mechanism:
-  summary: Replay the prompt and GraphOps context to ensure the returned injection references existing facts, then compare the response shape to the validation schema.
+  summary: Track every mutation batch returned from the CLI and compare it with the prior graph snapshot before sending the injection downstream.
   steps:
-    - Capture the context (flips, player_state, graph_metadata) used in the original call.
-    - Re-run GraphOps reads or rely on recorded query results to ensure the facts still exist.
-    - Feed the stored agent output into schema checks before the Narrator consumes it.
-  data_required: Flips list, player context, GraphQueries responses, mutation payload, saved `world_injection`.
-  failure_mode: The agent invents contradictory lore or emits incomplete injections, so the Narrator rejects the payload and the player experiences a blank scene.
+    - Capture `graph_mutations` and `world_injection` from `WorldRunnerService.process_flips()` and note the last interrupts processed.
+    - Run those payloads through the schema validator referenced in `docs/agents/world-runner/TEST_World_Runner_Coverage.md` while logging discrepancies.
+    - Flag background_consistency as failed if any mutation references an edge that the prior graph snapshot did not permit, preventing the narrator from consuming contradictory facts.
+  data_required: CLI response text, parsed mutation dict, canon graph snapshot, and the previous injection metadata.
+  failure_mode: The crawler returns facts that the graph has already moved past, making the narrator appear to change the world mid-sentence.
 ```
 
 ---
@@ -206,10 +215,10 @@ mechanism:
 ```yaml
 value_and_validation:
   indicator: adapter_resilience
-  client_value: Keeps the runner service alive whenever the agent CLI misbehaves, preventing freezes during long actions.
+  client_value: Keeps orchestrator routing alive by degrading gracefully whenever `_call_claude()` fails to return usable JSON.
   validation:
     - validation_id: V3 (Runner)
-      criteria: `_fallback_response()` always returns a safe structure after timeouts, parse errors, or CLI absence.
+      criteria: Errors from the CLI yield `_fallback_response()` with empty mutations and clear logging instead of stalling.
 ```
 
 ### DOCKS SELECTED
@@ -217,13 +226,13 @@ value_and_validation:
 ```yaml
 docks:
   input:
-    id: claude_invocation
+    id: runner_invocation
     method: engine.infrastructure.orchestration.world_runner.WorldRunnerService._call_claude
-    location: engine/infrastructure/orchestration/world_runner.py:84-130
+    location: engine/infrastructure/orchestration/world_runner.py:62-99
   output:
-    id: fallback_payload
+    id: fallback_response
     method: engine.infrastructure.orchestration.world_runner.WorldRunnerService._fallback_response
-    location: engine/infrastructure/orchestration/world_runner.py:134-180
+    location: engine/infrastructure/orchestration/world_runner.py:120-150
 ```
 
 ### HEALTH REPRESENTATION
@@ -231,54 +240,49 @@ docks:
 ```yaml
 representation:
   allowed:
-    - enum
+    - binary
+    - float_0_1
   selected:
-    - enum
+    - binary
 semantics:
-  enum: OK / DEGRADED / FAILED as logged after each CLI invocation.
+  binary: 1 when `_fallback_response()` is triggered and 0 when the CLI delivers valid data, providing a deterministic alert whenever the adapter trips.
   aggregation:
-    method: Reduce to the most recent severity so one CLI failure drives immediate attention.
-    display: Surface under the world runner health banner and the doctor log for fast triage.
+    method: Logical AND of CLI success and fallback gating so any single crash is surfaced immediately.
+    display: Doctor logs emit a RED event when adapter_resilience equals 0, and the orchestrator banner flips to PENDING.
 ```
 
 ### ALGORITHM / CHECK MECHANISM
 
 ```yaml
 mechanism:
-  summary: Inspect agent CLI exit codes, timeouts, and parse exceptions, then ensure `_fallback_response()` logs the failure and leaves graph_mutations empty before returning.
+  summary: Monitor `_call_claude()` for non-zero exits, timeouts, or parse failures and confirm `_fallback_response()` hands a safe payload back.
   steps:
-    - Trigger `_call_claude()` with a mocked failure (timeout, invalid JSON, missing binary).
-    - Confirm `_fallback_response()` seeds `world_injection` with a safe placeholder and avoids applying mutations.
-    - Log the failure to the health banner and mark the indicator as DEGRADED if any fallback path executed.
-  data_required: CLI exit code, stdout/stderr capture, raised exception, and the returned fallback dict.
-  failure_mode: CLI errors are swallowed, leaving the graph half-staged and the Narrator waiting for a missing injection.
+    - Invoke `_call_claude()` inside the orchestrator shim and catch `TimeoutExpired`, `FileNotFoundError`, or JSON parse errors.
+    - Route the stack into `_fallback_response()` so logs record the failure and the CLI still returns a V1-compliant structure.
+    - Mark adapter_resilience as failed whenever this guard path executes and emit telemetry so operators can triage the CLI binary state.
+  data_required: CLI stderr/stdout, fallback dict contents, runtime exception metadata.
+  failure_mode: A crash leaves the orchestrator waiting forever and no fallback object ever propagates, breaking the moment loop.
 ```
 
 ---
 
 ## HOW TO RUN
 
-1. Follow the manual checklist listed in `docs/agents/world-runner/VALIDATION_World_Runner_Invariants.md` to exercise V1–V3 and the associated error conditions.
-2. Re-run the world runner-specific checks described above in your dev environment and capture the status snapshot in the STATUS section.
-3. Run the protocol validator so the chain knows this HEALTH doc is compliant.
-
-```bash
-ngram validate
-```
+1. Run the integration suite that drives the orchestrator by executing `pytest engine/tests/test_moment_lifecycle.py` so World Runner receives realistic `process_flips()` calls and logs health events.
+2. For manual verification, instantiate `WorldRunnerService` in a Python shell, feed it a curated `Orchestrator` context, and inspect the `graph_mutations` and `world_injection` dictionaries for consistency before letting the Narrator resume.
+3. If you need to reproduce adapter failures, temporarily point `_call_claude()` at a stub CLI that returns invalid JSON so the fallback paths, logs, and health indicators become visible in the doctor trace.
 
 ---
 
 ## KNOWN GAPS
 
-- No automated regression harness covers CLI failure injection or timeout handling yet.
-- GraphQueries context replays are not instrumented; the runner can query stale narratives if the graph evolves between checks.
-- There is no schema validator for `world_injection` once GraphOps writes the mutations, so downstream Narrator errors go unnoticed.
+- [ ] No automated regression exists specifically for CLI timeout handling even though the fallback validator depends on that guard.
+- [ ] The injection payload returned to the Narrator is not yet schema-validated before it is forwarded, leaving room for untracked drift.
 
 ---
 
 ## GAPS / IDEAS / QUESTIONS
 
-- [ ] Build an integration script that exercises `WorldRunnerService.process_flips()` from `engine.infrastructure.orchestration.orchestrator` with mocked GraphQueries so the health indicators can run in CI.
-- [ ] Emit the `background_consistency` score into the `ngram doctor` log so the failure surface is easier to find during deployment.
-- [ ] Add a focused telemetry stream that correlates `adapter_resilience` degradations with the failing CLI stdout/stderr for faster root cause analysis.
-- QUESTION: Should the health indicator include a timeline of GraphOps mutations so we can audit exactly which edges were added or removed during long actions?
+- [ ] Automate a quick CLI failure test by mocking `_call_claude()` so adapter_resilience can be asserted on every commit.
+- [ ] Add a background mutation diff that highlights graph edges touched by each run to surface unexpected changes before the narrator is notified.
+- QUESTION: Should the runner health banner share the same scoring cadence as the Narrator health indicator so the doctor dashboard has a unified view of streaming consistency?

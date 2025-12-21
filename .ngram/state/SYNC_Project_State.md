@@ -171,6 +171,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Files:** `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(fails: still reports the known `docs/connectome/health` PATTERNS/SYNC/chain gaps, the `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the longstanding CHAIN-link warnings).*
 
+### 2026-02-13: Record the behavior guardrail fix
+
+- **What:** Documented the PATTERNS behavior update inside this sync so future agents tracing issue #11 can see the change in both the pattern and sync layers without searching through older entries.
+- **Why:** DOC_TEMPLATE_DRIFT #11 flagged the missing behavior slots, and recording the fix here keeps the project state and sync aligned with the canonical ledger/focus/timer story before downstream agents update the code.
+- **Files:** `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate`
+
 ### 2026-03-12: Record validation behavior guarantees
 
 - **What:** Added the BEHAVIORS GUARANTEED table and OBJECTIVES COVERED narrative to `docs/connectome/state_store/VALIDATION_Connectome_State_Store_Invariants_For_Ledger_Ordering_And_Focus.md`, and noted the change in the state_store SYNC so downstream validators can trace the ledger/focus/timer contract back to observable outcomes.
@@ -178,12 +185,12 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Files:** `docs/connectome/state_store/VALIDATION_Connectome_State_Store_Invariants_For_Ledger_Ordering_And_Focus.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(fails for the existing docs/connectome/health PATTERNS/SYNC gaps, docs/engine/membrane PATTERN naming mismatch, and the longstanding CHAIN warnings already noted by the doctor).*
 
-### 2026-03-13: Capture pointer coverage in sync ledger
+### 2026-03-16: Trace pointer coverage in the state ledger
 
-- **What:** Added a short memo describing the ordered pointer list and the doc-template sections in `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md` so the project sync now narrates where downstream agents should look for the PATTERNS, implementation, behavior, and health stories that this state_store sync references.
-- **Why:** DOC_TEMPLATE_DRIFT #11 expects the pointer and handoff sections to be explicit, so logging this insight in the project state keeps the chain visible even if the sync doc is edited by another agent before the handoff completes.
+- **What:** Logged that `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md` now steps through PATTERNS → IMPLEMENTATION → BEHAVIORS → HEALTH via the new pointer and handoff sections so downstream agents can follow the canonical chain before editing the store.
+- **Why:** DOC_TEMPLATE_DRIFT #11 requires an explicit pointer narrative, so the project-state entry captures the practice so future agents know where to continue when this sync is edited next.
 - **Files:** `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
-- **Verification:** `ngram validate` *(fails for the same docs/connectome/health PATTERNS/SYNC gaps and docs/engine/membrane/CHAIN warnings already tracked by doctor).*
+- **Verification:** `ngram validate` *(fails for the known docs/connectome/health PATTERNS/SYNC gaps and docs/engine/membrane PATTERN naming/CHAIN warnings the doctor still reports).*
 
 ### 2026-03-13: Enrich state store algorithm narrative
 

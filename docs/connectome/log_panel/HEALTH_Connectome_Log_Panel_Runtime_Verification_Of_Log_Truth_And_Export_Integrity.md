@@ -128,6 +128,8 @@ The binary result flag is emitted by the CLI runner and written to the `connecto
 
 Failure events also log a short explanation to `logs/connectome_health/log_panel.log` plus the CLI output so you can see which indicator and validation fired before you rerun the suite.
 
+Metadata (indicator name, event id, duration bucket) is also sent through the `connectome.health.log_panel` stream so dashboards can correlate the binary `0` result with the failing validation without parsing raw logs.
+
 ---
 
 ## DOCK TYPES (COMPLETE LIST)
@@ -138,6 +140,7 @@ Failure events also log a short explanation to `logs/connectome_health/log_panel
 * `display` — the CLI/marker dashboards and log surface that surface failures so humans can act quickly. The display dock also writes to `logs/connectome_health/log_panel.log` so reviewers can replay failure details later.
 
 These docks cover every input/output path in the health harness. Add `custom` docks only if you need to ingest a new data source outside the state store (none needed right now).
+Record any new dock here so future agents can track which signals feed which health indicator.
 
 ---
 
@@ -358,6 +361,17 @@ manual_run:
   command: pnpm connectome:health log_panel --checker health_check_export_contains_all_ledger_events_in_order
   notes: run before shipping copy/export changes or after serializer tweaks.
 ```
+
+Forwarding & Displays:
+
+```
+forwarding:
+  target: connectome.health.log_panel
+  metadata: event_id, indicator, duration_bucket
+  transport: marker stream + CLI log
+```
+
+Keep the stream entries in sync with the CLI output so the same failure report can be replayed from `logs/connectome_health/log_panel.log`.
 
 ---
 

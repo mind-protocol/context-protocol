@@ -1,6 +1,6 @@
 # flow_canvas — Sync: Current State
 
-LAST_UPDATED: 2026-04-18
+LAST_UPDATED: 2026-04-21
 UPDATED_BY: codex
 STATUS: DESIGNING
 ```
@@ -31,12 +31,14 @@ Implemented a React Flow-based FlowCanvas with force-directed node layout seeded
 
 ## RECENT CHANGES
 
-### 2026-04-18: Reaffirm flow canvas health template coverage (#11)
+### 2026-04-21: Reaffirm flow canvas health indicator docking (#11)
 
-* **What:** Re-wrote the recent health sync entry to stress the indicator-level VALUE/REPRESENTATION/DOCK narratives, documented the binary STATUS stream, and clarified the HOW TO RUN guidance so the health doc now maps every indicator to the VALIDATION invariants before dashboards consume the binary flag.
-* **Why:** DOC_TEMPLATE_DRIFT #11 still demands each health doc explain indicator inputs, outputs, and execution guidance; the fresh wording and metadata references keep the flow canvas health chain canonical for downstream agents and dashboards.
+* **What:** Expanded the indicator-centric entry so each VALUE/REPRESENTATION/DOCK note mentions the associated VALIDATION IDs, the `connectome.health.flow_canvas` stream, and the CLI `logs/connectome_health/flow_canvas.log` file, then refreshed HOW TO RUN and the DOCK TYPES list so the health doc thoroughly documents the observability paths.
+* **Why:** DOC_TEMPLATE_DRIFT #11 requires health syncs to tie indicators back to instrumentation, so the new narratives guarantee downstream dashboards can trace failures straight to the logged indicator, stream metadata, and validation guarantees without rereading the implementation docs.
 * **Files:** `docs/connectome/flow_canvas/HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_Stability_And_Perf_Budgets.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
-* **Validation:** `ngram validate` *(fails: existing docs/connectome/health chain gaps plus docs/engine/membrane naming mismatch and lingering CHAIN-link warnings; no new regressions introduced)*.
+* **Validation:** `ngram validate` *(fails: existing docs/connectome/health chain gaps, the docs/engine/membrane PATTERN naming mismatch, and the legacy CHAIN-link warnings persist; no new regressions introduced)*.
+
+### 2026-04-18: Reaffirm flow canvas health template coverage (#11)
 * **Notes:** Each indicator block also logs the validation ID, dock IDs, and log file location so debugging the binary `connectome.health.flow_canvas` stream no longer requires scanning the implementation documents.
 
 ### 2026-04-11: Extend health template indicators (#11)

@@ -99,6 +99,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2026-04-18: Expand runtime_engine health documentation (#11)
+
+* **What:** Added the OBJECTIVES COVERAGE table and indicator entries for speed, duration, and autoplay checks so every health signal now describes its validation target, docks, throttling, and forwarding details.
+* **Why:** DOC_TEMPLATE_DRIFT #11 called out the missing objective coverage and indicator narratives for runtime_engine health, and this change completes the template so downstream agents know what each probe guards.
+* **Files:** `docs/connectome/runtime_engine/HEALTH_Connectome_Runtime_Engine_Runtime_Verification_Of_Pacing_And_Order.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(fails: known connectome/health module chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming, and longstanding CHAIN link warnings remain; no new failures introduced).*
+
 ### 2026-04-17: Solidify flow canvas sync sections (#11)
 
 * **What:** Added `IN PROGRESS`, `KNOWN ISSUES`, `HANDOFF: FOR AGENTS`, `HANDOFF: FOR HUMAN`, `CONSCIOUSNESS TRACE`, and `POINTERS` sections to `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`, each with narratives exceeding fifty characters so the SYNC template now matches the DOC_TEMPLATE_DRIFT requirements.
@@ -139,6 +146,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
  * **Notes:** Confirmed the algorithm doc now spells out the zone layout anchors, the force layout seeding, the edge label declutter policy, camera transform invariants, and the interaction gating so implementation readers can trace the new sections to existing code.
 * **Notes:** Confirmed the algorithm doc now spells out the zone layout anchors, the force layout seeding, the edge label declutter policy, camera transform invariants, and the interaction gating so implementation readers can trace the new sections to existing code.
 * **Notes:** Confirmed the algorithm doc now spells out the zone layout anchors, the force layout seeding, the edge label declutter policy, camera transform invariants, and the interaction gating so implementation readers can trace the new sections to existing code.
+
+### 2026-04-21: Reaffirm flow canvas health indicator docking (#11)
+
+* **What:** Annotated the new sync entry so each indicator lists its VALIDATION ID, docks (including the `connectome.health.flow_canvas` stream), and the `logs/connectome_health/flow_canvas.log` telemetry sink, and linked the entry back to the HOW TO RUN guidance so watchers know where the binary `0` faults land.
+* **Why:** DOC_TEMPLATE_DRIFT #11 demands health syncs describe both the instrumentation path and the runbook; this wording keeps dashboards, CLI probes, and future agents aligned before they react to the status flag.
+* **Files:** `docs/connectome/flow_canvas/HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_Stability_And_Perf_Budgets.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Verification:** `ngram validate` *(fails: existing docs/connectome/health chain gaps, the docs/engine/membrane PATTERN naming mismatch, and the documented CHAIN-link warnings persist; no new regressions introduced)*.
 
 ### 2026-04-18: Reaffirm flow canvas health template coverage (#11)
 
@@ -1127,6 +1141,14 @@ Overwriting `.ngram/` content could damage protocol continuity; conflicts must b
 * **Files:** `docs/connectome/flow_canvas/ALGORITHM_Connectome_Flow_Canvas_Layout_Zones_And_Edge_Label_Decluttering.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate` *(fails because docs/connectome/health still lacks PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION/HEALTH coverage, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural PATTERNS prefix, and the longstanding CHAIN link warnings remain; no new failures were introduced).*
 * **Notes:** Confirmed the algorithm doc now narrates the zone layout anchors, the force layout seeding, the edge label declutter policy, camera transform invariants, and the interaction gating so the implementation readers can trace the new sections.
+
+### 2026-04-25: Verify flow canvas algorithm doc coverage (#11)
+
+* **What:** Re-read `ALGORITHM_Connectome_Flow_Canvas_Layout_Zones_And_Edge_Label_Decluttering.md` and confirmed the newly written OBJECTIVES AND BEHAVIORS, render summary, KEY DECISIONS, DATA FLOW, HELPER FUNCTIONS, and INTERACTIONS sections explain the zone layout anchors, force layout seeding, edge label declutter heuristic, camera transform invariants, and interaction gating.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged each of those blocks, so this state note records that the doc chain now points to the implementation realities before future agents rely on it.
+* **Files:** `docs/connectome/flow_canvas/ALGORITHM_Connectome_Flow_Canvas_Layout_Zones_And_Edge_Label_Decluttering.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails because docs/connectome/health still lacks PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION/HEALTH coverage, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural PATTERNS prefix, and the longstanding CHAIN-link warnings remain; no new failures were introduced).*
+* **Notes:** The doc now states how the nodes, edges, labels, and camera transform cooperate with the new sections, so downstream agents can trace the narrative to the code.
 
 
 ## TODO

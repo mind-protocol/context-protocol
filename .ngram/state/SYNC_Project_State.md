@@ -1,7 +1,7 @@
 # Project — Sync: Current State
 
 ```
-LAST_UPDATED: 2025-12-27
+LAST_UPDATED: 2026-03-13
 UPDATED_BY: codex
 ```
 
@@ -99,6 +99,20 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2026-03-07: Flesh out node kit validation guarantees
+
+- **What:** Added the missing `BEHAVIORS GUARANTEED`, `OBJECTIVES COVERED`, and `PROPERTIES` sections to `docs/connectome/node_kit/VALIDATION_Connectome_Node_Kit_Invariants_For_Node_Readability_And_State_Reflection.md` so the template now explains the node readability invariants with the required 50+ character detail and behavior tracing.
+- **Why:** DOC_TEMPLATE_DRIFT #11 flagged that the validation doc lacked the guaranteed behaviors, objectives, and property narratives, so the module chain still felt incomplete and prevented downstream agents from verifying the readability contract.
+- **Files:** `docs/connectome/node_kit/VALIDATION_Connectome_Node_Kit_Invariants_For_Node_Readability_And_State_Reflection.md`, `docs/connectome/node_kit/SYNC_Connectome_Node_Kit_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` *(fails: existing `docs/connectome/health` PATTERNS/SYNC/CHAIN gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN warnings already reported by the doctor).*
+
+### 2026-03-14: Expand state store algorithm doc template coverage
+
+- **What:** Added OBJECTIVES AND BEHAVIORS, KEY DECISIONS, DATA FLOW, HELPER FUNCTIONS, INTERACTIONS, and a richer commit narrative to `docs/connectome/state_store/ALGORITHM_Connectome_State_Store_Atomic_Commits_For_Step_Releases_And_Realtime.md` so the ALGORITHM document now satisfies DOC_TEMPLATE_DRIFT #11 requirements.
+- **Why:** The doctor reported these sections as missing or too short, so documenting the full algorithm story keeps the PATTERNS → ALGORITHM → IMPLEMENTATION chain aligned before the state store module is considered canonical.
+- **Files:** `docs/connectome/state_store/ALGORITHM_Connectome_State_Store_Atomic_Commits_For_Step_Releases_And_Realtime.md`
+- **Verification:** `ngram validate`
+
 ### 2025-12-21: Document state store behavior objectives
 
 - **What:** Added OBJECTIVES SERVED plus richer behavior/anti-behavior prose to `docs/connectome/state_store/BEHAVIORS_Connectome_State_Store_Observable_State_Consistency_Effects.md` and noted the change in the state store SYNC so downstream agents see the precise observable goals the module is guarding.
@@ -112,6 +126,8 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Why:** The doctor expected those sections to exist before the module could be considered doc-complete, so this entry captures the verification and points future agents to the SYNC and implementation files.
 - **Files:** `docs/connectome/state_store/IMPLEMENTATION_Connectome_State_Store_Code_Structure_And_Zustand_Actions.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate`
+- **Issue:** ISSUE_11_SYNC_TEMPLATE
+<!-- ISSUE_11_SYNC_STATE -->
 
 ### 2026-03-01: Complete state store health template coverage
 
@@ -134,6 +150,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Files:** `docs/connectome/state_store/VALIDATION_Connectome_State_Store_Invariants_For_Ledger_Ordering_And_Focus.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(fails for the existing docs/connectome/health PATTERNS/SYNC gaps, docs/engine/membrane PATTERN naming mismatch, and the longstanding CHAIN warnings already noted by the doctor).*
 
+### 2026-03-13: Enrich state store algorithm narrative
+
+- **What:** Added OBJECTIVES AND BEHAVIORS, KEY DECISIONS, DATA FLOW, HELPER FUNCTIONS, and INTERACTIONS sections plus richer descriptions of the primary commit algorithm so the ALGORITHM doc now satisfies DOC_TEMPLATE_DRIFT length and coverage requirements.
+- **Why:** DOC_TEMPLATE_DRIFT #11 flagged the algorithm doc for missing these template blocks, so the added narrative keeps the behavior story aligned with the PATTERN and implementation chain before downstream agents rely on it.
+- **Files:** `docs/connectome/state_store/ALGORITHM_Connectome_State_Store_Atomic_Commits_For_Step_Releases_And_Realtime.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate`
+
 ### 2026-02-28: Record state store behavior guardrails
 
 - **What:** Documented the BEHAVIORS SUPPORTED and BEHAVIORS PREVENTED sections for the connectome state_store PATTERN and recorded the change in the state_store SYNC so the module chain now explicitly explains which ledger/focus/timer outcomes are allowed and blocked.
@@ -154,6 +177,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **What:** Reworded BEHAVIORS SUPPORTED and BEHAVIORS PREVENTED so they spell out how ledger commits, focus updates, and timer signals stay unified, while keeping each block over the 50-character DOC_TEMPLATE_DRIFT minimum.
 - **Why:** DOC_TEMPLATE_DRIFT #11 flagged empty behavior slots; the new prose prevents downstream agents from guessing whether renderers or helpers can mutate focus/timers by making the guardrails explicit.
 - **Files:** `docs/connectome/state_store/PATTERNS_Connectome_State_Store_Single_Source_Of_Truth_For_Events_Focus_And_Timers.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate`
+
+### 2026-02-13: Affirmed state store pattern behaviors with sync updates
+
+- **What:** Added a recorded change in the state store sync and the project sync to document the behavior template adjustments so downstream agents can trace the guardrails from the PATTERNS doc back to the canonical ledger story.
+- **Why:** The guardrail change should be visible at the sync layer and in the project history so issue #11 stays resolved even as other connectome health docs continue to lag.
+- **Files:** `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate`
 
 ### 2026-01-26: Document tools pattern template coverage

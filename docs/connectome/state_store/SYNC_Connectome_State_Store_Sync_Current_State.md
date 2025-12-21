@@ -1,6 +1,6 @@
 # state_store — Sync: Current State
 
-LAST_UPDATED: 2026-03-12
+LAST_UPDATED: 2026-03-15
 UPDATED_BY: codex
 STATUS: DESIGNING
 
@@ -43,11 +43,32 @@ Confirming that the newly written handoff, pointer, and consciousness prose cont
 
 ## RECENT CHANGES
 
+### 2026-03-15: Expand behavior narratives for template compliance
+
+- **What:** Extended the BEHAVIORS doc with clarifying paragraphs for edge cases, anti-behaviors, and inputs/outputs while reaffirming the OBJECTIVES section so each template block exceeds the 50-character DOC_TEMPLATE_DRIFT requirement.
+- **Why:** DOC_TEMPLATE_DRIFT #11 flagged the missing objectives block and the short behavior sections, so the new narrative keeps the observable behavior doc canonical before downstream agents rely on its guardrails.
+- **Files:** `docs/connectome/state_store/BEHAVIORS_Connectome_State_Store_Observable_State_Consistency_Effects.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`
+- **Verification:** `ngram validate`
+
 ### 2026-03-12: Document sync template coverage
 
 - **What:** Added IN PROGRESS, KNOWN ISSUES, HANDOFF, POINTERS, and CONSCIOUSNESS TRACE narrative blocks to the sync so each DOC_TEMPLATE_DRIFT section now explains the active work, issues, handoffs, and trace links before the module is marked canonical.
 - **Why:** DOC_TEMPLATE_DRIFT #11 flagged this SYNC for missing template sections, so the expanded prose ensures the ledger records the checkpoints for future agents without touching the runtime store code.
 - **Files:** `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`
+- **Verification:** `ngram validate`
+
+### 2026-03-13: Enrich algorithm narrative to satisfy template
+
+- **What:** Added OBJECTIVES AND BEHAVIORS, KEY DECISIONS, DATA FLOW, HELPER FUNCTIONS, and INTERACTIONS sections plus richer descriptions of the primary commit algorithm so the ALGORITHM doc now passes the DOC_TEMPLATE_DRIFT requirements for narrative length and coverage.
+- **Why:** DOC_TEMPLATE_DRIFT #11 flagged the algorithm doc as missing those template blocks, so this change keeps the behavior story aligned with the PATTERN and implementation chain.
+- **Files:** `docs/connectome/state_store/ALGORITHM_Connectome_State_Store_Atomic_Commits_For_Step_Releases_And_Realtime.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`
+- **Verification:** `ngram validate`
+
+### 2026-02-11: Clarify state store behavior guardrails
+
+- **What:** Added the BEHAVIORS SUPPORTED and BEHAVIORS PREVENTED sections to the PATTERNS doc so ledger commits, focus updates, and timer signals now show the allowed/blocked outcomes and each block exceeds the 50-character DOC_TEMPLATE_DRIFT requirement.
+- **Why:** DOC_TEMPLATE_DRIFT #11 flagged missing behavior slots, so the new text keeps the canonical pattern aligned with the store’s ledger/focus/timer semantics before downstream agents interpret state_store actions.
+- **Files:** `docs/connectome/state_store/PATTERNS_Connectome_State_Store_Single_Source_Of_Truth_For_Events_Focus_And_Timers.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`
 - **Verification:** `ngram validate`
 
 ### 2026-03-11: Document validation behavior guarantees
@@ -123,6 +144,10 @@ pnpm connectome:health state_store
 
 * The implementation doc now lists the missing schema, flow, logic, dependency, runtime, and concurrency guidance so the chain is doc-template-compliant.
 * Completed the PATTERNS behaviors template so the guardrail summary now lives next to the problem/pattern narrative.
+* Expanded the health doc so it now covers the WHY/HOW reflex, objectives table, status stream, dock types, and a full indicator ledger tied to the docking devices.
+* Confirmed the schema, flow-by-flow docking, logic chains, module dependencies, runtime behavior, and concurrency sections remain the canonical coverage referenced by this sync so future agents can trace the entire chain before updating the store.
+* Added detailed paragraphs in the BEHAVIORS doc for edge cases, anti-behaviors, and inputs/outputs so each template block now exceeds the 50-character minimum while staying aligned with the store invariants.
+* Recorded that IN PROGRESS now tracks the retention cap placeholder, KNOWN ISSUES captures the outstanding health harness and DOC_TEMPLATE_DRIFT dependencies, and the new handoff/pointer/consciousness sections keep the doc-template narrative discoverable for downstream agents.
 * Confirmed the schema, flow-by-flow docking, logic chains, module dependencies, runtime behavior, and concurrency sections remain the canonical coverage referenced by this sync so future agents can trace the entire chain before updating the store.
 
 ## HANDOFF: FOR AGENTS

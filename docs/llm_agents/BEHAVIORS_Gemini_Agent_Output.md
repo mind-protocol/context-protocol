@@ -88,6 +88,7 @@ This adapter is tuned to measurable outputs that keep the CLI, TUI, and automati
 - Surface tool execution metadata (`tool_code`/`tool_result`) and credential errors alongside assistant messages so automation orchestrators can correlate each conversational step with its side effects and respond to missing keys promptly.
 
 These objectives double down on streaming determinism, explicit error handling, and stderr hygiene so the adapter never surprises downstream orchestrators or human readers.
+The validation doc's behavior table and objective coverage narrative now map back to these prose points so the living contract stays traceable.
 
 ---
 

@@ -106,10 +106,10 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Files:** `docs/tools/PATTERNS_Tools.md`, `docs/tools/SYNC_Tools.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate`
 
-### 2026-01-16: Document tools sync template coverage
+### 2026-01-27: Document tools sync template coverage
 
-- **What:** Added MATURITY, IN PROGRESS, KNOWN ISSUES, HANDOFF (agents + human), CONSCIOUSNESS TRACE, and POINTERS sections to `docs/tools/SYNC_Tools.md` so it now satisfies the DOC_TEMPLATE_DRIFT template and captures the full state story for downstream agents.
-- **Why:** The tools sync was missing multiple required sections, so documenting them now records the module maturity, outstanding work, and handoff details without modifying the runtime helpers.
+- **What:** Added MATURITY, IN PROGRESS, KNOWN ISSUES, HANDOFFS, CONSCIOUSNESS TRACE, and POINTERS sections to `docs/tools/SYNC_Tools.md` so the sync now records every template block, and future agents see both the maturity reasoning and the handoff guidance.
+- **Why:** DOC_TEMPLATE_DRIFT had flagged this SYNC for missing narrative chunks, so the richer ledger keeps the module traceable while leaving the helper scripts untouched.
 - **Files:** `docs/tools/SYNC_Tools.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate`
 

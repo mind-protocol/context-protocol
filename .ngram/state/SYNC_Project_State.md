@@ -99,12 +99,40 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2025-12-27: Documented narrator archive metadata
+
+- **What:** The narrator archive now includes longer MATURITY, CURRENT STATE, IN PROGRESS, KNOWN ISSUES, and POINTERS sections so the template drift warning is satisfied while still pointing future agents at the canonical SYNC before they make changes.
+- **Why:** DOC_TEMPLATE_DRIFT flagged the archive’s sections as missing, so enriching them with contextual prose and handoff reminders keeps this historical snapshot accurate without changing the live stream.
+- **Files:** `docs/agents/narrator/SYNC_Narrator_archive_2025-12.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` *(still fails for the known connectome health and membrane naming warnings already tracked by the doctor, so the archival note only documents the existing risk list)*
+
+### 2025-12-30: Document narrator behavior objectives
+
+- **What:** Added an `OBJECTIVES SERVED` section that clarifies the streaming timing goal, canonical mutation commitments, SceneTree signaling conventions, and telemetry the narrator must emit so the BEHAVIORS doc meets the template’s length requirements with concrete expectations.
+- **Why:** DOC_TEMPLATE_DRIFT flagged the missing objectives block, so enriching the behavior narrative is the only way to retire the warning while leaving runtime behavior untouched.
+- **Files:** `docs/agents/narrator/BEHAVIORS_Narrator.md`, `docs/agents/narrator/SYNC_Narrator.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` *(still reports the known connectome/health, membrane naming, and CHAIN warnings that predate this change)*
+
 ### 2025-12-29: Document narrator implementation stream nuance
 
 - **What:** Added a streaming health note under the implementation main loop, captured new SSE telemetry wording in the GAPS idea list, and fleshed out the narrator sync CURRENT STATE/IN PROGRESS sections so future agents see why the template seemed short.
 - **Why:** The DOC_TEMPLATE_DRIFT warning required richer runtime wording and longer narratives, so the module now records why the streaming LN is stable even when the doctor insists on more prose.
 - **Files:** `docs/agents/narrator/IMPLEMENTATION_Narrator.md`, `docs/agents/narrator/SYNC_Narrator.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(still failing for pre-existing connectome/health/membrane naming/CHAIN issues)*
+
+### 2025-12-30: Align narrator health coverage with the template
+
+- **What:** Expanded `HEALTH_Narrator.md` with the missing `WHY THIS PATTERN`, `HOW TO USE THIS TEMPLATE`, `OBJECTIVES COVERAGE`, an explicit `mutation_validity` indicator, and a GAPS / IDEAS / QUESTIONS section, then noted the work in this project sync.
+- **Why:** DOC_TEMPLATE_DRIFT flagged the health doc for missing template sections, so filling every clause keeps the verification story explicit without rewriting runtime code.
+- **Files:** `docs/agents/narrator/HEALTH_Narrator.md`, `docs/agents/narrator/SYNC_Narrator.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate`
+
+### 2025-12-21: Fill narrator archive sync template sections
+
+- **What:** Added MATURITY, CURRENT STATE, IN PROGRESS, KNOWN ISSUES, HANDOFF: FOR AGENTS, HANDOFF: FOR HUMAN, TODO, CONSCIOUSNESS TRACE, and POINTERS sections to `docs/agents/narrator/archive/SYNC_archive_2024-12.md`, so the archive finally satisfies the DOC_TEMPLATE_DRIFT length requirements while still pointing agents at the canonical SYNC for live work.
+- **Why:** The doctor reported this archive as missing the required sections, so enriching the prose prevents false positives while keeping the archived narrative read-only and historically accurate.
+- **Files:** `docs/agents/narrator/archive/SYNC_archive_2024-12.md`, `.ngram/state/SYNC_Project_State.md`
+- **Verification:** `ngram validate` *(still reports unrelated connectome health and membrane naming warnings elsewhere, but no longer flags this archive for missing sections).*
 
 ### 2025-12-26: Extended Gemini validation behavior/objective rationale
 

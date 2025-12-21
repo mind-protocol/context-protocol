@@ -42,7 +42,7 @@ Implemented LogPanel with a “Now” section, ledger list, duration color rules
 
 ### 2026-04-03: Document log panel health streaming metadata
 
-* **What:** Added a note about the `connectome.health.log_panel` stream metadata and the Forwarding & Displays block so this SYNC references the same indicator/event/duration metadata that the health doc now describes.
+* **What:** Added a note about the `connectome.health.log_panel` stream metadata, the Forwarding & Displays block, and the dual tagging of CLI log + stream so this SYNC references the same indicator/event/duration metadata that the health doc now describes.
 * **Why:** Operators and dashboards needed a pointer linking the binary health result to the streaming metadata, so recording it in the SYNC keeps the log panel chain traceable from the doc to the runtime stream.
 * **Files:** `docs/connectome/log_panel/HEALTH_Connectome_Log_Panel_Runtime_Verification_Of_Log_Truth_And_Export_Integrity.md`, this SYNC file
 * **Validation:** `ngram validate` *(fails: docs/connectome/health PATTERNS/SYNC gaps plus docs/physics naming/CHAIN warnings already logged elsewhere).*
@@ -53,6 +53,7 @@ Implemented LogPanel with a “Now” section, ledger list, duration color rules
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged these sections as missing, so spelling them out keeps the document in sync with the rest of the chain before downstream agents rely on the UI behaviors.
 * **Files:** `docs/connectome/log_panel/BEHAVIORS_Connectome_Log_Panel_Step_Clarity_And_Copyable_Audit_Trail_Effects.md`, this SYNC file
 * **Validation:** `ngram validate` *(fails: existing docs/connectome/health PATTERNS/SYNC gaps plus docs/physics naming and CHAIN warnings already tracked elsewhere).*
+* **Trace:** Confirmed the behavior doc now includes OBJECTIVES SERVED and INPUTS / OUTPUTS so the DOC_TEMPLATE_DRIFT #11 template fix is traceable from this sync.
 
 ### 2025-12-21: Complete log panel validation template trace
 

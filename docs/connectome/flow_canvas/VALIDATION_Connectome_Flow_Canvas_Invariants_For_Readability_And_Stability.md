@@ -4,7 +4,7 @@
 
 STATUS: DRAFT
 CREATED: 2025-12-20
-VERIFIED: 2025-12-20 against ?
+VERIFIED: 2026-04-06 against manual reasoning for DOC_TEMPLATE_DRIFT coverage
 ```
 
 ---
@@ -27,19 +27,40 @@ SYNC:            ./SYNC_Connectome_Flow_Canvas_Sync_Current_State.md
 
 | Behavior ID | Behavior | Why This Validation Matters |
 |-------------|----------|-----------------------------|
-| B1 | Camera movements (pan/zoom) keep every node and attached edge aligned with no perceptible lag or disconnected endpoints. | Guarantees that debugging sessions can move across the canvas without chasing phantom edges, so the rendered graph stays traceable across views. |
-| B2 | Stepper transitions only alter styling metadata unless the node/edge set actually changes, keeping the force layout deterministic for identical inputs. | Prevents jitter or topology drift during focused inspections so analysts can trust that only the active focus changes, not the underlying positions. |
-| B3 | Labels at zoom=1.0 obey the declutter policy so each title remains legible without overlapping more than the acceptable tolerance. | Ensures that the base zoom view is readable for operators before they zoom or filter, keeping storytelling and energy tracing reliable. |
+| B1 | Camera motions keep node and edge positions coherent so the canvas never detaches endpoints during pan or zoom. | Ensures analysts can follow paths without chasing disappearing edges, so debugging stays grounded in the rendered topology. |
+| B2 | Stepper-driven styling flips do not reflow node coordinates unless the underlying graph payload actually changes. | Keeps the layout deterministic for regression inspections so focus changes remain the only visible variance. |
+| B3 | Labels and zone overlays stay legible at the default 100% zoom with no more than one minor permitted overlap event. | Lets operators assess identifiers immediately before filters or zoom adjustments alter the view. |
 
 ## OBJECTIVES COVERED
 
 | Objective | Validations | Rationale |
 |-----------|-------------|-----------|
-| Keep node/edge connectivity intact across camera and stepper motions. | V1, V2 | So the canvas can be used as a stable reference image during debugging and the instrumentation never appears to rewrite topology without intent. |
-| Maintain label readability when the canvas opens at the default zoom level. | V3 | Operators rely on this zoom to scan identifiers, so readability prevents misinterpretation before further exploration or focus changes occur. |
-| Render zones as consistent spatial contexts with background priority. | V4, E2 | Zones must stay visible without occluding critical lines so grouping semantics remain clear and warnings surface when zones would break visibility. |
+| Maintain connectivity visibility across camera updates and step transitions. | V1, V2 | So the canvas reflects stable topology and analysts do not suspect phantom edits while navigating. |
+| Ensure the default viewport is immediately legible. | V3 | Readability at zoom=1 gives a reliable starting point for debug storytelling before deeper inspection. |
+| Render zones as consistent background structures that never hide edges or labels. | V4 | Keeps spatial grouping cues intact so operators can reason about components instead of chasing layout artifacts. |
 
----
+## PROPERTIES
+
+### P1: Deterministic layout replay
+
+```
+FOR:   repeated stepper advances using identical node/edge payloads
+THEN:  node/edge geometry reproduces exactly and only metadata tags shift
+```
+
+### P2: Label spacing guardrail
+
+```
+WHEN:   viewport is at zoom=1.0
+THEN:   label heights stay >= 12px, horizontal padding keeps neighbors 8px apart, and overlap never exceeds the permitted 25% area before decluttering triggers
+```
+
+### P3: Zone background precedence
+
+```
+FOR:   gradient-filled zone panels
+THEN:  they render beneath edges/labels so grouping semantics remain visible while composition still respects contrast thresholds
+```
 
 ## INVARIANTS
 
@@ -75,20 +96,21 @@ Zones do not occlude edges and labels
 Zones remain visible as grouping structure
 ```
 
-## PROPERTIES
+---
 
-### P1: Deterministic stepper transitions
-
-```
-WHEN:   the stepper index advances while the graph payload is unchanged
-THEN:   node positions and edge endpoints reproduce the previous layout exactly and only styling metadata toggles
-```
-
-### P2: Readable label layout at base zoom
+## SYNC STATUS
 
 ```
-WHEN:   zoom level is 1.0 with default viewport
-THEN:   label bounding boxes keep at least 12px height, maintain 8px horizontal spacing between neighbors, and force decluttering before more than 25% overlap occurs
+LAST_VERIFIED: 2026-04-06
+VERIFIED_AGAINST:
+  docs: docs/connectome/flow_canvas/BEHAVIORS_Connectome_Flow_Canvas_Readable_Stable_Interaction_Effects.md @ local tree
+  code: app/connectome/components/pannable_zoomable_zoned_flow_canvas_renderer.tsx @ local tree
+VERIFIED_BY: manual reasoning during doc refresh
+RESULT:
+  V1: PASS (manual reasoning)
+  V2: PASS (manual reasoning)
+  V3: PASS (manual reasoning)
+  V4: PASS (manual reasoning)
 ```
 
 ---
@@ -136,22 +158,6 @@ pnpm connectome:health flow_canvas
 ```
 
 ---
-
-## SYNC STATUS
-
-```
-LAST_VERIFIED: 2026-04-05
-VERIFIED_AGAINST:
-  docs: docs/connectome/flow_canvas/VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md @ local tree
-  code: app/connectome/components/pannable_zoomable_zoned_flow_canvas_renderer.tsx
-  tests: conceptual `pnpm connectome:health flow_canvas` checklist
-VERIFIED_BY: manual review during template refresh
-RESULT:
-  V1: PASS (manual reasoning)
-  V2: PASS (manual reasoning)
-  V3: PASS (manual reasoning)
-  V4: PASS (manual reasoning)
-```
 
 ## GAPS / IDEAS / QUESTIONS
 

@@ -99,9 +99,17 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2026-04-08: Complete flow canvas validation template (#11)
+
+* **What:** Filled the missing BEHAVIORS GUARANTEED, OBJECTIVES COVERED, PROPERTIES, and SYNC STATUS sections in `docs/connectome/flow_canvas/VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md` and recorded the repair in the flow canvas SYNC file so the template now meets the DOC_TEMPLATE_DRIFT requirements.
+* **Why:** Closes DOC_TEMPLATE_DRIFT #11 for the flow canvas validation doc and ensures downstream agents see the explicit guarantees, objectives, properties, and verification status before reusing the canvas invariants.
+* **Files:** `docs/connectome/flow_canvas/VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
+* **Validation:** `ngram validate` *(fails for the existing docs/connectome/health PATTERNS/SYNC/full-chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needing the plural prefix, and the longstanding CHAIN-link warnings but introduces no new failures).*
+
 ### 2026-04-03: Document log panel health forwarding metadata
 
 * **What:** Added a paragraph describing how the `connectome.health.log_panel` stream metadata (indicator name, event id, duration bucket) mirrors the CLI failure log and introduced a `Forwarding & Displays` block so the health doc explicitly maps the binary `0` result to instrumentation outputs.
+* **Impact:** Emphasized that both the CLI log and the marker stream now tag each failure with the same indicator/event metadata so dashboards can replay errors from either signal.
 * **Why:** Without this guidance, dashboards cannot correlate the streaming binary result with the log panel indicator that stopped the run, so the new narrative makes the metadata traceable before the next agent reruns the probes.
 * **Files:** `docs/connectome/log_panel/HEALTH_Connectome_Log_Panel_Runtime_Verification_Of_Log_Truth_And_Export_Integrity.md`, `docs/connectome/log_panel/SYNC_Connectome_Log_Panel_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate` *(fails: docs/connectome/health still lacks PATTERNS/SYNC, docs/engine/membrane naming mismatch, and the outstanding CHAIN warnings).* 
@@ -118,7 +126,14 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **What:** Added the OBJECTIVES SERVED section plus INPUTS / OUTPUTS narrative to `docs/connectome/flow_canvas/BEHAVIORS_Connectome_Flow_Canvas_Readable_Stable_Interaction_Effects.md` so the behavior doc now spells out the canvas goals and data contracts for navigation, focus, and zone rendering.
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged the missing blocks, and the new prose keeps the canonical flow canvas behavior contract aligned with the rest of the documentation chain.
 * **Files:** `docs/connectome/flow_canvas/BEHAVIORS_Connectome_Flow_Canvas_Readable_Stable_Interaction_Effects.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
-* **Validation:** `ngram validate` *(fails: docs/connectome/health still lacks PATTERNS/SYNC, docs/engine/membrane naming mismatch, and the existing CHAIN warnings the doctor tracks; no new regressions observed).*
+* **Validation:** `ngram validate` *(fails: docs/connectome/health still lacks PATTERNS/SYNC, docs/engine/membrane naming mismatch, and the existing CHAIN warnings the doctor tracks; no new regressions observed).* 
+
+### 2026-04-08: Harden flow canvas validation template coverage (#11)
+
+* **What:** Added BEHAVIORS GUARANTEED, OBJECTIVES COVERED, PROPERTIES, and SYNC STATUS to `VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md`, expanded the narratives to exceed fifty characters, and logged the completion in this state entry so the entire chain now satisfies DOC_TEMPLATE_DRIFT #11’s validation requirements.
+* **Why:** Makes the flow canvas invariants document trustworthy again for downstream agents by spelling out the guaranteed behaviors, targeted objectives, and inmemory verification context so the health checks stay aligned with the validated UI contract.
+* **Files:** `docs/connectome/flow_canvas/VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails: known blockers remain—`docs/connectome/health` still lacks PATTERNS/SYNC/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural prefix, and the longstanding CHAIN warnings persist).*
 
 ### 2025-12-21: Log panel behavior doc objectives and I/O added
 

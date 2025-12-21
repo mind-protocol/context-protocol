@@ -373,6 +373,8 @@ forwarding:
 
 Keep the stream entries in sync with the CLI output so the same failure report can be replayed from `logs/connectome_health/log_panel.log`.
 
+Tag both channels (CLI log + marker stream) with the indicator name and event id so automation can replay the metadata from either viewport and tie it back to the ledger entry that triggered the failure.
+
 ---
 
 ## HOW TO RUN

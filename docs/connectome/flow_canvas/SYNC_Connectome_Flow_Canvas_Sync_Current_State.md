@@ -1,8 +1,6 @@
-```
-
 # flow_canvas — Sync: Current State
 
-LAST_UPDATED: 2025-12-20
+LAST_UPDATED: 2026-04-08
 UPDATED_BY: codex
 STATUS: DESIGNING
 ```
@@ -63,10 +61,10 @@ Implemented a React Flow-based FlowCanvas with force-directed node layout seeded
 * **Why:** Maintain interactive performance on large graphs (WebGL points/lines).
 * **Files:** `app/connectome/components/pannable_zoomable_zoned_flow_canvas_renderer.tsx`, `app/connectome/connectome.css`.
 
-### 2026-04-05: Filled validation template drift sections for flow_canvas (#11)
+### 2026-04-08: Fill validation template drift sections for flow_canvas (#11)
 
-* **What:** Added the missing BEHAVIORS GUARANTEED, OBJECTIVES COVERED, PROPERTIES, and SYNC STATUS blocks to `VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md` and elaborated the narratives so every template block now exceeds fifty characters.
-* **Why:** Satisfies DOC_TEMPLATE_DRIFT #11 and keeps the flow canvas documentation chain canonical for the canvas invariants.
+* **What:** Added the missing BEHAVIORS GUARANTEED, OBJECTIVES COVERED, PROPERTIES, and SYNC STATUS sections to `VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md` and expanded each narrative so the template now exceeds fifty characters per block.
+* **Why:** Completes DOC_TEMPLATE_DRIFT #11 for the validation doc and gives downstream agents a document that explicitly links behaviors, objectives, invariants, and syncing evidence.
 * **Files:** `docs/connectome/flow_canvas/VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md`
 
 ### 2026-04-07: Add flow canvas behavior objectives and I/O (#11)

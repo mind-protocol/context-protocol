@@ -110,45 +110,6 @@ pnpm connectome:health state_store
 
 ---
 
-## IN PROGRESS
-
-Verifying that the retention policy placeholder we listed in TODO pairs cleanly with the scheduler layer so that ledger pressure stays predictable while the PATTERNS/IMPLEMENTATION/BEHAVIORS narrative remains consistent across the chain before we declare this module canonical.
-
-## KNOWN ISSUES
-
-- Thresholds for realtime ledger pruning remain undecided, leaving long-running sessions vulnerable to unbounded state growth until we pin either a max-entries cap or a sliding time window.
-- `pnpm connectome:health state_store` is still a manual verification step because the automated health harness that would gate CI is pending wiring, so this check is not yet discoverable by downstream agents.
-- `ngram validate` continues to highlight DOC_TEMPLATE_DRIFT gaps in other connectome health docs even though this sync now satisfies its template, so the overall module chain still has outside dependencies waiting to be resolved.
-
-## HANDOFF: FOR AGENTS
-
-- Continue using `VIEW_Implement_Write_Or_Modify_Code.md` when touching the state store implementation or behaviors so you keep aligning code with PATTERNS/ALGORITHM/VALIDATION.
-- Double-check that any retention or timer adjustments are captured not just in implementation but also in `docs/connectome/state_store/HEALTH_Connectome_State_Store_Runtime_Verification_Of_Ledger_And_Timer_Correctness.md` and the PATTERNS doc so the whole chain narrates the chosen guarantees.
-- Before touching atomic commit flows, confirm the `app/connectome/lib/zustand_connectome_state_store_with_atomic_commit_actions.ts` doc link still points back to this sync and add a `DOCS:` comment if helper files introduce new actions.
-
-## HANDOFF: FOR HUMAN
-
-- The sync now lists unresolved retention thresholds and the still-manual health harness, so please decide whether to cap ledger size by entries or elapsed time and when to automate `pnpm connectome:health state_store`, then log those decisions here.
-- Verify the remaining DOC_TEMPLATE_DRIFT warnings mentioned above and confirm whether they should be left for the next agent or escalated to a broader connectome health effort.
-
-## CONSCIOUSNESS TRACE
-
-**Momentum:** Locking in the sync narrative for this store while we await retention decisions keeps the canonical ledger traceable despite the draft health harness downstream.
-
-**Concerns:** The unresolved retention policy and human-only health check both impede claiming this module is canonical, so we need a decisive cap and automation plan before the next upgrade.
-
-**Opportunities:** Once retention logic and automation land, the todo checklist shrinks and we can elevate MATURITY out of DESIGNING while the pointer trail strengthens the documentation chain for future auditors.
-
-## POINTERS
-
-- `docs/connectome/state_store/IMPLEMENTATION_Connectome_State_Store_Code_Structure_And_Zustand_Actions.md` for the detailed schema, logic chains, and concurrency commentary that this sync references.
-- `docs/connectome/state_store/PATTERNS_Connectome_State_Store_Single_Source_Of_Truth_For_Events_Focus_And_Timers.md` for the design intent and accepted behaviors that the atomic ledger preserves.
-- `docs/connectome/state_store/HEALTH_Connectome_State_Store_Runtime_Verification_Of_Ledger_And_Timer_Correctness.md` for the verification steps that should eventually be automated via `pnpm connectome:health state_store`.
-- `docs/connectome/state_store/BEHAVIORS_Connectome_State_Store_Observable_State_Consistency_Effects.md` for the observable effects (ledger ordering, focus invariants, timer hints) this sync expects to remain true.
-- `app/connectome/lib/zustand_connectome_state_store_with_atomic_commit_actions.ts` for the actual actions that the doc chain is tracking; add `DOCS:` comments there if new actions appear so the link stays bi-directional.
-
----
-
 ## AGENT OBSERVATIONS
 
 ### Remarks

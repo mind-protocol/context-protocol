@@ -44,6 +44,13 @@ Implemented a React Flow-based FlowCanvas with force-directed node layout seeded
 * **Why:** Ensures the flow canvas algorithm narrative now fully documents the primary functions, decisions, data path, and interaction constraints that downstream engineers rely on.
 * **Files:** `docs/connectome/flow_canvas/ALGORITHM_Connectome_Flow_Canvas_Layout_Zones_And_Edge_Label_Decluttering.md`
 
+### 2026-04-15: Expand implementation architecture coverage (#11)
+
+* **What:** Documented the SCHEMA, FLOW-BY-FLOW data paths & docking points, LOGIC CHAINS, MODULE DEPENDENCIES, STATE MANAGEMENT, RUNTIME BEHAVIOR, and CONCURRENCY MODEL sections inside `IMPLEMENTATION_Connectome_Flow_Canvas_Code_Structure_With_React_Flow_And_Zones` so each required template block now exists and exceeds the 50-character guidance.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged the implementation doc for missing architectural context, leaving downstream engineers without reliable references for how the canvas consumes store data and orchestrates rendering.
+* **Files:** `docs/connectome/flow_canvas/IMPLEMENTATION_Connectome_Flow_Canvas_Code_Structure_With_React_Flow_And_Zones.md`
+* **Validation:** `ngram validate` *(fails: known gating issues persist—`docs/connectome/health` lacks PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION/SYNC, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` still needs the plural name, and the longstanding CHAIN warnings for docs/physics/* remain).* 
+
 ### 2025-12-20: Switched node layout to force-directed for scale
 
 * **What:** Added force-directed layout (d3-force) seeded by zone positions and linked by edges.

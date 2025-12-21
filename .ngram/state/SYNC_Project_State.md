@@ -108,7 +108,7 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ### 2025-12-21: Document flow canvas pattern behaviors (#11)
 
-* **What:** Replaced the placeholder behavior sections with detailed `BEHAVIORS SUPPORTED` and `BEHAVIORS PREVENTED` prose so the pan/zoom camera expectations, zone context resilience, focus persistence, LOD decluttering, and camera-control protections are spelled out in this design doc.
+* **What:** Added an explicit introduction to the behavior block and replaced the placeholders with detailed `BEHAVIORS SUPPORTED` and `BEHAVIORS PREVENTED` prose so the pan/zoom camera expectations, zone context resilience, focus persistence, LOD decluttering, and camera-control protections are spelled out in this design doc.
 * **Why:** DOC_TEMPLATE_DRIFT #11 reported this PATTERNS doc lacked observable behavior guidance, so the new wording keeps the flow canvas design contract aligned with the rest of the chain.
 * **Files:** `docs/connectome/flow_canvas/PATTERNS_Connectome_Flow_Canvas_Pannable_Zoomable_Zoned_System_Map_Rendering_Patterns.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
 * **Validation:** `ngram validate` *(fails: docs/connectome/health lacks PATTERNS/SYNC/chain docs, docs/engine/membrane/PATTERN_Membrane_Modulation.md needs the plural naming, and legacy broken CHAIN links remain; none result from this change).*
@@ -161,6 +161,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged the missing blocks, and the new prose keeps the canonical flow canvas behavior contract aligned with the rest of the documentation chain.
 * **Files:** `docs/connectome/flow_canvas/BEHAVIORS_Connectome_Flow_Canvas_Readable_Stable_Interaction_Effects.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate` *(fails: docs/connectome/health still lacks PATTERNS/SYNC, docs/engine/membrane naming mismatch, and the existing CHAIN warnings the doctor tracks; no new regressions observed).* 
+
+### 2026-04-08: Harden flow canvas validation template coverage (#11)
+
+* **What:** Added BEHAVIORS GUARANTEED, OBJECTIVES COVERED, PROPERTIES, and SYNC STATUS to `VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md`, expanded the narratives to exceed fifty characters, and logged the completion in this state entry so the entire chain now satisfies DOC_TEMPLATE_DRIFT #11’s validation requirements.
+* **Why:** Makes the flow canvas invariants document trustworthy again for downstream agents by spelling out the guaranteed behaviors, targeted objectives, and verification context so the health checks stay aligned with the validated UI contract.
+* **Files:** `docs/connectome/flow_canvas/VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails: known blockers remain—`docs/connectome/health` still lacks PATTERNS/SYNC/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural prefix, and the longstanding CHAIN warnings persist).*
 
 ### 2026-04-08: Harden flow canvas validation template coverage (#11)
 

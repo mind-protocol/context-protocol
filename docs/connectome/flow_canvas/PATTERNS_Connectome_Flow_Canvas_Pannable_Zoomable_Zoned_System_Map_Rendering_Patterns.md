@@ -21,6 +21,8 @@ HEALTH:          ./HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_
 SYNC:            ./SYNC_Connectome_Flow_Canvas_Sync_Current_State.md
 ```
 
+The following behavior statements describe what the canvas must reliably do and what hazards it must prevent so the zoomable system map stays legible as complexity grows.
+
 ## BEHAVIORS SUPPORTED
 
 * Interactive pan, zoom, fit-to-view, and reset controls keep camera motion responsive so analysts can zoom into dense clusters without losing the context of the current step in the runtime engine.

@@ -23,6 +23,12 @@ SYNC:            ./SYNC_Connectome_State_Store_Sync_Current_State.md
 
 ---
 
+## OBJECTIVES SERVED
+
+- Keep every observable step release grounded in a single deterministic action so log exports, UI highlights, and telemetry watchers all reference the same event ids and nothing is derived from component-local state.
+- Ensure focus, timer, and tick signals always flow through the store so consumer panels read a single source of truth for cursor highlights, wait progress bars, cron fills, and health indicators instead of inventing their own clocks.
+- Provide a consistent exportable ledger snapshot, singular active focus, and deterministic timer story so downstream health checks and telemetry adapters can assert atomicity without replaying UI behavior.
+
 ## BEHAVIORS
 
 ### B1: “One step” feels atomic everywhere
@@ -32,6 +38,7 @@ GIVEN:  a step is released
 WHEN:   the store updates
 THEN:   the diagram highlight, explanation sentence, and log entry change together
 AND:    there is no intermediate state where the highlight changed but the log did not (or vice versa)
+AND:    this atomic window lets telemetry and health observers rely on the same release commit for every rendered highlight.
 ```
 
 ### B2: The ledger is always copyable and truthful
@@ -40,6 +47,7 @@ AND:    there is no intermediate state where the highlight changed but the log d
 GIVEN:  the user presses “Copy log”
 THEN:   the exported data is exactly the ledger entries in the store
 AND:    the export includes stable ids and required fields (per event_model)
+AND:    downstream agents can map every copied entry back into the store because the ids and payloads never diverge mid-export.
 ```
 
 ### B3: Focus is singular and persistent
@@ -48,6 +56,7 @@ AND:    the export includes stable ids and required fields (per event_model)
 GIVEN:  a step is released
 THEN:   there is exactly one active edge and one active node focus
 AND:    they remain active until the next release
+AND:    singular focus means health checks can assert focus invariants without chasing drifting component timers.
 ```
 
 ### B4: Wait progress bar behaves like time-under-load, not animation
@@ -57,6 +66,7 @@ GIVEN:  a player message is “sent”
 WHEN:   no answer has arrived yet
 THEN:   wait progress increases up to max 4.0s
 AND:    when the answer arrives, progress stops and resets (or marks completion)
+AND:    the timing story is carried by the store so wait bars always represent the real elapsed delay, even when the renderer is paused.
 ```
 
 ### B5: Tick cron display is consistent with speed selection
@@ -65,6 +75,7 @@ AND:    when the answer arrives, progress stops and resets (or marks completion)
 GIVEN:  speed is set to pause/1x/2x/3x
 THEN:   store updates nominal tick interval and tick display label
 AND:    the cron node fill reflects the interval (signal only; rendering owns animation)
+AND:    speed changes immediately adjust the stored tick signal so cron fills, logs, and health monitors stay aligned.
 ```
 
 ---
@@ -76,6 +87,7 @@ AND:    the cron node fill reflects the interval (signal only; rendering owns an
 ```
 GIVEN:  user clicks Next rapidly
 THEN:   store commits remain ordered and consistent (no lost steps)
+AND:    the ordered action stream keeps telemetry loggers from replaying partial transitions after the player spams Next.
 ```
 
 ### E2: Out-of-order realtime events (deferred)
@@ -84,6 +96,7 @@ THEN:   store commits remain ordered and consistent (no lost steps)
 GIVEN:  two realtime events arrive out of order
 THEN:   store preserves a stable ordering policy (arrival order or at_ms policy)
 AND:    UI remains readable
+AND:    the ordering policy documented in the store keeps renderers sane even when telemetry batches arrive with jitter.
 ```
 
 ---
@@ -94,6 +107,7 @@ AND:    UI remains readable
 
 ```
 MUST NOT: maintain a separate log list in a component
+AND:         the store’s ledger is the only source for copy/export, so local shadow ledgers would immediately diverge from canonical history.
 INSTEAD: log is derived exclusively from store.ledger
 ```
 
@@ -101,6 +115,7 @@ INSTEAD: log is derived exclusively from store.ledger
 
 ```
 MUST NOT: multiple active edges remain lit simultaneously (unless explicitly allowed)
+AND:         focus ambiguity would break health stories that assert exactly one edge/node pair is active per release.
 INSTEAD: store.active_focus is singular
 ```
 

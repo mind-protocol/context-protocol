@@ -99,6 +99,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2025-12-21: Document state store behavior objectives
+
+- **What:** Added OBJECTIVES SERVED plus richer behavior/anti-behavior prose to `docs/connectome/state_store/BEHAVIORS_Connectome_State_Store_Observable_State_Consistency_Effects.md` and noted the change in the state store SYNC so downstream agents see the precise observable goals the module is guarding.
+- **Why:** DOC_TEMPLATE_DRIFT #11 flagged the missing objectives block and terse behavior narratives, so this entry keeps the canonical story complete before the state store is consumed.
+- **Files:** `docs/connectome/state_store/BEHAVIORS_Connectome_State_Store_Observable_State_Consistency_Effects.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`
+- **Verification:** `ngram validate` *(fails: known `docs/connectome/health` PATTERNS/SYNC gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and lingering CHAIN-link warnings reported by the validator).*
+
 ### 2026-03-05: Confirm state store documentation chain
 
 - **What:** Verified the state store implementation doc already includes SCHEMA, DATA FLOW AND DOCKING (FLOW-BY-FLOW), LOGIC CHAINS, MODULE DEPENDENCIES, RUNTIME BEHAVIOR, and CONCURRENCY MODEL narratives and recorded the assurance in the connectome state_store SYNC so the chain remains canonical for DOC_TEMPLATE_DRIFT #11.
@@ -115,10 +122,10 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ### 2026-03-05: Document state store sync template coverage
 
-- **What:** Added IN PROGRESS, KNOWN ISSUES, HANDOFF (agents + human), POINTERS, and CONSCIOUSNESS TRACE narrative blocks to the state_store sync so every DOC_TEMPLATE_DRIFT requirement now has a story and the pointer list points at the canonical docs.
-- **Why:** The doctor warned this SYNC was missing several template sections, so the new entries keep the ledger complete and signal exactly what to monitor before another agent declares this module canonical.
+- **What:** Added IN PROGRESS, KNOWN ISSUES, HANDOFF (agents + human), CONSCIOUSNESS TRACE, and POINTERS so the state_store sync now records the unresolved retention debate, the manual `pnpm connectome:health state_store` verification requirement, and the inbound/outbound handoff guidance while pointing readers at the canonical docs.
+- **Why:** DOC_TEMPLATE_DRIFT #11 flagged this SYNC for missing template sections, so the new prose lets downstream agents understand what remains to be decided, how the health harness is triggered manually, and where to continue before declaring the module canonical.
 - **Files:** `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
-- **Verification:** `ngram validate`
+- **Verification:** `ngram validate` *(fails: still reports the known `docs/connectome/health` PATTERNS/SYNC/chain gaps, the `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the longstanding CHAIN-link warnings).*
 
 ### 2026-02-28: Record state store behavior guardrails
 

@@ -25,7 +25,7 @@ SYNC:            ./SYNC_Connectome_Node_Kit_Sync_Current_State.md
 
 ## OVERVIEW
 
-Node rendering is deterministic: given node model + store state, it produces consistent visuals.
+Node rendering is deterministic: given node metadata and store state the kit produces consistent visuals that match the behavior guarantees for clarity, trust, and signal truth.
 
 Inputs:
 
@@ -35,6 +35,12 @@ Inputs:
 Outputs:
 
 * rendered node component with correct background, layout, highlighted step, and widgets
+
+---
+
+## OBJECTIVES AND BEHAVIORS
+
+This algorithm keeps the renderer honest by tying every painted pixel back to the Objectives listed in the BEHAVIORS doc: identity, step clarity, energy glow, wait timers, and tick pacing must all match the canonical state_store values so viewers trust what appears in the viz even before they read the legend. By documenting the behavior linkage here we also satisfy the DOC_TEMPLATE_DRIFT requirement and leave a traceable contract between what we render and the observable outcomes B1-B7 describe.
 
 ---
 
@@ -61,118 +67,133 @@ tooltip: {summary: string, notes: string|null}
 
 ---
 
-## ALGORITHM: `render_node(view_model, store_state)`
+## ALGORITHM: render_node
+
+`render_node(view_model, store_state)` orchestrates every visible detail for a node by consuming typed metadata, active focus, energy metrics, wait/tick signals, and flipped flags to emit the final component props.
 
 ### Step 1: Determine background theme
 
-```
-background_theme = theme_for(node_type, language)
-```
+`background_theme = theme_for(node_type, language)` picks the palette described in PATTERNS so each variant remains distinguishable even before labels are read.
 
 Rules (v1):
 
-* Player: distinct (warm neutral with accent)
-* UI: distinct (cool grey/blue)
-* Module TS: TS-blue background tint
-* Module PY: PY-purple background tint
-* GraphQueries: purple background tint
-* Moment: yellow background tint
-* Agent: green background tint
-* TickCron: speed-coded tint
+* Player: warm neutral with a vibrant accent that keeps it approachable and human.
+* UI: cool grey/blue palette so interface nodes recede visually from the player.
+* Module TS: tinted TS-blue to align with TypeScript branding.
+* Module PY: shaded purple that echoes Python tooling without stealing attention.
+* GraphQueries: purple background tint that signals read-only graph operations.
+* Moment: yellow tint to match the bright cues used for moment highlights.
+* Agent: resilient green tone to make agents feel alive and separate from modules.
+* TickCron: speed-coded tint that hints at pacing and encourages quick reflexes.
 
 ### Step 2: Title and path
 
-* title rendered prominent, colored by node_type
-* file_path rendered small, low contrast, not bold
+Render the title prominently, color it by `node_type`, and keep the file path subdued so the viewer can orient immediately even when zoomed out.
 
 ### Step 3: Steps list (if present)
 
-* render list of step labels
-* active_step_key = store.active_focus.active_step_key
-* if view_model has a matching step_key:
-
-  * mark that item active (bold)
-  * color it by its call_type (from view_model step definition)
-* all others revert to normal
+Render every step label, resolve `active_step_key = store_state.active_focus.active_step_key`, and when the view_model defines a matching step, mark that item bold and color it by its `call_type` so only one step ever appears highlighted.
 
 ### Step 4: Energy badge
 
-If energy_value exists:
-
-* show value (format: 0.00 or 0.0 depending on scale; v1 choose 0.2 precision)
-* compute energy_color = map_energy_to_color(energy_value)
-* set glow accordingly
+If `energy_value` exists, format it with two decimals, compute `energy_color = map_energy_to_color(energy_value)`, and layer the glow so the badge feels like a contained burst of energy instead of a flat label.
 
 ### Step 5: Widgets per node type
 
-* PlayerNode:
-
-  * show wait progress bar (value and seconds) from store selector
-* TickCronNode:
-
-  * show circular progress ring from store.tick_display.progress_0_1
-  * center shows speed label
+* PlayerNode: render the wait progress bar plus the seconds display from `store_state.wait_progress` so the countdown and color shifts described in BEHAVIORS appear instantly.
+* TickCronNode: draw a circular progress ring driven by `store_state.tick_display.progress_0_1`, center the current speed label, and color the ring to match the preset speed hues so pacing reads without extra text.
 
 ### Step 6: Flipped ring
 
-If flipped==true:
-
-* add outer ring glow with distinct color (e.g., pink/white) and stronger blur
+If `view_model.flipped` is `true`, draw an outer glow ring with a distinct white/pink tint, add extra blur, and trigger the animation immediately so flipped nodes visually pop from the layout.
 
 ---
 
-## ALGORITHM: `map_energy_to_color(energy)`
+## KEY DECISIONS
+
+* Treat each node variant as a discrete visual kit so the renderer can switch palettes by checking `node_type` and `language` before laying out anything.
+* Keep the file path low contrast and non-bold because clarity depends on the title being the first thing spotted; paths only appear when analysts inspect the node closely.
+* Map energy to color deterministically via a helper so the glow never lies about the numeric value, which preserves the trust guarantees.
+* Highlight exactly one step at a time by consulting `active_focus` and `call_type`, preventing the confusion that duplicate highlights used to cause.
+* Render progress widgets only when the runtime state explicitly enables them (PlayerNode wait bars, TickCron rings) so we never over-render or duplicate signals.
+
+---
+
+## DATA FLOW
+
+Metadata and `call_type` information flow from `event_model` into the `ConnectomeNodeViewModel`, which the renderer consumes along with `state_store` selectors for energy, wait progress, tick display, and flipped status. `render_node` stitches this data into component props, delegates step rendering to `render_steps_list`, sources colors from `map_energy_to_color`, and eventually hands the payload to presentation components so the canvas always reflects the active state without inventing signals.
+
+---
+
+## HELPER FUNCTIONS
+
+* `map_energy_to_color(energy_value)`: deterministically maps a numeric energy to a palette color (see below) and is shared across badges.
+* `render_steps_list(steps, active_step_key)`: walks the provided steps, looks for the active key, and returns list items with the correct bold + call_type hue.
+* `determine_background_theme(node_type, language)`: centralizes palette decisions so adding new node variations only requires updating one table.
+* `render_widget_for_node_type(node_type, store_state)`: dispatches to wait progress or tick cron renders, ensuring only supported widgets appear for each variant.
+
+---
+
+## ALGORITHM: map_energy_to_color
+
+`map_energy_to_color(energy_value)` returns the glow hue for the energy badge and is invoked from `render_node`.
 
 Deterministic thresholds (v1 initial):
 
 ```
-IF energy is null:
-color = neutral_grey
-ELSE IF energy < 0.10:
-color = grey
-ELSE IF energy < 0.30:
-color = blue
-ELSE IF energy < 0.60:
-color = orange
+IF energy_value is null:
+    color = neutral_grey
+ELSE IF energy_value < 0.10:
+    color = grey
+ELSE IF energy_value < 0.30:
+    color = blue
+ELSE IF energy_value < 0.60:
+    color = orange
 ELSE:
-color = yellow
+    color = yellow
 ```
 
 Notes:
 
-* thresholds can be tuned later but must remain deterministic
-* mapping must be documented whenever changed
+* Thresholds may be tuned later but must remain deterministic so the badge never lies.
+* Every change to this mapping must be documented in VALIDATION so the glow keeps provenance.
 
 ---
 
-## ALGORITHM: wait progress display (PlayerNode)
+## ALGORITHM: wait_progress_display
+
+`wait_progress_display(store_state)` renders the PlayerNode wait bar using selectors that deliver seconds and 0-1 progress while applying colors that signal urgency aligned with the BEHAVIORS milestones.
 
 Inputs from store selector:
 
-* seconds_display: one decimal (0.0..4.0)
-* value_0_1: 0..1
+* `seconds_display`: formatted single decimal (0.0..4.0).
+* `value_0_1`: normalized progress value between 0 and 1.
 
-Color thresholds (v1):
+Color thresholds (v1) as described in BEHAVIORS:
 
-* <1.0s green
-* <2.0s yellow
-* <3.0s orange
-* else red
+* `<1.0s`: green.
+* `<2.0s`: yellow.
+* `<3.0s`: orange.
+* `>=3.0s`: red.
+
+---
+
+## INTERACTIONS
+
+Node rendering depends on `state_store` selectors for live focus, energy, wait, tick, and flip signals, while `event_model` supplies step metadata and call_type hues. `flow_canvas` handles placement but leaves rendering to this kit, `edge_kit` owns every link so nodes never draw edges, and the component map / implementation tokens document the actual styles applied to each palette, glow, and widget.
 
 ---
 
 ## COMPLEXITY
 
-O(k) where k = number of steps in the node (small). Rendering is fast.
+O(k) where k = number of steps in the node (typically small). Rendering is fast because each view_model is painted once per frame and helper lookups remain constant time.
 
 ---
 
 ## GAPS / IDEAS / QUESTIONS
 
-* [ ] Define exact title color tokens per node_type (shared palette file likely in node_kit).
+* [ ] Define exact title color tokens per node_type so the palette table can be audited.
 * QUESTION: Is energy normalized 0..1 or unbounded? mapping assumes “small-ish”; mark `?` until telemetry defines it.
 * IDEA: Show a tiny “TS/PY” badge in corner for Module nodes.
-
----
 
 ---

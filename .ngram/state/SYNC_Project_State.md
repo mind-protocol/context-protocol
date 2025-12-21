@@ -99,6 +99,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2026-03-24: Document node kit behavior objectives and I/O
+
+- **What:** Added OBJECTIVES SERVED plus INPUTS / OUTPUTS sections and refreshed the energy metrics question so `docs/connectome/node_kit/BEHAVIORS_Connectome_Node_Kit_Visible_Clarity_And_Trust_Effects.md` now satisfies DOC_TEMPLATE_DRIFT’s 50-character requirement for every template block.
+- **Why:** The doctor flagged the behavior doc for missing objectives and I/O coverage, and the narrative now ties clarity/trust back to canonical state_store/event_model inputs.
+- **Files:** `docs/connectome/node_kit/BEHAVIORS_Connectome_Node_Kit_Visible_Clarity_And_Trust_Effects.md`, `docs/connectome/node_kit/SYNC_Connectome_Node_Kit_Sync_Current_State.md`
+- **Validation:** `ngram validate` *(still fails: existing `docs/connectome/health` PATTERNS/SYNC gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and legacy CHAIN link warnings tracked by the doctor).*
+
 ### 2026-03-23: Document expanded node kit implementation depth
 
 - **What:** Added richer prose to the node kit Implementation sections (DESIGN PATTERNS through CONCURRENCY MODEL) so the doc explicitly mentions tooltip helpers, render hints, queued ticks, energy/glow wiring, store selectors, and concurrency safeguards.

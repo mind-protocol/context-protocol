@@ -46,6 +46,13 @@ Tracking the flipped node signal source and the unbounded versus 0..1 energy sca
 
 ## RECENT CHANGES
 
+### 2026-03-24: Fill algorithm template sections
+
+* **What:** Added the missing OBJECTIVES AND BEHAVIORS, KEY DECISIONS, DATA FLOW, HELPER FUNCTIONS, and INTERACTIONS sections to the node kit algorithm doc so every template block now exceeds the 50-character threshold and ties the rendering logic back to store selectors and health checks.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged that this algorithm doc was missing the sections that explain its purpose, decisions, helpers, data flow, and interactions, so filling them keeps the chain canonical before further energy bucket tuning touches the same doc.
+* **Files:** `docs/connectome/node_kit/ALGORITHM_Connectome_Node_Kit_Node_Rendering_Spec_And_Energy_Glow_Mapping.md`, this SYNC file
+* **Verification:** `ngram validate` *(fails: known `docs/connectome/health` PATTERNS/SYNC gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN link warnings already recorded elsewhere).*
+
 ### 2026-03-24: Document node kit behavior objectives and I/O
 
 - **What:** Added OBJECTIVES SERVED plus INPUTS / OUTPUTS sections and lengthened the question narrative so every template block in the BEHAVIORS doc surpasses the DOC_TEMPLATE_DRIFT 50-character expectation.

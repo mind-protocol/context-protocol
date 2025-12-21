@@ -23,6 +23,12 @@ SYNC:            ./SYNC_Connectome_Node_Kit_Sync_Current_State.md
 
 ---
 
+## OBJECTIVES SERVED
+
+- Keep node framing, energy badges, step highlights, and tooltips coherent so the viewer immediately trusts what they see before reading any text.
+- Ensure every glow, wait bar, and cron ring aligns with canonical state_store signals so the connectome canvas never invents its own story about energy or focus.
+- Prevent the interface from relying on heuristics by anchoring visible changes to explicit FlowEvent metadata and validated palette mappings before repainting.
+
 ## BEHAVIORS
 
 ### B1: Node identity is obvious at a glance
@@ -102,6 +108,15 @@ INSTEAD: use deterministic mapping function from ALGORITHM
 
 ---
 
+## INPUTS / OUTPUTS
+
+**Inputs:** The node kit accepts state_store selectors that include node title, language metadata, energy value, wait progress, cron angle, active_focus, and flipped/interrupt markers, along with event_model call_type and step_key tuples so it never infers semantics from raw payloads.
+**Outputs:** The renderer emits node silhouettes, background washes, gradient glows, step highlights, tooltips, wait bars, and tick rings that faithfully animate the incoming signals while preserving the clarity and trust guarantees that give operators confidence before they read the text.
+
+**Documentation note:** This mirrors the store/event_model contract—the node kit is a pure presentation surface whose visible behavior is fully determined by the supplied inputs and whose outputs are purely visual reflections of the validated signals.
+
+---
+
 ## EDGE CASES
 
 ### E1: Unknowns
@@ -115,7 +130,7 @@ THEN:   it renders with default neutral styling and shows “?” in tooltip
 
 ## GAPS / IDEAS / QUESTIONS
 
-* QUESTION: Do we display multiple energy metrics (energy, weight, salience) in v1? (recommend: energy only for now)
+* QUESTION: Should we surface multiple energy metrics (weight, salience, momentum) in v1, or keep the kit narrowly focused on the single energy badge that the runtime already normalizes to preserve clarity? (recommend: energy only for now)
 
 ---
 

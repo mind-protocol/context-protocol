@@ -47,6 +47,13 @@ Implemented LogPanel with a “Now” section, ledger list, duration color rules
 * **Files:** `docs/connectome/log_panel/HEALTH_Connectome_Log_Panel_Runtime_Verification_Of_Log_Truth_And_Export_Integrity.md`, this SYNC file
 * **Validation:** `ngram validate` *(fails: docs/connectome/health PATTERNS/SYNC gaps plus docs/physics naming/CHAIN warnings already logged elsewhere).*
 
+### 2026-04-04: Record behavior doc objectives and I/O coverage repair
+
+* **What:** Logged that the behavior doc now includes OBJECTIVES SERVED and INPUTS / OUTPUTS so the template drift fix and ledger/export contract remain traceable to the canonical panel story.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged those sections as missing, so capturing the addition here keeps downstream agents aware of the canonical behavior before they rely on the panel.
+* **Files:** `docs/connectome/log_panel/BEHAVIORS_Connectome_Log_Panel_Step_Clarity_And_Copyable_Audit_Trail_Effects.md`, this SYNC file
+* **Validation:** `ngram validate` *(fails: existing docs/connectome/health PATTERNS/SYNC gaps plus docs/physics naming and CHAIN warnings already tracked elsewhere).*
+
 ### 2025-12-21: Expand behavior doc objectives and I/O coverage
 
 * **What:** Added rich OBJECTIVES SERVED plus INPUTS / OUTPUTS sections so the behavior document now lays out the canonical goals, audited signals, and copy/export payload expectations for the log panel.

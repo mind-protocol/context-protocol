@@ -106,6 +106,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **Files:** `docs/connectome/flow_canvas/VALIDATION_Connectome_Flow_Canvas_Invariants_For_Readability_And_Stability.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
 * **Validation:** `ngram validate` *(fails for the existing docs/connectome/health PATTERNS/SYNC/full-chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needing the plural prefix, and the longstanding CHAIN-link warnings but introduces no new failures).*
 
+### 2026-04-09: Complete flow canvas health template sections (#11)
+
+* **What:** Added WHY THIS PATTERN, HOW TO USE THIS TEMPLATE, OBJECTIVES COVERAGE, STATUS, DOCK TYPES, indicator/value/representation/docks narratives, and lengthened HOW TO RUN inside `HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_Stability_And_Perf_Budgets.md` so every template block now meets the DOC_TEMPLATE_DRIFT expectations and ties the indicator definitions back to the VALIDATION invariants.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged the missing sections in this health doc; the new content keeps the runtime verification story aligned with VALIDATION and lets dashboards know which streams/logs to watch before rerunning the probe.
+* **Files:** `docs/connectome/flow_canvas/HEALTH_Connectome_Flow_Canvas_Runtime_Verification_Of_Render_Stability_And_Perf_Budgets.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails: existing docs/connectome/health gaps, the engine/membrane PATTERN naming issue, and the long-standing CHAIN link warnings already tracked by the validator).*
+
 ### 2026-04-03: Document log panel health forwarding metadata
 
 * **What:** Added a paragraph describing how the `connectome.health.log_panel` stream metadata (indicator name, event id, duration bucket) mirrors the CLI failure log and introduced a `Forwarding & Displays` block so the health doc explicitly maps the binary `0` result to instrumentation outputs.
@@ -835,6 +842,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Why:** Close the DOC_TEMPLATE_DRIFT warning tied to `docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md` and clarify what the adapter does and prevents.
 - **Files:** `docs/llm_agents/PATTERNS_Provider_Specific_LLM_Subprocesses.md`, `docs/llm_agents/SYNC_LLM_Agents_State.md`
 - **Verification:** `ngram validate` (fails: pre-existing connectome health doc gaps, membrane naming, and various CHAIN links unrelated to this doc)
+
+### 2025-12-21: Document flow canvas PATTERNS behavior sections
+
+- **What:** Added BEHAVIORS SUPPORTED and BEHAVIORS PREVENTED sections to `docs/connectome/flow_canvas/PATTERNS_Connectome_Flow_Canvas_Pannable_Zoomable_Zoned_System_Map_Rendering_Patterns.md` so the upstream design doc now records the observable outcomes and tolerances flagged by DOC_TEMPLATE_DRIFT #11.
+- **Why:** Keeps the canonical PATTERNS doc aligned with the BEHAVIORS/ALGORITHM chain and ensures future agents trace the behavior contract before touching the canvas implementation.
+- **Files:** `docs/connectome/flow_canvas/PATTERNS_Connectome_Flow_Canvas_Pannable_Zoomable_Zoned_System_Map_Rendering_Patterns.md`, `docs/connectome/flow_canvas/SYNC_Connectome_Flow_Canvas_Sync_Current_State.md`
+- **Verification:** `ngram validate`
 
 ### 2025-12-21: Catalog archive repository map status
 

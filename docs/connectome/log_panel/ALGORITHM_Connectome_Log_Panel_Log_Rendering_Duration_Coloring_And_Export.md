@@ -82,6 +82,8 @@ Outputs:
 }
 ```
 
+This data modeling keeps the `render_log_panel` pipeline aligned with FlowEvent fields so rendering, badges, and exports reuse consistent terminology.
+
 ## ALGORITHM: `render_log_panel(store_state)`
 
 ### Step 1: Snapshot and normalize inputs

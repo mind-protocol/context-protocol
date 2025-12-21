@@ -2,7 +2,7 @@
 
 # runtime_engine — Sync: Current State
 
-LAST_UPDATED: 2026-05-01
+LAST_UPDATED: 2026-05-02
 UPDATED_BY: codex
 STATUS: DESIGNING
 ```
@@ -103,7 +103,7 @@ Stepper runtime engine is implemented with a fixed step script. Next dispatches 
 
 ### 2026-04-26: Complete runtime_engine PATTERNS behavior sections (#11)
 
-* **What:** Added the required `BEHAVIORS SUPPORTED` and `BEHAVIORS PREVENTED` narratives to the runtime_engine patterns doc, spelling out the gating guarantees and the UI/BMS guardrails so each template block satisfies the 50-character minimum and links back to the behavior expectations.
+* **What:** Added the required `BEHAVIORS SUPPORTED` and `BEHAVIORS PREVENTED` narratives (B1/B2/B3 and A1/A2) to the runtime_engine patterns doc, spelling out the gating guarantees, presentation-rate guardrails, and UI/BMS anti-behaviors so each template block satisfies the 50-character minimum and links back to the behavior expectations.
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged those sections as missing; filling them keeps the design intent traceable before agents edit runtime_engine code.
 * **Files:** `docs/connectome/runtime_engine/PATTERNS_Connectome_Runtime_Engine_Stepper_And_Realtime_Traversal_Control_Patterns.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
 * **Validation:** `ngram validate`

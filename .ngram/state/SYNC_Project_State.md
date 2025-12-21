@@ -1,7 +1,7 @@
 # Project — Sync: Current State
 
 ```
-LAST_UPDATED: 2026-05-04
+LAST_UPDATED: 2026-05-05
 UPDATED_BY: codex
 ```
 
@@ -99,6 +99,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ## RECENT CHANGES
 
+### 2026-05-08: Expand runtime engine validation narrative (#11)
+
+* **What:** Added detailed `BEHAVIORS GUARANTEED` and `OBJECTIVES COVERED` tables in the runtime engine validation doc plus the matching SYNC memo so the module now states what each gait invariant defends and why the autoplayer guardrails stay aligned with health indicators.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged missing behavior/objective coverage; the added tables spell out the deterministic release behavior, autoplayer gating goals, and indicator ties before downstream agents rely on the validation chain.
+* **Files:** `docs/connectome/runtime_engine/VALIDATION_Connectome_Runtime_Engine_Invariants_For_Stepper_And_Realtime.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails: known docs/connectome/health chain gaps, the docs/engine/membrane/PATTERN_Membrane_Modulation.md naming mismatch, and longstanding CHAIN link warnings remain; no new regressions introduced).*
+
 ### 2026-05-04: Expand edge kit behavior template (#11)
 
 * **What:** Added the missing `OBJECTIVES SERVED` and `INPUTS / OUTPUTS` sections, then expanded every behavior/anti description plus the Edge Case commentary so the prose now exceeds the 50-character threshold before downstream agents edit the edge kit.
@@ -119,6 +126,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged missing or incomplete SYNC sections; updating the file keeps future agents oriented while the runtime graph and telemetry story continue to evolve.
 * **Files:** `docs/connectome/edge_kit/SYNC_Connectome_Edge_Kit_Sync_Current_State.md`
 * **Validation:** `ngram validate` *(fails: the same pre-existing connectome/health chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` plural naming mismatch, and long-standing CHAIN-link warnings remain; no new regressions introduced).*
+
+### 2026-05-05: Complete edge kit validation template (#11)
+
+* **What:** Added BEHAVIORS GUARANTEED, OBJECTIVES COVERED, PROPERTIES, and SYNC STATUS sections that tie every invariant back to the documented behaviors, property guards, and verification steps so the template satisfies DOC_TEMPLATE_DRIFT's 50+ character requirement.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged the missing validation prose; this update makes the semantic/dash/pulse guarantees instantly traceable to the observable behavior and verification story before downstream agents edit the edge kit.
+* **Files:** `docs/connectome/edge_kit/VALIDATION_Connectome_Edge_Kit_Invariants_For_Color_Dash_And_Pulse_Truth.md`, `docs/connectome/edge_kit/SYNC_Connectome_Edge_Kit_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails: existing docs/connectome/health chain gaps, docs/engine/membrane/PATTERN_Membrane_Modulation.md plural naming mismatch, and legacy CHAIN-link warnings remain; no new regressions introduced).* 
 
 ### 2025-12-21: Fill edge kit pattern template sections (#11)
 
@@ -190,10 +204,17 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 
 ### 2026-05-04: Tie runtime engine objectives to telemetry and logs (#11)
 
-* **What:** Added a paragraph linking the behavior guarantees to the state_store commit and introduced a fifth scheduler step that describes how telemetry adapters, the log panel, and health tooling see the settled snapshot so downstream observers never disagree about ledger/focus/timer order.
-* **Why:** DOC_TEMPLATE_DRIFT #11 expects the behavior and algorithm narratives to mention their observable side effects and downstream consumers; the new prose makes it explicit why the runtime guard must lock focus, explanation, and timers before telemetry/log health targets render a release.
+* **What:** Added a paragraph linking the behavior guarantees to the state_store atomic commit and introduced a fifth scheduler step that describes how telemetry adapters, the log panel, and health tooling see the settled snapshot so downstream observers never disagree about ledger/focus/timer order.
+* **Why:** DOC_TEMPLATE_DRIFT #11 expects the behavior and algorithm narratives to mention their observable side effects and downstream consumers; the new prose makes it explicit why the runtime guard must lock focus, explanation, and timers before telemetry/log health targets render a release while giving downstream agents a concrete snapshot to verify before issuing new commands.
 * **Files:** `docs/connectome/runtime_engine/ALGORITHM_Connectome_Runtime_Engine_Step_Release_And_Realtime_Scheduling.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate` *(fails: the known `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings remain; no new failures introduced).*
+
+### 2026-05-05: Expand edge kit implementation architecture (#11)
+
+* **What:** Added detailed DESIGN PATTERNS, SCHEMA, DATA FLOW AND DOCKING (FLOW-BY-FLOW), LOGIC CHAINS, MODULE DEPENDENCIES, STATE MANAGEMENT, RUNTIME BEHAVIOR, CONCURRENCY MODEL, and BIDIRECTIONAL LINKS narratives to `docs/connectome/edge_kit/IMPLEMENTATION_Connectome_Edge_Kit_Component_Map_And_Render_Tokens.md` so the implementation doc now traces the FlowEvent contract, React Flow rendering, store usage, and health probes before downstream agents edit the edge kit code.
+* **Why:** DOC_TEMPLATE_DRIFT #11 flagged those sections as missing or too terse; expanding them keeps the canonical writeup aligned with the PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/HEALTH chain and equips agents with explicit data and runtime context ahead of further edits.
+* **Files:** `docs/connectome/edge_kit/IMPLEMENTATION_Connectome_Edge_Kit_Component_Map_And_Render_Tokens.md`, `docs/connectome/edge_kit/SYNC_Connectome_Edge_Kit_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Validation:** `ngram validate` *(fails: existing `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the longstanding CHAIN-link warnings remain; no regressions introduced).*
 
 ### 2026-05-02: Expand runtime engine implementation template (#11)
 
@@ -242,16 +263,16 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 * **Validation:** `ngram validate` *(fails: the existing docs/connectome/health chain gaps and `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch remain; no regressions introduced).*
 ### 2026-05-04: Tie runtime engine objectives to telemetry and logs (#11)
 
-* **What:** Added a paragraph linking the behavior guarantees to the state_store commit and introduced a fifth scheduler step that describes how telemetry adapters, the log panel, and health tooling see the settled snapshot so downstream observers never disagree about ledger/focus/timer order.
-* **Why:** DOC_TEMPLATE_DRIFT #11 expects the behavior and algorithm narratives to mention their observable side effects and downstream consumers; the new prose makes it explicit why the runtime guard must lock focus, explanation, and timers before telemetry/log health targets render a release.
+* **What:** Added a paragraph linking the behavior guarantees to the state_store atomic commit and introduced a fifth scheduler step that describes how telemetry adapters, the log panel, and health tooling see the settled snapshot so downstream observers never disagree about ledger/focus/timer order.
+* **Why:** DOC_TEMPLATE_DRIFT #11 expects the behavior and algorithm narratives to mention their observable side effects and downstream consumers; the new prose makes it explicit why the runtime guard must lock focus, explanation, and timers before telemetry/log health targets render a release while giving downstream agents a concrete snapshot to verify before issuing new commands.
 * **Files:** `docs/connectome/runtime_engine/ALGORITHM_Connectome_Runtime_Engine_Step_Release_And_Realtime_Scheduling.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate` *(fails: the known `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings remain; no new failures introduced).*
 
 
 ### 2026-05-04: Tie runtime engine objectives to telemetry and logs (#11)
 
-* **What:** Added a paragraph linking the behavior guarantees to the state_store commit and introduced a fifth scheduler step that describes how telemetry adapters, the log panel, and health tooling see the settled snapshot so downstream observers never disagree about ledger/focus/timer order.
-* **Why:** DOC_TEMPLATE_DRIFT #11 expects the behavior and algorithm narratives to mention their observable side effects and downstream consumers; the new prose makes it explicit why the runtime guard must lock focus, explanation, and timers before telemetry/log health targets render a release.
+* **What:** Added a paragraph linking the behavior guarantees to the state_store atomic commit and introduced a fifth scheduler step that describes how telemetry adapters, the log panel, and health tooling see the settled snapshot so downstream observers never disagree about ledger/focus/timer order.
+* **Why:** DOC_TEMPLATE_DRIFT #11 expects the behavior and algorithm narratives to mention their observable side effects and downstream consumers; the new prose makes it explicit why the runtime guard must lock focus, explanation, and timers before telemetry/log health targets render a release while giving downstream agents a concrete snapshot to verify before issuing new commands.
 * **Files:** `docs/connectome/runtime_engine/ALGORITHM_Connectome_Runtime_Engine_Step_Release_And_Realtime_Scheduling.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate` *(fails: the known `docs/connectome/health` chain gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN-link warnings remain; no new failures introduced).*
 

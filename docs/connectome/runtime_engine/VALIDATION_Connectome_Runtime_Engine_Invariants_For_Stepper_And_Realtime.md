@@ -27,17 +27,19 @@ SYNC:            ./SYNC_Connectome_Runtime_Engine_Sync_Current_State.md
 
 | Behavior ID | Behavior | Why This Validation Matters |
 |-------------|----------|-----------------------------|
-| B1 | Next in stepper mode increments the ledger length and cursor by exactly one FlowEvent release, then keeps the gate closed until an explicit command arrives. | Validating this ties each ledger entry to a deliberate click, maintaining deterministic replay and preventing ghost steps from polluting the history when operators retry. |
-| B2 | Speed adjustments only change animation duration defaults and presentation pacing; they never mutate ledger length, cursor, or FlowEvent cadence in stepper mode. | Confirming this guarantees that the authorization boundary stays separate from animation tweaks so the runtime never stealthily advances while speeding up visual feedback. |
+| B1 | Next in stepper mode increments the ledger length and cursor by exactly one FlowEvent release, then keeps the gate closed until an explicit command arrives. | Validating this ties each ledger entry to a deliberate click, maintains deterministic replay, and keeps autoplayer toggles from sneaking extra events into the history when operators retry. |
+| B2 | Speed adjustments only change animation duration defaults and presentation pacing; they never mutate ledger length, cursor, or FlowEvent cadence even when autoplayer controls are touched. | Confirming this guarantees that the authorization boundary stays separate from animation tweaks so the runtime never stealthily advances while speeding up visual feedback. |
 | B3 | Every release obeys the 200ms minimum duration clamp so realtime playback cannot collapse into imperceptibly fast bursts that disguise rapid autoplayer pulses. | The pacing guard keeps telemetry, UIs, and health probes aligned with a perceptible flow, making it obvious when autoplayer bursts try to masquerade as valid steps. |
+| B4 | Autoplay mode still requires explicit gating signals before dribbling events to FlowEvent archives, so the runtime never emits data without a preceding command. | This validation makes sure the autoplayer telemetry and health probes match the manual step gating path so nothing drifts when the runtime switches into realtime mode. |
 
 ## OBJECTIVES COVERED
 
 | Objective | Validations | Rationale |
 |-----------|-------------|-----------|
-| Keep Next clicks deterministic by allowing exactly one release per press so ledger updates, cursors, and logs stay predictable before the loop continues. | V1, P1 | This objective prevents multiple FlowEvents per command, making the runtime reproducible and giving analysts confidence that identical scripts yield identical sequences. |
-| Keep speed adjustments purely as duration knobs and block autoplay leaks so stepper mode never advances without explicit user consent. | V2, E1, E2 | Validating the speed and error invariants ensures downstream tooling can detect any boundary violation that would let autoplay or unauthorized releases slip through. |
+| Keep Next clicks deterministic by allowing exactly one release per press so ledger updates, cursors, and logs stay predictable before the loop continues. | V1, P1 | This objective prevents multiple FlowEvents per command, preserves replay reproducibility, and keeps autoplayer triggers from corrupting ordered script traces. |
+| Keep speed adjustments purely as duration knobs and block autoplay leaks so stepper mode never advances without explicit user consent. | V2, E1, E2 | Validating the speed and error invariants ensures downstream tooling can detect any boundary violation that would let autoplay or unauthorized releases slip through and mislead health dashboards. |
 | Maintain human-scale pacing by enforcing the 200ms minimum duration clamp so observers always see the same perceptible cadence before the next command. | V3 | The clamp keeps pacing aligned with telemetry and narrative expectations, preventing autoplayer bursts from rushing through events and confusing auditors. |
+| Keep realtime/autoplay gating observable so any emission outside the stepper path triggers a detectable health violation before it reaches downstream logs. | E1, E2 | This objective explicitly tracks the autoplayer guardrails and ensures validation storms fire whenever the runtime tries to skirt the canonical release route. |
 
 ---
 

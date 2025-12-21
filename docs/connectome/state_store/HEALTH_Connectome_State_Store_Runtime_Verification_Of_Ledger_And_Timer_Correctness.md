@@ -22,6 +22,7 @@ The HEALTH pattern is appropriate here because the state_store needs a lightweig
 4. For every flow, bind a health indicator to a docking event or metric and verify the input/output pair against the validation criteria.
 5. Keep throttling low and forward results only to the ngram health stream so we do not overwhelm the Connectome UI.
 6. After adjusting the indicators, update this document, the module SYNC, and rerun `ngram validate`.
+7. Record the completed indicator story in the AGENT OBSERVATIONS section so future agents can see why each flow and dock mattered.
 
 ---
 
@@ -174,6 +175,8 @@ This status entry is emitted to the Doctor health stream and is refreshed whenev
 - `metric` — `dock_store_ledgers_synced` and `dock_store_retention_evictions` provide counters for exported ledger alignment and retention trimming.
 
 These are the only dock types required for the state_store health harness, so we do not introduce custom categories beyond the standard ones above.
+
+The explicit dock taxonomy above keeps the Doctor aligned with runtime signal sources, so every future health tweak should restate the dock IDs that feed the indicator ledger.
 
 ---
 

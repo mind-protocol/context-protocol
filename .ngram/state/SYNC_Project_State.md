@@ -162,9 +162,9 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Files:** `docs/connectome/node_kit/VALIDATION_Connectome_Node_Kit_Invariants_For_Node_Readability_And_State_Reflection.md`, `docs/connectome/node_kit/SYNC_Connectome_Node_Kit_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(fails: persistent `docs/connectome/health` PATTERNS/SYNC gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the legacy CHAIN-link warnings the doctor still reports).*
 
-### 2026-03-17: Reaffirm state store health dock story
+- ### 2026-03-17: Reaffirm state store health dock story
 
-- **What:** Added a HOW TO USE bullet that routes the indicator story into AGENT OBSERVATIONS and clarified the dock types section so the state_store health doc explicitly names the flows, indicators, and dock sources the Doctor should monitor.
+- **What:** Added a HOW TO USE bullet that routes the indicator story into AGENT OBSERVATIONS, clarified the dock types section, and logged the observation so downstream agents know why each flow/dock combination was chosen.
 - **Why:** DOC_TEMPLATE_DRIFT #11 nudges us to keep the indicator/dock chain explicit; this update confirms the health doc now carries the entire story while the sync records the new observation.
 - **Files:** `docs/connectome/state_store/HEALTH_Connectome_State_Store_Runtime_Verification_Of_Ledger_And_Timer_Correctness.md`, `docs/connectome/state_store/SYNC_Connectome_State_Store_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
 - **Verification:** `ngram validate` *(fails for the pre-existing docs/connectome/health PATTERNS/SYNC gaps, the docs/engine/membrane PATTERN naming mismatch, and the CHAIN link warnings already listed by the doctor).*

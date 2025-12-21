@@ -106,6 +106,13 @@ Attention documentation now points at this canonical PATTERN so every consumer s
 - **Files:** `docs/connectome/node_kit/IMPLEMENTATION_Connectome_Node_Kit_Component_Map_And_Styling_Tokens.md`, `.ngram/state/SYNC_Project_State.md`
 - **Validation:** `ngram validate` *(fails: pre-existing `docs/connectome/health` gaps, the `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming issue, and lingering CHAIN warnings elsewhere.)*
 
+### 2026-03-22: Fill node kit behaviors template sections
+
+- **What:** Added the missing `OBJECTIVES SERVED` and `INPUTS / OUTPUTS` sections to `docs/connectome/node_kit/BEHAVIORS_Connectome_Node_Kit_Visible_Clarity_And_Trust_Effects.md`, expanded the question about energy metrics, and brought each block above the 50-character threshold flagged by DOC_TEMPLATE_DRIFT #11.
+- **Why:** The doctor reported those sections as missing/too terse, so this update keeps the behavior contract explicit before downstream agents rely on the clarity and trust effects.
+- **Files:** `docs/connectome/node_kit/BEHAVIORS_Connectome_Node_Kit_Visible_Clarity_And_Trust_Effects.md`, `docs/connectome/node_kit/SYNC_Connectome_Node_Kit_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+- **Validation:** `ngram validate` *(fails: existing `docs/connectome/health` gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and the long-standing CHAIN warnings already reported)*
+
 ### 2026-03-22: Expand node kit implementation template coverage
 
 - **What:** Added DESIGN PATTERNS, SCHEMA, LOGIC CHAINS, MODULE DEPENDENCIES, STATE MANAGEMENT, RUNTIME BEHAVIOR, CONCURRENCY MODEL, and DATA FLOW AND DOCKING content to `docs/connectome/node_kit/IMPLEMENTATION_Connectome_Node_Kit_Component_Map_And_Styling_Tokens.md` so every required template block now satisfies the DOC_TEMPLATE_DRIFT warning for this file.

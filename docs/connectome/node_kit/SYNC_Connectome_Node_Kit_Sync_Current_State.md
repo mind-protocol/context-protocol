@@ -46,12 +46,26 @@ Tracking the flipped node signal source and the unbounded versus 0..1 energy sca
 
 ## RECENT CHANGES
 
+### 2026-03-24: Document node kit behavior objectives and I/O
+
+- **What:** Added OBJECTIVES SERVED plus INPUTS / OUTPUTS sections and lengthened the question narrative so every template block in the BEHAVIORS doc surpasses the DOC_TEMPLATE_DRIFT 50-character expectation.
+- **Why:** The doctor flagged the behavior doc for missing objectives and I/O coverage, and the new prose now documents how clarity and trust rest on canonical state_store/event_model signals.
+- **Files:** `docs/connectome/node_kit/BEHAVIORS_Connectome_Node_Kit_Visible_Clarity_And_Trust_Effects.md`
+- **Verification:** `ngram validate` *(still fails: existing `docs/connectome/health` PATTERNS/SYNC gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and longstanding CHAIN link warnings tracked by the doctor).*
+
 ### 2026-03-23: Deepen implementation prose coverage
 
 * **What:** Added tighter prose to the node kit implementation sections (DESIGN PATTERNS, SCHEMA, LOGIC CHAINS, MODULE DEPENDENCIES, STATE MANAGEMENT, RUNTIME BEHAVIOR, CONCURRENCY MODEL, DATA FLOW AND DOCKING) so the doc now explains the render helpers, schema hooks, flow ticks, and store selectors that keep the palette/tooltip/state wiring consistent.
 * **Why:** DOC_TEMPLATE_DRIFT #11 still complains about missing sections with enough detail, so this entry records the extra sentences we added to make each section traceable back to the runtime code.
 * **Files:** `docs/connectome/node_kit/IMPLEMENTATION_Connectome_Node_Kit_Component_Map_And_Styling_Tokens.md`
 * **Verification:** `ngram validate` *(fails: pre-existing `docs/connectome/health` gaps, the `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming issue, and lingering CHAIN warnings handled elsewhere).*
+
+### 2026-03-22: Expand node kit behaviors template coverage
+
+* **What:** Added the missing `OBJECTIVES SERVED` and `INPUTS / OUTPUTS` sections to the BEHAVIORS doc, clarified the energy metrics question, and ensured each block exceeds the 50-character threshold required by DOC_TEMPLATE_DRIFT #11.
+* **Why:** Doctor warnings reported those behaviors sections absent/too short, so enriching them keeps the observable contract canonical before agents rely on the node kit’s clarity/trust guarantees.
+* **Files:** `docs/connectome/node_kit/BEHAVIORS_Connectome_Node_Kit_Visible_Clarity_And_Trust_Effects.md`, this SYNC file
+* **Verification:** `ngram validate` *(fails: pre-existing `docs/connectome/health` gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and legacy CHAIN-link warnings)*
 
 ### 2026-03-22: Expand implementation doc template coverage
 

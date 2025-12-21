@@ -114,6 +114,8 @@ health_indicators:
 | Keep node highlight fidelity and badge colors in sync with the store so the canvas never lies about what function is active. | node_active_step_singularity_integrity, node_energy_color_bucket_integrity | Operators read the canvas first; these signals keep the map trustworthy even under churn. |
 | Keep wait timers and tick cron indicators bounded and precise so pacing and chrono insights stay readable. | node_wait_progress_clamp_integrity, node_tick_cron_progress_clamp_integrity | Pacing decisions depend on these numbers; drift here would mislead message timing and physics pacing tools. |
 
+Each objective explains why the corresponding indicators matter to humans and automation alike. When you rerun the harness, make sure every listed indicator still supplies the coverage promised here—highlight, energy, wait, and tick—before you call the node kit healthy again.
+
 ---
 
 ## STATUS (RESULT INDICATOR)
@@ -128,6 +130,8 @@ status:
     source: node_active_step_singularity_integrity
 ```
 
+The `binary` result flag is emitted by the CLI runner and forwarded to the `connectome.health.node_kit` stream so dashboards can spot regressions quickly; `1` means every checker passed and `0` means at least one indicator tripped. Update `updated_at` each time you re-run the CLI so topic subscribers know which run produced the current status.
+
 ---
 
 ## DOCK TYPES (COMPLETE LIST)
@@ -136,6 +140,8 @@ status:
 * `process` — manual `pnpm connectome:health node_kit` probe execution.
 * `metrics` — logs indicator results to the health stream for downstream monitoring.
 * `stream` — health transcript output that feeds `connectome.health` dashboards.
+
+The `event` docks tag the store selectors (`active_focus`, `energy_value`, `wait_progress`, `tick_display`) so every indicator knows where to read its inputs. The `metrics` and `stream` docks propagate binary/warn/error outcomes to dashboards and log files, letting the durability team watch for trends. Add `graph_ops` or `cache` docks later only if you need to read persisted snapshots or caching layers; the current harness focuses on runtime state so these four docks cover the observable signal paths.
 
 Use `custom` only if standard types are insufficient (none needed here).
 
@@ -621,6 +627,8 @@ pnpm connectome:health node_kit --checker health_check_tick_cron_progress_bounde
 ```
 
 Each command logs results to the CLI and to `./logs/connectome_health/node_kit.log` so you can keep a history of indicator trends.
+
+Set `NGRAM_HEALTH_LOGS=./logs/connectome_health` or `HEALTH_LOG_DIR=./logs/connectome_health` before running to reroute logs elsewhere, and review the last three entries to confirm the binary/tong states settled before you push the change. If any check returns `0`, the CLI prints a stack trace with the offending node IDs so you can jump straight to the failing indicator (highlight, energy, wait, or cron) before rerunning.
 
 ---
 

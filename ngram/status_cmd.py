@@ -325,45 +325,6 @@ def extract_sync_details(sync_path: Path) -> Tuple[str, str, str]:
 # DOCTOR INTEGRATION
 # =============================================================================
 
-def get_module_health_issues(project_dir: Path, module_name: str, code_pattern: str, docs_path: str) -> List[HealthIssue]:
-    """Get health issues for a specific module from doctor."""
-    try:
-        from .doctor import run_all_checks
-        all_issues = run_all_checks(project_dir)
-
-        module_issues = []
-        for issue in all_issues:
-            path = issue.path
-            matched = False
-
-            # Check if issue path matches module code
-            if code_pattern:
-                if _path_matches_glob(path, code_pattern):
-                    matched = True
-
-            # Check if issue path matches module docs
-            if docs_path and path.startswith(docs_path.rstrip('/')):
-                matched = True
-
-            if matched:
-                module_issues.append(HealthIssue(
-                    issue_type=issue.issue_type,
-                    severity=issue.severity,
-                    path=path,
-                    message=issue.message,
-                    details=issue.details if hasattr(issue, 'details') else {},
-                ))
-
-        return module_issues
-    except Exception as e:
-        return [HealthIssue(
-            issue_type="STATUS_ERROR",
-            severity="warning",
-            path="",
-            message=f"Could not run health checks: {str(e)[:50]}",
-        )]
-
-
 def _path_matches_glob(path: str, pattern: str) -> bool:
     """Check if a path matches a glob pattern."""
     import fnmatch
@@ -376,20 +337,57 @@ def _path_matches_glob(path: str, pattern: str) -> bool:
 def get_all_health_issues(project_dir: Path) -> List[HealthIssue]:
     """Get all health issues from doctor."""
     try:
-        from .doctor import run_all_checks
-        all_issues = run_all_checks(project_dir)
-        return [
-            HealthIssue(
-                issue_type=issue.issue_type,
-                severity=issue.severity,
-                path=issue.path,
-                message=issue.message,
-                details=issue.details if hasattr(issue, 'details') else {},
-            )
-            for issue in all_issues
-        ]
-    except Exception:
-        return []
+        from .doctor import run_doctor
+        from .doctor_types import DoctorConfig
+        config = DoctorConfig()
+        result = run_doctor(project_dir, config)
+
+        all_issues = []
+        for severity in ["critical", "warning", "info"]:
+            for issue in result["issues"].get(severity, []):
+                all_issues.append(HealthIssue(
+                    issue_type=issue.issue_type,
+                    severity=issue.severity,
+                    path=issue.path,
+                    message=issue.message,
+                    details=issue.details if hasattr(issue, 'details') else {},
+                ))
+        return all_issues
+    except Exception as e:
+        # Return error as a single issue so user knows something went wrong
+        return [HealthIssue(
+            issue_type="DOCTOR_ERROR",
+            severity="warning",
+            path="",
+            message=f"Could not run health checks: {str(e)[:80]}",
+        )]
+
+
+def get_module_health_issues(project_dir: Path, module_name: str, code_pattern: str, docs_path: str) -> List[HealthIssue]:
+    """Get health issues for a specific module from doctor."""
+    all_issues = get_all_health_issues(project_dir)
+    return filter_issues_for_module(all_issues, code_pattern, docs_path)
+
+
+def filter_issues_for_module(all_issues: List[HealthIssue], code_pattern: str, docs_path: str) -> List[HealthIssue]:
+    """Filter issues to those matching a module's code or docs paths."""
+    module_issues = []
+    for issue in all_issues:
+        path = issue.path
+        matched = False
+
+        # Check if issue path matches module code
+        if code_pattern and _path_matches_glob(path, code_pattern):
+            matched = True
+
+        # Check if issue path matches module docs
+        if docs_path and path.startswith(docs_path.rstrip('/')):
+            matched = True
+
+        if matched:
+            module_issues.append(issue)
+
+    return module_issues
 
 
 # =============================================================================
@@ -431,14 +429,9 @@ def get_module_status(project_dir: Path, module_name: str, all_issues: List[Heal
         # Get health issues (use provided list or fetch)
         if all_issues is not None:
             # Filter from provided list
-            for issue in all_issues:
-                matched = False
-                if status.code_pattern and _path_matches_glob(issue.path, status.code_pattern):
-                    matched = True
-                if status.docs_path and issue.path.startswith(status.docs_path.rstrip('/')):
-                    matched = True
-                if matched:
-                    status.health_issues.append(issue)
+            status.health_issues = filter_issues_for_module(
+                all_issues, status.code_pattern, status.docs_path
+            )
         else:
             status.health_issues = get_module_health_issues(
                 project_dir, module_name, status.code_pattern, status.docs_path

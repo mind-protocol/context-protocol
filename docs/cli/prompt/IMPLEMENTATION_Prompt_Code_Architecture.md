@@ -18,7 +18,7 @@ ALGORITHM:      ./ALGORITHM_Prompt_Bootstrap_Prompt_Construction.md
 VALIDATION:     ./VALIDATION_Prompt_Bootstrap_Invariants.md
 THIS:           IMPLEMENTATION_Prompt_Code_Architecture.md
 HEALTH:         ./HEALTH_Prompt_Runtime_Verification.md
-SYNC:           ./prompt command sync (in .ngram/state/)
+SYNC:           ./prompt command sync (in ...ngram/state/)
 
 IMPL:           ngram/prompt.py
                 ngram/cli.py
@@ -197,7 +197,7 @@ flow:
 
 ## STATE MANAGEMENT
 
-- State artifacts include `.ngram/state/SYNC_Project_Health.md` (health runtime can detect prompt drift) and `.ngram/state/SYNC_Prompt_Command_State.md` (prompt-specific health snapshots). Prompt generation itself is stateless but pushes reminders into SYNC for agent follow-ups.
+- State artifacts include `...ngram/state/SYNC_Project_Health.md` (health runtime can detect prompt drift) and `...ngram/state/SYNC_Prompt_Command_State.md` (prompt-specific health snapshots). Prompt generation itself is stateless but pushes reminders into SYNC for agent follow-ups.
 - Equivalent monitoring hooks may reference the same paths without the dot prefix.
 
 ## RUNTIME BEHAVIOR
@@ -222,8 +222,8 @@ flow:
 - Code → Docs: `ngram/prompt.py` includes `DOCS:` references to this file and to the PATTERNS/ALGORITHM chain.
 - Docs → Code: `docs/cli/prompt/ALGORITHM_Prompt_Bootstrap_Prompt_Construction.md` links back to `generate_bootstrap_prompt()` and mentions `print_bootstrap_prompt()` to keep the chain tidy.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] @ngram:TODO Link this doc to `docs/cli/PATTERNS...` and confirm watchers know to update the template when impression shifts
-- IDEA: Emit telemetry when CLI prompt is generated to track compliance
-- QUESTION: Should the CLI ever insert module-specific guidance (e.g., `modules.yaml` summary)?
+<!-- @ngram:todo @ngram:TODO Link this doc to `docs/cli/PATTERNS...` and confirm watchers know to update the template when impression shifts -->
+<!-- @ngram:proposition Emit telemetry when CLI prompt is generated to track compliance -->
+<!-- @ngram:escalation Should the CLI ever insert module-specific guidance (e.g., `modules.yaml` summary)? -->

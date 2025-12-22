@@ -65,7 +65,7 @@ The TUI stays open. After a repair completes, you're back at the prompt. You can
 - Continue the conversation
 
 This mirrors how agent CLIs work — it's a session, not a command. The manager can be backed
-by Claude, Gemini, or Codex via `--agents {claude,codex,gemini}`.
+by Claude, Gemini, or Codex via `--model {claude,codex,gemini}`.
 
 ### Principle 2: Manager + Workers Visualization
 
@@ -155,10 +155,10 @@ IMPL: ngram/tui/manager.py
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Should the ngram manager have memory across sessions?
-- [ ] Consider keyboard shortcuts (Ctrl+R for repair, Ctrl+D for doctor)
-- [ ] How to handle very long agent outputs? Auto-scroll? Truncation?
-- IDEA: Agent history panel showing completed agents
-- QUESTION: Should `ngram` without args require textual, or gracefully fall back to CLI help?
+<!-- @ngram:todo Should the ngram manager have memory across sessions? -->
+<!-- @ngram:todo Consider keyboard shortcuts (Ctrl+R for repair, Ctrl+D for doctor) -->
+<!-- @ngram:todo How to handle very long agent outputs? Auto-scroll? Truncation? -->
+<!-- @ngram:proposition Agent history panel showing completed agents -->
+<!-- @ngram:escalation Should `ngram` without args require textual, or gracefully fall back to CLI help? -->

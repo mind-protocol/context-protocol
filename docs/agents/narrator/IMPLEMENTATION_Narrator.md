@@ -257,7 +257,7 @@ The output is streamed back through `tools/stream_dialogue.py`'s SSE wiring, whi
 
 --- 
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 ### Extraction Candidates
 
@@ -267,16 +267,16 @@ The output is streamed back through `tools/stream_dialogue.py`'s SSE wiring, whi
 
 ### Missing Implementation
 
-- [ ] Add SSE health instrumentation that emits schema versions and streaming latency metadata so monitoring tooling can validate narrator output without manual CLI invocation.
-- [ ] Harden the fallback response metadata to surface narrator voice hints and mutation summaries before the engine applies defaults, reducing hallucination risk when generation fails.
+<!-- @ngram:todo Add SSE health instrumentation that emits schema versions and streaming latency metadata so monitoring tooling can validate narrator output without manual CLI invocation. -->
+<!-- @ngram:todo Harden the fallback response metadata to surface narrator voice hints and mutation summaries before the engine applies defaults, reducing hallucination risk when generation fails. -->
 
 ### Ideas
 
-- IDEA: Log narrator prompt contexts and outcomes to a dedicated audit trail so debugging continuity breaks does not require parsing raw CLAUDE output.
-- IDEA: Surface narrator mutation summaries in the health dashboard with toggles for scene drift, SSE lag, and graph updates to speed up telemetric checks.
-- IDEA: Publish narrator SSE progress summaries (scene hash, click count, and latency) into the health log so the doctor can spot streaming stalls without replaying the full conversation.
+<!-- @ngram:proposition Log narrator prompt contexts and outcomes to a dedicated audit trail so debugging continuity breaks does not require parsing raw CLAUDE output. -->
+<!-- @ngram:proposition Surface narrator mutation summaries in the health dashboard with toggles for scene drift, SSE lag, and graph updates to speed up telemetric checks. -->
+<!-- @ngram:proposition Publish narrator SSE progress summaries (scene hash, click count, and latency) into the health log so the doctor can spot streaming stalls without replaying the full conversation. -->
 
 ### Questions
 
-- QUESTION: Should the narrator CLI pre-cache heavy graph snapshots before each run when world size grows so repeated queries do not stall scene generation?
-- QUESTION: How strict should the free-input guardrail be when deciding whether to hand a proposal back to physics versus issuing a canned fallback response?
+<!-- @ngram:escalation Should the narrator CLI pre-cache heavy graph snapshots before each run when world size grows so repeated queries do not stall scene generation? -->
+<!-- @ngram:escalation How strict should the free-input guardrail be when deciding whether to hand a proposal back to physics versus issuing a canned fallback response? -->

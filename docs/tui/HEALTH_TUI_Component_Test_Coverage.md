@@ -117,7 +117,7 @@ health_indicators:
 
 ```yaml
 status:
-  stream_destination: .ngram/state/SYNC_Project_Health.md
+  stream_destination: ...ngram/state/SYNC_Project_Health.md
   result:
     representation: enum
     value: OK
@@ -206,14 +206,14 @@ docks:
 
 ## KNOWN GAPS
 
-- [ ] No automated visual regression tests for layout.
-- [ ] No automated check for terminal color compatibility.
-- [ ] No automated unit tests for `manager.py` logic.
+<!-- @ngram:todo No automated visual regression tests for layout. -->
+<!-- @ngram:todo No automated check for terminal color compatibility. -->
+<!-- @ngram:todo No automated unit tests for `manager.py` logic. -->
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Use Textual's `App.run_test()` for automated health verification in CI.
-- IDEA: Add a "TUI Health" overlay for developers to see internal latency and event counts.
-- QUESTION: How should we handle terminal resizing failures in HEALTH?
+<!-- @ngram:todo Use Textual's `App.run_test()` for automated health verification in CI. -->
+<!-- @ngram:proposition Add a "TUI Health" overlay for developers to see internal latency and event counts. -->
+<!-- @ngram:escalation How should we handle terminal resizing failures in HEALTH? -->

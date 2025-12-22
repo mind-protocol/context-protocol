@@ -285,19 +285,19 @@ Models are frequently serialized to dictionaries or JSON (e.g., for API response
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 ### Missing Implementation
 
-- [ ] Custom validation for mutually exclusive fields (e.g., `Narrative source` vs. `Narrative detail`).
-- [ ] More robust `__eq__` and `__hash__` methods for all models to enable reliable set/dict usage.
+<!-- @ngram:todo Custom validation for mutually exclusive fields (e.g., `Narrative source` vs. `Narrative detail`). -->
+<!-- @ngram:todo More robust `__eq__` and `__hash__` methods for all models to enable reliable set/dict usage. -->
 
 ### Ideas
 
-- IDEA: Generate JSON Schema for all models and use it for API documentation and frontend validation.
-- IDEA: Implement `Config.extra = 'forbid'` to prevent accidental inclusion of unknown fields.
+<!-- @ngram:proposition Generate JSON Schema for all models and use it for API documentation and frontend validation. -->
+<!-- @ngram:proposition Implement `Config.extra = 'forbid'` to prevent accidental inclusion of unknown fields. -->
 
 ### Questions
 
-- QUESTION: How can we best manage schema evolution without breaking existing saved graph data?
-- QUESTION: Should `Moment`'s `tick` property (alias for `tick_created`) be removed for clarity in new code?
+<!-- @ngram:escalation How can we best manage schema evolution without breaking existing saved graph data? -->
+<!-- @ngram:escalation Should `Moment`'s `tick` property (alias for `tick_created`) be removed for clarity in new code? -->

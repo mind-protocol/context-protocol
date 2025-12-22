@@ -152,7 +152,7 @@ Out of scope: narrator prose, frontend rendering, and non-tension systems such a
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 - Should the runner expose a trace summary for debugging long actions so we can step through partial ticks when telemetry shows drift?
 - How should partial ticks be represented when resuming mid-action to ensure narrators see consistent remaining durations and graph context?

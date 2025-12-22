@@ -84,8 +84,8 @@ single place to integrate.
 - It does not address rendering or UI concerns.
 
 ===============================================================================
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 ===============================================================================
 
-- [ ] Implement the graph-backed moment lifecycle and query helpers.
-- [ ] Author or relocate the API doc referenced by engine/app/tests.
+<!-- @ngram:todo Implement the graph-backed moment lifecycle and query helpers. -->
+<!-- @ngram:todo Author or relocate the API doc referenced by engine/app/tests. -->

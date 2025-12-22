@@ -190,16 +190,16 @@ pointer to the originating Moment for later reconstruction.
 | `engine/models/nodes.py` | `Moment` | Schema validation for node data |
 
 ===============================================================================
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 ===============================================================================
 
-- [ ] Clarify whether any legacy name-expansion rules still influence canonical
+<!-- @ngram:todo Clarify whether any legacy name-expansion rules still influence canonical -->
       Moment Graph identifiers or whether they are fully retired.
-- [ ] Decide if transcript append should remain synchronous or move to a batched
+<!-- @ngram:todo Decide if transcript append should remain synchronous or move to a batched -->
       async flush to reduce write latency.
-- IDEA: Map legacy Scene Context fields into explicit Moment Graph metadata for
+<!-- @ngram:proposition Map legacy Scene Context fields into explicit Moment Graph metadata for -->
   historical migrations.
-- QUESTION: Which pieces of the legacy belief-creation rules survived into the
+<!-- @ngram:escalation Which pieces of the legacy belief-creation rules survived into the -->
   current `MomentProcessor` logic, if any?
 
 ===============================================================================

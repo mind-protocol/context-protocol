@@ -76,7 +76,7 @@ FOR EACH implementation file:
 ### V6: Project SYNC Exists and Is Current
 
 ```
-ASSERT EXISTS: .ngram/state/SYNC_Project_State.md
+ASSERT EXISTS: ...ngram/state/SYNC_Project_State.md
 ASSERT: LAST_UPDATED is recent
 ```
 
@@ -237,12 +237,12 @@ RESULT:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Implement check_doc_refs.py
-- [ ] Implement check_chain_links.py
-- [ ] Implement check_orphans.py
-- [ ] Implement validate_protocol.py (umbrella script)
-- [ ] CI integration for validation
-- IDEA: Pre-commit hook for SYNC update reminder
-- QUESTION: How strict should validation be? Warn vs block?
+<!-- @ngram:todo Implement check_doc_refs.py -->
+<!-- @ngram:todo Implement check_chain_links.py -->
+<!-- @ngram:todo Implement check_orphans.py -->
+<!-- @ngram:todo Implement validate_protocol.py (umbrella script) -->
+<!-- @ngram:todo CI integration for validation -->
+<!-- @ngram:proposition Pre-commit hook for SYNC update reminder -->
+<!-- @ngram:escalation How strict should validation be? Warn vs block? -->

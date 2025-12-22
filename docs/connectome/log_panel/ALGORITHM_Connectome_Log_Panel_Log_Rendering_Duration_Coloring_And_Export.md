@@ -325,7 +325,7 @@ Export must be derived from ledger only (no UI-only state).
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: Should export include cursor and speed changes as synthetic events? (nice-to-have; possibly represented as call_type=code)
 

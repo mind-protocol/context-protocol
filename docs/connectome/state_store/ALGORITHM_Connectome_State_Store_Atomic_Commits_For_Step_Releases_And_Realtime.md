@@ -258,7 +258,7 @@ Store does not “tick” this; a selector can compute on render, or a lightweig
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Decide focus policy in realtime mode (auto-focus newest vs pinned).
 * QUESTION: Should store include a “pinned_focus” that prevents realtime from overriding focus?

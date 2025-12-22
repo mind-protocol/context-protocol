@@ -73,7 +73,7 @@ AND:    Conversation resumes on each turn (Claude, Gemini, or Codex)
 ```
 GIVEN:  TUI launches successfully
 WHEN:   Doctor check completes
-THEN:   Right panel shows contents of .ngram/state/SYNC_Project_State.md
+THEN:   Right panel shows contents of ...ngram/state/SYNC_Project_State.md
 AND:    If SYNC file missing, shows issues list instead
 AND:    CHANGES tab header shows recent changes/commits per minute
 ```
@@ -264,7 +264,7 @@ IMPL: ngram/tui/commands.py
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 - [x] RESOLVED: Natural language input goes to manager agent via subprocess
 
@@ -286,4 +286,4 @@ AND:    Code blocks have syntax highlighting
 ```
 
 ### Open Questions
-- [ ] Behavior when agent produces binary/non-text output
+<!-- @ngram:todo Behavior when agent produces binary/non-text output -->

@@ -26,6 +26,7 @@ THIS:
   - VALIDATION_Attention_Split_And_Interrupts.md
 
 IMPL:
+  - ../../../engine/physics/attention_split_sink_mass_distribution_mechanism.py
   - ../../../engine/physics/tick.py
   - ../../../engine/moment_graph/surface.py
   - ../../../engine/moment_graph/traversal.py
@@ -277,6 +278,7 @@ SYMPTOM: jitter pacing, unusable acceleration modes
 pytest tests/moment_graph/test_queries_readonly.py
 pytest tests/moment_graph/test_canon_single_writer.py
 pytest tests/physics/test_attention_split_determinism.py
+pytest engine/tests/test_physics_mechanisms.py -k attention
 pytest tests/runtime/test_interrupt_invariants.py
 pytest tests/runtime/test_dmz_worldbuilder.py
 pytest tests/runtime/test_void_tension.py
@@ -311,7 +313,7 @@ RESULT:
 
 ## GAPS / QUESTIONS
 
-- [ ] Define exact player_neighborhood() whitelist + hop depth k
-- [ ] Define CONTRADICTS visibility rule in surfacing policy
-- [ ] Define beat window boundaries (epoch_id vs tick window)
-- [ ] Define split budget constraint (strict conservation vs bounded clamp)
+<!-- @ngram:todo Define exact player_neighborhood() whitelist + hop depth k -->
+<!-- @ngram:todo Define CONTRADICTS visibility rule in surfacing policy -->
+<!-- @ngram:todo Define beat window boundaries (epoch_id vs tick window) -->
+<!-- @ngram:todo Define split budget constraint (strict conservation vs bounded clamp) -->

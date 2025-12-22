@@ -163,9 +163,9 @@ RESULT: Added missing SYNC status and expanded validation detail; runtime verifi
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Automated voice consistency scoring to reduce subjective review burden.
-- [ ] Property-based tests for mutation integrity across edge-case payloads.
-- [ ] Regression tests for classification drift on conversational thresholds.
-- QUESTION: How to validate seeds -> payoff tracking without subjective tags?
+<!-- @ngram:todo Automated voice consistency scoring to reduce subjective review burden. -->
+<!-- @ngram:todo Property-based tests for mutation integrity across edge-case payloads. -->
+<!-- @ngram:todo Regression tests for classification drift on conversational thresholds. -->
+<!-- @ngram:escalation How to validate seeds -> payoff tracking without subjective tags? -->

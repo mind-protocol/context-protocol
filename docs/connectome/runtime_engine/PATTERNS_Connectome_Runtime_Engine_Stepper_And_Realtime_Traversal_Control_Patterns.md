@@ -358,7 +358,7 @@ To add during implementation:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 ### Extraction Candidates
 

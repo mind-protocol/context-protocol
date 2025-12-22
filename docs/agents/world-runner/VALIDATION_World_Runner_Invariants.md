@@ -179,7 +179,7 @@ RESULT:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add unit tests for error handling and schema compliance.
-- [ ] Add a contract test that validates WorldRunnerOutput against TOOL_REFERENCE schema.
+<!-- @ngram:todo Add unit tests for error handling and schema compliance. -->
+<!-- @ngram:todo Add a contract test that validates WorldRunnerOutput against TOOL_REFERENCE schema. -->

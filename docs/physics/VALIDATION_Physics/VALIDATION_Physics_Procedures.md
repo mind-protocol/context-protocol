@@ -56,7 +56,7 @@ Validation guidance is aligned with `docs/physics/SYNC_Physics.md`. Update the
 SYNC file whenever invariants or verification steps change to avoid drift.
 If SYNC is stale, treat the validation result as incomplete.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 - Which validation checks should be automated vs. manual when handler and
   canon runtime scaffolding is still pending?

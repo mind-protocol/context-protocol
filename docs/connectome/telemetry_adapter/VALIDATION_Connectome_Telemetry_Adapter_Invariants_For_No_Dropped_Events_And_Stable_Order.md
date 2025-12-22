@@ -112,7 +112,7 @@ pnpm connectome:health telemetry_adapter
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: Where does “session” boundary live for arrival_index? (store session_id vs adapter local) → `?`
 

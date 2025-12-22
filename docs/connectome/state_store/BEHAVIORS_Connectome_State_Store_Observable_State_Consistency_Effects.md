@@ -140,7 +140,7 @@ Documenting these inputs/outputs clarifies that the store never returns derived 
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: Should focus include “active_zone_id” (FE/BE/GRAPH/AGENTS) to improve zone highlighting?
 * IDEA: Include a “session_id” so exports clearly separate restarts.

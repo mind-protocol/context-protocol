@@ -201,13 +201,13 @@ See `docs/agents/narrator/HANDOFF_Rolling_Window_Architecture.md` for the rollin
 
 ## Gaps / Ideas / Questions
 
-- [ ] Figure out how aggressively the rolling window should pre-author responses
+<!-- @ngram:todo Figure out how aggressively the rolling window should pre-author responses -->
   to avoid player-visible generation delays without front-loading every branch.
-- [ ] Define the minimal authored response inventory that keeps the world feeling
+<!-- @ngram:todo Define the minimal authored response inventory that keeps the world feeling -->
   intentional while leaving room for targeted generation.
-- QUESTION: What guardrails should free input respect by default before the
+<!-- @ngram:escalation What guardrails should free input respect by default before the -->
   narrator defers to a generator so canon drift is still prevented?
-- IDEA: Capture canonical click-to-response linkages so designer tooling can
+<!-- @ngram:proposition Capture canonical click-to-response linkages so designer tooling can -->
   audit when a generator was used instead of authored content.
 
 ---

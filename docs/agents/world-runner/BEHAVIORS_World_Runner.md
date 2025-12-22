@@ -167,7 +167,7 @@ interface News {
   updates or queued injections.
 - Must not author narrative prose or override the Narrator’s scene writing.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 - Should the Injection include a compact trace summary for debugging long
   actions without rehydrating full tick logs?
@@ -204,7 +204,7 @@ interface News {
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 - Should the Runner attach a concise tick trace for debugging interruptions?
 - Is there a canonical JSON schema artifact we can link instead of duplicates?

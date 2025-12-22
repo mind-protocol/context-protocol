@@ -566,49 +566,49 @@ def benchmark_parallel_handlers():
 Before release:
 
 **Core Invariants:**
-- [ ] I1: No state stored outside graph
-- [ ] I2: Physics tick runs continuously
-- [ ] I3: THEN links immutable
-- [ ] I4: Handlers write only for their character
-- [ ] I5: Canon cannot revert
-- [ ] I6: Same canon at any speed
-- [ ] I7: Energy conservation holds
-- [ ] I8: No arbitrary handler triggers
+<!-- @ngram:todo I1: No state stored outside graph -->
+<!-- @ngram:todo I2: Physics tick runs continuously -->
+<!-- @ngram:todo I3: THEN links immutable -->
+<!-- @ngram:todo I4: Handlers write only for their character -->
+<!-- @ngram:todo I5: Canon cannot revert -->
+<!-- @ngram:todo I6: Same canon at any speed -->
+<!-- @ngram:todo I7: Energy conservation holds -->
+<!-- @ngram:todo I8: No arbitrary handler triggers -->
 
 **Graph State:**
-- [ ] Status values valid
-- [ ] Weight bounds enforced
-- [ ] Link types valid
+<!-- @ngram:todo Status values valid -->
+<!-- @ngram:todo Weight bounds enforced -->
+<!-- @ngram:todo Link types valid -->
 
 **Physics:**
-- [ ] Decay time-based not tick-based
-- [ ] Flip deterministic
-- [ ] Energy always lands
+<!-- @ngram:todo Decay time-based not tick-based -->
+<!-- @ngram:todo Flip deterministic -->
+<!-- @ngram:todo Energy always lands -->
 
 **Handlers:**
-- [ ] Output structure valid
-- [ ] Scope isolation enforced
+<!-- @ngram:todo Output structure valid -->
+<!-- @ngram:todo Scope isolation enforced -->
 
 **Canon:**
-- [ ] Drama not blocked
-- [ ] True mutex rare and handled
+<!-- @ngram:todo Drama not blocked -->
+<!-- @ngram:todo True mutex rare and handled -->
 
 **Speed:**
-- [ ] Display doesn't affect canon
-- [ ] Interrupts break through
+<!-- @ngram:todo Display doesn't affect canon -->
+<!-- @ngram:todo Interrupts break through -->
 
 **Actions:**
-- [ ] Sequential processing
-- [ ] Validation before execution
+<!-- @ngram:todo Sequential processing -->
+<!-- @ngram:todo Validation before execution -->
 
 **Question Answering:**
-- [ ] Non-blocking
-- [ ] Consistent with existing facts
+<!-- @ngram:todo Non-blocking -->
+<!-- @ngram:todo Consistent with existing facts -->
 
 **Performance:**
-- [ ] View query <50ms
-- [ ] Physics tick <100ms
-- [ ] Parallel handlers work
+<!-- @ngram:todo View query <50ms -->
+<!-- @ngram:todo Physics tick <100ms -->
+<!-- @ngram:todo Parallel handlers work -->
 
 ---
 

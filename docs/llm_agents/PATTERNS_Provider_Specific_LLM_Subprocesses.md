@@ -130,8 +130,8 @@ Adapters should check for required API keys early and exit with explicit error m
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add a `--model` flag and document supported model IDs.
-- [ ] Decide whether the model listing debug output should be gated by a flag.
-- QUESTION: Should adapters include a shared helper for JSON stream normalization?
+<!-- @ngram:todo Add a `--model` flag and document supported model IDs. -->
+<!-- @ngram:todo Decide whether the model listing debug output should be gated by a flag. -->
+<!-- @ngram:escalation Should adapters include a shared helper for JSON stream normalization? -->

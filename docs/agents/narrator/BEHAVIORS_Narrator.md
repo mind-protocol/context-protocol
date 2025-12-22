@@ -103,7 +103,7 @@ Inputs include the player action payload, recent scene state, and any world inje
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 Gaps: Recovery behavior for interrupted streams is documented elsewhere but not fully enumerated here.  
 Ideas: Add explicit expectations for narrator fallback phrasing when click responses are missing.  

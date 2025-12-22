@@ -158,11 +158,11 @@ The hard constraint that forces all of this. Can't load everything. Must choose 
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] MCP tools for navigation (load_view, find_docs, update_sync)
-- [ ] Automated SYNC verification
-- [ ] Integration with different agent frameworks
-- IDEA: Generate module index from doc structure
-- IDEA: Lint for missing chain links
-- QUESTION: How to handle very large projects with many areas?
+<!-- @ngram:todo MCP tools for navigation (load_view, find_docs, update_sync) -->
+<!-- @ngram:todo Automated SYNC verification -->
+<!-- @ngram:todo Integration with different agent frameworks -->
+<!-- @ngram:proposition Generate module index from doc structure -->
+<!-- @ngram:proposition Lint for missing chain links -->
+<!-- @ngram:escalation How to handle very large projects with many areas? -->

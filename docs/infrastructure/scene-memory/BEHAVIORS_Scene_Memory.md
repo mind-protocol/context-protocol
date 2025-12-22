@@ -89,7 +89,7 @@ Moment Graph docs for canonical behavior definitions:
   its own unit of memory for downstream linking.
 
 ===============================================================================
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 ===============================================================================
 
 - Gap: The legacy design assumes scene containers, but the canonical Moment

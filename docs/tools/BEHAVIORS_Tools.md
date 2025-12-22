@@ -100,12 +100,12 @@ the SSE reader, CLI log, and replay archives all observe the same sequence of
   the stack helper documents every restart via `./logs/run_stack`; skipping the
   tracer makes it harder to audit what commands ran after the last crash.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Should the splitter log a manifest (bundle name → output files) so revisions
+<!-- @ngram:todo Should the splitter log a manifest (bundle name → output files) so revisions -->
   can be traced even after the target docs rotate during refactors?
-- [ ] Could `stream_dialogue` expose a `--dry-run` mode to validate JSON/GraphOps
+<!-- @ngram:todo Could `stream_dialogue` expose a `--dry-run` mode to validate JSON/GraphOps -->
   payloads without mutating FalkorDB, which would help scripted regression tests?
-- [ ] What is the canonical frontend command for `ngram-fe.service`, and should
+<!-- @ngram:todo What is the canonical frontend command for `ngram-fe.service`, and should -->
   `tools/run_stack.sh` expose it via a documented `FE_CMD` expectation for
   `ngrok` integration?

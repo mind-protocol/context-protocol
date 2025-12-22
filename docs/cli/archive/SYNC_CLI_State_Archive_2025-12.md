@@ -109,7 +109,7 @@ Snapshot of the CLI SYNC state as of 2025-12-18. Core commands stable; archives 
 
 ## TODO
 
-- [ ] Consider capturing automated diffs between successive archives to track what changed between 2024 and 2025 snapshots.
+<!-- @ngram:todo Consider capturing automated diffs between successive archives to track what changed between 2024 and 2025 snapshots. -->
 
 ## CONSCIOUSNESS TRACE
 

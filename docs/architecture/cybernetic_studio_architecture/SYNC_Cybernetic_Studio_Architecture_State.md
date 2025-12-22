@@ -86,6 +86,14 @@ The Cybernetic Studio architecture docs are now a full chain (PATTERNS → BEHAV
 - **Why:** Ensures `ngram context` can reach the documentation chain from the canonical source.
 - **Files:** `data/ARCHITECTURE — Cybernetic Studio.md`
 
+## GAPS
+
+### Escalation Resolution Pending
+
+- **Completed:** No actions taken as no human decisions were provided.
+- **Remains to be done:** A human decision is needed for the escalation marker `<!-- @ngram:escalation Should pressure computation be validated via sampled contradictions? -->` in `docs/architecture/cybernetic_studio_architecture/VALIDATION_Cybernetic_Studio_Architectural_Invariants.md`. Once the decision is provided, the conflict resolution can be implemented.
+- **Reason for not completing:** The task explicitly stated "(No decisions provided - skip this issue)" under "Human Decisions", preventing me from making any changes to resolve the escalation.
+
 ---
 
 ## KNOWN ISSUES
@@ -134,7 +142,7 @@ None for this change set.
 
 ### Doc/Impl Drift
 
-- [ ] IMPL→DOCS: Once stimulus watchers and graph hooks land, update IMPLEMENTATION and HEALTH with real paths.
+<!-- @ngram:todo IMPL→DOCS: Once stimulus watchers and graph hooks land, update IMPLEMENTATION and HEALTH with real paths. -->
 
 ### Tests to Run
 
@@ -144,13 +152,13 @@ None for this change set.
 
 ### Immediate
 
-- [ ] Decide where Place registry lives (ngram vs graph service).
-- [ ] Define graph service ownership boundary in `ngram` (deployment/config/contracts).
+<!-- @ngram:todo Decide where Place registry lives (ngram vs graph service). -->
+<!-- @ngram:todo Define graph service ownership boundary in `ngram` (deployment/config/contracts). -->
 
 ### Later
 
-- [ ] Define EvidenceRef schema (string vs structured object).
-- IDEA: Draft a minimal health runner for architecture-level checks.
+<!-- @ngram:todo Define EvidenceRef schema (string vs structured object). -->
+<!-- @ngram:proposition Draft a minimal health runner for architecture-level checks. -->
 
 ---
 

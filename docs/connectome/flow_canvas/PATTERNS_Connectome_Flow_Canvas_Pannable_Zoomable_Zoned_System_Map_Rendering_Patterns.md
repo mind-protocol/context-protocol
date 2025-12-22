@@ -245,7 +245,7 @@ docking_points:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Tune force parameters for very large graphs (nodes > 1k).
 * IDEA: optional “declutter toggle” hides secondary labels until zoom > threshold.

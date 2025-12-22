@@ -67,9 +67,9 @@ The core data models are well-defined and documented. Key areas for review invol
 
 ## TODO
 
-- [ ] Add `engine/models` mapping to `modules.yaml` (already done in previous step).
-- [ ] Implement unit tests for all Pydantic models, covering validation, defaults, and properties.
-- [ ] Refactor the `embeddable_text` methods across models in `nodes.py` to be consistent with the `PATTERNS_Embeddings.md` rules (detail > 20, fallback to name).
+<!-- @ngram:todo Add `engine/models` mapping to `modules.yaml` (already done in previous step). -->
+<!-- @ngram:todo Implement unit tests for all Pydantic models, covering validation, defaults, and properties. -->
+<!-- @ngram:todo Refactor the `embeddable_text` methods across models in `nodes.py` to be consistent with the `PATTERNS_Embeddings.md` rules (detail > 20, fallback to name). -->
 
 ## CONSCIOUSNESS TRACE
 
@@ -89,10 +89,15 @@ Confidence in the model definitions themselves is high, as Pydantic handles much
 - Node helper properties are already implemented; repair was verification-only.
 
 ### Suggestions
-- [ ] None.
+<!-- @ngram:todo None. -->
 
 ### Propositions
 - None.
+
+## GAPS
+- **What was completed:** Identified an `ESCALATION` marker in `docs/engine/models/HEALTH_Models.md` regarding acceptable latency for model instantiation.
+- **What remains to be done:** The `ESCALATION` marker needs to be converted to a `DECISION` and the relevant documentation updated based on a human decision.
+- **Why you couldn't finish:** No human decisions were provided in the task description to resolve the escalation.
 
 ## CHAIN
 

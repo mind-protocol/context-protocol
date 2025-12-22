@@ -10,13 +10,13 @@ CREATED: 2025-12-18
 ## CHAIN
 
 ```
-PATTERNS:        ../PATTERNS_Why_CLI_Over_Copy.md
-BEHAVIORS:       ../BEHAVIORS_CLI_Command_Effects.md
-ALGORITHM:       ../ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md
-VALIDATION:      ../VALIDATION_CLI_Instruction_Invariants.md
-THIS:            IMPLEMENTATION_Overview.md
-HEALTH:          ../HEALTH_CLI_Command_Test_Coverage.md
-SYNC:            ../SYNC_CLI_Development_State.md
+PATTERNS:        ../../PATTERNS_Why_CLI_Over_Copy.md
+BEHAVIORS:       ../../BEHAVIORS_CLI_Command_Effects.md
+ALGORITHM:       ../../ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md
+VALIDATION:      ../../VALIDATION_CLI_Instruction_Invariants.md
+THIS:            ./IMPLEMENTATION_Overview.md
+HEALTH:          ../../HEALTH_CLI_Command_Test_Coverage.md
+SYNC:            ../../SYNC_CLI_Development_State.md
 ```
 
 ---
@@ -26,9 +26,9 @@ SYNC:            ../SYNC_CLI_Development_State.md
 The CLI is a modular command suite. Each subcommand lives in its own module and is dispatched by `ngram/cli.py`. The two largest subsystems are Doctor (health checks) and Repair (agent orchestration).
 
 **Implementation sections:**
-- `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Code_Structure.md`
-- `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Runtime_And_Dependencies.md`
-- `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Schema.md`
+- `../structure/IMPLEMENTATION_Code_Structure.md`
+- `../runtime/IMPLEMENTATION_Runtime_And_Dependencies.md`
+- `../schema/IMPLEMENTATION_Schema.md`
 
 ---
 
@@ -85,11 +85,11 @@ IMPL: ngram/core_utils.py
 
 ## CODE STRUCTURE
 
-The detailed file layout is captured in `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Code_Structure.md`; refer there for line counts and split candidates.
+The detailed file layout is captured in `../structure/IMPLEMENTATION_Code_Structure.md`; refer there for line counts and split candidates.
 
 ## SCHEMA
 
-See `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Schema.md` for rich schema definitions (ValidationResult, DoctorIssue, RepairResult) used across CLI flows.
+See `../schema/IMPLEMENTATION_Schema.md` for rich schema definitions (ValidationResult, DoctorIssue, RepairResult) used across CLI flows.
 
 ## ENTRY POINTS
 
@@ -97,11 +97,11 @@ Core entrypoints include `ngram/cli.py::main`, `ngram/doctor.py::run_doctor`, an
 
 ## DATA FLOW AND DOCKING (FLOW-BY-FLOW)
 
-Flows are described in `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Runtime_And_Dependencies.md`; the biggest ones are command dispatch and health reporting. Each flow lists docking points for `.ngram/state` and `doc` artifacts.
+Flows are described in `../runtime/IMPLEMENTATION_Runtime_And_Dependencies.md`; the biggest ones are command dispatch and health reporting. Each flow lists docking points for `.ngram/state` and `doc` artifacts.
 
 ## LOGIC CHAINS
 
-Logic chains such as CLI dispatch → doctor runner → SYNC update are summarized in `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Code_Structure.md`, linking each step to doc anchors for traceability.
+Logic chains such as CLI dispatch → doctor runner → SYNC update are summarized in `../structure/IMPLEMENTATION_Code_Structure.md`, linking each step to doc anchors for traceability.
 
 ## MODULE DEPENDENCIES
 
@@ -109,7 +109,7 @@ Internal dependencies (CLI → doctor → repair, etc.) are captured in the runt
 
 ## STATE MANAGEMENT
 
-State layers include `.ngram/state/` (health reports), `.ngram/traces/`, and `modules.yaml`; the CLI writes them after each run to advertise progress to the doctor.
+State layers include `...ngram/state/` (health reports), `.ngram/traces/`, and `modules.yaml`; the CLI writes them after each run to advertise progress to the doctor.
 
 ## RUNTIME BEHAVIOR
 
@@ -127,10 +127,10 @@ Key switches (monolith thresholds, disabled checks, agent timeouts) live in the 
 
 Code references this overview via `DOCS:` markers inside `ngram/cli.py`, and the overview links back to key files listed above to ensure traceability.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add DOCS: pointers from newly split doctor checks to this overview so each check is represented.
-- IDEA: Provide a CLI command to regenerate this overview automatically after code moves.
+<!-- @ngram:todo Add DOCS: pointers from newly split doctor checks to this overview so each check is represented. -->
+<!-- @ngram:proposition Provide a CLI command to regenerate this overview automatically after code moves. -->
 ## GAPS (ACTIVE)
 
 ### Extraction Candidates
@@ -140,8 +140,8 @@ Code references this overview via `DOCS:` markers inside `ngram/cli.py`, and the
 
 ### Missing Implementation
 
-- [ ] Add type hints across the CLI codebase.
-- [ ] Add DOCS: references to all source files.
+<!-- @ngram:todo Add type hints across the CLI codebase. -->
+<!-- @ngram:todo Add DOCS: references to all source files. -->
 
 ---
 

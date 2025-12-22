@@ -79,16 +79,16 @@ Docs created:
 
 ### Immediate
 
-- [ ] Implement `log_trace()` function
-- [ ] Add tracing to `context` command
-- [ ] Implement `trace` command (basic summary)
+<!-- @ngram:todo Implement `log_trace()` function -->
+<!-- @ngram:todo Add tracing to `context` command -->
+<!-- @ngram:todo Implement `trace` command (basic summary) -->
 
 ### Later
 
-- [ ] `trace --detail` flag
-- [ ] `trace clear` command
-- [ ] Navigation pattern detection
-- [ ] Stale doc detection integration
+<!-- @ngram:todo `trace --detail` flag -->
+<!-- @ngram:todo `trace clear` command -->
+<!-- @ngram:todo Navigation pattern detection -->
+<!-- @ngram:todo Stale doc detection integration -->
 
 ---
 

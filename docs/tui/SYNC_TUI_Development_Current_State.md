@@ -96,6 +96,9 @@ Archive consolidation: confirmed the 2024-12 condensed snapshot lives in `archiv
 
 ## KNOWN GAPS
 
+- Could not resolve escalation in `docs/tui/PATTERNS_TUI_Modular_Interface_Design.md` as no human decisions were provided for the conflict: "Should `ngram` without args require textual, or gracefully fall back to CLI help?".
+
+
 - Tab layout for >3 agents not fully implemented
 - Agent queue processing (issues beyond first 3) not implemented
 
@@ -122,7 +125,7 @@ Archive consolidation: confirmed the 2024-12 condensed snapshot lives in `archiv
 - Extracted manager startup helpers to `ngram/tui/app_manager.py` to reduce `ngram/tui/app_core.py`.
 
 ### Suggestions
-- [ ] Keep doctor-ignore and SYNC notes updated together to avoid drift.
+<!-- @ngram:todo Keep doctor-ignore and SYNC notes updated together to avoid drift. -->
 
 ### Propositions
 - None

@@ -163,9 +163,9 @@ This validation document ensures the declared schema invariants and properties a
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add explicit unit tests for `V4: Immutable Defaults Are Truly Immutable`.
-- [ ] Implement property-based tests for serialization roundtrip (P1) and derived properties (P2).
-- IDEA: Generate validation reports from Pydantic schema exports (e.g., JSON Schema) and compare against expectations.
-- QUESTION: Should all models have an explicit `__eq__` method for robust comparison in tests?
+<!-- @ngram:todo Add explicit unit tests for `V4: Immutable Defaults Are Truly Immutable`. -->
+<!-- @ngram:todo Implement property-based tests for serialization roundtrip (P1) and derived properties (P2). -->
+<!-- @ngram:proposition Generate validation reports from Pydantic schema exports (e.g., JSON Schema) and compare against expectations. -->
+<!-- @ngram:escalation Should all models have an explicit `__eq__` method for robust comparison in tests? -->

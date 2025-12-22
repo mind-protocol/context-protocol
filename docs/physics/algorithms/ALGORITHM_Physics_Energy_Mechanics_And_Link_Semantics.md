@@ -3584,9 +3584,9 @@ O(N + T) for energy + pressure caches.
 **Purpose:** Maintains histories of cluster energy readings, surfaces snapshots for clusters with ≥50 nodes, and flags spikes that exceed a configurable multiplier of the running average so dashboards can park fast attention.  
 **Verification:** `engine/tests/test_cluster_energy_monitor.py` drives the monitor with large clusters to prove summaries and spike detection remain stable even with high node counts.
 
-### GAPS / IDEAS / QUESTIONS
+### MARKERS
 
-- [ ] Verify whether read-side energy injection is intended as physics or UX.
-- [ ] Clarify ownership between `MomentTraversal.handle_click()` and `GraphOps.handle_click()` to avoid double paths.
-- IDEA: Batch narrative reads in `_decay_energy()` to reduce query count.
-- QUESTION: Should tension pressure also consider narrative energy, not only weight?
+<!-- @ngram:todo Verify whether read-side energy injection is intended as physics or UX. -->
+<!-- @ngram:todo Clarify ownership between `MomentTraversal.handle_click()` and `GraphOps.handle_click()` to avoid double paths. -->
+<!-- @ngram:proposition Batch narrative reads in `_decay_energy()` to reduce query count. -->
+<!-- @ngram:escalation Should tension pressure also consider narrative energy, not only weight? -->

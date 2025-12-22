@@ -63,18 +63,18 @@ The pattern keeps tooltip composition, step highlights, and motion tokens isolat
 
 ## SCHEMA
 
-Nodes consume `ConnectomeNodeDefinition` shapes defined under `app/connectome/lib/connectome_system_map_node_edge_manifest.ts`, which bundle `node_id`, `zone_id`, `node_type`, `language`, `title`, optional `file_path`, `steps`, and `energy_value`. The `steps` list contains `{ step_key, label, call_type }` entries used by the `StepList`, while the ledger of normalized `FlowEvent` rows from `app/connectome/lib/flow_event_schema_and_normalization_contract.ts` feeds the tooltip updater. Each node also reads `render_hint` metadata (compact, show_path, show_steps) when present so that story-specific renderers can opt in or out of badges, paths, and step lists without changing the schema.
+Nodes consume `ConnectomeNodeDefinition` shapes (see [Connectome Graph Manifest](../runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md)) which bundle `node_id`, `zone_id`, `node_type`, `language`, `title`, optional `file_path`, `steps`, and `energy_value`. The `steps` list contains `{ step_key, label, call_type }` entries used by the `StepList`, while the ledger of normalized `FlowEvent` rows from the `event_model` module (see [IMPLEMENTATION_Connectome_Event_Model_Code_Architecture_And_Schema.md](../event_model/IMPLEMENTATION_Connectome_Event_Model_Code_Architecture_And_Schema.md)) feeds the tooltip updater. Each node also reads `render_hint` metadata (compact, show_path, show_steps) when present so that story-specific renderers can opt in or out of badges, paths, and step lists without changing the schema.
 
 ## LOGIC CHAINS
 
-1. Runtime scripts invoke `dispatch_runtime_command`/`release_next_step` in `app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine.ts`, which normalizes `FlowEvent`s, updates `useConnectomeStore`, and flips `active_focus` so the node kit can highlight the current node and step.
+1. Runtime scripts invoke `dispatch_runtime_command`/`release_next_step` in the [Runtime Engine](../runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md), which normalizes `FlowEvent`s, updates `useConnectomeStore`, and flips `active_focus` so the node kit can highlight the current node and step.
 2. Player node clicks call `dispatch_runtime_command({ kind: "player_message" })`, causing the runtime engine to append a ledger event, start the wait timer, and push the new focus so the progress bar and energy badge animate truthfully.
 3. Ledger and focus updates propagate to every node via subscriptions to `useConnectomeStore`, keeping the energy palette, tooltip text, and active step highlight consistent with the latest flow events.
 4. Tick updates come from `tick_display` mutations in the store; each `TickCronRing` watches the nominal interval and speed label so the circle animation resets on speed or pause changes.
 
 ## MODULE DEPENDENCIES
 
-Depends on the runtime engine bits in `next_step_gate_and_realtime_playback_runtime_engine.ts`, the `flow_event_schema_and_normalization_contract.ts` for ledger normalization, the `zustand_connectome_state_store_with_atomic_commit_actions.ts` store, and the theme token map in `connectome_node_background_theme_tokens_by_type_and_language.ts`. The node kit exports are wired into the canvas in `docs/connectome/flow_canvas/IMPLEMENTATION_Connectome_Flow_Canvas_Code_Structure_With_React_Flow_And_Zones.md`.
+Depends on the [Runtime Engine](../runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md), the `event_model` module for ledger normalization, the [State Store](../state_store/IMPLEMENTATION_Connectome_State_Store_Code_Structure_And_Zustand_Actions.md), and the theme token map in `connectome_node_background_theme_tokens_by_type_and_language.ts`. The node kit exports are wired into the canvas in `docs/connectome/flow_canvas/IMPLEMENTATION_Connectome_Flow_Canvas_Code_Structure_With_React_Flow_And_Zones.md`.
 It also depends on `NodeFrame` for docking and tooltip injection, `EnergyBadge` for bucketed glows, and `StepList` for per-node step rendering.
 
 ## STATE MANAGEMENT
@@ -131,7 +131,7 @@ Actions from `dispatch_runtime_command` batch updates through the store before R
 Node kit only consumes selectors from `useConnectomeStore`; it never mutates the runtime store.
 
 ### Flow-by-flow
-- `next_step` releases from `next_step_gate_and_realtime_playback_runtime_engine.ts` normalize `FlowEvent` data, update the ledger/focus state, and trigger the node kit to repaint the active node plus badge values.
+- `next_step` releases from the [Runtime Engine](../runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md) normalize `FlowEvent` data, update the ledger/focus state, and trigger the node kit to repaint the active node plus badge values.
 - Player interactions dispatch runtime commands, bump the ledger, start/stop the wait timer, and cause `PlayerWaitProgressBar` plus the energy badge to reflect the latest seconds and bucketed energy.
 - Ledger replays and focus updates drive the tooltip builder, step-list highlight, and tick ring animation through memoized selectors, keeping the UI physics congruent with the runtime story.
 
@@ -168,7 +168,7 @@ docking_points:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Decide whether GraphQueries node should be a ModuleNode with call_type=graphQuery styling, or a separate node type (currently separate for clarity).
 * QUESTION: Do we display both “language” and “call_type” badges, or only one?

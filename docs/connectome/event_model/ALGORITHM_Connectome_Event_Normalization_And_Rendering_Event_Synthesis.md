@@ -234,7 +234,7 @@ render edge + highlight node step + append unified log entry
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Define retention policy for event ledger in realtime mode (max N, or time window).
 * QUESTION: should “energy pulse” be represented as a FlowEvent or a derived rendering-only artifact?

@@ -12,17 +12,17 @@ VERIFIED: 2025-12-20 against local tree
 
 ```
 PATTERNS:
-  - ../PATTERNS_Player_DMZ.md
+  - ../../PATTERNS_Player_DMZ.md
 
 BEHAVIORS:
-  - ../BEHAVIORS_Player_DMZ.md (planned)
+  - ../../BEHAVIORS_Player_DMZ.md (planned)
 
 THIS:
   - VALIDATION_Player_DMZ.md
 
 IMPL:
-  - ../../../../engine/world_builder/*
-  - ../../../../engine/moment_graph/queries.py
+  - ../../../../../engine/world_builder/*
+  - ../../../../../engine/moment_graph/queries.py
 ```
 
 ---
@@ -123,7 +123,7 @@ RESULT:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Define exact DMZ link whitelist and hop depth.
-- [ ] Decide whether DMZ is view-based or player-node based.
+<!-- @ngram:todo Define exact DMZ link whitelist and hop depth. -->
+<!-- @ngram:todo Decide whether DMZ is view-based or player-node based. -->

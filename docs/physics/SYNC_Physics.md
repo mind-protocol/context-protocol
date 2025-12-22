@@ -11,13 +11,13 @@ STATUS: CANONICAL. Core physics tick, graph ops, and health checks are implement
 
 ## CURRENT STATE
 
-Physics documentation is split into focused fragments (patterns, behaviors, implementation, validation, health). The behavior/implementation docs now live in dedicated folders so each file stays readable, and the previous implementation/validation histories are preserved in the archive.
+Physics documentation follows the standard chain (patterns, behaviors, implementation, validation, health). Implementation is consolidated into a single comprehensive document for better maintainability and consistency. The behavior and validation docs still use focused subfolders/fragments as needed for readability.
 
 ## RECENT CHANGES
 
-- Split `docs/physics/BEHAVIORS_Physics.md` into an overview plus a continuation document so B1–B12 sections stay under 300 lines each.
-- Rebuilt the implementation doc into a concise root plus three focused fragments and archived the prior implementation write-up to `docs/physics/archive/IMPLEMENTATION_Physics_archive_2025-12.md`.
-- Refactored `VALIDATION_Physics.md` into an overview linking to `VALIDATION_Physics_Invariants.md` and `VALIDATION_Physics_Procedures.md` under `docs/physics/VALIDATION_Physics/`.
+- Consolidated `docs/physics/IMPLEMENTATION_Physics/` fragments back into `docs/physics/IMPLEMENTATION_Physics.md` to reduce duplication and improve context density.
+- Removed redundant implementation fragments: `IMPLEMENTATION_Physics_Runtime.md`, `IMPLEMENTATION_Physics_Code_And_Patterns.md`, and `IMPLEMENTATION_Physics_Flows_And_Dependencies.md`.
+- Maintained the behavior and validation fragment structures as established in previous iterations.
 
 ## KNOWN ISSUES
 
@@ -30,4 +30,4 @@ Physics documentation is split into focused fragments (patterns, behaviors, impl
 
 ## HANDOFF NOTES
 
-Doc restructures keep the canonical chain intact; future agents should update the new fragments directly and refresh this SYNC when behaviors, implementation, or validation narratives change.
+Consolidation of implementation docs complete. Future updates should be made directly to `docs/physics/IMPLEMENTATION_Physics.md`. Maintain the single-file structure unless the implementation details exceed 500+ lines.

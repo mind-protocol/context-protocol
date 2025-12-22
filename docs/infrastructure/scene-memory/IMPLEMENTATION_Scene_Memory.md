@@ -137,7 +137,7 @@ engine/infrastructure/memory/moment_processor.py
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 ### Extraction Candidates
 
@@ -148,4 +148,4 @@ engine/infrastructure/memory/moment_processor.py
 
 ### Questions
 
-- QUESTION: Should transcript IO move behind a storage interface to support streaming or append-only logs?
+<!-- @ngram:escalation Should transcript IO move behind a storage interface to support streaming or append-only logs? -->

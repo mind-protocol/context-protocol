@@ -96,9 +96,9 @@ This document describes the observable behaviors of the data models within the `
 - Properties performing heavy computation without caching.
 - Properties causing unexpected mutations to the model state.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Should `Config.extra = 'forbid'` be used consistently across all models to prevent unknown fields?
-- [ ] How should custom serialization for complex types (e.g., `datetime` objects) be documented or enforced?
-- IDEA: Add an explicit behavior for handling nested Pydantic models within other models.
-- QUESTION: Are there specific Pydantic features (e.g., discriminated unions, generics) that could simplify certain schema definitions?
+<!-- @ngram:todo Should `Config.extra = 'forbid'` be used consistently across all models to prevent unknown fields? -->
+<!-- @ngram:todo How should custom serialization for complex types (e.g., `datetime` objects) be documented or enforced? -->
+<!-- @ngram:proposition Add an explicit behavior for handling nested Pydantic models within other models. -->
+<!-- @ngram:escalation Are there specific Pydantic features (e.g., discriminated unions, generics) that could simplify certain schema definitions? -->

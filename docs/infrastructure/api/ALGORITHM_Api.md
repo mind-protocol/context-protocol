@@ -59,11 +59,11 @@ This module coordinates with graph physics for mutations, with orchestration
 services for playthrough actions, with scenario files for seed content, and
 with frontend hooks that call playthrough and view endpoints.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Document API versioning once public clients exist and endpoints stabilize.
-- [ ] Clarify how auth and rate limiting should be layered (API vs gateway).
-- QUESTION: Should health checks validate scenario assets on disk?
+<!-- @ngram:todo Document API versioning once public clients exist and endpoints stabilize. -->
+<!-- @ngram:todo Clarify how auth and rate limiting should be layered (API vs gateway). -->
+<!-- @ngram:escalation Should health checks validate scenario assets on disk? -->
 
 ## Graph Helpers
 
@@ -139,8 +139,8 @@ Creates playthrough artifacts consumed by `GET /api/view/{playthrough_id}`, reli
 
 ### Gaps / Ideas / Questions
 
-- [ ] Should scenario YAML be schema-validated before graph injection to surface errors earlier?
-- [ ] Should playthrough creation fail hard if seed data fails, or continue as it does now?
+<!-- @ngram:todo Should scenario YAML be schema-validated before graph injection to surface errors earlier? -->
+<!-- @ngram:todo Should playthrough creation fail hard if seed data fails, or continue as it does now? -->
 
 ### Flow Diagram
 

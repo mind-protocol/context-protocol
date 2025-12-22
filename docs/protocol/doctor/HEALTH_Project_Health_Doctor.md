@@ -99,7 +99,7 @@ health_indicators:
 
 ```yaml
 status:
-  stream_destination: .ngram/state/SYNC_Project_Health.md
+  stream_destination: ...ngram/state/SYNC_Project_Health.md
   result:
     representation: tuple
     value: {OK, 1.0}
@@ -174,12 +174,12 @@ ngram doctor --format json
 
 ## KNOWN GAPS
 
-- [ ] No automated check for "false positive rate".
-- [ ] No performance benchmarking for very large project trees.
+<!-- @ngram:todo No automated check for "false positive rate". -->
+<!-- @ngram:todo No performance benchmarking for very large project trees. -->
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add `ngram doctor --benchmark` to measure check latency.
-- QUESTION: Should we add a check for "documentation quality" (AI-assisted)?
+<!-- @ngram:todo Add `ngram doctor --benchmark` to measure check latency. -->
+<!-- @ngram:escalation Should we add a check for "documentation quality" (AI-assisted)? -->

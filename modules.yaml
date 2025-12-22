@@ -51,134 +51,346 @@ modules:
 # YOUR MODULES
 # =============================================================================
 
+tools:
+  code: "tools/**"
+  docs: "docs/tools/"
+  maturity: CANONICAL # Based on existing extensive documentation
+  owner: agent
+  entry_points:
+    - connectome_doc_bundle_splitter_and_fence_rewriter.py
+    - stream_dialogue.py
+    - run_stack.sh
+  notes: |\
+    Utility scripts for documentation processing, stack orchestration,\
+    and dialogue streaming. This module provides essential helpers\
+    for the overall ngram ecosystem.
+
+connectome_graph_api:
+  code: "app/api/connectome/graph/**"
+  docs: "docs/connectome/graph_api/"
+  maturity: DESIGNING
+  owner: agent
+  entry_points:
+    - app/api/connectome/graph/route.ts
+  notes: |
+    API for handling graph-related operations within the connectome feature.
+    Provides endpoints to interact with the graph data structure.
+
+connectome_graphs:
+  code: "app/api/connectome/graphs/**"
+  docs: "docs/connectome/graphs/"
+  maturity: PROPOSED # Starting as proposed as it's newly documented
+  owner: agent
+  entry_points:
+    - route.ts
+  notes: |
+    API route for listing available graphs from the FalkorDB database.
+    It acts as a proxy to a Python CLI tool.
+
 # Uncomment and modify as you create modules:
 
-  # types:
-  #   code: "src/types/**"
-  #   docs: "docs/core/types/"
-  #   maturity: CANONICAL
-  #   owner: human
-  #   notes: |
-  #     Core type definitions. Changes affect entire codebase.
+# types:
+#   code: "src/types/**"
+#   docs: "docs/core/types/"
+#   maturity: CANONICAL
+#   owner: human
+#   notes: |
+#     Core type definitions. Changes affect entire codebase.
+
+connectome_search_api:
+  code: "app/api/connectome/search/**"
+  docs: "docs/connectome/search_api/"
+  maturity: DESIGNING
+  owner: agent
+  entry_points:
+    - app/api/connectome/search/route.ts
+  notes: |
+    API for performing search operations within the connectome graph.
+    It acts as a proxy to a Python CLI tool (connectome_read_cli).
+
+sse_api:
+  code: "app/api/sse/**"
+  docs: "docs/api/sse/"
+  maturity: PROPOSED # Starting as proposed as it's newly documented
+  owner: agent
+  entry_points:
+    - route.ts
+  notes: |
+    Provides a Server-Sent Events (SSE) endpoint for real-time communication.
+    Currently acts as a health check and heartbeat mechanism.
+
+app_shell:
+  code: "app/{globals.css,layout.tsx,page.tsx,api/**,ngram/**}"
+  docs: "docs/frontend/app_shell/"
+  maturity: PROPOSED
+  owner: agent
+  entry_points:
+    - app/layout.tsx
+    - app/page.tsx
+  notes: |
+    The root Next.js application shell, defining the global layout, styles,
+    and routing for the main application.
+
+connectome_node_kit:
+  code: "app/connectome/components/node_kit/**"
+  docs: "docs/connectome/node_kit/"
+  maturity: DESIGNING
+  owner: agent
+  entry_points:
+    - typed_connectome_node_components_with_energy_and_step_highlighting.tsx
+  notes: |
+    Provides UI components for rendering connectome nodes, including frames,
+    energy badges, step lists, and progress indicators, with a focus on visual
+    clarity and state reflection.
+
+connectome_health_panel:
+  code: "app/connectome/components/connectome_health_panel.tsx"
+  docs: "docs/connectome/health_panel/"
+  maturity: DESIGNING
+  owner: agent
+  entry_points:
+    - connectome_health_panel.tsx
+  depends_on:
+    - zustand_connectome_state_store_with_atomic_commit_actions # inferred from import
+  notes: |
+    Displays real-time health metrics for the Connectome system, including status, score,
+    runner activity, attention, pressure, and various counters.
+
+connectome_feature_shell:
+  code: "app/connectome/**"
+  docs: "docs/connectome/feature_shell/"
+  maturity: DESIGNING
+  owner: agent
+  entry_points:
+    - app/connectome/page.tsx
+  depends_on:
+    - connectome_node_kit
+    - connectome_health_panel
+    # Add other connectome_ modules as explicit dependencies once their module.yaml entries are complete
+  notes: |
+    The top-level Next.js feature module for the Connectome application.
+    It orchestrates the various connectome sub-modules and provides the main
+    user interface, routing, and global styling for the feature.
+
+ngram_feature:
+  code: "app/ngram/**"
+  docs: "docs/ngram_feature/"
+  maturity: PROPOSED
+  owner: agent
+  entry_points:
+    - app/ngram/page.tsx
+  notes: |
+    The Next.js module for the Ngram feature. Currently, it acts as a placeholder
+    page that renders the `ConnectomePageShell`, indicating a potential future
+    integration or reuse of the connectome UI structure for ngram-related
+    functionalities.
+
+tui:
+  code: "ngram/tui/**"
+  docs: "docs/tui/"
+  maturity: PROPOSED
+  owner: agent
+  entry_points:
+    - app.py
+  notes: |
+    This module implements the Text User Interface (TUI) for the Ngram project.
+    It includes the main application, command handling, state management, and custom widgets.
+
+llm_agents:
+  code: "ngram/llms/**"
+  docs: "docs/llm_agents/"
+  maturity: DESIGNING
+  owner: agent
+  entry_points:
+    - ngram/llms/gemini_agent.py
+  notes: |
+    This module contains implementations of various Large Language Model (LLM) agents,
+    including provider-specific integrations and their associated tool helpers.
+    It focuses on handling LLM communication, streaming, and tool execution.
+
+ngram_cli_core:
+  code: "ngram/**"
+  docs: "docs/ngram_cli_core/"
+  maturity: CANONICAL
+  owner: agent
+  entry_points:
+    - ngram/cli.py
+    - ngram/agent_cli.py
+    - ngram/doctor.py
+    - ngram/repair.py
+    - ngram/validate.py
+    - ngram/context.py
+    - ngram/prompt.py
+  notes: |
+    Core command-line interface (CLI) and foundational utilities for the ngram framework.
+    This module encompasses the main entry points, project health checks,
+    repair mechanisms, context management, and prompt handling for agent interactions.
+
+# ---------------------------------------------------------------------------
+# ENGINE MODULES
+# ---------------------------------------------------------------------------
+
+engine_physics:
+  code: "engine/physics/**"
+  docs: "docs/physics/"
+  maturity: CANONICAL
+  owner: agent
+  entry_points:
+    - engine/physics/tick.py
+    - engine/physics/handlers.py
+  notes: |
+    Physics engine for graph energy, tick cycles, and state transitions.
+
+engine_physics_graph:
+  code: "engine/physics/graph/**"
+  docs: "docs/physics/graph/"
+  maturity: CANONICAL
+  owner: agent
+  entry_points:
+    - engine/physics/graph/graph_ops.py
+    - engine/physics/graph/graph_queries.py
+  notes: |
+    Graph operations and queries for FalkorDB interaction.
+
+engine_infrastructure_api:
+  code: "engine/infrastructure/api/**"
+  docs: "docs/infrastructure/api/"
+  maturity: DESIGNING
+  owner: agent
+  entry_points:
+    - engine/infrastructure/api/app.py
+    - engine/infrastructure/api/graphs.py
+  notes: |
+    FastAPI backend for ngram services.
+
+engine_infrastructure_orchestration:
+  code: "engine/infrastructure/orchestration/**"
+  docs: "docs/agents/"
+  maturity: DESIGNING
+  owner: agent
+  entry_points:
+    - engine/infrastructure/orchestration/orchestrator.py
+  notes: |
+    Orchestration layer for narrator and world-runner agents.
+
+engine_membrane:
+  code: "engine/membrane/**"
+  docs: "docs/engine/membrane/"
+  maturity: DESIGNING
+  owner: agent
+  notes: |
+    Membrane modulation system for graph boundaries.
+
+engine_models:
+  code: "engine/models/**"
+  docs: "docs/engine/models/"
+  maturity: DESIGNING
+  owner: agent
+  notes: |
+    Pydantic models for engine data structures.
+
+engine_tests:
+  code: "engine/tests/**"
+  docs: "docs/engine/"
+  maturity: CANONICAL
+  owner: agent
+  notes: |
+    Test suite for engine modules.
+
+engine_infrastructure_tempo:
+  code: "engine/infrastructure/tempo/**"
+  docs: "docs/infrastructure/tempo/"
+  maturity: PROPOSED
+  owner: agent
+  notes: |
+    Tempo/timing infrastructure for engine operations.
+
+engine_infrastructure_embeddings:
+  code: "engine/infrastructure/embeddings/**"
+  docs: "docs/infrastructure/"
+  maturity: PROPOSED
+  owner: agent
+  notes: |
+    Embedding service for semantic search.
+
+engine_infrastructure_memory:
+  code: "engine/infrastructure/memory/**"
+  docs: "docs/infrastructure/scene-memory/"
+  maturity: PROPOSED
+  owner: agent
+  notes: |
+    Scene memory infrastructure.
+
+engine_infrastructure_canon:
+  code: "engine/infrastructure/canon/**"
+  docs: "docs/infrastructure/"
+  maturity: PROPOSED
+  owner: agent
+  notes: |
+    Canon/canonical state management.
+
+engine_moments:
+  code: "engine/moments/**"
+  docs: "docs/engine/moments/"
+  maturity: DESIGNING
+  owner: agent
+  notes: |
+    Moment graph engine for narrative moments.
+
+engine_moment_graph:
+  code: "engine/moment_graph/**"
+  docs: "docs/engine/moment-graph-engine/"
+  maturity: DESIGNING
+  owner: agent
+  notes: |
+    Moment graph data structures and operations.
+
+engine_graph_health:
+  code: "engine/graph/health/**"
+  docs: "docs/schema/graph-health/"
+  maturity: DESIGNING
+  owner: agent
+  notes: |
+    Graph health validation and checks.
+
+engine_scripts:
+  code: "engine/scripts/**"
+  docs: "docs/engine/"
+  maturity: PROPOSED
+  owner: agent
+  notes: |
+    Utility scripts for engine operations.
+
+# ---------------------------------------------------------------------------
+# APP/CONNECTOME MODULES
+# ---------------------------------------------------------------------------
+
+connectome_edge_kit:
+  code: "app/connectome/components/edge_kit/**"
+  docs: "docs/connectome/edge_kit/"
+  maturity: DESIGNING
+  owner: agent
+  notes: |
+    Edge rendering components for connectome visualization.
+
+connectome_components:
+  code: "app/connectome/components/**"
+  docs: "docs/connectome/"
+  maturity: DESIGNING
+  owner: agent
+  notes: |
+    Shared connectome UI components.
+
+# ---------------------------------------------------------------------------
+# TUI MODULES
+# ---------------------------------------------------------------------------
+
+tui_widgets:
+  code: "ngram/tui/widgets/**"
+  docs: "docs/tui/"
+  maturity: PROPOSED
+  owner: agent
+  notes: |
+    Custom widgets for the TUI interface.
 
 # Add more modules as they emerge...
-
-  cli_core:
-    code: "ngram/**"
-    docs: "docs/cli/core/"
-    maturity: CANONICAL
-    owner: agent
-    notes: |
-      CLI command routing and core orchestration.
-
-  cli_prompt:
-    code: "ngram/prompt.py"
-    docs: "docs/cli/prompt/"
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      Prompt bootstrap generator for ngram agents.
-
-  core_utils:
-    code: "ngram/core_utils.py"
-    docs: "docs/core_utils/"
-    maturity: CANONICAL
-    owner: agent
-    notes: |
-      Shared path resolution and doc discovery helpers.
-
-  protocol_doctor:
-    code: "ngram/doctor.py"
-    docs: "docs/protocol/doctor/"
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      Health checks and reporting for protocol integrity.
-
-  llm_agents:
-    code: "ngram/llms/**"
-    docs: "docs/llm_agents/"
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      Provider-specific subprocess orchestration.
-
-  tui:
-    code: "ngram/tui/**"
-    docs: "docs/tui/"
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      Text UI experience and widget interactions.
-
-  engine_models:
-    code: "engine/models/**"
-    docs: "docs/engine/models/"
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      Graph data model primitives and invariants.
-
-  engine_moments:
-    code: "engine/moments/**"
-    docs: "docs/engine/moments/"
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      Moment ingestion, storage, and retrieval.
-
-  engine_moment_graph:
-    code: "engine/moment_graph/**"
-    docs: "docs/engine/moment-graph-engine/"
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      Moment graph engine orchestration logic.
-
-  engine_physics:
-    code: "engine/physics/**"
-    docs: "docs/physics/"
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      Physics runtime for graph dynamics and state updates.
-
-  engine_physics_graph:
-    code: "engine/physics/graph/**"
-    docs: "docs/physics/graph/"
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      Graph-specific physics algorithms and invariants.
-
-  engine_api:
-    code: "engine/api/**"
-    docs: "docs/infrastructure/api/"
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      API surface for engine orchestration.
-
-  engine_scene_memory:
-    code: "engine/infrastructure/memory/**"
-    docs: "docs/infrastructure/scene-memory/"
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      Scene memory storage and retrieval.
-
-  engine_root:
-    code: "engine/**"
-    docs: "docs/engine/"
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      Engine runtime umbrella covering code without a dedicated submodule.
-
-  tools:
-    code: "tools/**"
-    docs: "docs/tools/"
-    maturity: DESIGNING
-    owner: agent
-    notes: |
-      Utility scripts for documentation and streaming helpers.

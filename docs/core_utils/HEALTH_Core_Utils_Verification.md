@@ -344,10 +344,10 @@ PY
 
 ## KNOWN GAPS
 
-- [ ] No automated health check runner for core_utils yet.
+<!-- @ngram:todo No automated health check runner for core_utils yet. -->
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Decide whether to add a small health check script under ngram/health/.
+<!-- @ngram:todo Decide whether to add a small health check script under ngram/health/. -->

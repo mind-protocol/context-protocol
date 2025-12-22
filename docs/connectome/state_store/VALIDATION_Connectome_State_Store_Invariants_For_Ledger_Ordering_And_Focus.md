@@ -161,7 +161,7 @@ V4: NOT RUN
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: do we need a “transaction id” recorded per commit for debugging atomicity? (nice-to-have)
 * IDEA: ledger entries can include `arrival_index` to guarantee ordering even with same timestamp

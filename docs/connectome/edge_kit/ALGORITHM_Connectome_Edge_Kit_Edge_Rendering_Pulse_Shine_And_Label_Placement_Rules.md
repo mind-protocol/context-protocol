@@ -175,7 +175,7 @@ If energy_delta unknown:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: Do we show arrowheads? likely only on hover to reduce clutter.
 * IDEA: For graphLink subtype (ABOUT vs THEN), tint yellow vs orange.

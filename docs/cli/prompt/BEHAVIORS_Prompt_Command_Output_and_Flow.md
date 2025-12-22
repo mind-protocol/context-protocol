@@ -111,8 +111,8 @@ INSTEAD:  Trust the structured sections and follow the instructions verbatim
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] @ngram:TODO Capture actual view choice telemetry so health can report which VIEW is selected most often (`HEALTH_Prompt_Runtime_Verification.md` → `health_indicators`)
-- IDEA: Surface a short summary of `data/NGRAM Documentation Chain Pattern (Draft “Marco”).md` source sections (see `@ngram:id: PROMPT.INGEST.MODULE_CHAIN.FEATURE_INTEGRATION — ## Recap — Action Items`) in the prompt output for transparency.
-- QUESTION: Should the prompt warn if `SYNC_Project_State.md` appears to be template content or out-of-date per the health indicator `prompt_doc_reference_check`?
+<!-- @ngram:todo @ngram:TODO Capture actual view choice telemetry so health can report which VIEW is selected most often (`HEALTH_Prompt_Runtime_Verification.md` → `health_indicators`) -->
+<!-- @ngram:proposition Surface a short summary of `data/NGRAM Documentation Chain Pattern (Draft “Marco”).md` source sections (see `@ngram:id: PROMPT.INGEST.MODULE_CHAIN.FEATURE_INTEGRATION — ## Recap — Action Items`) in the prompt output for transparency. -->
+<!-- @ngram:escalation Should the prompt warn if `SYNC_Project_State.md` appears to be template content or out-of-date per the health indicator `prompt_doc_reference_check`? -->

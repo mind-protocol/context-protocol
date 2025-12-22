@@ -145,6 +145,6 @@ INSTEAD:  check the next candidate or raise FileNotFoundError
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Should find_module_directories() return a stable sorted list to reduce diff noise?
+<!-- @ngram:todo Should find_module_directories() return a stable sorted list to reduce diff noise? -->

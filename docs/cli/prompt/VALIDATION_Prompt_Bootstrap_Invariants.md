@@ -33,7 +33,7 @@ IMPL:            ngram/prompt.py
 ### V1: Prompt always cites protocol/principles state
 
 ```
-The generated prompt must include the `.ngram/PROTOCOL.md`, `.ngram/PRINCIPLES.md`, and `.ngram/state/SYNC_Project_State.md` paths in their own section.
+The generated prompt must include the `.ngram/PROTOCOL.md`, `.ngram/PRINCIPLES.md`, and `...ngram/state/SYNC_Project_State.md` paths in their own section.
 ```
 
 **Checked by:** `generate_bootstrap_prompt()` output parsing (reference: `ngram/prompt.py — generate_bootstrap_prompt()`) and periodic spot-check that `@ngram:id: CLI.PROMPT.PATTERNS` sections remain unchanged.
@@ -138,8 +138,8 @@ RESULT:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] @ngram:TODO Automate VIEW-table verification across `.ngram/views` to keep the prompt stable (interfaces with `docs/protocol/HEALTH_Protocol_Verification.md` doctor check #1).
-- IDEA: Align prompt invariants with doctor checks in `docs/protocol/HEALTH_Protocol_Verification.md` by feeding `prompt_doc_reference_check` into the chain integrity monitor.
-- QUESTION: Should we track which views agents actually load after reading the prompt to feed back into `HEALTH_Prompt_Runtime_Verification.md` metrics?
+<!-- @ngram:todo @ngram:TODO Automate VIEW-table verification across `.ngram/views` to keep the prompt stable (interfaces with `docs/protocol/HEALTH_Protocol_Verification.md` doctor check #1). -->
+<!-- @ngram:proposition Align prompt invariants with doctor checks in `docs/protocol/HEALTH_Protocol_Verification.md` by feeding `prompt_doc_reference_check` into the chain integrity monitor. -->
+<!-- @ngram:escalation Should we track which views agents actually load after reading the prompt to feed back into `HEALTH_Prompt_Runtime_Verification.md` metrics? -->

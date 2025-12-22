@@ -49,7 +49,7 @@ PATTERNS:        ./PATTERNS_Why_CLI_Over_Copy.md
 BEHAVIORS:       ./BEHAVIORS_CLI_Command_Effects.md
 ALGORITHM:       ./ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md
 VALIDATION:      ./VALIDATION_CLI_Instruction_Invariants.md
-IMPLEMENTATION:  ./IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md
+IMPLEMENTATION:  ./IMPLEMENTATION_CLI_Code_Architecture/overview/IMPLEMENTATION_Overview.md
 THIS:            HEALTH_CLI_Command_Test_Coverage.md
 SYNC:            ./SYNC_CLI_Development_State.md
 ```
@@ -126,7 +126,7 @@ health_indicators:
 
 ```yaml
 status:
-  stream_destination: .ngram/state/SYNC_Project_Health.md
+  stream_destination: ...ngram/state/SYNC_Project_Health.md
   result:
     representation: float_0_1
     value: 0.85
@@ -147,7 +147,7 @@ status:
 ## INDICATOR: CLI Command Health
 
 - **Purpose:** Tracks whether the core CLI commands (`init`, `validate`, `doctor`, `repair`) complete without corruption or missing artifacts.
-- **Dock:** stdout/stderr + `.ngram/state/SYNC_Project_Health.md`.
+- **Dock:** stdout/stderr + `...ngram/state/SYNC_Project_Health.md`.
 - **Validation:** Cross-check `DoctorIssue` outputs against the `doctor` command to ensure no dramatic regression in docs or templates.
 
 ---
@@ -226,13 +226,13 @@ ngram doctor
 
 ## KNOWN GAPS
 
-- [ ] No automated unit tests for CLI argument parsing.
-- [ ] No integration tests for parallel repair agents.
-- [ ] No automated check for template version drift after upgrade.
+<!-- @ngram:todo No automated unit tests for CLI argument parsing. -->
+<!-- @ngram:todo No integration tests for parallel repair agents. -->
+<!-- @ngram:todo No automated check for template version drift after upgrade. -->
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add `ngram doctor --check-only` for fast CI checks.
-- QUESTION: Should `validate` automatically fix simple file missing issues?
+<!-- @ngram:todo Add `ngram doctor --check-only` for fast CI checks. -->
+<!-- @ngram:escalation Should `validate` automatically fix simple file missing issues? -->

@@ -144,7 +144,7 @@ pnpm connectome:health telemetry_adapter
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * IDEA: Provide a built-in “mock telemetry generator” for health checks (no backend required).
 * QUESTION: Should telemetry_adapter expose a “schema_version” from backend docks? (reserved)

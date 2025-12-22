@@ -82,8 +82,8 @@ moment graph so the visible moment set is always derived from graph state.
 - It does not perform narrative planning or LLM-driven reasoning.
 
 ===============================================================================
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 ===============================================================================
 
-- [ ] Document validation invariants and test coverage for traversal/surfacing.
-- [ ] Confirm performance targets against integration benchmarks.
+<!-- @ngram:todo Document validation invariants and test coverage for traversal/surfacing. -->
+<!-- @ngram:todo Confirm performance targets against integration benchmarks. -->

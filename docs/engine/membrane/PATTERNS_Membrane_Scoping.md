@@ -166,11 +166,11 @@ Dynamic modulation functions rely on the `MembraneContext` aggregates above plus
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Define cache invalidation rules for per-place frames.
-- [ ] Decide whether we cache neutral frames or compute fresh ones on scene entry.
-- [ ] Define the canonical `MembraneContext` fields.
-- [ ] Document default bounds for every dynamic function.
-- IDEA: Debug archive of per-place membrane frames (non-canon).
-- QUESTION: Which graph-encoded signals should carry cross-place influence?
+<!-- @ngram:todo Define cache invalidation rules for per-place frames. -->
+<!-- @ngram:todo Decide whether we cache neutral frames or compute fresh ones on scene entry. -->
+<!-- @ngram:todo Define the canonical `MembraneContext` fields. -->
+<!-- @ngram:todo Document default bounds for every dynamic function. -->
+<!-- @ngram:proposition Debug archive of per-place membrane frames (non-canon). -->
+<!-- @ngram:escalation Which graph-encoded signals should carry cross-place influence? -->

@@ -58,8 +58,8 @@ SOURCE: docs/agents/narrator/*
 
 ## TODO
 
-- [ ] None. This archive is intentionally quiet, so no new action items live here—any required work should be captured in `docs/agents/narrator/SYNC_Narrator.md`.
-- [ ] When another freeze is requested, regenerate this archive via the canonical sync workflow so the December 2024 snapshot remains a trustworthy historical record.
+<!-- @ngram:todo None. This archive is intentionally quiet, so no new action items live here—any required work should be captured in `docs/agents/narrator/SYNC_Narrator.md`. -->
+<!-- @ngram:todo When another freeze is requested, regenerate this archive via the canonical sync workflow so the December 2024 snapshot remains a trustworthy historical record. -->
 
 ## CONSCIOUSNESS TRACE
 

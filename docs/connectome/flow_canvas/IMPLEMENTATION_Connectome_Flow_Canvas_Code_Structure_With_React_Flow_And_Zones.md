@@ -76,7 +76,7 @@ app/connectome/components/edge_label_declutter_and_visibility_policy_helpers.ts
 | `revealed_node_ids` | IDs that temporarily bypass LOD-based label hiding when search or telemetry forces them on |
 | `revealed_edge_ids` | Edge IDs whose labels/pulses stay active despite camera zooming; shared with `node_kit` helpers |
 
-Schema definitions live alongside `connectome_system_map_node_edge_manifest` and the `flow_canvas` helpers so every renderer shares the same canonical contract.
+Schema definitions live alongside the [Connectome Graph Manifest](../runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md) and the `flow_canvas` helpers so every renderer shares the same canonical contract.
 `FlowCanvasProps` is declared inside `pannable_zoomable_zoned_flow_canvas_renderer.tsx` and pulls its schema directly from the store selectors so the render loop never invents a view that the runtime does not already own.
 
 ## DATA FLOW AND DOCKING (FLOW-BY-FLOW)
@@ -159,7 +159,7 @@ docking_points:
 | `app/connectome/components/edge_kit` | Edge renderers, label tokens, and pulse helpers used by the WebGL overlay on top of the canvas. |
 | `app/connectome/components/page_shell_control_surface` | Camera control buttons and stepper wiring that trigger the same handlers as runtime focus updates. |
 | `engine/runtime_engine` adapters | Emit FlowEvents that update the graph projection and focus data consumed by FlowCanvas via `state_store`. |
-| `app/connectome/lib/connectome_system_map_node_edge_manifest` | Defines `ConnectomeNodeDefinition`/`ConnectomeEdgeDefinition` schema referenced across helpers. |
+| [Connectome Graph Manifest](../runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md) | Defines `ConnectomeNodeDefinition`/`ConnectomeEdgeDefinition` schema referenced across helpers. |
 | `app/connectome/components/telemetry_camera_controls.ts` | Synthesizes camera deltas and health pings so the FlowCanvas loops stay observable to dashboards. |
 
 ## STATE MANAGEMENT
@@ -197,7 +197,7 @@ Because the FlowCanvas work happens in the React commit phase, the concurrency s
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * NOTE: custom WebGL renderer replaced React Flow for scalability
 * IDEA: minimap toggle in top-right for navigation

@@ -49,7 +49,7 @@ AND:    Only then does the agent modify code
 ```
 GIVEN:  An agent has made changes to code or docs
 WHEN:   The agent completes their work
-THEN:   The agent updates .ngram/state/SYNC_Project_State.md
+THEN:   The agent updates ...ngram/state/SYNC_Project_State.md
 AND:    The agent updates relevant module SYNC files
 AND:    The SYNC includes: what changed, why, what's next
 ```
@@ -137,7 +137,7 @@ AND:    The agent describes the task details in YAML format
 - `.ngram/PROTOCOL.md`
 - `.ngram/views/VIEW_*.md`
 - `.ngram/templates/*.md`
-- `.ngram/state/SYNC_Project_State.md`
+- `...ngram/state/SYNC_Project_State.md`
 - Updated .ngram/CLAUDE.md with protocol bootstrap
 - Updated AGENTS.md with the bootstrap plus Codex guidance (protocol-first reading, no self-run TUI, verbose outputs, parallel-work awareness)
 
@@ -232,9 +232,9 @@ INSTEAD:  Load VIEW, follow VIEW instructions, load only what's specified
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Behavior for handling merge conflicts in SYNC files
-- [ ] Behavior for multi-agent concurrent work
-- IDEA: VIEW for onboarding new agents to a project
-- QUESTION: How detailed should SYNC updates be?
+<!-- @ngram:todo Behavior for handling merge conflicts in SYNC files -->
+<!-- @ngram:todo Behavior for multi-agent concurrent work -->
+<!-- @ngram:proposition VIEW for onboarding new agents to a project -->
+<!-- @ngram:escalation How detailed should SYNC updates be? -->

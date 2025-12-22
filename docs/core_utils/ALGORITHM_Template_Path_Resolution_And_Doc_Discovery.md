@@ -159,6 +159,6 @@ None. Both functions implement their own logic directly.
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Should discovery order be stable-sorted by name instead of filesystem order?
+<!-- @ngram:todo Should discovery order be stable-sorted by name instead of filesystem order? -->

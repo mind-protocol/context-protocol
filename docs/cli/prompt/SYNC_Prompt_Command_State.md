@@ -51,12 +51,12 @@ The HEALTH doc now stores the signal-to-dock mapping for each invariant so the `
 
 - **What:** Added PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/IMPLEMENTATION/HEALTH/SYNC files under `docs/cli/prompt/`, each following templates and referencing `ngram/prompt.py`.
 - **Why:** Capture canonical workflow for the `ngram prompt` command and satisfy the `NGRAM Documentation Chain Pattern` requirements.
-- **Files:** All files inside `docs/cli/prompt/`; `docs/cli/core/SYNC_CLI_Development_State.md`; `modules.yaml`; `.ngram/state/SYNC_Project_State.md`; `ngram/prompt.py` (DOCS pointer added). points.
+- **Files:** All files inside `docs/cli/prompt/`; `docs/cli/core/SYNC_CLI_Development_State.md`; `modules.yaml`; `...ngram/state/SYNC_Project_State.md`; `ngram/prompt.py` (DOCS pointer added). points.
 - **Struggles/Insights:** Copying numerous templates is time-consuming but ensures future agents have the full chain.
 
 ### 2025-12-21: Doctoring prompt health + documentation coupling
 
-- **What:** Hooked the prompt health indicators (`prompt_doc_reference_check`, `prompt_view_table_check`, `prompt_checklist_presence_check`) plus the doc-link integrity and code-doc delta coupling checks into `ngram doctor` and recorded the output in `.ngram/state/SYNC_Project_Health.md`.
+- **What:** Hooked the prompt health indicators (`prompt_doc_reference_check`, `prompt_view_table_check`, `prompt_checklist_presence_check`) plus the doc-link integrity and code-doc delta coupling checks into `ngram doctor` and recorded the output in `...ngram/state/SYNC_Project_Health.md`.
 - **Why:** Turned the CLI prompt into an observable health signal so any drift or unanswered doc-coupling gaps are visible during routine health sweeps (see `docs/protocol/HEALTH_Protocol_Verification.md`).
 - **Impact:** `ngram doctor` now surfaces the prompt health status while also flagging 27 doc-link issues and 3 code-doc delta warnings; these are new observations captured in this module's TODO list.
 
@@ -103,8 +103,8 @@ The HEALTH doc now stores the signal-to-dock mapping for each invariant so the `
 
 ### Doc/Impl Drift
 
-- [ ] DOCS→IMPL: Implement automation that compares `generate_bootstrap_prompt()` output to PATTERNS/BEHAVIORS descriptions (links to `docs/protocol/HEALTH_Protocol_Verification.md` doctor check #1).
-- [ ] IMPL→DOCS: When the VIEW table evolves, update ALGORITHM/BEHAVIORS and rerun `prompt_view_table_check`.
+<!-- @ngram:todo DOCS→IMPL: Implement automation that compares `generate_bootstrap_prompt()` output to PATTERNS/BEHAVIORS descriptions (links to `docs/protocol/HEALTH_Protocol_Verification.md` doctor check #1). -->
+<!-- @ngram:todo IMPL→DOCS: When the VIEW table evolves, update ALGORITHM/BEHAVIORS and rerun `prompt_view_table_check`. -->
 
 ### Tests to Run
 
@@ -122,8 +122,8 @@ PY
 
 ### Later
 
-- [ ] Deprecate `VIEW_Test_Write_Tests_And_Verify.md` mention after health checks settle
-- IDEA: Emit CLI events when `ngram prompt` runs for usage telemetry feeding `docs/cli/prompt/HEALTH_Prompt_Runtime_Verification.md`.
+<!-- @ngram:todo Deprecate `VIEW_Test_Write_Tests_And_Verify.md` mention after health checks settle -->
+<!-- @ngram:proposition Emit CLI events when `ngram prompt` runs for usage telemetry feeding `docs/cli/prompt/HEALTH_Prompt_Runtime_Verification.md`. -->
 
 ---
 

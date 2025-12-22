@@ -114,7 +114,7 @@ Maintain a small sliding window:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: Do we subscribe via named SSE events (preferred) or use default onmessage? depends on backend format → `?`
 * IDEA: unify multiple SSE sources into one combined envelope stream for the runtime engine.

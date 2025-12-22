@@ -206,10 +206,10 @@ RESULT: NOT RUN (no implementation yet)
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Property test for output ordering (messages arrive in order)
-- [ ] Invariant for concurrent command handling (what if user types during repair?)
-- IDEA: Fuzzing for command parser
-- IDEA: Stress test with many rapid commands
-- QUESTION: How to test async Textual apps effectively?
+<!-- @ngram:todo Property test for output ordering (messages arrive in order) -->
+<!-- @ngram:todo Invariant for concurrent command handling (what if user types during repair?) -->
+<!-- @ngram:proposition Fuzzing for command parser -->
+<!-- @ngram:proposition Stress test with many rapid commands -->
+<!-- @ngram:escalation How to test async Textual apps effectively? -->

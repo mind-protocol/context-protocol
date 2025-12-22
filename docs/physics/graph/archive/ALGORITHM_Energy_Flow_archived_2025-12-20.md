@@ -80,7 +80,7 @@ The orchestrator calls `graph_tick` each time a player action advances time.
 GraphOps provides the query/mutation surface for narrative, link, and tension
 data, while the world runner consumes flipped tensions to generate changes.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 - Confirm the exact source of `player` and `current_tick` in tick context.
 - Validate propagation factors against current GraphOps link taxonomy.

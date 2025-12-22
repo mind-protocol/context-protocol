@@ -10,26 +10,26 @@ CREATED: 2025-12-18
 ## CHAIN
 
 ```
-PATTERNS:        ../PATTERNS_Why_CLI_Over_Copy.md
-BEHAVIORS:       ../BEHAVIORS_CLI_Command_Effects.md
-ALGORITHM:       ../ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md
-VALIDATION:      ../VALIDATION_CLI_Instruction_Invariants.md
-IMPLEMENTATION:  ./IMPLEMENTATION_Overview.md
-HEALTH:          ../HEALTH_CLI_Command_Test_Coverage.md
-SYNC:            ../SYNC_CLI_Development_State.md
+PATTERNS:        ../../PATTERNS_Why_CLI_Over_Copy.md
+BEHAVIORS:       ../../BEHAVIORS_CLI_Command_Effects.md
+ALGORITHM:       ../../ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md
+VALIDATION:      ../../VALIDATION_CLI_Instruction_Invariants.md
+IMPLEMENTATION:  ../overview/IMPLEMENTATION_Overview.md
+HEALTH:          ../../HEALTH_CLI_Command_Test_Coverage.md
+SYNC:            ../../SYNC_CLI_Development_State.md
 ```
 
 ---
 
 ## CONTEXT
 
-Entry point: `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md`.
+Entry point: `../overview/IMPLEMENTATION_Overview.md`.
 
 ---
 
 ## CODE STRUCTURE
 
-See `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Code_Structure.md` for the physical file layout, responsibilities, and split guidance. Runtime insights assume that structure stays roughly the same while doctor/repair modules evolve.
+See `../structure/IMPLEMENTATION_Code_Structure.md` for the physical file layout, responsibilities, and split guidance. Runtime insights assume that structure stays roughly the same while doctor/repair modules evolve.
 
 ## DESIGN PATTERNS
 
@@ -39,7 +39,7 @@ See `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Code_Stru
 
 ## SCHEMA
 
-Schema definitions live in `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Schema.md`. Runtime flows rely on `ValidationResult`, `DoctorIssue`, and `RepairResult` to carry status through the flows described below.
+Schema definitions live in `../schema/IMPLEMENTATION_Schema.md`. Runtime flows rely on `ValidationResult`, `DoctorIssue`, and `RepairResult` to carry status through the flows described below.
 
 ---
 
@@ -62,16 +62,16 @@ Schema definitions live in `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/I
 ## DATA FLOW AND DOCKING (FLOW-BY-FLOW)
 
 - **Command dispatch flow:** `ngram/cli.py` parses args → selects handler → writes outputs to stdout/files → writes SYNC/state artifacts.
-- **Health flow:** `ngram/doctor.py` collects issues → `ngram/doctor_report.py` renders Markdown + JSON → writes `.ngram/state/SYNC_Project_Health.md` and archives.
-- **Repair flow:** `ngram/repair.py` builds prompts → `ngram/agent_cli.py` runs subprocesses → `ngram/repair_report.py` emits artifacts plus the repair report (in `.ngram/state/`).
+- **Health flow:** `ngram/doctor.py` collects issues → `ngram/doctor_report.py` renders Markdown + JSON → writes `...ngram/state/SYNC_Project_Health.md` and archives.
+- **Repair flow:** `ngram/repair.py` builds prompts → `ngram/agent_cli.py` runs subprocesses → `ngram/repair_report.py` emits artifacts plus the repair report (in `...ngram/state/`).
 - **Init flow:** `ngram/init_cmd.py` copies protocol assets → writes AGENTS/CLAUDE → copies `.ngram/skills` into `.claude/skills` and `$CODEX_HOME/skills`.
 
-Docking points include `.ngram/state/`, `.ngram/traces/`, `docs/`, and `.ngram/state/SYNC_Project_Health.md`.
+Docking points include `...ngram/state/`, `.ngram/traces/`, `docs/`, and `...ngram/state/SYNC_Project_Health.md`.
 
 ## LOGIC CHAINS
 
 1. CLI dispatch → module handler → `DoctorIssue`/`RepairResult` → final report.
-2. Health runner → `ngram/doctor_report.py` → `.ngram/state/SYNC_Project_Health.md` + Markdown + JSON outputs.
+2. Health runner → `ngram/doctor_report.py` → `...ngram/state/SYNC_Project_Health.md` + Markdown + JSON outputs.
 
 ---
 
@@ -87,7 +87,7 @@ Internal: CLI → doctor, repair, prompt, repo_overview, core_utils. Doctor → 
 | Validation results | `List[ValidationResult]` | per-command | in-memory |
 | Repair results | `List[RepairResult]` | per-command | in-memory |
 | Trace logs | `.ngram/traces/` | persistent | rotates daily |
-| Health report | `.ngram/state/SYNC_Project_Health.md` | persistent | overwritten each run |
+| Health report | `...ngram/state/SYNC_Project_Health.md` | persistent | overwritten each run |
 
 ## RUNTIME BEHAVIOR
 
@@ -130,9 +130,9 @@ Internal: CLI → doctor, repair, prompt, repo_overview, core_utils. Doctor → 
 
 ## BIDIRECTIONAL LINKS
 
-`ngram/cli.py` and command modules contain `DOCS:` pointers to this file; the file also links back to `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md` and the entry point files listed above to keep doc-code coherence.
+`ngram/cli.py` and command modules contain `DOCS:` pointers to this file; the file also links back to `../overview/IMPLEMENTATION_Overview.md` and the entry point files listed above to keep doc-code coherence.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Capture runtime telemetry (command durations, doctor coverage) in `.ngram/state`.
-- IDEA: Add CLI telemetry for frequent commands to feed into future architecture docs.
+<!-- @ngram:todo Capture runtime telemetry (command durations, doctor coverage) in `.ngram/state`. -->
+<!-- @ngram:proposition Add CLI telemetry for frequent commands to feed into future architecture docs. -->

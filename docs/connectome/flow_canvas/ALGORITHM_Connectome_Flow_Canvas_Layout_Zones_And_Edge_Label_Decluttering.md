@@ -199,7 +199,7 @@ User interactions are constrained to pan, zoom, fit-to-view, reset, and focus cl
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * IDEA: allow per-zone gravity centers to keep clusters readable at 10k nodes
 * QUESTION: do we allow user to drag nodes? (v1: no, to preserve stability)

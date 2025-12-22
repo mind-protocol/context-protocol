@@ -144,7 +144,7 @@ INSTEAD: map it to callType="code" trigger="stream" with notes="?" and preserve 
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Confirm whether we need `parent_event_id` for causal tracing in V1 (nice-to-have).
 * QUESTION: Do we treat “graph link energy flow” as callType=graphLink or as a derived visualization event?

@@ -9,7 +9,7 @@ Original file: SYNC_Project_Repository_Map.md
 
 ### Doc/Impl Drift
 
-- [ ] DOCS: Consider updating the overview generator to preserve or emit SYNC headers instead of manual edits.
+<!-- @ngram:todo DOCS: Consider updating the overview generator to preserve or emit SYNC headers instead of manual edits. -->
 
 ### Tests to Run
 
@@ -19,12 +19,12 @@ ngram validate
 
 ### Immediate
 
-- [ ] Decide whether this file should be regenerated now or after additional repairs land.
+<!-- @ngram:todo Decide whether this file should be regenerated now or after additional repairs land. -->
 
 ### Later
 
-- [ ] Capture a lightweight diff summary when regenerating the map, if feasible.
-- IDEA: Add a note in the generator output about the command used to produce the map.
+<!-- @ngram:todo Capture a lightweight diff summary when regenerating the map, if feasible. -->
+<!-- @ngram:proposition Add a note in the generator output about the command used to produce the map. -->
 
 ---
 
@@ -275,7 +275,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## COMPLEXITY
 - ## HELPER FUNCTIONS
 - ## INTERACTIONS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Doc refs:**
 - `docs/cli/ALGORITHM_CLI_Logic.md`
@@ -310,7 +310,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - # Run all health checks via validate
 - # Run project health via doctor
 - ## KNOWN GAPS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `ngram/agent_cli.py`
@@ -361,7 +361,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## CONCURRENCY MODEL
 - ## CONFIGURATION
 - ## BIDIRECTIONAL LINKS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `agent_cli.py`
@@ -387,7 +387,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## DEPENDENCIES
 - ## INSPIRATIONS
 - ## WHAT THIS DOES NOT SOLVE
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `doctor_files.py`
@@ -435,7 +435,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - # No automated test suite yet
 - # TODO: Add pytest tests
 - ## CHECK REFERENCES
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Sections:**
 - # ngram LLM Agents — Algorithm: Gemini Stream Flow
@@ -444,7 +444,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## ALGORITHM: Gemini Adapter Execution
 - ## DATA FLOW
 - ## COMPLEXITY
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Sections:**
 - # ngram LLM Agents — Behaviors: Gemini Agent Output
@@ -474,7 +474,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - # Manual verification of stream JSON
 - # Manual verification of plain text
 - ## KNOWN GAPS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `ngram/agent_cli.py`
@@ -504,7 +504,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## DEPENDENCIES
 - ## INSPIRATIONS
 - ## WHAT THIS DOES NOT SOLVE
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `gemini_agent.py`
@@ -664,7 +664,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - # Run all doctor checks on the current project
 - # Run with JSON output for machine parsing
 - ## KNOWN GAPS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Sections:**
 - # PATTERNS: Project Health Doctor
@@ -749,7 +749,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## INPUTS / OUTPUTS
 - ## EDGE CASES
 - ## ANTI-BEHAVIORS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `ngram/validate.py`
@@ -772,7 +772,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - # Verify protocol health for the current project
 - # Verify a specific module
 - ## KNOWN GAPS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Doc refs:**
 - `docs/protocol/IMPLEMENTATION/IMPLEMENTATION_Overview.md`
@@ -793,7 +793,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## DEPENDENCIES
 - ## INSPIRATIONS
 - ## WHAT THIS DOES NOT SOLVE
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `ngram/cli.py`
@@ -834,7 +834,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - # Check specific invariant
 - # Check specific module
 - ## SYNC STATUS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `ngram/cli.py`
@@ -919,7 +919,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## COMPLEXITY
 - ## HELPER FUNCTIONS
 - ## INTERACTIONS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Sections:**
 - # ngram TUI — Behaviors: User Interactions and Observable Effects
@@ -928,7 +928,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## INPUTS / OUTPUTS
 - ## EDGE CASES
 - ## ANTI-BEHAVIORS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `manager.py`
@@ -954,7 +954,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - # Manual verification of agent panels
 - # Run /repair and verify that agent panels appear and stream output.
 - ## KNOWN GAPS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `ngram/cli.py`
@@ -987,7 +987,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## DEPENDENCIES
 - ## INSPIRATIONS
 - ## WHAT THIS DOES NOT SOLVE
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `ngram/repair_core.py`
@@ -1029,7 +1029,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - # Once tests exist:
 - # With coverage:
 - ## SYNC STATUS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `agent_cli.py`
@@ -1601,7 +1601,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## COMPLEXITY
 - ## HELPER FUNCTIONS
 - ## INTERACTIONS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `{path/to/main/source/file.py`
@@ -1613,7 +1613,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## INPUTS / OUTPUTS
 - ## EDGE CASES
 - ## ANTI-BEHAVIORS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Sections:**
 - # CONCEPT: {Concept Name} — {What This Concept Is}
@@ -1644,7 +1644,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - # Run all health checks for this module
 - # Run a specific checker
 - ## KNOWN GAPS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `{path/to/main/source/file.py`
@@ -1664,7 +1664,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## CONCURRENCY MODEL
 - ## CONFIGURATION
 - ## BIDIRECTIONAL LINKS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Code refs:**
 - `{path/to/main/source/file.py`
@@ -1679,7 +1679,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - ## DEPENDENCIES
 - ## INSPIRATIONS
 - ## SCOPE
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Sections:**
 - # {Module/Area/Project} — Sync: Current State
@@ -1718,7 +1718,7 @@ I am confident this preserves the historical snapshot while giving future agents
 - # Run tests
 - # Run with coverage
 - ## SYNC STATUS
-- ## GAPS / IDEAS / QUESTIONS
+- ## MARKERS
 
 **Sections:**
 - # VIEW: Analyze — Structural Analysis and Recommendations

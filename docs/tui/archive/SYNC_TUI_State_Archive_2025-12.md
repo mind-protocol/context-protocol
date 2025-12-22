@@ -83,7 +83,7 @@ ngram/
 - Agent integration with subprocess providers (Claude/Gemini/Codex), streaming output, thinking blocks.
 - Command handling: `/help`, `/repair`, `/doctor`, `/quit`, `/clear`, `/run`, `/issues`.
 - Input history, tab completion, command detection.
-- Conversation history stored in `.ngram/state/conversation_history.json`.
+- Conversation history stored in `...ngram/state/conversation_history.json`.
 - Agent panels with headers, status colors, auto-collapse, capped output lines.
 - Repair sessions under `.ngram/repairs/{timestamp}/` with ISSUE.md per agent.
 - Error logging to `.ngram/error_log.txt`.

@@ -29,6 +29,8 @@ IMPL:            agents/narrator/CLAUDE.md
 
 Define the minimal, reliable generation flow that keeps narration responsive, graph-canonical, and ready to output the shaped payload that downstream tools expect. This write-up clarifies how the narrator classifies actions, streams dialogue, queries the graph for truth, invents when needed, and closes the loop with the schema-aligned response envelope.
 
+By tracking world-injection urgency and thread health inside the same narrative frame, the algorithm prevents injected beats from derailing continuity while still surfacing the new facts the composer intended.
+
 ---
 
 ## OVERVIEW
@@ -36,6 +38,8 @@ Define the minimal, reliable generation flow that keeps narration responsive, gr
 This algorithm coordinates scene narration with graph-backed truth, balancing stream-first delivery with the need to record invented details. It keeps a persistent thread going so every chunk of dialogue inherits a shared memory while still deciding when to synthesize new facts and mutate the graph so the next round can consume them.
 
 By explicitly tagging the action as either conversational or significant, the narrator avoids overloading lightweight exchanges with expensive SceneTree payloads and only builds the full tree when pacing demands it. Graph queries and invention steps happen in parallel with streaming so latency stays low while the structured output eventually arrives complete.
+
+It also demystifies how world injection fragments (`heard`, `witnessed`, `will_hear`, `interruption`) flow through the decision layers, so downstream agents know that urgencies raise the significance threshold without breaking the rolling window.
 
 ---
 
@@ -218,12 +222,12 @@ NarratorOutput (dialogue chunks, mutations, optional scene, metadata)
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Evaluate adaptive rolling-window depth when player latency grows above 3 seconds so narration stays ahead of clicks.
-- [ ] Capture richer metadata that distinguishes invented facts from retrieved facts for audit tooling and chaos testing.
-- IDEA: Replace the binary significant/conversational classification with a pacing score so short significant bursts still produce SceneTrees when needed.
-- QUESTION: Should certain high-urgency world injections temporarily suppress SceneTree builds to avoid conflicting pacing signals?
+<!-- @ngram:todo Evaluate adaptive rolling-window depth when player latency grows above 3 seconds so narration stays ahead of clicks. -->
+<!-- @ngram:todo Capture richer metadata that distinguishes invented facts from retrieved facts for audit tooling and chaos testing. -->
+<!-- @ngram:proposition Replace the binary significant/conversational classification with a pacing score so short significant bursts still produce SceneTrees when needed. -->
+<!-- @ngram:escalation Should certain high-urgency world injections temporarily suppress SceneTree builds to avoid conflicting pacing signals? -->
 
 ---
 

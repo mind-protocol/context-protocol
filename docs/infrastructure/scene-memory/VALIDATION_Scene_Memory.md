@@ -96,7 +96,7 @@ Detailed legacy test sketches were moved to the archive.
 5. Cross-check with canonical Moment Graph validation docs for gaps.
 
 ===============================================================================
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 ===============================================================================
 
 - Which legacy invariants still need explicit regression tests once the

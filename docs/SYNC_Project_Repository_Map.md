@@ -135,8 +135,8 @@ structural changes; that choice affects how often this file is updated.
 
 ## TODO
 
-- [ ] Re-run `ngram overview` after the next major doc or code reorganization.
-- [ ] Confirm whether the map should include repo root artifacts like logs.
+<!-- @ngram:todo Re-run `ngram overview` after the next major doc or code reorganization. -->
+<!-- @ngram:todo Confirm whether the map should include repo root artifacts like logs. -->
 
 ## CONSCIOUSNESS TRACE
 

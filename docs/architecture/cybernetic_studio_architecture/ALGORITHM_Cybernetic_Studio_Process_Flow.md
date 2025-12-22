@@ -167,9 +167,9 @@ flip + canonize → Places
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Formalize weight evolution rules (W updates and pruning policy).
-- [ ] Define canonicalization policy for dev narratives vs local moments.
-- IDEA: Add reference implementation notes once graph ops API is finalized.
-- QUESTION: How should Place focus weights be computed across UI contexts?
+<!-- @ngram:todo Formalize weight evolution rules (W updates and pruning policy). -->
+<!-- @ngram:todo Define canonicalization policy for dev narratives vs local moments. -->
+<!-- @ngram:proposition Add reference implementation notes once graph ops API is finalized. -->
+<!-- @ngram:escalation How should Place focus weights be computed across UI contexts? -->

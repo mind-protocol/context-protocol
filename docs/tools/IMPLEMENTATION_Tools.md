@@ -82,11 +82,11 @@ This Implementation doc points back to the Tools chain (PATTERNS, BEHAVIORS, ALG
 - `tools/connectome_doc_bundle_splitter_and_fence_rewriter.py`
 - `tools/stream_dialogue.py`
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add fixture-driven regression checks that run the splitter on a saved bundle so we know `$$$` transforms keep producing the documented documents.
-- [ ] Build a controlled dialogue streamer fixture that asserts the appended JSON line matches the schema described above, including clickable metadata and FalkorDB graph selection.
-- [ ] Explain how `tools/run_stack.sh` fits this implementation ledger so operators can trace its restarts back to this documentation chain when diagnosing drift.
+<!-- @ngram:todo Add fixture-driven regression checks that run the splitter on a saved bundle so we know `$$$` transforms keep producing the documented documents. -->
+<!-- @ngram:todo Build a controlled dialogue streamer fixture that asserts the appended JSON line matches the schema described above, including clickable metadata and FalkorDB graph selection. -->
+<!-- @ngram:todo Explain how `tools/run_stack.sh` fits this implementation ledger so operators can trace its restarts back to this documentation chain when diagnosing drift. -->
 ## CODE LOCATIONS
 
 - `tools/connectome_doc_bundle_splitter_and_fence_rewriter.py`

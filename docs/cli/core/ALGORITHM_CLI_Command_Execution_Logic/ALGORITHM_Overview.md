@@ -53,14 +53,14 @@ Each heading below keeps the previous command-specific details while leaving onl
 2. Run the doctor checks in priority order (`doctor_check_monolith`, `doctor_check_undocumented`, `doctor_check_stale_sync`, `doctor_check_placeholder`, `doctor_check_no_docs_ref`, `doctor_check_incomplete_chain`, `doctor_check_broken_impl_links`, `doctor_check_stub_impl`, `doctor_check_incomplete_impl`, `doctor_check_undoc_impl`, `doctor_check_large_doc_module`, `doctor_check_yaml_drift`, `doctor_check_recent_log_errors`).
 3. Calculate a health score starting at 100, subtracting penalties per issue bucket (10 per critical, 3 per warning, 1 per info) and clamping at 0.
 4. Shuffle issues within each severity bucket before publishing so agents do not repeatedly focus on the same items.
-5. Serialize the markdown report to `.ngram/state/SYNC_Project_Health.md` so downstream commands have the latest snapshot.
+5. Serialize the markdown report to `...ngram/state/SYNC_Project_Health.md` so downstream commands have the latest snapshot.
 
 #### Repair command
 1. Use `run_doctor()` to gather critical and warning issues, filtering by the requested depth (`links`, `docs`, or `full`) and any explicit issue-type filters; higher-priority issues (e.g., `YAML_DRIFT`) surface first.
 2. For every remaining issue, build a repair prompt: fetch the issue instructions, split docs into existing vs missing, and call `build_agent_prompt` with the issue, the associated VIEW, the docs list, and the written task description.
 3. Spawn repair agents in parallel (`ThreadPoolExecutor`) so each issue is handled concurrently, streaming progress via Claude/Gemini subprocesses and waiting for `REPAIR COMPLETE` or `REPAIR FAILED` signals from each session.
 4. For each issue, run the assembled command, capture JSON/text output, and add the result to the aggregated list.
-5. After agents finish, rerun `doctor` to compare before/after health scores and write a summary to `.ngram/state/REPAIR_REPORT.md`.
+5. After agents finish, rerun `doctor` to compare before/after health scores and write a summary to `...ngram/state/REPAIR_REPORT.md`.
 
 ##### Key decisions
 - **D1: Depth filtering.** `links` restricts fixes to references (`NO_DOCS_REF`, `BROKEN_IMPL_LINK`, `YAML_DRIFT`, `UNDOC_IMPL`), `docs` adds document content fixes (`INCOMPLETE_CHAIN`, `PLACEHOLDER`, `LARGE_DOC_MODULE`), and `full` enables code changes including `MONOLITH`, `STUB_IMPL`, and `INCOMPLETE_IMPL`.

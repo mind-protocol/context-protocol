@@ -108,7 +108,7 @@ AND:    connection status updates accordingly
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: Should reconnect reset arrival_index or continue monotonic? (prefer continue per session)
 * IDEA: allow “pause but still show connection status” (buffering continues)

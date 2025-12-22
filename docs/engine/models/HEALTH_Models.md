@@ -148,18 +148,18 @@ python scripts/verify_schema_consistency.py
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 ### Missing Health Check Implementation
 
-- [ ] Implement a checker for mutable default fields not using `default_factory` (V4).
-- [ ] Develop property-based tests for model serialization roundtrip (P1) and derived properties (P2).
+<!-- @ngram:todo Implement a checker for mutable default fields not using `default_factory` (V4). -->
+<!-- @ngram:todo Develop property-based tests for model serialization roundtrip (P1) and derived properties (P2). -->
 
 ### Ideas for Improvement
 
-- IDEA: Integrate Pydantic's `Config.extra = 'forbid'` into health checks to detect unexpected fields in incoming data.
-- IDEA: Monitor `ValidationError` rates in production logs as a real-time health indicator for data quality.
+<!-- @ngram:proposition Integrate Pydantic's `Config.extra = 'forbid'` into health checks to detect unexpected fields in incoming data. -->
+<!-- @ngram:proposition Monitor `ValidationError` rates in production logs as a real-time health indicator for data quality. -->
 
 ### Open Questions
 
-- QUESTION: What is the acceptable latency for model instantiation during high-frequency data ingestion?
+<!-- @ngram:escalation What is the acceptable latency for model instantiation during high-frequency data ingestion? -->

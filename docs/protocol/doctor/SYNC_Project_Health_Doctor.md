@@ -47,7 +47,7 @@ The command provides holistic project health analysis beyond pass/fail validatio
 - Doctor now flags resolved escalation markers so they get applied and removed.
 - Escaped marker references in BEHAVIORS to avoid triggering escalation scans.
 - Special marker detection now includes `@ngram&#58;todo` entries for task triage.
-- Doc-link integrity and code-doc delta coupling checks now guard the prompt doc chain and flagged 27 doc-link + 3 code-doc delta warnings (see `.ngram/state/SYNC_Project_Health.md`).
+- Doc-link integrity and code-doc delta coupling checks now guard the prompt doc chain and flagged 27 doc-link + 3 code-doc delta warnings (see `...ngram/state/SYNC_Project_Health.md`).
  - Implementation docs now explicitly list each doctor, repair, repo-overview, solve, and TUI code path mentioned by the latest doctor scan so the doc-link integrity check can anchor back to this module.
 - Incomplete-implementation detection now treats stub-only bodies (pass/return None/NotImplemented) as incomplete while allowing concise return-based helpers.
 - Stub-only detection now evaluates every function boundary (including end-of-file) to avoid false positives on short helpers.
@@ -144,18 +144,18 @@ Suggested order based on dependencies:
 
 ### To Implement (v2)
 
-- [ ] check_activity_gaps - No SYNC updates in N days across project
-- [ ] check_abandoned - Docs started but never completed
-- [ ] check_vague_names - Files named utils, helpers, misc, etc.
-- [ ] `--guide` remediation mode
+<!-- @ngram:todo check_activity_gaps - No SYNC updates in N days across project -->
+<!-- @ngram:todo check_abandoned - Docs started but never completed -->
+<!-- @ngram:todo check_vague_names - Files named utils, helpers, misc, etc. -->
+<!-- @ngram:todo `--guide` remediation mode -->
 
 ### Future Ideas
 
-- IDEA: `--fix` mode that auto-creates missing docs
-- IDEA: `--watch` mode for continuous health monitoring
-- IDEA: Health score badge for README
-- IDEA: Integration with CI (GitHub Actions template)
-- IDEA: Trend tracking (score over time)
+<!-- @ngram:proposition `--fix` mode that auto-creates missing docs -->
+<!-- @ngram:proposition `--watch` mode for continuous health monitoring -->
+<!-- @ngram:proposition Health score badge for README -->
+<!-- @ngram:proposition Integration with CI (GitHub Actions template) -->
+<!-- @ngram:proposition Trend tracking (score over time) -->
 
 ---
 

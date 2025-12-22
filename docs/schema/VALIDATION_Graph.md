@@ -91,11 +91,11 @@ RESULT:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Confirm the graph-health tests cover disconnected cluster detection for
+<!-- @ngram:todo Confirm the graph-health tests cover disconnected cluster detection for -->
   new node batches, and add a targeted test if coverage is incomplete.
-- IDEA: Add a lightweight schema smoke test that runs on CI without FalkorDB,
+<!-- @ngram:proposition Add a lightweight schema smoke test that runs on CI without FalkorDB, -->
   exercising enum/required-field validation in isolation.
-- QUESTION: Should schema validation explicitly report cycle checks for link
+<!-- @ngram:escalation Should schema validation explicitly report cycle checks for link -->
   types like supersedes, or should those remain in physics-layer validation?

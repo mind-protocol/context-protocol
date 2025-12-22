@@ -184,7 +184,7 @@ V1..V6: NOT RUN
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: Should we assert minimum contrast ratios (WCAG-ish) for title readability? (nice-to-have)
 

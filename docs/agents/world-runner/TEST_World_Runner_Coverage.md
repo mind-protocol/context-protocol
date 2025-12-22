@@ -135,5 +135,5 @@ docks:
 
 ## KNOWN GAPS
 
-- [ ] No automated regression for CLI timeout handling.
-- [ ] Lack of schema validation for background injection payloads.
+<!-- @ngram:todo No automated regression for CLI timeout handling. -->
+<!-- @ngram:todo Lack of schema validation for background injection payloads. -->

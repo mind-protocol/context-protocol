@@ -133,8 +133,8 @@ input: project_dir path (per `modules.yaml: prompt`) → render doc path strings
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] @ngram:TODO Bake actual project metadata (e.g., `modules.yaml`) into the prompt in future iterations
-- IDEA: Parameterize the view table so custom tasks can be surfaced without editing the template string
-- QUESTION: Should the prompt mention which health checks to verify before running work?
+<!-- @ngram:todo @ngram:TODO Bake actual project metadata (e.g., `modules.yaml`) into the prompt in future iterations -->
+<!-- @ngram:proposition Parameterize the view table so custom tasks can be surfaced without editing the template string -->
+<!-- @ngram:escalation Should the prompt mention which health checks to verify before running work? -->

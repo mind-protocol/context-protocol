@@ -62,7 +62,7 @@ Show individual trace entries.
 ```bash
 $ ngram trace --detail --limit 10
 
-2024-12-16 14:32:01 | READ    | .ngram/state/SYNC_Project_State.md
+2024-12-16 14:32:01 | READ    | ...ngram/state/SYNC_Project_State.md
 2024-12-16 14:32:05 | READ    | .ngram/views/VIEW_Implement_*.md
 2024-12-16 14:32:15 | READ    | docs/engine/graph/PATTERNS_*.md
 2024-12-16 14:33:01 | CONTEXT | src/engine/graph.py → docs/engine/graph/ (4 docs)

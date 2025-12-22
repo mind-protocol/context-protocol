@@ -118,8 +118,8 @@ RESULT:
   V2: PASS (manual)
 ```
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add fixture-based smoke tests that run each script inside CI to capture regressions before doc pulls land.
-- [ ] Document the expected `stream.jsonl` schema so downstream consumers can assert the appended metadata.
-- [ ] Explore replacing the current manual checklist with automated assertions once fixtures are stable.
+<!-- @ngram:todo Add fixture-based smoke tests that run each script inside CI to capture regressions before doc pulls land. -->
+<!-- @ngram:todo Document the expected `stream.jsonl` schema so downstream consumers can assert the appended metadata. -->
+<!-- @ngram:todo Explore replacing the current manual checklist with automated assertions once fixtures are stable. -->

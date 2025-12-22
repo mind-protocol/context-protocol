@@ -20,6 +20,7 @@ HEALTH:          ./HEALTH_Connectome_Runtime_Engine_Runtime_Verification_Of_Paci
 SYNC:            ./SYNC_Connectome_Runtime_Engine_Sync_Current_State.md
 
 IMPL:            app/connectome/lib/next_step_gate_and_realtime_playback_runtime_engine (planned) (PROPOSED)
+IMPL:            app/connectome/lib/connectome_system_map_node_edge_manifest.ts
 ```
 
 ---
@@ -32,7 +33,8 @@ app/
 ├── lib/
 │   ├── next_step_gate_and_realtime_playback_runtime_engine (planned)
 │   ├── minimum_duration_clamp_and_speed_based_default_policy (planned)
-│   └── step_script_cursor_and_replay_determinism_helpers (planned)
+│   ├── step_script_cursor_and_replay_determinism_helpers (planned)
+│   └── connectome_system_map_node_edge_manifest.ts
 ```
 
 ### File Responsibilities
@@ -42,6 +44,7 @@ app/
 | `next_step_gate_and_realtime_playback_runtime_engine (planned)`   | command dispatch + step release gate + realtime attach (deferred) | `dispatch_runtime_command`, `release_next_step` |
 | `minimum_duration_clamp_and_speed_based_default_policy (planned)` | duration policy + thresholds                                      | `compute_animation_duration_ms`                 |
 | `step_script_cursor_and_replay_determinism_helpers (planned)`     | cursor movement + stable ids for stepper                          | `make_stepper_event_id`, `advance_cursor`       |
+| `connectome_system_map_node_edge_manifest.ts`             | system map graph definition (nodes/edges)                         | `CONNECTOME_NODE_DEFINITIONS`, `CONNECTOME_EDGE_DEFINITIONS` |
 
 ---
 
@@ -227,11 +230,10 @@ Playback control (speed/mode/pause) in the UI
 | `app/connectome/lib/flow_event_schema_and_normalization_contract`                                         | helper module       | Normalizes raw script steps (call, trigger, duration) into canonical `FlowEvent` objects that every downstream consumer shares.                     |
 | `app/connectome/lib/minimum_duration_clamp_and_speed_based_default_policy`                                 | helper module       | Centralizes duration clamping and speed defaults so stepper pulses, replay, and planned realtime streaming all share pacing invariants.              |
 | `app/connectome/lib/connectome_session_boundary_and_restart_policy_controller`                             | helper module       | Lets `restart` commands either clear the ledger or insert session boundaries, which ties the runtime engine to session-aware health and export logic. |
-| `app/connectome/lib/connectome_system_map_node_edge_manifest.ts`                                            | helper module       | Seeds the canonical node/edge IDs that `initialize_connectome_runtime()` reveals so the runtime gate always matches the log panel and telemetry nodes. |
 | `app/connectome/log_panel`                                                                                 | consumer module     | Reads the ledger, focus, explanation, and pacing fields that `commit_step_release_*` updates so the runtime engine’s releases are immediately visible. |
 | `app/connectome/lib/connectome_wait_timer_progress_and_tick_display_signal_selectors.ts`                    | observer module     | Reads the runtime store slices (wait progress, tick display, speed) to drive health meters and pacing indicators that confirm gating invariants.   |
 
-`initialize_connectome_runtime()` uses this manifest to reveal the instrumentation nodes/edges listed in `connectome_system_map_node_edge_manifest.ts`, guaranteeing the runtime gate, log panel, and telemetry health signals share the same canonical node/edge graph before any Next click runs.
+`initialize_connectome_runtime()` uses the manifest (defined in this module) to reveal the instrumentation nodes/edges listed in the graph definition, guaranteeing the runtime gate, log panel, and telemetry health signals share the same canonical node/edge graph before any Next click runs.
 
 ### External Dependencies
 
@@ -254,7 +256,7 @@ The `zustand` binding drives the shared store hook so both the logic chain and U
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 ### Extraction Candidates
 

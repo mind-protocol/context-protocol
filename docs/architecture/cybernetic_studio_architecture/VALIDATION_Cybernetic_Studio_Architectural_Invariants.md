@@ -184,8 +184,8 @@ RESULT:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Define a minimal graph audit script for EvidenceRef-only storage.
-- [ ] Add a link-type validator to prevent RELATED_TO usage.
-- QUESTION: Should pressure computation be validated via sampled contradictions?
+<!-- @ngram:todo Define a minimal graph audit script for EvidenceRef-only storage. -->
+<!-- @ngram:todo Add a link-type validator to prevent RELATED_TO usage. -->
+<!-- @ngram:escalation Should pressure computation be validated via sampled contradictions? -->

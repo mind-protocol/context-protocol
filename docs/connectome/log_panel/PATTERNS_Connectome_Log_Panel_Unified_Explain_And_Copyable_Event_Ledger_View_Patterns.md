@@ -191,7 +191,7 @@ Export must:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Decide whether export includes raw_payload by default (recommended: no; behind debug toggle).
 * QUESTION: Should log be filterable by zone/node/call_type in v1? (nice-to-have, likely v1.1)

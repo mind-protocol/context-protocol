@@ -124,7 +124,7 @@ The graph service is owned and operated by the `ngram` platform. `blood-ledger` 
 
 ### 3.2 Tooling Relationship
 - `ngram` runs against `blood-ledger` as a target repo.
-- `blood-ledger` includes `.ngram/state/SYNC_*.md` which are repo-backed Places.
+- `blood-ledger` includes `...ngram/state/SYNC_*.md` which are repo-backed Places.
 
 ### 3.3 Graph Relationship (Meaning Layer)
 - Both repos connect to the same graph service.
@@ -259,7 +259,7 @@ Pressure is an input to salience and flip likelihood; not a persistent object.
 ### 8.1 Repo-Backed Place (SYNC as Place)
 Each SYNC file defines a stable Place:
 - Place ID: `place://sync/Project_State`
-- Artifact: `.ngram/state/SYNC_Project_State.md`
+- Artifact: `...ngram/state/SYNC_Project_State.md`
 - Updates create Moments (“SYNC updated”) and distill Narratives (“current state is…”)- SYNC rooms behave like chat rooms: they’re where state is negotiated and handed off.
 
 ### 8.2 UI Rooms (Human ↔ AI)

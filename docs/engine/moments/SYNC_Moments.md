@@ -75,7 +75,7 @@ moment shape before implementing persistence or traversal.
 
 ### Doc/Impl Drift
 
-- [ ] IMPL->DOCS: Implement graph-backed moment model to match schema.
+<!-- @ngram:todo IMPL->DOCS: Implement graph-backed moment model to match schema. -->
 
 ### Tests to Run
 

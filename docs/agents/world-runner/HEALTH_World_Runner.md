@@ -74,9 +74,11 @@ flows_analysis:
       peak_rate: 5/min (during rapid traversal skips)
       burst_behavior: Limited by CLI timeouts and queued flips when the graph backlog grows.
     risks:
-      - Graph mutations reflect stale facts because the CLI completed after the narrator already resumed.
-      - CLI failures cause the orchestrator to stall and leave the world state frozen while waiting for a fallback.
+  - Graph mutations reflect stale facts because the CLI completed after the narrator already resumed.
+  - CLI failures cause the orchestrator to stall and leave the world state frozen while waiting for a fallback.
 ```
+
+This flow runs at roughly 0.5/min with 5/min bursts, and it feeds the `background_consistency` and `adapter_resilience` indicators so the manual `ngram validate` check described later always samples the same cadence.
 
 ---
 
@@ -276,13 +278,13 @@ mechanism:
 
 ## KNOWN GAPS
 
-- [ ] No automated regression exists specifically for CLI timeout handling even though the fallback validator depends on that guard.
-- [ ] The injection payload returned to the Narrator is not yet schema-validated before it is forwarded, leaving room for untracked drift.
+<!-- @ngram:todo No automated regression exists specifically for CLI timeout handling even though the fallback validator depends on that guard. -->
+<!-- @ngram:todo The injection payload returned to the Narrator is not yet schema-validated before it is forwarded, leaving room for untracked drift. -->
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Automate a quick CLI failure test by mocking `_call_claude()` so adapter_resilience can be asserted on every commit.
-- [ ] Add a background mutation diff that highlights graph edges touched by each run to surface unexpected changes before the narrator is notified.
-- QUESTION: Should the runner health banner share the same scoring cadence as the Narrator health indicator so the doctor dashboard has a unified view of streaming consistency?
+<!-- @ngram:todo Automate a quick CLI failure test by mocking `_call_claude()` so adapter_resilience can be asserted on every commit. -->
+<!-- @ngram:todo Add a background mutation diff that highlights graph edges touched by each run to surface unexpected changes before the narrator is notified. -->
+<!-- @ngram:escalation Should the runner health banner share the same scoring cadence as the Narrator health indicator so the doctor dashboard has a unified view of streaming consistency? -->

@@ -101,8 +101,8 @@ IMPL:            ngram/core_utils.py
 
 ## TODO
 
-- [ ] Keep utility scope limited to generic helpers.
-- [ ] Add automated tests for core_utils utilities.
+<!-- @ngram:todo Keep utility scope limited to generic helpers. -->
+<!-- @ngram:todo Add automated tests for core_utils utilities. -->
 
 ---
 

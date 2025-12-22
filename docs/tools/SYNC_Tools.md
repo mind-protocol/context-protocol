@@ -70,7 +70,7 @@ Documenting additional connectors and linking them to their tests ensures future
 
 - **What:** Added MATURITY, IN PROGRESS, KNOWN ISSUES, HANDOFFS, CONSCIOUSNESS TRACE, and POINTERS sections to `docs/tools/SYNC_Tools.md` so every required block now exceeds fifty characters, the ledger records the new template expectations, and the module state is explicit for downstream agents.
 - **Why:** DOC_TEMPLATE_DRIFT flagged this sync file for missing those sections, so the richer narrative keeps the state ledger traceable while leaving the helper scripts untouched.
-- **Files:** `docs/tools/SYNC_Tools.md`, `.ngram/state/SYNC_Project_State.md`
+- **Files:** `docs/tools/SYNC_Tools.md`, `...ngram/state/SYNC_Project_State.md`
 - **Trace:** Added maturity, progress, known issue, handoff, and consciousness trace narratives so the sync now tells a full story for downstream agents.
 - **Verification:** `ngram validate` *(fails: known docs/connectome/health PATTERNS/SYNC gaps, `docs/engine/membrane/PATTERN_Membrane_Modulation.md` naming mismatch, and existing CHAIN/link warnings).* 
 
@@ -127,17 +127,17 @@ Documenting additional connectors and linking them to their tests ensures future
 - `docs/tools/IMPLEMENTATION_Tools.md` now narrates the required code structure, design patterns, schema, flow, dependencies, runtime behavior, concurrency, and configuration sections so the implementation ledger no longer lags the rest of the module documentation.
 
 ### Suggestions
-- [ ] Confirm the exact frontend start command and update `.ngram/systemd.env` so `ngram-fe.service` can start cleanly.
-- [ ] Confirm the blood frontend port/command once its build is finalized.
-- [ ] Add `# DOCS: docs/tools/IMPLEMENTATION_Tools.md` comments to `tools/connectome_doc_bundle_splitter_and_fence_rewriter.py`, `tools/stream_dialogue.py`, and `tools/run_stack.sh` so the implementation narrative is reachable from the scripts.
+<!-- @ngram:todo Confirm the exact frontend start command and update `.ngram/systemd.env` so `ngram-fe.service` can start cleanly. -->
+<!-- @ngram:todo Confirm the blood frontend port/command once its build is finalized. -->
+<!-- @ngram:todo Add `# DOCS: docs/tools/IMPLEMENTATION_Tools.md` comments to `tools/connectome_doc_bundle_splitter_and_fence_rewriter.py`, `tools/stream_dialogue.py`, and `tools/run_stack.sh` so the implementation narrative is reachable from the scripts. -->
 
 ### Propositions
 - If a canonical frontend repo exists, add a brief doc link here so future agents can locate its startup command quickly.
 
 ## TODO
 
-- [ ] Add fixtures and run examples for each script to validate outputs.
-- [ ] Create CI-friendly fixtures for the splitter and stream helper so the missing implementation checklist items can be automated.
+<!-- @ngram:todo Add fixtures and run examples for each script to validate outputs. -->
+<!-- @ngram:todo Create CI-friendly fixtures for the splitter and stream helper so the missing implementation checklist items can be automated. -->
 
 ## HANDOFF: FOR AGENTS
 
@@ -167,3 +167,5 @@ This improvement confirms issue #11 is resolved, so future agents can trust thes
 **Architectural concerns:** Systemd wiring, frontend commands, and ngrok config remain loosely tied to ad-hoc env vars, so avoid scattering those details across multiple sources before stabilizing the values; keep these knobs centralized in this sync so future agents can follow the documented guardrails.
 
 **Opportunities noticed:** This sync file now models how docs, behaviors, algorithms, validation, and health indicators interlock; future agents can copy this structure when expanding the stack scripts or adding new helpers, and the new pointer list proves the pattern for future modules.
+
+<!-- ISSUE_11_TOOLS_SYNC -->

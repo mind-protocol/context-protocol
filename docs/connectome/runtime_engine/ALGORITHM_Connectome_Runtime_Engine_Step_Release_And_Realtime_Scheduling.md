@@ -195,7 +195,7 @@ UI command
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Decide ledger reset policy on Restart (clear all vs mark new cycle boundary)
 * QUESTION: Should “Restart” preserve old logs and start a new session id? (likely yes for copy/export)

@@ -60,7 +60,7 @@ flows_analysis:
     purpose: Ensure SYNC edits become Place moments.
     triggers:
       - type: event
-        source: .ngram/state/SYNC_*.md edits
+        source: ...ngram/state/SYNC_*.md edits
         notes: manual or agent edits
     frequency:
       expected_rate: human-driven
@@ -306,12 +306,12 @@ manual_run:
 
 ## KNOWN GAPS
 
-- [ ] No live checkers until graph hooks exist.
-- [ ] Dock locations are planned, not implemented.
+<!-- @ngram:todo No live checkers until graph hooks exist. -->
+<!-- @ngram:todo Dock locations are planned, not implemented. -->
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Define a concrete health runner command once graph hooks are wired.
-- QUESTION: Should health signals be written to a dedicated status file?
+<!-- @ngram:todo Define a concrete health runner command once graph hooks are wired. -->
+<!-- @ngram:escalation Should health signals be written to a dedicated status file? -->

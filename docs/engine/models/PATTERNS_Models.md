@@ -141,9 +141,9 @@ All these data structures are defined as Pydantic `BaseModel` classes, leveragin
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Consider adding custom Pydantic validators for cross-field dependencies (e.g., `Narrative.source` and `Narrative.detail` exclusivity).
-- [ ] Explore integrating Pydantic models with OpenAPI/JSON Schema generation for API documentation.
-- IDEA: Use Pydantic's `Config.allow_extra = 'forbid'` for stricter schema enforcement.
-- QUESTION: Should all enums be defined centrally in `base.py` or co-located with their primary models?
+<!-- @ngram:todo Consider adding custom Pydantic validators for cross-field dependencies (e.g., `Narrative.source` and `Narrative.detail` exclusivity). -->
+<!-- @ngram:todo Explore integrating Pydantic models with OpenAPI/JSON Schema generation for API documentation. -->
+<!-- @ngram:proposition Use Pydantic's `Config.allow_extra = 'forbid'` for stricter schema enforcement. -->
+<!-- @ngram:escalation Should all enums be defined centrally in `base.py` or co-located with their primary models? -->

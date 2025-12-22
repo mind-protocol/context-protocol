@@ -57,7 +57,7 @@ Please confirm any future archival cut before aging new narratives into this sna
 
 ## TODO
 
-- [ ] Keep this archive synchronized with any future migrations of world-runner examples that need long-term preservation; otherwise, leave it untouched and note the reason for each freeze.
+<!-- @ngram:todo Keep this archive synchronized with any future migrations of world-runner examples that need long-term preservation; otherwise, leave it untouched and note the reason for each freeze. -->
 
 ## CONSCIOUSNESS TRACE
 

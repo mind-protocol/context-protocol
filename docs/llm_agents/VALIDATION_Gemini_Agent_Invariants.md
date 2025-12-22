@@ -138,7 +138,7 @@ RESULT:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Should we define explicit severity weighting for stream errors vs. tool failures?
-- IDEA: Add JSON schema validation for `tool_result` payloads so downstream parsers can rely on a rigid contract.
+<!-- @ngram:todo Should we define explicit severity weighting for stream errors vs. tool failures? -->
+<!-- @ngram:proposition Add JSON schema validation for `tool_result` payloads so downstream parsers can rely on a rigid contract. -->

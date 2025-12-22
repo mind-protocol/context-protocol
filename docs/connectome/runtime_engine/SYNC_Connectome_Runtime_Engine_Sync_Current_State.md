@@ -100,7 +100,7 @@ Stepper runtime engine is implemented with a fixed step script. Next dispatches 
 
 * **What:** Added the missing `Side Effects` section plus elaborated the `OBJECTIVES SERVED` table, `EDGE CASES`, and `ANTI-BEHAVIORS` narratives so every behavior template block now explains why the manual stepper and realtime traversal guards matter while keeping each passage longer than fifty characters.
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged the objectives section and other short passages; the new explanations make the behavior contract traceable across inputs, outputs, edge cases, and anti-behavior guards.
-* **Files:** `docs/connectome/runtime_engine/BEHAVIORS_Connectome_Runtime_Engine_User_Controlled_Traversal_Effects.md`, `.ngram/state/SYNC_Project_State.md`
+* **Files:** `docs/connectome/runtime_engine/BEHAVIORS_Connectome_Runtime_Engine_User_Controlled_Traversal_Effects.md`, `...ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate` *(fails because `docs/connectome/health` still lacks PATTERNS+BEHAVIORS+ALGORITHM+VALIDATION+HEALTH/SYNC coverage and `docs/engine/membrane/PATTERN_Membrane_Modulation.md` needs the plural naming plus long-standing CHAIN link warnings remain; no new regressions were introduced).*
 
 ---
@@ -109,7 +109,7 @@ Stepper runtime engine is implemented with a fixed step script. Next dispatches 
 
 * **What:** Added a full OBJECTIVES COVERAGE table plus individual indicator stories for the pacing, speed, duration, and autoplay checks so the health doc now describes every required metric, dock, and threat with ≥50-character prose.
 * **Why:** DOC_TEMPLATE_DRIFT #11 flagged missing objectives and indicator sections; the new narratives clarify what each signal defends and the guardrails downstream agents must audit.
-* **Files:** `docs/connectome/runtime_engine/HEALTH_Connectome_Runtime_Engine_Runtime_Verification_Of_Pacing_And_Order.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `.ngram/state/SYNC_Project_State.md`
+* **Files:** `docs/connectome/runtime_engine/HEALTH_Connectome_Runtime_Engine_Runtime_Verification_Of_Pacing_And_Order.md`, `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`, `...ngram/state/SYNC_Project_State.md`
 * **Validation:** Pending the next `ngram validate` run; the change is purely documentation.
 
 ### 2026-04-18: Refine runtime_engine health coverage (#11)
@@ -144,7 +144,7 @@ Stepper runtime engine is implemented with a fixed step script. Next dispatches 
 * **Files:**
   * `docs/connectome/runtime_engine/IMPLEMENTATION_Connectome_Runtime_Engine_Code_Structure_And_Control_Surface.md`
   * `docs/connectome/runtime_engine/SYNC_Connectome_Runtime_Engine_Sync_Current_State.md`
-  * `.ngram/state/SYNC_Project_State.md`
+  * `...ngram/state/SYNC_Project_State.md`
 * **Validation:** `ngram validate`
 
 ---

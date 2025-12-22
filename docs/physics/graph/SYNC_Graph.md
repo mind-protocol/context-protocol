@@ -30,14 +30,14 @@ The graph physics engine and its GraphOps/GraphQueries helpers are implemented a
 2. **Runtime Integration**: The core Canon Holder exists (`engine/infrastructure/canon/canon_holder.py`) but is not yet wired into the `Orchestrator` loop.
 3. **Handlers**: Flip-triggered character handlers are planned but not yet implemented (missing `engine/handlers/`).
 
+Read-only access for the Connectome dashboard is now provided by `GraphReadOps` in `engine/physics/graph/graph_ops_read_only_interface.py`, defaulting to the `seed` database, stripping embeddings from node/link results, and keeping `GraphOps` focused on write paths. GraphOps now fits under the 800-line threshold (799L) while the reader helper stands on its own (246L).
+
 ---
 
 ## IN PROGRESS
 
 - Defining the `/api/action` endpoint contract and how it should integrate with existing playthrough and narration flows without breaking clients.
 - Planning the integration of `CanonHolder` into the `Orchestrator` to record dialogue as moments.
-
----
 
 ## KNOWN ISSUES
 
@@ -56,6 +56,7 @@ The graph physics engine and its GraphOps/GraphQueries helpers are implemented a
 | World Runner | ✓ Complete | `engine/infrastructure/orchestration/world_runner.py` |
 | Narrator | ✓ Complete | `engine/infrastructure/orchestration/narrator.py` |
 | API app | ✓ Running | `engine/infrastructure/api/app.py` |
+| GraphReadOps | ✓ Complete | `engine/physics/graph/graph_ops_read_only_interface.py` |
 
 ---
 
@@ -101,6 +102,10 @@ Continue with VIEW_Implement_Write_Or_Modify_Code. Focus on adding the
 `/api/action` endpoint wiring to the orchestrator without altering graph
 physics internals. Keep doc updates confined to graph SYNC and API docs.
 
+**GraphClient interface status:** The Protocol in `engine/physics/graph/graph_interface.py`
+now covers all methods used by Orchestrator and tick.py. If blood-ledger proxy
+exists, it needs the 4 new methods added (see `@ngram:todo` in the file).
+
 ---
 
 ## HANDOFF: FOR HUMAN
@@ -113,8 +118,8 @@ flip processing through the normal HTTP interface.
 
 ## TODO
 
-- [ ] Add `/api/action` endpoint in `engine/infrastructure/api/app.py`.
-- [ ] Add a minimal integration check that confirms ticks run via API.
+<!-- @ngram:todo Add `/api/action` endpoint in `engine/infrastructure/api/app.py`. -->
+<!-- @ngram:todo Add a minimal integration check that confirms ticks run via API. -->
 
 ---
 
@@ -150,7 +155,7 @@ VALIDATION: ./VALIDATION_Living_Graph.md
 - Moment query helpers in `engine/physics/graph/graph_queries_moments.py` are already implemented; no code changes required for issue #16.
 
 ### Suggestions
-- [ ] Add a DOCS reference in `engine/physics/graph/graph_ops_types.py` so `ngram context` resolves the graph documentation chain.
+<!-- @ngram:todo Add a DOCS reference in `engine/physics/graph/graph_ops_types.py` so `ngram context` resolves the graph documentation chain. -->
 
 ### Propositions
 - None.
@@ -168,10 +173,38 @@ VALIDATION: ./VALIDATION_Living_Graph.md
 - Verified `get_narrative_moments`, `get_narratives_from_moment`, `get_available_transitions`, and `get_clickable_words` are already implemented in `engine/physics/graph/graph_queries_moments.py`; no code changes required for issue #16.
 
 ### Suggestions
-- [ ] Add a lightweight unit test for `emit_event` to cover listener registration/removal behavior.
+<!-- @ngram:todo Add a lightweight unit test for `emit_event` to cover listener registration/removal behavior. -->
 
 ### Propositions
 - None.
+
+
+## Agent Observations
+
+### Remarks
+- Extracted `GraphReadOps` into `engine/physics/graph/graph_ops_read_only_interface.py` (246L) so the Connectome reader stays available while `GraphOps` stays trim at 799L.
+- `graph_ops.py` now re-exports `GraphReadOps`/`get_graph_reader`, keeping existing callers working while the write facade focuses on mutations.
+
+### Suggestions
+<!-- @ngram:todo Document the new file in `docs/physics/IMPLEMENTATION_Physics.md` (already done) and consider referencing it from `docs/physics/graph/BEHAVIORS_Graph.md` so future readers find the read helper quickly. -->
+<!-- @ngram:todo Add concise smoke tests for `query_natural_language` or `search_semantic` to catch regressions in the token/embedding helpers. -->
+
+### Propositions
+- None.
+
+
+---
+
+## ARCHIVE
+
+Older content archived to: `SYNC_Graph_archive_2025-12.md`
+
+
+---
+
+## ARCHIVE
+
+Older content archived to: `SYNC_Graph_archive_2025-12.md`
 
 
 ---

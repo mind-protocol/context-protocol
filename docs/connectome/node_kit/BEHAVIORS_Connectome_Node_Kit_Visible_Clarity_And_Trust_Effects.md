@@ -1,6 +1,6 @@
 ```
 
-# node_kit — Behaviors: Visible Clarity and Trust Effects
+# node_kit - Behaviors: Visible Clarity and Trust Effects
 
 STATUS: DRAFT
 CREATED: 2025-12-20
@@ -81,11 +81,11 @@ AND:    center shows speed label
 AND:    color changes with speed
 ```
 
-### B7: “Flipped” nodes are visually distinct
+### B7: "Flipped" nodes are visually distinct
 
 ```
 GIVEN:  a node is marked flipped/interrupt=true (source ?)
-THEN:   it has a distinct glow ring so it “pops” from normal activation
+THEN:   it has a distinct glow ring so it "pops" from normal activation
 ```
 
 ---
@@ -113,7 +113,7 @@ INSTEAD: use deterministic mapping function from ALGORITHM
 **Inputs:** The node kit accepts state_store selectors that include node title, language metadata, energy value, wait progress, cron angle, active_focus, and flipped/interrupt markers, along with event_model call_type and step_key tuples so it never infers semantics from raw payloads.
 **Outputs:** The renderer emits node silhouettes, background washes, gradient glows, step highlights, tooltips, wait bars, and tick rings that faithfully animate the incoming signals while preserving the clarity and trust guarantees that give operators confidence before they read the text.
 
-**Documentation note:** This mirrors the store/event_model contract—the node kit is a pure presentation surface whose visible behavior is fully determined by the supplied inputs and whose outputs are purely visual reflections of the validated signals.
+**Documentation note:** This mirrors the store/event_model contract-the node kit is a pure presentation surface whose visible behavior is fully determined by the supplied inputs and whose outputs are purely visual reflections of the validated signals.
 
 ---
 
@@ -123,12 +123,12 @@ INSTEAD: use deterministic mapping function from ALGORITHM
 
 ```
 GIVEN:  a node lacks language/type info
-THEN:   it renders with default neutral styling and shows “?” in tooltip
+THEN:   it renders with default neutral styling and shows "?" in tooltip
 ```
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: Should we surface multiple energy metrics (weight, salience, momentum) in v1, or keep the kit narrowly focused on the single energy badge that the runtime already normalizes to preserve clarity? (recommend: energy only for now)
 

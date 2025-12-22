@@ -184,7 +184,7 @@ V4: NOT RUN
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Decide exact ordering policy for realtime out-of-order events (by arrival vs by at_ms).
 * QUESTION: Should “?” node ids be allowed in production or only in dev?

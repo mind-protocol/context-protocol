@@ -90,7 +90,7 @@ SSE EventSource frame
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: Do we need authentication headers for SSE? (browser EventSource limitations) → `?`
 * IDEA: If SSE auth is hard, switch to fetch-stream polyfill (but that affects implementation and must be documented).

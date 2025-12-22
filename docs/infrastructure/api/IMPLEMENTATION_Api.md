@@ -270,7 +270,7 @@ engine/infrastructure/api
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 ### Extraction Candidates
 
@@ -280,4 +280,4 @@ engine/infrastructure/api
 
 ### Missing Implementation
 
-- [ ] Authentication and rate limiting.
+<!-- @ngram:todo Authentication and rate limiting. -->

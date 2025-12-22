@@ -143,7 +143,7 @@ RESULT:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add tests for template resolution priority and failure message content.
-- [ ] Add tests for module directory discovery (including docs/concepts exclusion).
+<!-- @ngram:todo Add tests for template resolution priority and failure message content. -->
+<!-- @ngram:todo Add tests for module directory discovery (including docs/concepts exclusion). -->

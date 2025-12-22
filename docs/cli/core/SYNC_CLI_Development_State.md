@@ -148,7 +148,7 @@ Consolidated every CLI command algorithm topic (init/validate/doctor/repair/mark
 - The issue lookup helpers in `ngram/repair_core.py` are now robust against empty or mixed-case issue types, preventing false positives in the incomplete implementation check.
 
 ### Suggestions
-- [ ] Consider updating the doctor incomplete-impl heuristic to ignore short, explicit dictionary lookup helpers to reduce noise.
+<!-- @ngram:todo Consider updating the doctor incomplete-impl heuristic to ignore short, explicit dictionary lookup helpers to reduce noise. -->
 ### Propositions
 - @ngram:TODO Add automation that flags the prompt module as lacking health runners when `HEALTH_Prompt_Runtime_Verification.md` stays in DESIGNING status for too long.
 
@@ -157,10 +157,10 @@ Consolidated every CLI command algorithm topic (init/validate/doctor/repair/mark
 
 ## TODO
 
-- [ ] Expand the CLI prompt docs (PATTERNS→HEALTH) with canonical references, invariants, and health wiring so doctor drift warnings resolve completely.
-- [ ] Update `modules.yaml` to include CLI helper modules such as `ngram/repair_core.py` and `ngram/repo_overview.py` to silence the current doc-link drift warnings.
-- [ ] Extend `ngram refactor` with `move`, `promote`, and `demote` subcommands after the rename routine proves stable.
-- IDEA: Introduce `@ngram:thing:docs/...` tagging helpers so refactor can update `@ngram:id` anchors instead of string rewrites.
+<!-- @ngram:todo Expand the CLI prompt docs (PATTERNS→HEALTH) with canonical references, invariants, and health wiring so doctor drift warnings resolve completely. -->
+<!-- @ngram:todo Update `modules.yaml` to include CLI helper modules such as `ngram/repair_core.py` and `ngram/repo_overview.py` to silence the current doc-link drift warnings. -->
+<!-- @ngram:todo Extend `ngram refactor` with `move`, `promote`, and `demote` subcommands after the rename routine proves stable. -->
+<!-- @ngram:proposition Introduce `@ngram:thing:docs/...` tagging helpers so refactor can update `@ngram:id` anchors instead of string rewrites. -->
 
 ## CONSCIOUSNESS TRACE
 

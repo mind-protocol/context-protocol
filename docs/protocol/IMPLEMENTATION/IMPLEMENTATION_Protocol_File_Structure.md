@@ -40,7 +40,7 @@ This document consolidates the protocol implementation details that were previou
 ├── views/                 # 11 VIEW files
 ├── templates/             # 10 doc templates
 └── state/
-    └── <!-- ../../../templates/ngram/state/SYNC_Project_State.md -->
+    └── <!-- ../../../templates/..ngram/state/SYNC_Project_State.md -->
 ```
 
 ### Installed Directory (Target Project)
@@ -53,8 +53,8 @@ This document consolidates the protocol implementation details that were previou
 ├── templates/
 ├── modules.yaml
 ├── state/
-│   ├── <!-- .ngram/state/SYNC_Project_State.md -->
-│   └── <!-- .ngram/state/SYNC_Project_Health.md -->
+│   ├── <!-- ...ngram/state/SYNC_Project_State.md -->
+│   └── <!-- ...ngram/state/SYNC_Project_Health.md -->
 └── traces/                # Optional agent logs
 ```
 
@@ -66,8 +66,8 @@ This document consolidates the protocol implementation details that were previou
 | PRINCIPLES.md | Working stance | Session start |
 | VIEW_*.md | Task instructions | Based on task |
 | *_TEMPLATE.md | Doc scaffolding | When creating docs |
-| .ngram/state/SYNC_Project_State.md | Project state and handoff | Session start |
-| .ngram/state/SYNC_Project_Health.md | Doctor output | After `doctor` |
+| ...ngram/state/SYNC_Project_State.md | Project state and handoff | Session start |
+| ...ngram/state/SYNC_Project_Health.md | Doctor output | After `doctor` |
 | modules.yaml | Code ↔ docs mapping | CLI and tooling |
 
 ### Bootstrap Files
@@ -149,7 +149,7 @@ VIEW:
 | Bootstrap | ../../../.ngram/CLAUDE.md + AGENTS.md | Agent session start |
 | Navigation | ../../../.ngram/PROTOCOL.md | After bootstrap |
 | Task selection | ../../../.ngram/views/VIEW_*.md | Based on task type |
-| State check | .ngram/state/SYNC_Project_State.md | Before any work |
+| State check | ...ngram/state/SYNC_Project_State.md | Before any work |
 | Module context | docs/{area}/{module}/PATTERNS_*.md | When modifying code |
 
 ### Agent Session Flow
@@ -158,7 +158,7 @@ VIEW:
 Agent starts
   → read ../../../.ngram/CLAUDE.md / AGENTS.md
   → read PROTOCOL + PRINCIPLES
-  → load .ngram/state/SYNC_Project_State.md
+  → load ...ngram/state/SYNC_Project_State.md
   → select VIEW_{Task}
   → load module docs
   → do work
@@ -198,7 +198,7 @@ PROTOCOL.md
   → views/VIEW_*.md
   → templates/*_TEMPLATE.md
 VIEW_*.md
-  → .ngram/state/SYNC_Project_State.md
+  → ...ngram/state/SYNC_Project_State.md
   → docs/{area}/{module}/*.md
 modules.yaml
   → code paths

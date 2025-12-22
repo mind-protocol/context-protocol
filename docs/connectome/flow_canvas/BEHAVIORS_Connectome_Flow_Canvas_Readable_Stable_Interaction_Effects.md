@@ -111,7 +111,7 @@ INSTEAD: label placement rules and spacing prevent collisions by default
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: should labels fade when zoomed out? (likely yes, but must be predictable)
 * IDEA: show only active edge label when zoom < threshold

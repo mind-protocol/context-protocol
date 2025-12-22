@@ -621,7 +621,7 @@ pnpm connectome:health runtime_engine --checker health_check_stepper_one_click_o
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * IDEA: Add a “rapid-click fuzz” mode to stress test V1 quickly.
 * QUESTION: Should health checks run in CI, or only as an on-demand dev tool?

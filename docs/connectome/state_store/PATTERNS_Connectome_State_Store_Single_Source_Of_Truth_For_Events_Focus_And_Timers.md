@@ -231,7 +231,7 @@ docking_points:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Decide restart policy: clear ledger vs session boundary (must match runtime_engine).
 * [ ] Decide retention strategy for realtime: max N events or last T seconds.

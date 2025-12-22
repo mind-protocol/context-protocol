@@ -63,12 +63,12 @@ boundaries that separate orchestration from transport concerns.
 - Graph mutation logic and physics tick behavior -> see: `docs/physics/`.
 - Narrator prompt composition and agent behavior -> see: `docs/agents/narrator/`.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Document the API versioning strategy once public clients exist.
-- [ ] Clarify whether debug SSE should be behind auth or dev-only config.
-- IDEA: Split the app factory into per-router factories when the surface grows.
-- QUESTION: Should health checks include a read-only scenario asset check?
+<!-- @ngram:todo Document the API versioning strategy once public clients exist. -->
+<!-- @ngram:todo Clarify whether debug SSE should be behind auth or dev-only config. -->
+<!-- @ngram:proposition Split the app factory into per-router factories when the surface grows. -->
+<!-- @ngram:escalation Should health checks include a read-only scenario asset check? -->
 
 ## CHAIN
 

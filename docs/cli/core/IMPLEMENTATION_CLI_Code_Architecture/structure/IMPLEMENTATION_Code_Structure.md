@@ -10,20 +10,20 @@ CREATED: 2025-12-18
 ## CHAIN
 
 ```
-PATTERNS:        ../PATTERNS_Why_CLI_Over_Copy.md
-BEHAVIORS:       ../BEHAVIORS_CLI_Command_Effects.md
-ALGORITHM:       ../ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md
-VALIDATION:      ../VALIDATION_CLI_Instruction_Invariants.md
-IMPLEMENTATION:  ./IMPLEMENTATION_Overview.md
-HEALTH:          ../HEALTH_CLI_Command_Test_Coverage.md
-SYNC:            ../SYNC_CLI_Development_State.md
+PATTERNS:        ../../PATTERNS_Why_CLI_Over_Copy.md
+BEHAVIORS:       ../../BEHAVIORS_CLI_Command_Effects.md
+ALGORITHM:       ../../ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md
+VALIDATION:      ../../VALIDATION_CLI_Instruction_Invariants.md
+IMPLEMENTATION:  ../overview/IMPLEMENTATION_Overview.md
+HEALTH:          ../../HEALTH_CLI_Command_Test_Coverage.md
+SYNC:            ../../SYNC_CLI_Development_State.md
 ```
 
 ---
 
 ## CONTEXT
 
-Entry point: `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md`.
+Entry point: `../overview/IMPLEMENTATION_Overview.md`.
 
 ---
 
@@ -71,7 +71,7 @@ ngram/
 
 ## SCHEMA
 
-Key data structures such as `ValidationResult`, `DoctorIssue`, `RepairResult`, and `RepairInstruction` are defined in `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Schema.md`.
+Key data structures such as `ValidationResult`, `DoctorIssue`, `RepairResult`, and `RepairInstruction` are defined in `../schema/IMPLEMENTATION_Schema.md`.
 
 ## ENTRY POINTS
 
@@ -85,12 +85,12 @@ Key data structures such as `ValidationResult`, `DoctorIssue`, `RepairResult`, a
 
 ## DATA FLOW AND DOCKING (FLOW-BY-FLOW)
 
-Flow descriptions mirror `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Runtime_And_Dependencies.md`; the primary flows are macros for command dispatch and health reporting, docking to `.ngram/state/SYNC_Project_Health.md` and `docs/`.
+Flow descriptions mirror `../runtime/IMPLEMENTATION_Runtime_And_Dependencies.md`; the primary flows are macros for command dispatch and health reporting, docking to `...ngram/state/SYNC_Project_Health.md` and `docs/`.
 
 ## LOGIC CHAINS
 
 1. CLI dispatch → module handler → health/repair outcomes.
-2. Doctor checks → `.ngram/state/SYNC_Project_Health.md` → `ngram/doctor_report.py`.
+2. Doctor checks → `...ngram/state/SYNC_Project_Health.md` → `ngram/doctor_report.py`.
 
 ## MODULE DEPENDENCIES
 
@@ -98,7 +98,7 @@ CLI (`ngram/cli.py`) → `ngram/doctor.py`, `ngram/repair.py`, `ngram/prompt.py`
 
 ## STATE MANAGEMENT
 
-State lives in `.ngram/state/` (health, archives), `.ngram/traces/`, and `modules.yaml`; commands write snapshots after every run for observability.
+State lives in `...ngram/state/` (health, archives), `.ngram/traces/`, and `modules.yaml`; commands write snapshots after every run for observability.
 
 ## RUNTIME BEHAVIOR
 
@@ -124,7 +124,7 @@ Shutdown: flush logs, exit cleanly.
 
 ## BIDIRECTIONAL LINKS
 
-`ngram/cli.py` contains `DOCS:` references back to this doc, and this doc links forward to `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md` and the referred code in the responsibilities table to keep doc-code coupling clear.
+`ngram/cli.py` contains `DOCS:` references back to this doc, and this doc links forward to `../overview/IMPLEMENTATION_Overview.md` and the referred code in the responsibilities table to keep doc-code coupling clear.
 
 ## FILE RESPONSIBILITIES
 
@@ -170,5 +170,5 @@ Shutdown: flush logs, exit cleanly.
 - `ngram/validate.py` (~712L) needs check extraction.
 
 **GAPS / IDEAS / QUESTIONS**
-- [ ] Monitor `ngram/repair.py` for growth above 700 lines and extract new helpers if needed.
-- IDEA: Provide an auto-generated summary of file statuses for doctors to reference.
+<!-- @ngram:todo Monitor `ngram/repair.py` for growth above 700 lines and extract new helpers if needed. -->
+<!-- @ngram:proposition Provide an auto-generated summary of file statuses for doctors to reference. -->

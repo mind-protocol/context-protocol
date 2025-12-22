@@ -20,6 +20,20 @@ edge_kit HEALTH ensures links do not lie or vanish:
 
 ---
 
+## WHY THIS PATTERN
+
+Edge kit HEALTH locks the runtime verification narrative to the semantic palette, trigger-to-dash rules, and pulse invariants that the PATTERNS and VALIDATION chains promise. When flows become real and edges pulse across the canvas, the signals that operators read must stay aligned with the canonical story; this doc defends that promise by describing what to monitor, which indicators map back to V1–V6, and how to surface alerts before a node or flow can lie about energy transfer.
+
+## HOW TO USE THIS TEMPLATE
+
+1. Read the full chain (PATTERNS → BEHAVIORS → ALGORITHM → VALIDATION → IMPLEMENTATION → SYNC) before adding probes so you understand the lexicon of triggers, call types, and pulse motion this health file references.
+2. Follow the IMPLEMENTATION docking map to locate the selectors, tokens, and render helpers mentioned above; every probe should sample the same data path the front-end already relies on.
+3. Choose flows whose breakage would confuse operators—trigger color, call type, active persistence, and boundary clamping—and describe the indicators you will emit for them in the sections below.
+4. Document each indicator, dock, and mechanism so the next agent can trace a failing checker back to the validation criterion it violated.
+5. Keep the CHECKER INDEX, STATUS, and DOCK TYPES lists synced with the detection harness that emits the `connectome.health.edge_kit` stream.
+
+---
+
 ## CHAIN
 
 ```
@@ -78,6 +92,40 @@ health_indicators:
 
 ---
 
+
+## OBJECTIVES COVERAGE
+
+| Objective | Indicators | Why These Signals Matter |
+|-----------|------------|--------------------------|
+| Preserve the trigger-to-dash and call type color determinism so link styles never lie about the semantic vocabulary they promise. | `edge_semantic_style_mapping_integrity` | Operators read call_type colors and trigger dashes to infer author intent; this indicator keeps that semantic shorthand trustworthy even when pulses animate rapidly. |
+| Keep pulses clamped to node boundaries and long enough for directionality so the energy transfer remains visible while respecting topology. | `edge_pulse_endpoint_clamp_integrity` | When pulses bleed through or vanish too soon, viewers can no longer trace energy flows; clamping and duration ensure the canvas still matches the VALIDATION invariants. |
+| Ensure active edges stay visible until the next step and no edges vanish between renders so the persistence story is intact. | `edge_visibility_integrity` | Persistent visibility and survivable renders keep analysts confident that they are watching the latest energy transfer instead of a stale or missing edge. |
+
+## STATUS (RESULT INDICATOR)
+
+```
+status:
+  stream_destination: ngram-marker:connectome.health.edge_kit
+  result:
+    representation: binary
+    value: 1
+    updated_at: 2026-05-05T00:00:00Z
+    source: edge_visibility_integrity
+```
+
+The `binary` status stream is emitted by the health runner and pushed to `connectome.health.edge_kit`; `1` signals every indicator passed and `0` flags at least one failing signal. Keep `updated_at` current so dashboards know how fresh the observation is, and update `source` to the most influential indicator when you run new checks.
+
+## DOCK TYPES (COMPLETE LIST)
+
+* `event` — captures selector deltas (`trigger`, `call_type`, `active_focus`, `pulse_geometry`) before the renderer picks colors and dash styles.
+* `process` — manual `pnpm connectome:health edge_kit` probes that snapshot rendered edges, logs, and result codes.
+* `metrics` — health stream payloads or files that downstream monitors consume to trace indicator flips over time.
+* `stream` — the `connectome.health.edge_kit` topic where the binary status and per-indicator detail are published for dashboards.
+
+These dock types cover the data ingress (events), the probe execution, and the outputs that instruments and dashboards consume. Add additional dock types (e.g., `graph_ops` or `cache`) only when new sources beyond the renderer are probed.
+
+---
+
 ## CHECKER INDEX
 
 ```
@@ -116,6 +164,8 @@ checkers:
 
 ## HOW TO RUN
 
+Run this from the repo root while `npm run dev` (or the production preview) keeps the Connectome canvas alive; the CLI needs live rendering to read styles, pulse paths, and active edge flags, then it ships the result into `logs/connectome_health` plus the `connectome.health.edge_kit` stream.
+
 ```
 pnpm connectome:health edge_kit
 ```
@@ -129,7 +179,7 @@ pnpm connectome:health edge_kit
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * IDEA: expose a debug object per rendered edge to avoid brittle DOM tests.
 

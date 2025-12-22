@@ -265,8 +265,8 @@ mechanism:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add per-script fixture directories and README excerpts so future runs can be automated rather than relying on manual runs described here.
-- [ ] Surface a canonical list of `tools/` scripts in `docs/tools/OBJECTIFS_Tools_Goals.md` so the health doc can cite it directly instead of repeating the names.
+<!-- @ngram:todo Add per-script fixture directories and README excerpts so future runs can be automated rather than relying on manual runs described here. -->
+<!-- @ngram:todo Surface a canonical list of `tools/` scripts in `docs/tools/OBJECTIFS_Tools_Goals.md` so the health doc can cite it directly instead of repeating the names. -->
 - What additional metrics should the doctor log to prove script execution consistency beyond exit codes?

@@ -166,7 +166,7 @@ V3: NOT RUN
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: Do we treat “Restart” as a new session boundary in determinism checks?
 * IDEA: Add a “command ledger” (Next/Restart/Mode changes) for auditability (v2)

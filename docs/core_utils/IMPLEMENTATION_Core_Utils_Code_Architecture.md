@@ -274,7 +274,7 @@ Files that reference this documentation:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 ### Extraction Candidates
 
@@ -282,12 +282,12 @@ None. File size is well under WATCH threshold.
 
 ### Missing Implementation
 
-- [ ] None noted.
+<!-- @ngram:todo None noted. -->
 
 ### Ideas
 
-- IDEA: Add optional sorting flag for deterministic module discovery ordering.
+<!-- @ngram:proposition Add optional sorting flag for deterministic module discovery ordering. -->
 
 ### Questions
 
-- QUESTION: Should module discovery include HEALTH docs in the prefix list?
+<!-- @ngram:escalation Should module discovery include HEALTH docs in the prefix list? -->

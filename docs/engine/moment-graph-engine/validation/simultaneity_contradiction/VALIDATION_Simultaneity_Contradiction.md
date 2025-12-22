@@ -12,17 +12,17 @@ VERIFIED: 2025-12-20 against local tree
 
 ```
 PATTERNS:
-  - ../PATTERNS_Simultaneity_And_Contradiction.md
+  - ../../PATTERNS_Simultaneity_And_Contradiction.md
 
 BEHAVIORS:
-  - ../BEHAVIORS_Simultaneity_And_Contradiction.md (planned)
+  - ../../BEHAVIORS_Simultaneity_And_Contradiction.md (planned)
 
 THIS:
   - VALIDATION_Simultaneity_Contradiction.md
 
 IMPL:
-  - ../../../../engine/infrastructure/canon/canon_holder.py
-  - ../../../../engine/moment_graph/surface.py
+  - ../../../../../engine/infrastructure/canon/canon_holder.py
+  - ../../../../../engine/moment_graph/surface.py
 ```
 
 ---
@@ -97,6 +97,6 @@ pytest tests/runtime/test_simultaneity_contradicts.py
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Define beat window boundaries (tick window or epoch id).
+<!-- @ngram:todo Define beat window boundaries (tick window or epoch id). -->

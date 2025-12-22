@@ -201,7 +201,7 @@ O(k) where k = number of steps in the node (typically small). Rendering is fast 
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Define exact title color tokens per node_type so the palette table can be audited.
 * QUESTION: Is energy normalized 0..1 or unbounded? mapping assumes “small-ish”; mark `?` until telemetry defines it.

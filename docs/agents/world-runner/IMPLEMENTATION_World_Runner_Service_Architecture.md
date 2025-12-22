@@ -193,7 +193,7 @@ At runtime the service behaves as a stateless adapter: each `process_flips` invo
 - This implementation doc points to `HEALTH_World_Runner.md` and `SYNC_World_Runner.md`, while the SYNC references it under `CHAIN`, ensuring future agents can jump back into the runtime contract from the service state summary.
 - The CLI instructions in `agents/world_runner/CLAUDE.md` are effectively linked bidirectionally because this doc captures how the prompt ducks into `_build_prompt`, and the CLAUDE doc can cite this implementation file to ground expectations for the JSON schema and fallback behavior.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 - Instrument `process_flips` to emit a structured trace (flip IDs, prompt length, timestep) so long-running ticks can be profiled without replaying the full narrative cycle.
 - Introduce resilience around `GraphQueries.query` calls (circuit breaker, caching, or retry) so a slow or missing context query does not cascade into a fallback world injection.

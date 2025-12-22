@@ -127,7 +127,7 @@ THEN:   log remains usable with retention/pagination policy (owned by state_stor
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: Should duration thresholds be configurable? (v1: no, fixed)
 * IDEA: Provide a “copy last 20” option in v1.1

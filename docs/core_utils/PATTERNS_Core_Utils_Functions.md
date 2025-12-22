@@ -77,6 +77,6 @@ IMPL: ngram/core_utils.py
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- IDEA: Formalize a process for adding new utility functions to ensure they meet the reusability and simplicity criteria.
+<!-- @ngram:proposition Formalize a process for adding new utility functions to ensure they meet the reusability and simplicity criteria. -->

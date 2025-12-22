@@ -396,7 +396,7 @@ Run this command from the repo root after starting the Connectome preview (`pnpm
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * IDEA: export includes a deterministic header with session_id and schema version.
 

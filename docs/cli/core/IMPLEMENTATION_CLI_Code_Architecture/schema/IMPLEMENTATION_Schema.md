@@ -10,13 +10,13 @@ CREATED: 2025-12-18
 ## CHAIN
 
 ```
-PATTERNS:        ../PATTERNS_Why_CLI_Over_Copy.md
-BEHAVIORS:       ../BEHAVIORS_CLI_Command_Effects.md
-ALGORITHM:       ../ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md
-VALIDATION:      ../VALIDATION_CLI_Instruction_Invariants.md
-IMPLEMENTATION:  IMPLEMENTATION_Overview.md
-HEALTH:          ../HEALTH_CLI_Command_Test_Coverage.md
-SYNC:            ../SYNC_CLI_Development_State.md
+PATTERNS:        ../../PATTERNS_Why_CLI_Over_Copy.md
+BEHAVIORS:       ../../BEHAVIORS_CLI_Command_Effects.md
+ALGORITHM:       ../../ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md
+VALIDATION:      ../../VALIDATION_CLI_Instruction_Invariants.md
+IMPLEMENTATION:  ../overview/IMPLEMENTATION_Overview.md
+HEALTH:          ../../HEALTH_CLI_Command_Test_Coverage.md
+SYNC:            ../../SYNC_CLI_Development_State.md
 ```
 
 ---
@@ -29,7 +29,7 @@ Defines the principal data structures shared across CLI commands, doctor checks,
 
 ## CODE STRUCTURE
 
-This schema module describes structures used by `doctor`, `repair`, and `validate` commands, and aligns with the `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Code_Structure.md` file so the doc chain stays traceable.
+This schema module describes structures used by `doctor`, `repair`, and `validate` commands, and aligns with the `../structure/IMPLEMENTATION_Code_Structure.md` file so the doc chain stays traceable.
 
 ## DESIGN PATTERNS
 
@@ -103,7 +103,7 @@ The above schemas are consumed by entrypoints such as `ngram/doctor.py::run_doct
 
 ## DATA FLOW AND DOCKING (FLOW-BY-FLOW)
 
-`ValidationResult` flows from `ngram/validate.py` → `ngram/doctor.py` → `ngram/doctor_report.py`. `DoctorIssue` flows through `doctor_checks_*` modules into `.ngram/state/SYNC_Project_Health.md`. `RepairResult` flows from `ngram/repair.py` agents into the repair report (in `.ngram/state/`).
+`ValidationResult` flows from `ngram/validate.py` → `ngram/doctor.py` → `ngram/doctor_report.py`. `DoctorIssue` flows through `doctor_checks_*` modules into `...ngram/state/SYNC_Project_Health.md`. `RepairResult` flows from `ngram/repair.py` agents into the repair report (in `...ngram/state/`).
 
 ## LOGIC CHAINS
 
@@ -117,7 +117,7 @@ Main consumers: `ngram/validate.py`, `ngram/doctor.py`, `ngram/repair.py`, `ngra
 
 ## STATE MANAGEMENT
 
-Schemas persist via `.ngram/state/SYNC_Project_Health.md`, the repair report (in `.ngram/state/`), and `.ngram/state/repair_results/` (future). Each run writes a JSON view of the active data structures.
+Schemas persist via `...ngram/state/SYNC_Project_Health.md`, the repair report (in `...ngram/state/`), and `...ngram/state/repair_results/` (future). Each run writes a JSON view of the active data structures.
 
 ## RUNTIME BEHAVIOR
 
@@ -135,7 +135,7 @@ Validation and doctor flows respect the config file (in `.ngram/`) keys like `di
 
 This schema doc is referenced by `ngram/doctor_report.py`, `ngram/repair_report.py`, and `ngram/validate.py` via `DOCS:` pointers, and links back to the runtime and structure docs above, keeping the doc-code chain intact.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add JSON Schema exporter for these structures so external tools can validate CLI outputs.
-- IDEA: Capture schema versioning metadata inside `.ngram/state` to ensure backward compatibility as structures evolve.
+<!-- @ngram:todo Add JSON Schema exporter for these structures so external tools can validate CLI outputs. -->
+<!-- @ngram:proposition Capture schema versioning metadata inside `.ngram/state` to ensure backward compatibility as structures evolve. -->

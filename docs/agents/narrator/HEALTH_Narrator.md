@@ -115,7 +115,7 @@ status:
 - Link indicators back to validation IDs in `VALIDATION_Narrator.md` and describe the dock types and cadence to make the check repeatable without rerunning the code search.
 - Capture what each checker observes, how often the indicator is sampled, and any gap reminders in the same narrative length so the validator’s minimum-character guardrail never flags the doc.
 - Once the health flow is defined, describe how to run the check in practice (integration test, CLI exercise, manual replay) so human operators can reproduce the runtime signal before blaming the doctor.
-- Finally, record how each indicator is updated in `.ngram/state/SYNC_Project_Health.md` so the doctor can trace degraded scores back to concrete log entries during manual reviews.
+- Finally, record how each indicator is updated in `...ngram/state/SYNC_Project_Health.md` so the doctor can trace degraded scores back to concrete log entries during manual reviews.
 
 ## CHECKER INDEX
 
@@ -314,13 +314,13 @@ pytest engine/tests/test_narrator_integration.py -v
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Automated check for voice consistency across long threads so the narrator does not drift in tone during marathon play sessions.
-- [ ] Hallucination detection for unprompted entity creation so unexpected characters or locations fail early instead of polluting the graph.
-- [ ] Trigger a sanity run that compares narrator health scores with the CLI health banner to keep scoring aligned with human perception.
-- [ ] Could we automatically diff every scene against the previous SceneTree so the doctor flags contradictions before the player notices?
-- [ ] Explore instrumentation that correlates mutation_validity failures with the specific graph edges touched to speed up debugging.
-- [ ] Add a catalog that maps each indicator failure to the CLI warning it emits so future agents can triage alerts without guessing the root cause.
-- [ ] Instrument SSE latency tracking so the stream_latency indicator can point back to the exact chunk or network hop that introduced the delay.
-- QUESTION: Should the health indicator include runtime telemetry from SSE logs so we can correlate latency spikes with schema violations?
+<!-- @ngram:todo Automated check for voice consistency across long threads so the narrator does not drift in tone during marathon play sessions. -->
+<!-- @ngram:todo Hallucination detection for unprompted entity creation so unexpected characters or locations fail early instead of polluting the graph. -->
+<!-- @ngram:todo Trigger a sanity run that compares narrator health scores with the CLI health banner to keep scoring aligned with human perception. -->
+<!-- @ngram:todo Could we automatically diff every scene against the previous SceneTree so the doctor flags contradictions before the player notices? -->
+<!-- @ngram:todo Explore instrumentation that correlates mutation_validity failures with the specific graph edges touched to speed up debugging. -->
+<!-- @ngram:todo Add a catalog that maps each indicator failure to the CLI warning it emits so future agents can triage alerts without guessing the root cause. -->
+<!-- @ngram:todo Instrument SSE latency tracking so the stream_latency indicator can point back to the exact chunk or network hop that introduced the delay. -->
+<!-- @ngram:escalation Should the health indicator include runtime telemetry from SSE logs so we can correlate latency spikes with schema violations? -->

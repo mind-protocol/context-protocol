@@ -128,6 +128,17 @@ No combined “LLM” blob.
 
 ---
 
+## BEHAVIORS SUPPORTED
+
+- Keep node titles, type badges, and step highlights synchronized with state_store metadata so the active focus is obvious before any energy badges are inspected.
+- Surface authentic energy, wait, and tick values through gradient glows and progress instrumentation that mirror the backend payloads instead of invented heuristics.
+- Maintain typed call semantics by coloring active steps with call_type hues so viewers can tell the difference between player work, module recomputations, and agent-led rewrites at a glance.
+
+## BEHAVIORS PREVENTED
+
+- Prevent nodes from morphing into ambiguous cards by forbidding duplicate highlights or background mappings that could mimic edge kits or other node types.
+- Block stale energy colors by requiring the last known state_store value before repainting so the glow never drifts apart from the actual magnitude.
+
 ## NODE TYPES (V1)
 
 ### Primary nodes
@@ -160,6 +171,15 @@ No combined “LLM” blob.
 
 ---
 
+## DATA
+
+Node rendering relies on state_store for titles, step lists, energy, wait progress, cron angle, and active_focus plus the language and call_type metadata that flows out of event_model so every hue, highlight, and meter exactly matches what the runtime reports.
+
+## INSPIRATIONS
+
+- Inspired by instrument panels that keep energy, tempo, and tension signals clustered near the controls so operators can react without scanning multiple screens.
+- Borrowed from typed node diagrams in data-flow visualizers where identity, path, and metrics live inside a single frame so each card stands on its own without extra captions.
+
 ## SCOPE
 
 ### In Scope
@@ -180,7 +200,7 @@ No combined “LLM” blob.
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Define “flipped node” signal source (FlowEvent flag? derived from backend event?) → `?`
 * QUESTION: Do we show node “language” as a badge (TS/PY) or infer from background only? (prefer: both, subtle)

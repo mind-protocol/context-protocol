@@ -184,7 +184,7 @@ Implemented a React Flow-based FlowCanvas with force-directed node layout seeded
 - Keep tracking label declutter thresholds and zoom-based detail toggles so the readability guarantees mentioned in PATTERNS and VALIDATION stay true as graph size increases.
 
 ### Suggestions
-- [ ] Capture label declutter threshold values in health/validation checks so future doctors can automatically flag when readability budgets are violated.
+<!-- @ngram:todo Capture label declutter threshold values in health/validation checks so future doctors can automatically flag when readability budgets are violated. -->
 
 ### Propositions
 - Continue the TODO idea of showing only the active edge label when zoom is below a threshold as a future readability experiment once instrumentation collects bandwidth metrics.

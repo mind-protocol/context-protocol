@@ -88,8 +88,8 @@ Treat `tools/` as a small, documented module. Each script stays lightweight, but
 - Embedding secret credentials inside scripts instead of describing them via configs and env templates.
 - Introducing new distributed service orchestration outside the documented stack runner and systemd wiring until those helpers stabilize.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Decide if the splitter should capture a manifest mapping bundle names to derived docs for traceability in audit logs.
-- [ ] Determine whether `stream_dialogue.py` needs a dry-run mode to validate JSON/GraphOps payloads without mutating the production store.
-- [ ] Ask whether the canonical frontend command for `ngram-fe.service` can be documented here so `tools/run_stack.sh` can rely on a single source of truth.
+<!-- @ngram:todo Decide if the splitter should capture a manifest mapping bundle names to derived docs for traceability in audit logs. -->
+<!-- @ngram:todo Determine whether `stream_dialogue.py` needs a dry-run mode to validate JSON/GraphOps payloads without mutating the production store. -->
+<!-- @ngram:todo Ask whether the canonical frontend command for `ngram-fe.service` can be documented here so `tools/run_stack.sh` can rely on a single source of truth. -->

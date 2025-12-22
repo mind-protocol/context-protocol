@@ -99,7 +99,7 @@ python engine/graph/health/lint_terminology.py --graph seed
 
 ### Immediate
 
-- [ ] Decide whether to add full doc chain (BEHAVIORS/ALGORITHM/etc.).
+<!-- @ngram:todo Decide whether to add full doc chain (BEHAVIORS/ALGORITHM/etc.). -->
 
 ---
 
@@ -129,7 +129,7 @@ module intent and noted that this change is purely documentation alignment.
 - Verified issue #16 as a no-op for code; only SYNC updated.
 
 ### Suggestions
-- [ ] Consider adding BEHAVIORS/ALGORITHM docs if this module changes again.
+<!-- @ngram:todo Consider adding BEHAVIORS/ALGORITHM docs if this module changes again. -->
 
 ### Propositions
 - None.

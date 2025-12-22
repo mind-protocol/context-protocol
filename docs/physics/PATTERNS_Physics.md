@@ -304,7 +304,7 @@ Cascades don't have boundaries because the graph never stops.
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 - How aggressively should energy decay when the world is in a "quiet" state?
 - What is the right threshold for flipping from potential to canon in dense scenes?

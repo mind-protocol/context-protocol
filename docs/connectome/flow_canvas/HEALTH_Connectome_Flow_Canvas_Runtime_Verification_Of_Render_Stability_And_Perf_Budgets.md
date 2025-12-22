@@ -308,7 +308,7 @@ Run this command from the repository root so it resolves the WebGL renderer, the
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * IDEA: instrument render counts per step and warn if too many rerenders
 * QUESTION: do we define a frame budget threshold now (e.g., 16ms) or defer?

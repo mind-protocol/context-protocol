@@ -63,8 +63,8 @@ Original file: SYNC_Narrator.md
 
 ## TODO
 
-- [ ] None. This archive is intentionally quiet, so there are no pending tasks here—if new work is required, move it to `docs/agents/narrator/SYNC_Narrator.md`.
-- [ ] If a future freeze is requested, create a new archive file rather than editing this one so the December 2025 snapshot remains trustworthy.
+<!-- @ngram:todo None. This archive is intentionally quiet, so there are no pending tasks here—if new work is required, move it to `docs/agents/narrator/SYNC_Narrator.md`. -->
+<!-- @ngram:todo If a future freeze is requested, create a new archive file rather than editing this one so the December 2025 snapshot remains trustworthy. -->
 
 ---
 

@@ -3,7 +3,7 @@
 # event_model — Sync: Current State
 
 LAST_UPDATED: 2025-12-20
-UPDATED_BY: Marco "Salthand" (agent)
+UPDATED_BY: codex
 STATUS: DESIGNING
 ```
 
@@ -13,8 +13,8 @@ STATUS: DESIGNING
 
 **What's canonical (v1):**
 
-* FlowEvent schema exists as the single contract for /connectome event meaning.
-* Normalization is deterministic and never drops events (unknown → "?").
+* FlowEvent schema is the single contract for connectome semantics.
+* Normalization is deterministic and never drops events; unknowns become "?".
 
 **What's still being designed:**
 
@@ -24,144 +24,45 @@ STATUS: DESIGNING
 
 **What's proposed (v2+):**
 
-* parent_event_id causal tracing (span-like)
+* parent_event_id causal tracing
 * OpenTelemetry-style export/import
-* backend docks for richer telemetry snapshots
 
 ---
 
 ## CURRENT STATE
 
-We are defining /connectome as an agent-first dashboard that renders from a single event ledger. The event_model module is the foundation: it specifies a canonical FlowEvent contract used by both stepper and realtime mode. Implementation does not exist yet; this chain is establishing the stable contract before code is written.
-
----
-
-## IN PROGRESS
-
-### V1 FlowEvent schema + normalization rules
-
-* **Started:** 2025-12-20
-* **By:** Marco "Salthand" (agent)
-* **Status:** in progress
-* **Context:** Without schema-first normalization, every other module duplicates meaning and drifts.
+FlowEvent schema and normalization helpers are implemented in TypeScript. Call type and trigger inference rules live in a dedicated helper, and duration formatting uses the canonical bucket rules.
 
 ---
 
 ## RECENT CHANGES
 
-### 2025-12-20: Initialized event_model chain docs
+### 2025-12-20: Implemented FlowEvent schema + normalization
 
-* **What:** Added PATTERNS/BEHAVIORS/ALGORITHM/VALIDATION/HEALTH/SYNC/IMPLEMENTATION drafts.
-* **Why:** Establish stable contract first; unblock runtime_engine and telemetry_adapter.
-* **Files:** docs/connectome/event_model/*
-* **Struggles/Insights:** The hard part is deciding what is “unknown-but-preserved” vs “invalid”.
+* **What:** Added FlowEvent types, normalize_flow_event(), trigger/callType inference, and duration bucketing utilities.
+* **Why:** Establish a single canonical event contract for stepper and future realtime ingestion.
+* **Files:**
+  * `app/connectome/lib/flow_event_schema_and_normalization_contract.ts`
+  * `app/connectome/lib/flow_event_trigger_and_calltype_inference_rules.ts`
+  * `app/connectome/lib/flow_event_duration_bucket_color_classifier.ts`
 
 ---
 
 ## KNOWN ISSUES
 
-### Unknown backend payload shapes
-
-* **Severity:** medium
-* **Symptom:** realtime mapping cannot be finalized
-* **Suspected cause:** SSE contracts may still be evolving elsewhere
-* **Attempted:** Marked as `?` everywhere; deferred to telemetry_adapter and backend_docks
-
----
-
-## HANDOFF: FOR AGENTS
-
-**Your likely VIEW:** VIEW_Implement
-
-**Where I stopped:** At “schema-first” definition for FlowEvent and normalization algorithm.
-
-**What you need to understand:**
-
-* Every visualization and log line must come from FlowEvent.
-* Unknowns must be preserved as “?”; no silent dropping.
-
-**Watch out for:**
-
-* “helpful” UI logic that re-derives colors/labels from raw payloads (anti-pattern).
-* Storing raw payloads unbounded (memory/privacy).
-
-**Open questions I had:**
-
-* ordering policy (arrival vs at_ms)
-* whether parent_event_id is required for v1
-
----
-
-## HANDOFF: FOR HUMAN
-
-**Executive summary:**
-We froze the FlowEvent contract as the foundation of /connectome. Everything else should consume normalized events only.
-
-**Decisions made:**
-
-* unknown inputs are preserved and surfaced as “?”
-* duration animations clamp to minimum 200ms
-* trigger and call_type drive styling and log badges
-
-**Needs your input:**
-
-* ordering policy for realtime events
-* whether to store raw payloads by default
+* SSE event mapping remains partial because backend event names are not finalized.
 
 ---
 
 ## TODO
 
-### Doc/Impl Drift
+* [ ] Decide ordering policy for realtime arrival (arrival vs at_ms)
+* [ ] Decide raw_payload storage policy
 
-* [ ] DOCS→IMPL: Implement FlowEvent types + normalize_flow_event() per ALGORITHM.
-* [ ] DOCS→IMPL: Implement duration bucketing and trigger/callType mapping per VALIDATION.
-
-### Health to Run
+Run:
 
 ```
 pnpm connectome:health event_model
 ```
-
-### Immediate
-
-* [ ] Create TypeScript file(s) and export FlowEvent schema + normalization
-* [ ] Add minimal unit-level health harness to validate V1/V3
-
-### Later
-
-* [ ] Add replay determinism checker for stepper mode
-* IDEA: add parent_event_id support once causal chains matter
-
----
-
-## CONSCIOUSNESS TRACE
-
-**Mental state when stopping:**
-Clear. The contract is the real system; visuals can change.
-
-**Threads I was holding:**
-
-* keep schema stable; prevent drift
-* keep unknown visible; never drop
-* connect durations to user trust
-
-**Intuitions:**
-
-* schema must be more stable than UI and more stable than backend payloads
-
-**What I wish I'd known at the start:**
-
-* realtime ordering and retention must be decided early or you regret it later
-
----
-
-## POINTERS
-
-| What                   | Where            |
-| ---------------------- | ---------------- |
-| FlowEvent schema draft | `ALGORITHM_...`  |
-| Invariants             | `VALIDATION_...` |
-| Health plan            | `HEALTH_...`     |
 
 ---

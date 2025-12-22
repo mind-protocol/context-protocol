@@ -14,12 +14,12 @@ VERIFIED: 2025-12-20 against local tree
 PATTERNS:        ./PATTERNS_Attention_Energy_Split.md
 THIS:            BEHAVIORS_Attention_Split_And_Interrupts.md (you are here)
 ALGORITHM:       ./ALGORITHM_Attention_Energy_Split.md
-VALIDATION:      ./VALIDATION_Attention_Energy_Split.md
+VALIDATION:      ./VALIDATION_Attention_Split_And_Interrupts.md
 IMPLEMENTATION:  ./IMPLEMENTATION_Attention_Energy_Split.md
 HEALTH:          ./HEALTH_Attention_Energy_Split.md
 SYNC:            ./SYNC_Attention_Energy_Split.md
 
-IMPL:            engine/physics/tick.py
+IMPL:            engine/physics/attention_split_sink_mass_distribution_mechanism.py
 ```
 
 > **Contract:** Read docs before modifying. After changes: update IMPL or add TODO to SYNC. Run tests.
@@ -85,7 +85,7 @@ AND:    may cause focus reconfiguration
 
 ## INPUTS / OUTPUTS
 
-### Primary Function: `apply_attention_split()` (planned)
+### Primary Function: `apply_attention_split()` (implemented)
 
 **Inputs:**
 
@@ -149,8 +149,8 @@ INSTEAD: interrupt only on focus reconfiguration or spoken
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Define player_neighborhood() scope (links + depth).
-- [ ] Define split_fn inputs and bounds.
-- IDEA: add debug-only logging for sink shares and interrupt reason.
+<!-- @ngram:todo Define player_neighborhood() scope (links + depth). -->
+<!-- @ngram:todo Define split_fn inputs and bounds. -->
+<!-- @ngram:proposition add debug-only logging for sink shares and interrupt reason. -->

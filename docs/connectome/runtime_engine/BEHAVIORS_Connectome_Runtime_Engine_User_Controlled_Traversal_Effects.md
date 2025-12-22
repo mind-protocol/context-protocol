@@ -195,7 +195,7 @@ Requiring every release to pass through runtime_engine preserves the ledger inva
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 ### Extraction Candidates
 

@@ -40,12 +40,12 @@ health and debug endpoints and preserves a stable SSE connection contract.
 - The debug SSE channel should not leak gameplay events or block on slow
   consumers; each client must keep an isolated queue.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Document the expected payload shapes for `/api/action` once the frontend
+<!-- @ngram:todo Document the expected payload shapes for `/api/action` once the frontend -->
   contract stabilizes.
-- IDEA: Add explicit backpressure guidance for debug streams in the API docs.
-- QUESTION: Should health checks validate scenario assets or remain pure
+<!-- @ngram:proposition Add explicit backpressure guidance for debug streams in the API docs. -->
+<!-- @ngram:escalation Should health checks validate scenario assets or remain pure -->
   connectivity probes?
 
 ---

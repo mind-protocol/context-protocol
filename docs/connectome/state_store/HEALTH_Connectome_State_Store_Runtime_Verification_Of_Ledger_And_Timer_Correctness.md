@@ -911,13 +911,13 @@ pnpm connectome:health state_store --checker health_check_atomic_commit_updates_
 
 ## KNOWN GAPS
 
-- [ ] Dock locations are unknown until the runtime implementation wires each telemetry emitter, so the `location` fields above may require later updates when the scripts exist (file:line = ?).
-- [ ] Restart policy wiring is still in flux because policy A/B behavior has not been finalized, so the checks keep toggling between WARN and ERROR when the instrumentation is incomplete.
+<!-- @ngram:todo Dock locations are unknown until the runtime implementation wires each telemetry emitter, so the `location` fields above may require later updates when the scripts exist (file:line = ?). -->
+<!-- @ngram:todo Restart policy wiring is still in flux because policy A/B behavior has not been finalized, so the checks keep toggling between WARN and ERROR when the instrumentation is incomplete. -->
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add a `commit_id` field that increments per atomic commit to make ledger comparison checks deterministic.
-- IDEA: Emit health status to a persistent log file so the Doctor can replay indicator deltas after crashes.
-- QUESTION: Should exports include a `session_id` header to help downstream replay tooling recover after restarts?
+<!-- @ngram:todo Add a `commit_id` field that increments per atomic commit to make ledger comparison checks deterministic. -->
+<!-- @ngram:proposition Emit health status to a persistent log file so the Doctor can replay indicator deltas after crashes. -->
+<!-- @ngram:escalation Should exports include a `session_id` header to help downstream replay tooling recover after restarts? -->

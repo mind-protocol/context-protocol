@@ -258,13 +258,13 @@ produced by the canon and display pipeline.
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- QUESTION: How should energy routing behave when a named character is present
+<!-- @ngram:escalation How should energy routing behave when a named character is present -->
   but asleep or otherwise unavailable to respond?
-- QUESTION: Should action queue pacing slow under 1x to keep responses legible
+<!-- @ngram:escalation Should action queue pacing slow under 1x to keep responses legible -->
   while still honoring sequential action resolution?
-- IDEA: Add a visible "waiting" affordance that explains when no potentials
+<!-- @ngram:proposition Add a visible "waiting" affordance that explains when no potentials -->
   are above threshold, instead of relying solely on narrated silence.
 
 ---

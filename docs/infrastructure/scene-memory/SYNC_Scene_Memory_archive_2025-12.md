@@ -58,7 +58,7 @@ This archive is retained to preserve prior decision history, but the canonical s
 
 ## TODO
 
-- [ ] If this archive is refreshed again, re-run the SYNC template checklist to ensure maturity, handoff, and pointers remain aligned with protocol requirements.
+<!-- @ngram:todo If this archive is refreshed again, re-run the SYNC template checklist to ensure maturity, handoff, and pointers remain aligned with protocol requirements. -->
 
 ---
 
@@ -350,7 +350,7 @@ Original file: SYNC_Scene_Memory.md
   implemented; this repair was a verification-only pass.
 
 ### Suggestions
-- [ ] Consider moving remaining legacy Scene Memory docs into the archive folder
+<!-- @ngram:todo Consider moving remaining legacy Scene Memory docs into the archive folder -->
       entirely once no longer needed for historical reference.
 
 ### Propositions

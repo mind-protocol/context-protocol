@@ -169,7 +169,7 @@ INSTEAD: skip empty chunks entirely
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add explicit documentation for tool schema fields (name, args, response) once the schema stabilizes.
-- QUESTION: Should tool_result errors include a standardized code field for downstream UI handling?
+<!-- @ngram:todo Add explicit documentation for tool schema fields (name, args, response) once the schema stabilizes. -->
+<!-- @ngram:escalation Should tool_result errors include a standardized code field for downstream UI handling? -->

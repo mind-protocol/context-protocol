@@ -58,7 +58,7 @@ ngram/
 └── project_map_html.py         # HTML export
 ```
 
-This split is described in `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Code_Structure.md` along with file responsibilities and status indicators (OK/WATCH/SPLIT).
+This split is described in `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/structure/IMPLEMENTATION_Code_Structure.md` along with file responsibilities and status indicators (OK/WATCH/SPLIT).
 
 ---
 
@@ -86,7 +86,7 @@ Boundaries:
 ```yaml
 ValidationResult:
   required:
-    - name: str           # refer to docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Schema.md for fields
+    - name: str           # refer to docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/schema/IMPLEMENTATION_Schema.md for fields
     - errors: list[str]
   optional:
     - severity: str
@@ -163,7 +163,7 @@ flow:
       - id: doc_sync
         type: file
         direction: output
-        file: .ngram/state/SYNC_Project_Health.md
+        file: ...ngram/state/SYNC_Project_Health.md
         function: doctor_runner
         trigger: after doctor finishes
         payload: JSON
@@ -196,7 +196,7 @@ flow:
       description: gather module mappings, sync files, and config to seed the checks
       file: ngram/context.py
       function: get_module_context
-      input: modules.yaml, docs/, .ngram/state/
+      input: modules.yaml, docs/, ...ngram/state/
       output: context bundle
       trigger: start of doctor run
       side_effects: none
@@ -213,7 +213,7 @@ flow:
       file: ngram/doctor_report.py
       function: generate_health_markdown
       input: list of DoctorIssue
-      output: Markdown + JSON + .ngram/state/SYNC_Project_Health.md
+      output: Markdown + JSON + ...ngram/state/SYNC_Project_Health.md
       trigger: after checks complete
       side_effects: writes health state
 ```
@@ -279,10 +279,10 @@ Repair agent threading relies on a thread pool inside `ngram/repair.py` so subpr
 
 | State | Location | Scope | Lifecycle |
 |-------|----------|-------|-----------|
-| Health report | `.ngram/state/SYNC_Project_Health.md` | project | overwritten each `ngram doctor` |
+| Health report | `...ngram/state/SYNC_Project_Health.md` | project | overwritten each `ngram doctor` |
 | Doc templates | `docs/` | project | updated when templates change |
 | Module map | `modules.yaml` | project | edited when modules move |
-| Repair results | `.ngram/state/repair_results/` (future) | per run | appended per repair |
+| Repair results | `...ngram/state/repair_results/` (future) | per run | appended per repair |
 
 State transitions:
 
@@ -349,7 +349,7 @@ raw CLI args ──> dispatch context ──> command execution ──> issue ar
 | File | Line | Reference |
 |------|------|-----------|
 | `ngram/cli.py` | ~40 | `docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md` |
-| `ngram/doctor.py` | ~120 | `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md` |
+| `ngram/doctor.py` | ~120 | `docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/overview/IMPLEMENTATION_Overview.md` |
 
 ### Docs → Code
 
@@ -360,7 +360,7 @@ raw CLI args ──> dispatch context ──> command execution ──> issue ar
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 ### Extraction Candidates
 
@@ -371,15 +371,15 @@ raw CLI args ──> dispatch context ──> command execution ──> issue ar
 
 ### Missing Implementation
 
-- [ ] Add DOCS pointers to `ngram/prompt.py` and `ngram/doctor_checks_*` in each submodule.
-- [ ] Ensure `ngram/repair.py` writes to `.ngram/state/repair_results/` (future work).
+<!-- @ngram:todo Add DOCS pointers to `ngram/prompt.py` and `ngram/doctor_checks_*` in each submodule. -->
+<!-- @ngram:todo Ensure `ngram/repair.py` writes to `...ngram/state/repair_results/` (future work). -->
 
 ### Ideas
 
-- IDEA: Introduce a metadata-first doc when splitting new CLI modules.
-- IDEA: Surface prompt health data directly in `ngram doctor` output for faster operator triage.
+<!-- @ngram:proposition Introduce a metadata-first doc when splitting new CLI modules. -->
+<!-- @ngram:proposition Surface prompt health data directly in `ngram doctor` output for faster operator triage. -->
 
 ### Questions
 
-- QUESTION: Should `ngram/doctor_files.py` be split further or removed once new discovery helpers cover the same ground?
-- QUESTION: How do we keep `modules.yaml` in sync when new CLI commands land?
+<!-- @ngram:escalation Should `ngram/doctor_files.py` be split further or removed once new discovery helpers cover the same ground? -->
+<!-- @ngram:escalation How do we keep `modules.yaml` in sync when new CLI commands land? -->

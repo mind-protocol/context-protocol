@@ -95,6 +95,33 @@ Key insight:
 > Edges are the verbs of the system.
 > If you can’t read the edge, you can’t understand the flow.
 
+## BEHAVIORS SUPPORTED
+
+- **B1:** Edge labels remain legible at zoom=1 because halo contrast and consistent non-bold formatting keep the call_type text readable even when pulses or glow layers activate on top of the dark substrate.
+- **B2:** Directional shine and magnitude pulses continue to travel correctly along the source→target axis, so viewers always perceive motion direction without needing extra cues.
+- **B3:** The strict trigger→dash and call_type→color mapping delivers instant semantics, letting readers identify direct, stream, async, and graphLink/code/llm flow without needing tooltips.
+
+## BEHAVIORS PREVENTED
+
+- **A1:** Labels are never bolded or recolored outside the defined palette, ensuring the halo-based readability system remains the single source of contrast rather than arbitrary typography tricks.
+- **A2:** No edge can override the trigger or call_type styling arbitrarily, which keeps the entire link vocabulary deterministic across the graph and prevents visual noise that would dilute meaning.
+- **A3:** GraphLink/ABOUT/THEN/SAID edges are kept purely as edges (optionally with halos) and never rendered as node-like cards, so edges retain their verb-like affordance.
+
+## DATA
+
+| Data           | Description                                                                       |
+| -------------- | --------------------------------------------------------------------------------- |
+| `FlowEvent`    | Normalized event blob that carries `trigger`, `call_type`, and `energy_delta`.    |
+| `ColorPalette` | Ecological-gothic palette tokens that anchor call_type colors to the substrate.  |
+| `NodeBounds`   | Geometry (circle/rounded rect) used for pulse clamping and shine origin/destination. |
+| `ActivityState`| Active focus metadata from `state_store` that drives glow, highlight, and pulse timing. |
+
+## INSPIRATIONS
+
+* Metro diagrams (thin directional strokes + color-coded lines) taught us how to show motion without extra nodes.
+* Physics energy pulses from the runtime engine helped constrain pulse timing so transfer magnitude feels kinetic but readable.
+* Tooltips with halos from other UI kits remind us to keep labels legible without relying on bold text or heavy strokes.
+
 ---
 
 ## PRINCIPLES
@@ -179,7 +206,7 @@ Optional: a fuzzy halo at midpoint to represent “link energy” if needed, but
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Decide whether graphLink is always yellow OR can be yellow/orange by subtype (ABOUT vs THEN) → `?`
 * QUESTION: do we allow edge thickness to vary with energy_delta in v1, or only pulse size? (recommend: pulse size only for readability)

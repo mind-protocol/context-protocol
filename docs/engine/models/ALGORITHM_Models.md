@@ -154,9 +154,9 @@ Validated Model Instance
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Formalize documentation for custom validators if they become more complex.
-- [ ] Explore Pydantic V2's new features (e.g., `model_validator`) to optimize validation flows.
-- IDEA: Add a section on performance tuning for large-scale model instantiation.
-- QUESTION: Should all derived properties be explicitly documented in a separate behaviors file or kept within the algorithm doc?
+<!-- @ngram:todo Formalize documentation for custom validators if they become more complex. -->
+<!-- @ngram:todo Explore Pydantic V2's new features (e.g., `model_validator`) to optimize validation flows. -->
+<!-- @ngram:proposition Add a section on performance tuning for large-scale model instantiation. -->
+<!-- @ngram:escalation Should all derived properties be explicitly documented in a separate behaviors file or kept within the algorithm doc? -->

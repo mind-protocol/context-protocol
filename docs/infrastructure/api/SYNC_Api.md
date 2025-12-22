@@ -75,8 +75,8 @@ Use VIEW_Implement_Write_Or_Modify_Code when touching API routers. Ensure new en
 
 ## TODO
 
-- [ ] Split remaining legacy endpoints from `app.py` into router modules.
-- [ ] Implement API versioning strategy.
+<!-- @ngram:todo Split remaining legacy endpoints from `app.py` into router modules. -->
+<!-- @ngram:todo Implement API versioning strategy. -->
 
 ## POINTERS
 

@@ -125,6 +125,6 @@ RESULT:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Define silence threshold units (tick vs wall-clock).
+<!-- @ngram:todo Define silence threshold units (tick vs wall-clock). -->

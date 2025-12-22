@@ -140,7 +140,7 @@ Original file: SYNC_Schema_Models.md
 
 - **What:** Rechecked `GameTimestamp.__str__`, `__le__`, and `__gt__` for the 06-INCOMPLETE_IMPL-models-base repair run; no code changes needed.
 - **Why:** Current repair task required verification in the latest run.
-- **Files:** `engine/models/base.py`, `docs/schema/models/SYNC_Schema_Models.md`, `.ngram/state/SYNC_Project_State.md`.
+- **Files:** `engine/models/base.py`, `docs/schema/models/SYNC_Schema_Models.md`, `...ngram/state/SYNC_Project_State.md`.
 - **Struggles/Insights:** Repair task remains stale relative to current code.
 
 ### 2025-12-19: Revalidated GameTimestamp comparison helpers (repair 04)
@@ -178,7 +178,7 @@ Original file: SYNC_Schema_Models.md
 - Revalidated link helper implementations for the current repair run; no code changes required.
 
 ### Suggestions
-- [ ] Consider adding explicit tests for `GameTimestamp` ordering in `engine/tests/test_models.py`.
+<!-- @ngram:todo Consider adding explicit tests for `GameTimestamp` ordering in `engine/tests/test_models.py`. -->
 
 ### Propositions
 
@@ -328,7 +328,7 @@ Original file: SYNC_Schema_Models.md
 
 - **What:** Rechecked `GameTimestamp.__str__`, `__le__`, and `__gt__` for the 06-INCOMPLETE_IMPL-models-base repair run; no code changes needed.
 - **Why:** Current repair task required verification in the latest run.
-- **Files:** `engine/models/base.py`, `docs/schema/models/SYNC_Schema_Models.md`, `.ngram/state/SYNC_Project_State.md`.
+- **Files:** `engine/models/base.py`, `docs/schema/models/SYNC_Schema_Models.md`, `...ngram/state/SYNC_Project_State.md`.
 - **Struggles/Insights:** Repair task remains stale relative to current code.
 
 ### 2025-12-19: Revalidated GameTimestamp comparison helpers (repair 04)
@@ -370,7 +370,7 @@ Original file: SYNC_Schema_Models.md
   health tooling context.
 
 ### Suggestions
-- [ ] Consider adding explicit tests for `GameTimestamp` ordering in `engine/tests/test_models.py`.
+<!-- @ngram:todo Consider adding explicit tests for `GameTimestamp` ordering in `engine/tests/test_models.py`. -->
 
 ### Propositions
 

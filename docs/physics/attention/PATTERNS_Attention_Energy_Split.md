@@ -171,11 +171,11 @@ Why this matters: avoids hidden heuristics and preserves determinism.
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Define the player_neighborhood() boundary (links + depth).
-- [ ] Specify split_fn inputs and bounds.
-- IDEA: Add debug-only observability for sink shares and dominant focus.
-- [ ] Define dominant active moment selection policy.
-- [ ] Define “player-linked” criteria for focus and interrupt evaluation.
+<!-- @ngram:todo Define the player_neighborhood() boundary (links + depth). -->
+<!-- @ngram:todo Specify split_fn inputs and bounds. -->
+<!-- @ngram:proposition Add debug-only observability for sink shares and dominant focus. -->
+<!-- @ngram:todo Define dominant active moment selection policy. -->
+<!-- @ngram:todo Define “player-linked” criteria for focus and interrupt evaluation. -->
 *** End Patch"}}

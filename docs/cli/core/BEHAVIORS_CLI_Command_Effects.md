@@ -15,7 +15,7 @@ PATTERNS:        ./PATTERNS_Why_CLI_Over_Copy.md
 THIS:            BEHAVIORS_CLI_Command_Effects.md
 ALGORITHM:       ./ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md
 VALIDATION:      ./VALIDATION_CLI_Instruction_Invariants.md
-IMPLEMENTATION:  ./IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md
+IMPLEMENTATION:  ./IMPLEMENTATION_CLI_Code_Architecture/overview/IMPLEMENTATION_Overview.md
 HEALTH:          ./HEALTH_CLI_Command_Test_Coverage.md
 SYNC:            ./SYNC_CLI_Development_State.md
 ```
@@ -69,7 +69,7 @@ WHEN:   `ngram doctor` is executed
 THEN:   13 health checks are run
 AND:    Issues are grouped by severity (critical, warning, info)
 AND:    Health score (0-100) is calculated
-AND:    Results saved to .ngram/state/SYNC_Project_Health.md
+AND:    Results saved to ...ngram/state/SYNC_Project_Health.md
 AND:    Exit code is 0 even when issues are found
 AND:    GitHub issues are created only when `--github` is provided
 ```
@@ -80,10 +80,10 @@ AND:    GitHub issues are created only when `--github` is provided
 GIVEN:  A project with health issues from doctor
 WHEN:   `ngram repair` is executed
 THEN:   Repair agents are spawned for each issue
-AND:    `--agents {claude,codex,gemini}` selects the agent provider
+AND:    `--model {claude,codex,gemini}` selects the agent model
 AND:    Agents follow appropriate VIEW for each issue type
 AND:    Progress is streamed to terminal
-AND:    Report saved to .ngram/state/REPAIR_REPORT.md
+AND:    Report saved to ...ngram/state/REPAIR_REPORT.md
 ```
 
 ### B6: Context Command
@@ -184,8 +184,8 @@ Inputs/outputs, edge cases, and anti-behaviors are captured in `docs/cli/core/VA
 
 ## INPUTS / OUTPUTS
 
-- **Inputs:** CLI args (`--dir`, `--agents`, `--format`, etc.), environment variables (e.g., `NGRAM_AGENT_TIMEOUT`, `GEMINI_API_KEY`), and documentation templates stored under `.ngram/`.
-- **Outputs:** Printed summaries (doctor/report), generated files (`docs/*`, `map.md`, `.ngram/*`), and health/repair reports saved under `.ngram/state/`.
+- **Inputs:** CLI args (`--dir`, `--model`, `--format`, etc.), environment variables (e.g., `NGRAM_AGENT_TIMEOUT`, `GEMINI_API_KEY`), and documentation templates stored under `.ngram/`.
+- **Outputs:** Printed summaries (doctor/report), generated files (`docs/*`, `map.md`, `.ngram/*`), and health/repair reports saved under `...ngram/state/`.
 
 ---
 
@@ -205,8 +205,8 @@ Inputs/outputs, edge cases, and anti-behaviors are captured in `docs/cli/core/VA
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Should `ngram` provide a `--dry-run` toggle that prints all DOCS/chain updates without modifying files?
-- IDEA: Capture which commands humans run most often and emit that telemetry into `docs/cli/core/HEALTH_CLI_Command_Test_Coverage.md`.
-- QUESTION: Should VERSIONING be added to the CLI behavior doc chain so prompts mention the protocol version before running?
+<!-- @ngram:todo Should `ngram` provide a `--dry-run` toggle that prints all DOCS/chain updates without modifying files? -->
+<!-- @ngram:proposition Capture which commands humans run most often and emit that telemetry into `docs/cli/core/HEALTH_CLI_Command_Test_Coverage.md`. -->
+<!-- @ngram:escalation Should VERSIONING be added to the CLI behavior doc chain so prompts mention the protocol version before running? -->

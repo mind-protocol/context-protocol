@@ -153,7 +153,7 @@ RESULT:
   V4: PASS (documentation match + export study)
 ```
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: Should “call_type” also have a badge in export text? (likely yes for readability)
 

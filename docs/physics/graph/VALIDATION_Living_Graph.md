@@ -1276,7 +1276,7 @@ summary:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 - Which invariants should be enforced at mutation time versus during scheduled
   health checks, and how should partial persistence report the difference?

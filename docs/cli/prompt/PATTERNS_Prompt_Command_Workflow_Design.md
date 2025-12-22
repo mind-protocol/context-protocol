@@ -101,8 +101,8 @@ The prompt includes references to doc paths and states what counts as verified. 
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] @ngram:TODO Flesh out the preceding VIEW descriptions with LOC-aligned guidance from `.ngram/views` and cite them here plus cross-cutting `@ngram:id: PROMPT.INGEST.MODULE_CHAIN.FEATURE_INTEGRATION — ## Canon Linking Rules`.
-- IDEA: Capture usage metrics (which VIEW is chosen most) via future health indicator described in `docs/cli/prompt/HEALTH_Prompt_Runtime_Verification.md` (see `health_indicators` section).
-- QUESTION: Should the prompt ever auto-switch agents to autonomous mode when `SYNC_Project_State.md` is empty or flagged “DESIGNING”? If so, what doc + health signal anchors that decision? Document answer here.
+<!-- @ngram:todo @ngram:TODO Flesh out the preceding VIEW descriptions with LOC-aligned guidance from `.ngram/views` and cite them here plus cross-cutting `@ngram:id: PROMPT.INGEST.MODULE_CHAIN.FEATURE_INTEGRATION — ## Canon Linking Rules`. -->
+<!-- @ngram:proposition Capture usage metrics (which VIEW is chosen most) via future health indicator described in `docs/cli/prompt/HEALTH_Prompt_Runtime_Verification.md` (see `health_indicators` section). -->
+<!-- @ngram:escalation Should the prompt ever auto-switch agents to autonomous mode when `SYNC_Project_State.md` is empty or flagged “DESIGNING”? If so, what doc + health signal anchors that decision? Document answer here. -->

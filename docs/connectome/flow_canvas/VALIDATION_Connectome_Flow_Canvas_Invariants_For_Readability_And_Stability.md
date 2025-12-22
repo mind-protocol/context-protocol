@@ -159,7 +159,7 @@ pnpm connectome:health flow_canvas
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: define measurable label overlap threshold for v1 health checks (pixel-based sampling?).
 

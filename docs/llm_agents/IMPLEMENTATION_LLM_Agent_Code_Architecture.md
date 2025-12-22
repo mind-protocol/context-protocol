@@ -352,7 +352,7 @@ No explicit async or threading constructs are present, so the adapter relies on 
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 ### Extraction Candidates
 
@@ -362,16 +362,16 @@ No explicit async or threading constructs are present, so the adapter relies on 
 
 ### Missing Implementation
 
-- [ ] Gate the stderr model listing so the TUI does not parse noisy diagnostics when the Gemini SDK logs available models.
-- [ ] Honor the `--allowed-tools` flag by filtering `tool_map` before passing it to `genai.Client` for the next provider.
+<!-- @ngram:todo Gate the stderr model listing so the TUI does not parse noisy diagnostics when the Gemini SDK logs available models. -->
+<!-- @ngram:todo Honor the `--allowed-tools` flag by filtering `tool_map` before passing it to `genai.Client` for the next provider. -->
 
 ### Ideas
 
-- IDEA: Introduce a shared adapter base that other providers can subclass to keep tooling and streaming logic consistent.
-- IDEA: Persist `tool_result` payloads to `.ngram/state/agent_memory.jsonl` when they mutate disks, enabling replay or audits.
+<!-- @ngram:proposition Introduce a shared adapter base that other providers can subclass to keep tooling and streaming logic consistent. -->
+<!-- @ngram:proposition Persist `tool_result` payloads to `...ngram/state/agent_memory.jsonl` when they mutate disks, enabling replay or audits. -->
 
 ### Questions
 
-- QUESTION: Should adapters expose health metrics for tool execution latency so the doctor can flag slow helpers?
-- QUESTION: Do we need a common JSON schema validator before emitting the stream to guard against SDK drift?
-- QUESTION: Would tracking helper execution timestamps improve the concurrency diagnostics so we can spot helpers that block the stream longer than expected?
+<!-- @ngram:escalation Should adapters expose health metrics for tool execution latency so the doctor can flag slow helpers? -->
+<!-- @ngram:escalation Do we need a common JSON schema validator before emitting the stream to guard against SDK drift? -->
+<!-- @ngram:escalation Would tracking helper execution timestamps improve the concurrency diagnostics so we can spot helpers that block the stream longer than expected? -->

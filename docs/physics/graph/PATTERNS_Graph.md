@@ -181,7 +181,7 @@ Agents update **link strengths**. Energy follows automatically.
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 - What is the safest decay curve when the graph is quiet but not stagnant?
 - How should multi-hop proximity affect energy transfer in dense clusters?

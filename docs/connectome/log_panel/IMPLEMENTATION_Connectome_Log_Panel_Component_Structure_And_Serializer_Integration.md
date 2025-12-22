@@ -150,6 +150,6 @@ state_store selectors
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Decide whether “Copy log” copies JSONL by default or offers both (recommend: both buttons).

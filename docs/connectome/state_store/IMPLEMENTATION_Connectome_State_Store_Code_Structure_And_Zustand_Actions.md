@@ -226,7 +226,7 @@ Zustand actions execute sequentially on the main event loop, and the atomic comm
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Decide RESTART_POLICY and lock it (docs + code)
 * [ ] Decide retention cap for realtime mode

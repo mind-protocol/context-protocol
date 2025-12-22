@@ -98,7 +98,7 @@ health_indicators:
 
 ```yaml
 status:
-  stream_destination: .ngram/state/SYNC_Project_Health.md
+  stream_destination: ...ngram/state/SYNC_Project_Health.md
   result:
     representation: binary
     value: 1
@@ -235,7 +235,7 @@ throttling:
 ```yaml
 forwarding:
   targets:
-    - location: .ngram/state/SYNC_Project_Health.md
+    - location: ...ngram/state/SYNC_Project_Health.md
       transport: file
       notes: Doctor inspects this stream score through the canonical health log before surfacing drift tickets.
 display:
@@ -352,7 +352,7 @@ throttling:
 ```yaml
 forwarding:
   targets:
-    - location: .ngram/state/SYNC_Project_Health.md
+    - location: ...ngram/state/SYNC_Project_Health.md
       transport: file
       notes: Doctor consumes this indicator to flag missing credentials before streaming begins.
 display:
@@ -389,13 +389,13 @@ python3 -m ngram.llms.gemini_agent -p "ping" --output-format text
 
 ## KNOWN GAPS
 
-- [ ] No automated check for response latency.
-- [ ] No check for provider-side rate limit errors (429).
-- [ ] No automated unit tests for `gemini_agent.py` internals.
+<!-- @ngram:todo No automated check for response latency. -->
+<!-- @ngram:todo No check for provider-side rate limit errors (429). -->
+<!-- @ngram:todo No automated unit tests for `gemini_agent.py` internals. -->
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add a "health probe" prompt to quickly verify API connectivity.
-- QUESTION: Should we monitor token usage per-session in HEALTH?
+<!-- @ngram:todo Add a "health probe" prompt to quickly verify API connectivity. -->
+<!-- @ngram:escalation Should we monitor token usage per-session in HEALTH? -->

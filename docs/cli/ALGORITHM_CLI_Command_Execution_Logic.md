@@ -61,7 +61,7 @@ The resolved handler runs with the parsed args; it returns exit codes, writes SY
 
 ### Step 4: Emit health signals
 
-`doctor.py` and related modules translate issues into `.ngram/state/SYNC_Project_Health.md` and supplemental Markdown reports.
+`doctor.py` and related modules translate issues into `...ngram/state/SYNC_Project_Health.md` and supplemental Markdown reports.
 
 ---
 
@@ -104,7 +104,7 @@ user argv
           → SYNC + README + terminal output
 ```
 
-Docking points: `.ngram/state/SYNC_Project_Health.md`, `.ngram/state/SYNC_Project_Health_archive_*.md`, `.ngram/traces/`.
+Docking points: `...ngram/state/SYNC_Project_Health.md`, `...ngram/state/SYNC_Project_Health_archive_*.md`, `.ngram/traces/`.
 
 ---
 
@@ -146,9 +146,9 @@ Logic: executes the handler, collects DoctorIssue list, and calls `doctor_report
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Record per-command runtime metrics in `.ngram/state` for future health graphs.
-- [ ] Surface doc integrity hooks as part of the doctor run output.
-- IDEA: Build a dedicated CLI diagnostics command to replay earlier doctor runs.
-- QUESTION: Should command dispatch load modules lazily to reduce startup time?
+<!-- @ngram:todo Record per-command runtime metrics in `.ngram/state` for future health graphs. -->
+<!-- @ngram:todo Surface doc integrity hooks as part of the doctor run output. -->
+<!-- @ngram:proposition Build a dedicated CLI diagnostics command to replay earlier doctor runs. -->
+<!-- @ngram:escalation Should command dispatch load modules lazily to reduce startup time? -->

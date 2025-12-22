@@ -78,7 +78,7 @@ The PATTERN now also captures the dynamic modulation function strategy so a sing
 
 ### Doc/Impl Drift
 
-- [ ] DOCS→IMPL: Add a membrane provider and apply a modulation frame in runtime.
+<!-- @ngram:todo DOCS→IMPL: Add a membrane provider and apply a modulation frame in runtime. -->
 
 ### Tests to Run
 
@@ -88,13 +88,13 @@ ngram validate
 
 ### Immediate
 
-- [ ] Define ModulationFrame bounds.
-- [ ] Decide injection point for frame computation.
-- [ ] Specify dynamic functions for threshold/decay/transfer.
+<!-- @ngram:todo Define ModulationFrame bounds. -->
+<!-- @ngram:todo Decide injection point for frame computation. -->
+<!-- @ngram:todo Specify dynamic functions for threshold/decay/transfer. -->
 
 ### Later
 
-- [ ] Add health check script for bounds/idempotency.
+<!-- @ngram:todo Add health check script for bounds/idempotency. -->
 
 ---
 

@@ -58,7 +58,7 @@ This archive is a historical snapshot of the graph SYNC; current priorities and 
 
 ## TODO
 
-- [ ] If this archive is updated again, re-run the SYNC template checklist to keep maturity, handoffs, and pointers aligned with protocol requirements.
+<!-- @ngram:todo If this archive is updated again, re-run the SYNC template checklist to keep maturity, handoffs, and pointers aligned with protocol requirements. -->
 
 ---
 
@@ -793,6 +793,82 @@ class ActionRequest(BaseModel):
 - Filled the missing template sections in `docs/physics/graph/SYNC_Graph_archive_2025-12.md` to align the archive with current SYNC requirements for repair #16.
 - Verified `docs/physics/graph/SYNC_Graph_archive_2025-12.md` remains template-complete; no further edits were needed for this repair pass.
 - Re-verified the archive SYNC template completeness for repair #16; no additional edits were required in this pass.
+
+---
+
+
+
+---
+
+# Archived: SYNC_Graph.md
+
+Archived on: 2025-12-21
+Original file: SYNC_Graph.md
+
+---
+
+## RECENT CHANGES
+
+### 2025-12-21: Reorganized GraphReadOps into a dedicated module
+
+* **What:** Extracted `GraphReadOps` and `get_graph_reader` into `engine/physics/graph/graph_ops_read_only_interface.py` and now re-export them from `graph_ops.py`.
+* **Why:** Keep the mutation-focused facade (`GraphOps`) under the 800-line threshold while isolating Connectome read helpers and semantic search.
+* **Files:** `engine/physics/graph/graph_ops.py`, `engine/physics/graph/graph_ops_read_only_interface.py`
+* **Metrics:** GraphOps is now 799 lines; the reader module is 246 lines and satisfies the OK threshold.
+
+### 2025-12-21: Added read-only graph access for Connectome
+
+* **What:** Added `GraphReadOps` with Cypher and simple natural-language queries and embedding-stripped output.
+* **Why:** Provide Connectome access to real nodes and links from the `seed` graph without embedding payloads.
+* **Files:** `engine/physics/graph/graph_ops.py`.
+
+### 2025-12-21: Added embedding-based semantic search for Connectome
+
+* **What:** Added `search_semantic` using embeddings with hop expansion and a CLI runner; embeddings are never returned.
+* **Why:** Enable true semantic search while keeping payloads small.
+* **Files:** `engine/physics/graph/graph_ops.py`, `engine/physics/graph/connectome_read_cli.py`.
+
+---
+
+
+
+---
+
+# Archived: SYNC_Graph.md
+
+Archived on: 2025-12-22
+Original file: SYNC_Graph.md
+
+---
+
+## RECENT CHANGES
+
+### 2025-12-22: Fixed Orchestrator Indentation Bug
+
+- **What:** Methods `_world_injection_path`, `_get_world_tick`, `_load_world_injection` were over-indented (nested inside `new_game` method).
+- **Why:** `/api/action` endpoint was failing with `'Orchestrator' object has no attribute '_get_world_tick'`.
+- **Fix:** Corrected indentation from 8 spaces to 4 spaces for these methods.
+- **Files:** `engine/infrastructure/orchestration/orchestrator.py`
+
+### 2025-12-22: Expanded GraphClient Protocol Interface
+
+- **What:** Added 4 missing methods to the GraphClient protocol that consumers actually use.
+- **Why:** Orchestrator and tick.py call methods not in the original interface. External proxy (blood-ledger) needs the complete contract.
+- **Added methods:**
+  - `get_player_location()` — used by Orchestrator
+  - `get_narrative_believers()` — used by Orchestrator
+  - `get_path_between()` — used by tick.py
+  - `get_narratives_about()` — used by tick.py
+- **Files:** `engine/physics/graph/graph_interface.py`
+- **Markers added:**
+  - `@ngram:proposition` — documents the "minimal interface" design decision
+  - `@ngram:todo` — reminder to update blood-ledger proxy
+
+### 2025-12-21: Fixed link extraction for GraphReadOps
+
+- **What:** Added support for FalkorDB Edge objects in link extraction.
+- **Why:** Ensure `/api/connectome/graph` returns links (not nodes only).
+- **Files:** `engine/physics/graph/graph_query_utils.py`.
 
 ---
 

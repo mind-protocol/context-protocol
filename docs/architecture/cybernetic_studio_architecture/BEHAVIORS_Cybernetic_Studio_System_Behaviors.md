@@ -140,8 +140,8 @@ INSTEAD:  Thresholds MUST be implemented as adaptive gates (rolling quantiles / 
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Clarify the exact contract and API for L1/L2 stimulus ingestion between `ngram` and `blood-ledger` (or other potential integrations).
-- IDEA: Explore mechanisms for "pre-computation" or caching of salience scores for frequently accessed Places to improve UI responsiveness.
-- QUESTION: How are "focus" weights in the salience computation (W * E * focus) dynamically determined or set by the active Place/VIEW?
+<!-- @ngram:todo Clarify the exact contract and API for L1/L2 stimulus ingestion between `ngram` and `blood-ledger` (or other potential integrations). -->
+<!-- @ngram:proposition Explore mechanisms for "pre-computation" or caching of salience scores for frequently accessed Places to improve UI responsiveness. -->
+<!-- @ngram:escalation How are "focus" weights in the salience computation (W * E * focus) dynamically determined or set by the active Place/VIEW? -->

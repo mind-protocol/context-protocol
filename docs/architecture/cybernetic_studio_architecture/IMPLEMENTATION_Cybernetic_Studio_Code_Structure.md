@@ -175,7 +175,7 @@ flow:
   steps:
     - id: sync_edit
       description: Edit SYNC file in repo
-      file: .ngram/state/SYNC_*.md
+      file: ...ngram/state/SYNC_*.md
       function: manual edit
       input: markdown update
       output: updated file
@@ -198,7 +198,7 @@ flow:
       - id: dock_sync_edit
         type: file
         direction: input
-        file: .ngram/state/SYNC_Project_State.md
+        file: ...ngram/state/SYNC_Project_State.md
         function: manual edit
         trigger: edit
         payload: markdown diff
@@ -255,8 +255,8 @@ No direct code references yet (conceptual architecture).
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Specify exact watcher locations in `ngram` once stimulus ingestion code lands.
-- [ ] Confirm graph ops API boundaries and versioning strategy.
-- QUESTION: Where should Place registry live: `ngram` or the graph service?
+<!-- @ngram:todo Specify exact watcher locations in `ngram` once stimulus ingestion code lands. -->
+<!-- @ngram:todo Confirm graph ops API boundaries and versioning strategy. -->
+<!-- @ngram:escalation Where should Place registry live: `ngram` or the graph service? -->

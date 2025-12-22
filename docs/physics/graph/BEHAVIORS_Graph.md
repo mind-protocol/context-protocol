@@ -255,13 +255,13 @@ views without making agents responsible for writing in new values.
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- QUESTION: How should energy routing behave when a nearby character is
+<!-- @ngram:escalation How should energy routing behave when a nearby character is -->
   incapacitated but still linked by proximity?
-- QUESTION: What normalization strategy best prevents dense clusters from
+<!-- @ngram:escalation What normalization strategy best prevents dense clusters from -->
   drowning out sparse but high-stakes narratives?
-- IDEA: Add a diagnostic view that highlights the top three pressure drivers
+<!-- @ngram:proposition Add a diagnostic view that highlights the top three pressure drivers -->
   during each tick for debugging and balancing.
 
 ---

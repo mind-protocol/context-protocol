@@ -221,7 +221,7 @@ For any flip, return a compact cluster of linked nodes (tension, narratives, key
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 - Should tick size be adaptive for very long actions to reduce runtime while
   preserving interrupt sensitivity?

@@ -15,7 +15,7 @@ PATTERNS:        ./PATTERNS_Why_CLI_Over_Copy.md
 BEHAVIORS:       ./BEHAVIORS_CLI_Command_Effects.md
 ALGORITHM:       ./ALGORITHM_CLI_Command_Execution_Logic/ALGORITHM_Overview.md
 THIS:            VALIDATION_CLI_Instruction_Invariants.md
-IMPLEMENTATION:  ./IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md
+IMPLEMENTATION:  ./IMPLEMENTATION_CLI_Code_Architecture/overview/IMPLEMENTATION_Overview.md
 HEALTH:          ./HEALTH_CLI_Command_Test_Coverage.md
 SYNC:            ./SYNC_CLI_Development_State.md
 ```
@@ -227,10 +227,10 @@ For detailed check definitions, see `docs/cli/core/ALGORITHM_CLI_Command_Executi
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add automated tests for all invariants
-- [ ] Property-based testing for idempotency/monotonicity
-- [ ] Integration tests for repair agent behavior
-- IDEA: Add pre-commit hook to run validate
-- QUESTION: Should validate fail on warnings or only critical issues?
+<!-- @ngram:todo Add automated tests for all invariants -->
+<!-- @ngram:todo Property-based testing for idempotency/monotonicity -->
+<!-- @ngram:todo Integration tests for repair agent behavior -->
+<!-- @ngram:proposition Add pre-commit hook to run validate -->
+<!-- @ngram:escalation Should validate fail on warnings or only critical issues? -->

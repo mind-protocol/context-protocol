@@ -177,7 +177,7 @@ Why this matters:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Decide whether `raw_payload` is stored by default or behind a debug toggle (privacy + size).
 * [ ] Confirm the authoritative list of backend SSE event names (some are known; others may drift) → `?`

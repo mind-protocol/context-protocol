@@ -310,7 +310,7 @@ pnpm connectome:health event_model --checker health_check_event_schema_conforman
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * IDEA: Export health results to a stable JSON file consumed by ngram doctor.
 * QUESTION: Should schema violations in production hard-fail (stop realtime mode) or degrade (WARN)?

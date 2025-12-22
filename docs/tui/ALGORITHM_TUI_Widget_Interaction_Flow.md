@@ -118,10 +118,10 @@ MATCH command.name:
 ### D0: Agent Provider
 
 ```
-IF --agents=codex:
+IF --model=codex:
     Use codex exec resume --last for manager prompts
     Parse plain text output
-ELIF --agents=gemini:
+ELIF --model=gemini:
     Use gemini --resume latest for manager prompts
     Parse plain text output
 ELSE:
@@ -254,10 +254,10 @@ User Input
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Algorithm for resizing panels on terminal resize
-- [ ] How to handle agent output parsing for progress indicators
-- IDEA: Progress bars for agents based on output patterns
-- IDEA: Pause/resume agent execution
-- QUESTION: Should ngram manager run continuously in background?
+<!-- @ngram:todo Algorithm for resizing panels on terminal resize -->
+<!-- @ngram:todo How to handle agent output parsing for progress indicators -->
+<!-- @ngram:proposition Progress bars for agents based on output patterns -->
+<!-- @ngram:proposition Pause/resume agent execution -->
+<!-- @ngram:escalation Should ngram manager run continuously in background? -->

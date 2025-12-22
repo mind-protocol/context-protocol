@@ -43,7 +43,7 @@ Detailed workflows are consolidated here for easier navigation.
    - Append `templates/CLAUDE_ADDITION.md` to `.ngram/CLAUDE.md` (create if missing).
    - Mirror the same content to root `AGENTS.md` and append `templates/CODEX_SYSTEM_PROMPT_ADDITION.md`.
    - For manager role, write `.ngram/agents/manager/AGENTS.md` using `templates/ngram/agents/manager/CLAUDE.md` plus the Codex addition.
-3. Initialize `.ngram/state/SYNC_Project_State.md` with current state.
+3. Initialize `...ngram/state/SYNC_Project_State.md` with current state.
 4. (Optional) Create `docs/` and add module docs as needed.
 
 ---

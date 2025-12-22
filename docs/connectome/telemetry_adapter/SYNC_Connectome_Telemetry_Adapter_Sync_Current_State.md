@@ -33,6 +33,10 @@ This module is reserved and documented, but implementation is deferred until:
 * we confirm backend SSE contracts
 * we decide buffering ownership policy
 
+An interim `/api/sse` stub now exists in the Next.js app to avoid 404s in the
+Connectome UI. It emits a single `connectome_health` event and periodic
+`ping` events for local development only.
+
 ---
 
 ## TODO
@@ -41,6 +45,7 @@ This module is reserved and documented, but implementation is deferred until:
 * [ ] Implement EventSource wrapper with connection state and parsing
 * [ ] Emit RawTelemetryEnvelope objects to runtime_engine
 * [ ] Add health harness with mock SSE generator
+* [ ] Replace `/api/sse` stub with real telemetry adapter once backend contracts are set
 
 Run:
 

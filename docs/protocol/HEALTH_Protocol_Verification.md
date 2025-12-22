@@ -99,7 +99,7 @@ health_indicators:
 
 ```yaml
 status:
-  stream_destination: .ngram/state/SYNC_Project_Health.md
+  stream_destination: ...ngram/state/SYNC_Project_Health.md
   result:
     representation: binary
     value: 1
@@ -181,12 +181,12 @@ ngram validate --dir docs/cli
 
 ## KNOWN GAPS
 
-- [ ] Automated check for "doc quality" (e.g., minimum character counts per section).
-- [ ] Check for duplicate documentation across different modules.
+<!-- @ngram:todo Automated check for "doc quality" (e.g., minimum character counts per section). -->
+<!-- @ngram:todo Check for duplicate documentation across different modules. -->
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Add `ngram doctor` checks for protocol-specific drift.
-- QUESTION: Should `validate` warn about non-canonical doc types (e.g. `CONCEPT_`)?
+<!-- @ngram:todo Add `ngram doctor` checks for protocol-specific drift. -->
+<!-- @ngram:escalation Should `validate` warn about non-canonical doc types (e.g. `CONCEPT_`)? -->

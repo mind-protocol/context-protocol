@@ -35,12 +35,12 @@
 
 Validation notes align with `docs/infrastructure/api/SYNC_Api.md` and the current implementation doc chain as of 2025-12-19.
 
--## GAPS / IDEAS / QUESTIONS
+-## MARKERS
 
 - [x] Add explicit API integration tests that assert health and SSE behavior (covered by `engine/tests/test_moments_api.py`
   and `engine/tests/test_router_schema_validation.py`).
-- IDEA: Document a reproducible smoke-test script for playthrough creation and action dispatch.
-- QUESTION: Should validation include an auth-required health mode once gateway decisions are final?
+<!-- @ngram:proposition Document a reproducible smoke-test script for playthrough creation and action dispatch. -->
+<!-- @ngram:escalation Should validation include an auth-required health mode once gateway decisions are final? -->
 
 ---
 

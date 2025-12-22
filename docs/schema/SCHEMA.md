@@ -8,3 +8,4 @@ Start here:
 - `docs/schema/SCHEMA/SCHEMA_Links.md`
 - `docs/schema/SCHEMA/SCHEMA_Tensions.md`
 - `docs/schema/SCHEMA_Moments/SCHEMA_Moments_Overview.md`
+- `docs/schema/link-axes/SCHEMA_Link_Axes.md`

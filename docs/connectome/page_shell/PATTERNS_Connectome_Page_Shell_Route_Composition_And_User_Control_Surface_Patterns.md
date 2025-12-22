@@ -19,6 +19,8 @@ VALIDATION:      ./VALIDATION_Connectome_Page_Shell_Invariants_For_Control_Corre
 IMPLEMENTATION:  ./IMPLEMENTATION_Connectome_Page_Shell_Nextjs_Route_And_Component_Wiring.md
 HEALTH:          ./HEALTH_Connectome_Page_Shell_Runtime_Verification_Of_Control_Semantics_And_Mode_Gating.md
 SYNC:            ./SYNC_Connectome_Page_Shell_Sync_Current_State.md
+
+IMPL:            app/connectome/components/connectome_page_shell_route_layout_and_control_surface.tsx
 ```
 
 ### Bidirectional Contract
@@ -164,7 +166,7 @@ No direct “append to ledger” or “set focus” calls from page_shell.
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Decide keyboard shortcuts v1: Next = Space/Enter? Restart = R? Toggle mode = M? → `?`
 * QUESTION: Should mode toggle be hidden until telemetry_adapter is implemented? (v1: can show but disabled with tooltip)

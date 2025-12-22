@@ -24,8 +24,9 @@ THIS:            ./SYNC_Engine.md
 
 ## CURRENT STATE
 
-Engine-level docs were added to define runtime ownership boundaries and tie submodules together.
+Engine-level docs define runtime ownership boundaries and tie submodules together. Membrane modulation now includes per-place scoping in `docs/engine/`.
 
 ## TODO
 
-- [ ] Expand engine runtime flows with concrete sequences once submodule behavior stabilizes.
+<!-- @ngram:todo Expand engine runtime flows with concrete sequences once submodule behavior stabilizes. -->
+<!-- @ngram:todo Docs updated, implementation needs: membrane modulation hook and supporting chain docs. -->

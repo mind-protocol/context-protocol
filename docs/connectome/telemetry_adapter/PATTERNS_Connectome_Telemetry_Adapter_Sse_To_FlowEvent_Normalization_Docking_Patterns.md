@@ -145,7 +145,7 @@ Ordering policy must be explicit:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * [ ] Confirm actual SSE endpoints and event names used by the backend → `?`
 * QUESTION: one SSE connection or multiple (moments + tempo + weights)? (likely multiple, unified into one envelope stream)

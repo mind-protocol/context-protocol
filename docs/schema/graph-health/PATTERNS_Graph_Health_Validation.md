@@ -104,11 +104,11 @@ engineering workflows outside the health module.
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Should link property validation expand beyond enum checks for required
+<!-- @ngram:todo Should link property validation expand beyond enum checks for required -->
   metadata and relationship-level invariants?
-- [ ] Decide if health checks should run in CI with a seeded graph so schema
+<!-- @ngram:todo Decide if health checks should run in CI with a seeded graph so schema -->
   drift is caught before integration tests.
-- IDEA: Add a report export format (CSV or markdown) that includes summaries,
+<!-- @ngram:proposition Add a report export format (CSV or markdown) that includes summaries, -->
   query outputs, and timestamped audit metadata.

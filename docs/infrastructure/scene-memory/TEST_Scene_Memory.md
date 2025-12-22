@@ -99,8 +99,8 @@ pytest engine/tests/test_moment.py engine/tests/test_moment_graph.py engine/test
 
 ## KNOWN TEST GAPS
 
-- [ ] Transcript write failure paths (`_append_to_transcript` error logging).
-- [ ] End-to-end coverage for `link_moments` triggers with real click traversal.
+<!-- @ngram:todo Transcript write failure paths (`_append_to_transcript` error logging). -->
+<!-- @ngram:todo End-to-end coverage for `link_moments` triggers with real click traversal. -->
 
 ---
 
@@ -112,7 +112,7 @@ pytest engine/tests/test_moment.py engine/tests/test_moment_graph.py engine/test
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- IDEA: Add a fixture for deterministic tick/time mapping across moment tests.
-- QUESTION: Should we add a smoke test that verifies transcript entries align with graph line references?
+<!-- @ngram:proposition Add a fixture for deterministic tick/time mapping across moment tests. -->
+<!-- @ngram:escalation Should we add a smoke test that verifies transcript entries align with graph line references? -->

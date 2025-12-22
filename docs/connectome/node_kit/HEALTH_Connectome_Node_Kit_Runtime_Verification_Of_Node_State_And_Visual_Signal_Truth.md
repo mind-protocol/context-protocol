@@ -639,7 +639,7 @@ Set `NGRAM_HEALTH_LOGS=./logs/connectome_health` or `HEALTH_LOG_DIR=./logs/conne
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * IDEA: expose a debug-only “rendered node snapshot” object to simplify HEALTH checks.
 

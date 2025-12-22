@@ -121,7 +121,7 @@ filters and query limits in graph ops.
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 - Handler runtime and canon holder code are planned but not fully implemented.
 - Energy constants (pump rates, thresholds) still need playtesting.

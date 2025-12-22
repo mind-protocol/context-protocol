@@ -134,6 +134,7 @@ INSTEAD: readable size + halo/contrast
 **Documentation note:** This input-output contract keeps the kit purely presentational, meaning any behavior change must be traced through the incoming FlowEvent and active_focus sources before the visuals adapt.
 
 Health telemetry references the same data so the documentation directly maps what those probes validate at runtime.
+Running `pnpm connectome:health edge_kit` replays the FlowEvent triggers and asserts the dash/color mapping, so this doc describes the very contract those checks assert.
 
 ---
 
@@ -150,7 +151,7 @@ THEN:   render using neutral defaults and show “?” tooltip
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
 * QUESTION: should async edges have a different motion profile than stream edges? (maybe slower, more “chunky”)
   This question keeps the door open for future iterations to split the temporal pacing so async visuals feel deliberate yet still traceable in the health probe logs.

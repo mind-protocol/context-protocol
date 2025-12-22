@@ -71,7 +71,7 @@ Docking points for health clients:
 
 ## DOC-LINK COMPLIANCE
 
- The doctor implementation is the bi-directional anchor for every health-related doc. The CLI/doctor doc chain now names every code path referenced by the health indicators listed in `.ngram/state/SYNC_Project_Health.md` (also available at `ngram/state/SYNC_Project_Health.md`):
+ The doctor implementation is the bi-directional anchor for every health-related doc. The CLI/doctor doc chain now names every code path referenced by the health indicators listed in `...ngram/state/SYNC_Project_Health.md` (also available at `..ngram/state/SYNC_Project_Health.md`):
 
 - `ngram/doctor.py` serves as the CLI entry glue.
 - `ngram/doctor_checks.py` orchestrates the check catalog.
@@ -96,5 +96,5 @@ Each code file above also appears in the prompt health doc chain via `DOCS:` poi
 
 ## GAPS / IDEAS
 
-- [ ] The `doctor_check_*` functions could expose metadata describing which IMPLEMENTATION docs they reference for richer doc linking automation.
-- IDEA: Emit structured events from `DoctorRunner` so `ngram doctor` health results can feed dashboards.
+<!-- @ngram:todo The `doctor_check_*` functions could expose metadata describing which IMPLEMENTATION docs they reference for richer doc linking automation. -->
+<!-- @ngram:proposition Emit structured events from `DoctorRunner` so `ngram doctor` health results can feed dashboards. -->

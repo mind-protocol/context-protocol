@@ -92,7 +92,7 @@ health_indicators:
 
 ```yaml
 status:
-  stream_destination: .ngram/state/SYNC_Prompt_Command_State.md
+  stream_destination: ...ngram/state/SYNC_Prompt_Command_State.md
   result:
     representation: binary
     value: 1
@@ -106,7 +106,7 @@ status:
 
 - `cli` — `ngram prompt` stdout includes doc sections, VIEW table, and checklist.
 - `file` — Canonical docs referenced (e.g., `.ngram/PROTOCOL.md`, `.ngram/views/*.md`).
-- `state` — `.ngram/state/SYNC_Prompt_Command_State.md` records health verification outcomes.
+- `state` — `...ngram/state/SYNC_Prompt_Command_State.md` records health verification outcomes.
 
 ---
 
@@ -142,7 +142,7 @@ checkers:
 
 ## VERIFICATION RESULTS
 
-- `prompt_doc_reference_check`: PASS — `python3 - <<'PY'` confirmed `generate_bootstrap_prompt(Path('.'))` still emits `.ngram/PROTOCOL.md`, `.ngram/PRINCIPLES.md`, and `.ngram/state/SYNC_Project_State.md`, and `ngram doctor --format json` reported zero `DOC_LINK_INTEGRITY` issues for the prompt doc chain (`doc_link count 0`).
+- `prompt_doc_reference_check`: PASS — `python3 - <<'PY'` confirmed `generate_bootstrap_prompt(Path('.'))` still emits `.ngram/PROTOCOL.md`, `.ngram/PRINCIPLES.md`, and `...ngram/state/SYNC_Project_State.md`, and `ngram doctor --format json` reported zero `DOC_LINK_INTEGRITY` issues for the prompt doc chain (`doc_link count 0`).
 - `prompt_view_table_check`: PASS — the same script verified the prompt still renders the canonical `| Task | VIEW |` table described in the algorithm doc, so each view entry remains visible to agents.
 - `prompt_checklist_presence_check`: PASS — `### Checklist` is still present in prompt output, and `ngram doctor --format json` did not raise any checklist-related warnings.
 
@@ -151,7 +151,7 @@ checkers:
 ## INDICATOR: Prompt Doc Reference Health
 
 - **Purpose:** Track that canonical protocol docs are present in the prompt output.
-- **Dock:** `dock_docs` (stdout string) and `.ngram/state/SYNC_Project_State.md`.
+- **Dock:** `dock_docs` (stdout string) and `...ngram/state/SYNC_Project_State.md`.
 - **Validation:** `VALIDATION_Prompt_Bootstrap_Invariants.md` V1-V2.
 
 ## INDICATOR: Prompt Checklist Presence
@@ -175,13 +175,13 @@ ngram doctor --format json > /tmp/doctor_prompt.json
 
 ## KNOWN GAPS
 
-- [ ] No automated parser currently compares `ngram prompt` output to the canonical doc list defined in the PATTERNS doc.
-- [ ] VIEW table detection still relies on string matching; future work should parse rows to ensure new VIEW entries aren't missed.
+<!-- @ngram:todo No automated parser currently compares `ngram prompt` output to the canonical doc list defined in the PATTERNS doc. -->
+<!-- @ngram:todo VIEW table detection still relies on string matching; future work should parse rows to ensure new VIEW entries aren't missed. -->
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Triaged the doc-link integrity and code-doc delta warnings emitted by `ngram doctor` and promoted the highest-priority follow-ups to `.ngram/state/SYNC_Project_Health.md`.
-- IDEA: Save the last prompt output snapshot under `.ngram/traces/` for audit and doc-link validation.
-- QUESTION: Should prompt health metrics feed into the CLI health dashboard or the doc-link metrics aggregated by doctor?
+<!-- @ngram:todo Triaged the doc-link integrity and code-doc delta warnings emitted by `ngram doctor` and promoted the highest-priority follow-ups to `...ngram/state/SYNC_Project_Health.md`. -->
+<!-- @ngram:proposition Save the last prompt output snapshot under `.ngram/traces/` for audit and doc-link validation. -->
+<!-- @ngram:escalation Should prompt health metrics feed into the CLI health dashboard or the doc-link metrics aggregated by doctor? -->

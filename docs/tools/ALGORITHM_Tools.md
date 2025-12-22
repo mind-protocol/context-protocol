@@ -127,13 +127,13 @@ frontend SSE feed. `tools/run_stack.sh` keeps the runtime stack humming so these
 helpers have backend services to talk to, and `tools/ngrok.yml` plus
 `.ngram/systemd.env` set the environment that the scripts and services assume.
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] Introduce smoke tests that rerun the splitter on a synthetic bundle to
+<!-- @ngram:todo Introduce smoke tests that rerun the splitter on a synthetic bundle to -->
   ensure the rewritten fences and directory structure match expectations.
-- [ ] Consider adding a `--dry-run` flag to `stream_dialogue` so agents can
+<!-- @ngram:todo Consider adding a `--dry-run` flag to `stream_dialogue` so agents can -->
   validate payloads without modifying the graph.
-- [ ] Document `run_stack.sh` requirements (ngrok URL, frontend command) near
+<!-- @ngram:todo Document `run_stack.sh` requirements (ngrok URL, frontend command) near -->
   these docs so the helper’s contract is easier to discover.
 
 ## FLOWS

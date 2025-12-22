@@ -96,7 +96,7 @@ and replace it with a single pointer to Moment Graph documentation.
 ## TODO
 ===============================================================================
 
-- [ ] Decide whether to fully archive legacy Scene Memory docs after migration
+<!-- @ngram:todo Decide whether to fully archive legacy Scene Memory docs after migration -->
       sign-off, and document the decision in this SYNC.
 
 ===============================================================================
@@ -125,7 +125,7 @@ drifting into duplicate specifications.
 ## OPEN QUESTIONS
 ===============================================================================
 
-- [ ] Should the deprecated legacy docs be removed entirely after a future
+<!-- @ngram:todo Should the deprecated legacy docs be removed entirely after a future -->
       migration sign-off?
 
 ===============================================================================

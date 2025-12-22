@@ -1,7 +1,7 @@
 """
 ngram CLI - Memory for AI agents
 
-DOCS: docs/cli/core/PATTERNS_Why_CLI_Over_Copy.md
+DOCS: docs/ngram_cli_core/OBJECTIFS_ngram_cli_core.md
 
 Protocol for context, state, and handoffs across sessions.
 
@@ -43,6 +43,7 @@ from .sync import sync_command
 from .solve_escalations import solve_special_markers_command
 from .repair import repair_command
 from .refactor import refactor_command
+from .status_cmd import status_command
 from .repo_overview import generate_and_save as generate_overview
 from .docs_fix import docs_fix_command
 
@@ -96,10 +97,16 @@ def main():
         description="ngram - Memory for AI agents. Protocol for context, state, and handoffs."
     )
     parser.add_argument(
+        "--model",
+        choices=AGENT_CHOICES,
+        default="all",
+        help="Agent model for repair and TUI (default: all, randomly picks a provider per task)",
+    )
+    parser.add_argument(
         "--agents",
         choices=AGENT_CHOICES,
-        default="claude",
-        help="Agent provider for repair and TUI (default: claude)",
+        dest="model",
+        help=argparse.SUPPRESS,
     )
 
     subparsers = parser.add_subparsers(dest="command", help="Commands")
@@ -299,6 +306,30 @@ def main():
         help="Project directory (default: current directory)"
     )
 
+    # status command
+    status_parser = subparsers.add_parser(
+        "status",
+        help="Show module implementation progress and health"
+    )
+    status_parser.add_argument(
+        "module",
+        nargs="?",
+        type=str,
+        default=None,
+        help="Module name to show detailed status (optional, shows all if omitted)"
+    )
+    status_parser.add_argument(
+        "--dir", "-d",
+        type=Path,
+        default=Path.cwd(),
+        help="Project directory (default: current directory)"
+    )
+    status_parser.add_argument(
+        "--verbose", "-v",
+        action="store_true",
+        help="Show detailed information including doc chain files"
+    )
+
     # repair command
     repair_parser = subparsers.add_parser(
         "repair",
@@ -343,13 +374,20 @@ def main():
         "--parallel", "-p",
         type=int,
         default=5,
-        help="Number of parallel agents (default: 5, use 1 for sequential)"
+        help="Number of parallel agents (default: 5, or 6 if model is 'all')",
+    )
+    repair_parser.add_argument(
+        "--model",
+        choices=AGENT_CHOICES,
+        dest="repair_model",
+        default=None,
+        help="Agent model for repair runs (overrides global --model, default: all)",
     )
     repair_parser.add_argument(
         "--agents",
         choices=AGENT_CHOICES,
-        default="claude",
-        help="Agent provider for repair runs (default: claude)",
+        dest="repair_model",
+        help=argparse.SUPPRESS,
     )
 
     # refactor command
@@ -532,7 +570,11 @@ def main():
     elif args.command == "sync":
         exit_code = sync_command(args.dir)
         sys.exit(exit_code)
+    elif args.command == "status":
+        exit_code = status_command(args.dir, args.module, args.verbose)
+        sys.exit(exit_code)
     elif args.command == "repair":
+        agent_provider = args.repair_model or args.model
         exit_code = repair_command(
             args.dir,
             max_issues=args.max,
@@ -540,7 +582,7 @@ def main():
             depth=args.depth,
             dry_run=args.dry_run,
             parallel=args.parallel,
-            agent_provider=args.agents,
+            agent_provider=agent_provider,
         )
         sys.exit(exit_code)
     elif args.command == "refactor":
@@ -604,7 +646,7 @@ def main():
         # Launch TUI when no subcommand is given (similar to agent CLIs)
         try:
             from .tui import NgramApp
-            app = NgramApp(target_dir=Path.cwd(), agent_provider=args.agents)
+            app = NgramApp(target_dir=Path.cwd(), agent_provider=args.model)
             app.run()
             sys.exit(0)
         except ImportError as e:

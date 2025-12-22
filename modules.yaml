@@ -60,9 +60,9 @@ tools:
     - connectome_doc_bundle_splitter_and_fence_rewriter.py
     - stream_dialogue.py
     - run_stack.sh
-  notes: |\
-    Utility scripts for documentation processing, stack orchestration,\
-    and dialogue streaming. This module provides essential helpers\
+  notes: |
+    Utility scripts for documentation processing, stack orchestration,
+    and dialogue streaming. This module provides essential helpers
     for the overall ngram ecosystem.
 
 connectome_graph_api:

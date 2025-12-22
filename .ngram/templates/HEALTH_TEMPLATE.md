@@ -37,7 +37,7 @@ What to include:
 
 ## HOW TO USE THIS TEMPLATE
 
-1. Read the full doc chain first (PATTERNS → BEHAVIORS → ALGORITHM → VALIDATION → IMPLEMENTATION → SYNC).
+1. Read the full doc chain first (OBJECTIFS → BEHAVIORS → PATTERNS → ALGORITHM → VALIDATION → IMPLEMENTATION → SYNC).
 2. Read the linked implementation files to build a global mental model (entry points, dependencies, data flows).
 3. Identify what *matters* most: vital signals for humans/agents (correctness, safety, money, security, user-visible outputs, state integrity).
 4. Study each flow in IMPLEMENTATION; list available docks, then select the significant/risky/transformative docks.
@@ -55,6 +55,7 @@ What to include:
 ## CHAIN
 
 ```
+OBJECTIFS:      ./OBJECTIFS_{name}.md
 PATTERNS:        ./PATTERNS_{name}.md
 BEHAVIORS:       ./BEHAVIORS_{name}.md
 ALGORITHM:       ./ALGORITHM_{name}.md
@@ -112,6 +113,12 @@ How to fill:
 ## HEALTH INDICATORS SELECTED
 
 List the indicators that matter most. These should map directly to VALIDATION criteria and client impact.
+
+## OBJECTIVES COVERAGE
+
+| Objective | Indicators | Why These Signals Matter |
+|-----------|------------|--------------------------|
+| {Objective} | {indicator names} | {how these signals protect the objective} |
 
 ```yaml
 health_indicators:
@@ -404,17 +411,45 @@ What to include:
 
 ## KNOWN GAPS
 
-- [ ] {Missing checker}
-- [ ] {Unverified validation criteria}
+What to track here:
+- Every VALIDATION criterion not yet covered by a checker
+- Missing docs or observability required to check
 
-What to include:
-- every VALIDATION criterion not yet covered by a checker.
-- missing docks or missing observability required to check.
+<!-- @ngram:todo {Missing checker for validation criterion} -->
+<!-- @ngram:todo {Unverified validation criteria} -->
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] {Missing health check}
-- IDEA: {Health signal improvement}
-- QUESTION: {Throttling uncertainty}
+> See VIEW_Escalation for full YAML formats. Use `ngram solve-markers` to triage.
+
+<!-- @ngram:todo
+title: "{Missing health check}"
+priority: {low|medium|high|critical}
+context: |
+  {What validation criterion is uncovered}
+task: |
+  {Specific checker to implement}
+-->
+
+<!-- @ngram:proposition
+title: "{Health signal improvement}"
+priority: {1-10}
+context: |
+  {Current limitation in health coverage}
+implications: |
+  {Better observability or alerting}
+suggested_changes: |
+  {New indicators or checkers to add}
+-->
+
+<!-- @ngram:escalation
+task_name: "{Throttling or monitoring decision needed}"
+priority: {1-10}
+category: {tradeoff-needed|design-choice-needed|...}
+context: |
+  {Current monitoring state, constraints}
+questions:
+  - "{What threshold or frequency is appropriate?}"
+-->

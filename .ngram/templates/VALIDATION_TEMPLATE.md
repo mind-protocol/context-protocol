@@ -11,6 +11,7 @@ VERIFIED: {DATE} against {COMMIT}
 ## CHAIN
 
 ```
+OBJECTIFS:      ./OBJECTIFS_{name}.md
 PATTERNS:        ./PATTERNS_*.md
 BEHAVIORS:       ./BEHAVIORS_*.md
 ALGORITHM:       ./ALGORITHM_*.md
@@ -23,6 +24,25 @@ IMPL:            {path/to/main/source/file.py}
 ```
 
 > **Contract:** Read docs before modifying. After changes: update IMPL or add TODO to SYNC. Run tests.
+
+---
+
+## BEHAVIORS GUARANTEED
+
+List the BEHAVIORS this validation is necessary for and guarantees.
+
+| Behavior ID | Behavior | Why This Validation Matters |
+|-------------|----------|-----------------------------|
+| B1 | {Behavior Name} | {what this validation protects} |
+| B2 | {Behavior Name} | {what this validation protects} |
+
+---
+
+## OBJECTIVES COVERED
+
+| Objective | Validations | Rationale |
+|-----------|-------------|-----------|
+| {Objective} | V1, V2 | {why these invariants protect the objective} |
 
 ---
 
@@ -155,9 +175,36 @@ RESULT:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] {Missing test}
-- [ ] {Invariant that needs formal verification}
-- IDEA: {Additional property to test}
-- QUESTION: {Unclear validation requirement}
+> See VIEW_Escalation for full YAML formats. Use `ngram solve-markers` to triage.
+
+<!-- @ngram:todo
+title: "{Missing test or invariant needing verification}"
+priority: {low|medium|high|critical}
+context: |
+  {Why this verification is needed}
+task: |
+  {Specific test or check to add}
+-->
+
+<!-- @ngram:proposition
+title: "{Additional property to test}"
+priority: {1-10}
+context: |
+  {Why this property matters}
+implications: |
+  {Coverage improvement}
+suggested_changes: |
+  {What tests or invariants to add}
+-->
+
+<!-- @ngram:escalation
+task_name: "{Unclear validation requirement needing clarification}"
+priority: {1-10}
+category: {validation-needed|scope-needed|...}
+context: |
+  {Current validation state, ambiguity}
+questions:
+  - "{What exactly needs to be validated?}"
+-->

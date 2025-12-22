@@ -11,12 +11,14 @@ VERIFIED: {DATE} against {COMMIT}
 ## CHAIN
 
 ```
-PATTERNS:        ./PATTERNS_*.md
+OBJECTIFS:      ./OBJECTIFS_{name}.md
 THIS:            BEHAVIORS_*.md (you are here)
+PATTERNS:        ./PATTERNS_*.md
+MECHANISMS:     ./MECHANISMS_*.md (if applicable)
 ALGORITHM:       ./ALGORITHM_*.md
 VALIDATION:      ./VALIDATION_{name}.md
-IMPLEMENTATION:  ./IMPLEMENTATION_*.md
 HEALTH:          ./HEALTH_{name}.md
+IMPLEMENTATION:  ./IMPLEMENTATION_*.md
 SYNC:            ./SYNC_{name}.md
 
 IMPL:            {path/to/main/source/file.py}
@@ -52,6 +54,15 @@ GIVEN:  {precondition}
 WHEN:   {action}
 THEN:   {outcome}
 ```
+
+---
+
+## OBJECTIVES SERVED
+
+| Behavior ID | Objective | Why It Matters |
+|-------------|-----------|----------------|
+| B1 | {Objective} | {what the behavior protects or enables} |
+| B2 | {Objective} | {what the behavior protects or enables} |
 
 ---
 
@@ -121,9 +132,36 @@ INSTEAD:  {correct outcome}
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] {Open question}
-- [ ] {Behavior that needs clarification}
-- IDEA: {Potential future behavior}
-- QUESTION: {Uncertain edge case}
+> See VIEW_Escalation for full YAML formats. Use `ngram solve-markers` to triage.
+
+<!-- @ngram:todo
+title: "{Behavior that needs clarification}"
+priority: {low|medium|high|critical}
+context: |
+  {Why this behavior needs attention}
+task: |
+  {Concrete clarification or fix needed}
+-->
+
+<!-- @ngram:proposition
+title: "{Potential future behavior}"
+priority: {1-10}
+context: |
+  {Why this behavior would be valuable}
+implications: |
+  {How it changes existing behavior}
+suggested_changes: |
+  {What behaviors to add or modify}
+-->
+
+<!-- @ngram:escalation
+task_name: "{Uncertain edge case needing decision}"
+priority: {1-10}
+category: {behavior-needed|scope-needed|...}
+context: |
+  {Current behavior, unclear edge case}
+questions:
+  - "{What should happen in this case?}"
+-->

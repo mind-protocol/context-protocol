@@ -36,7 +36,7 @@ Read PRINCIPLES.md and internalize it. Then use this file for navigation.
 
 Documentation isn't an archive. It's navigation.
 
-Every module has a chain: PATTERNS → BEHAVIORS → ALGORITHM → VALIDATION → IMPLEMENTATION → HEALTH → SYNC.
+Every module has a chain: OBJECTIFS → BEHAVIORS → PATTERNS → ALGORITHM → VALIDATION → IMPLEMENTATION → HEALTH → SYNC.
 Each file explains something different. You load what you need for your task.
 
 SYNC files track current state. They're how you understand what's happening and how you communicate to the next agent (or yourself in a future session).
@@ -100,6 +100,7 @@ After changes, update SYNC files:
 
 | Pattern | Purpose | When to Load |
 |---------|---------|--------------|
+| `OBJECTIFS_*.md` | Ranked goals & tradeoffs — WHAT we optimize | Before deciding tradeoffs |
 | `PATTERNS_*.md` | Design philosophy & scope — WHY this shape, WHAT's in/out | Before modifying module |
 | `BEHAVIORS_*.md` | Observable effects — WHAT it should do | When behavior unclear |
 | `ALGORITHM_*.md` | Procedures — HOW it works (pseudocode) | When logic unclear |
@@ -114,6 +115,51 @@ After changes, update SYNC files:
 |---------|---------|--------------|
 | `CONCEPT_*.md` | Cross-cutting idea — WHAT it means | When concept spans modules |
 | `TOUCHES_*.md` | Index — WHERE concept appears | Finding related code |
+
+---
+
+## MARKERS: HUMAN-AGENT COMMUNICATION
+
+Markers bridge the gap between agent execution and human judgment. Use them to surface blockers, suggestions, and tasks.
+
+### Marker Types
+
+| Marker | When to Use | Priority |
+|--------|-------------|----------|
+| `@ngram:escalation` | Blocked by missing human decision | warning |
+| `@ngram:proposition` | Suggesting improvements or refactors | info |
+| `@ngram:todo` | Actionable task needs doing | info |
+
+### Quick Format
+
+```yaml
+@ngram:todo
+title: "{Task description}"
+priority: {low|medium|high|critical}
+context: |
+  {Why this task exists}
+task: |
+  {Concrete work to perform}
+```
+
+### Commands
+
+```bash
+ngram solve-markers    # Triage all markers by priority
+ngram doctor           # Detects markers as issues
+```
+
+### Full Documentation
+
+- **VIEW**: `views/VIEW_Escalation_How_To_Handle_Vague_Tasks_Missing_Information_And_Complex_Non-Obvious_Problems.md`
+- **SKILL**: `skills/SKILL_Solve_Markers_Triage_Escalations_Propositions_And_Todos.md`
+
+### Rules
+
+- Escalations MUST have human response before removal
+- Propositions MUST be explicitly approved or rejected
+- Todos MUST be completed with evidence before removal
+- Never delete markers without resolution
 
 ---
 

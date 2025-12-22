@@ -11,11 +11,14 @@ VERIFIED: {DATE} against {COMMIT}
 ## CHAIN
 
 ```
+OBJECTIFS:      ./OBJECTIFS_{name}.md
+BEHAVIORS:      ./BEHAVIORS_*.md
 THIS:            PATTERNS_*.md (you are here)
-BEHAVIORS:       ./BEHAVIORS_*.md
+MECHANISMS:     ./MECHANISMS_*.md (if applicable)
 ALGORITHM:       ./ALGORITHM_*.md
 VALIDATION:      ./VALIDATION_{name}.md
 HEALTH:          ./HEALTH_{name}.md
+IMPLEMENTATION:  ./IMPLEMENTATION_{name}.md
 SYNC:            ./SYNC_{name}.md
 
 IMPL:            {path/to/main/source/file.py}
@@ -52,6 +55,17 @@ IMPL:            {path/to/main/source/file.py}
 {What is the core design approach?}
 {What shape does the solution take?}
 {What's the key insight that makes this work?}
+
+---
+
+## BEHAVIORS SUPPORTED
+
+- {Behavior ID} — {short explanation of how this pattern enables it}
+- {Behavior ID} — {short explanation}
+
+## BEHAVIORS PREVENTED
+
+- {Anti-behavior ID} — {short explanation of how this pattern blocks it}
 
 ---
 
@@ -117,9 +131,36 @@ IMPL:            {path/to/main/source/file.py}
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] {Open question or todo}
-- [ ] {Another item}
-- IDEA: {Future possibility}
-- QUESTION: {Unresolved uncertainty}
+> See VIEW_Escalation for full YAML formats. Use `ngram solve-markers` to triage.
+
+<!-- @ngram:todo
+title: "{Actionable task}"
+priority: {low|medium|high|critical}
+context: |
+  {Why this task exists and what it unblocks}
+task: |
+  {Concrete work to perform}
+-->
+
+<!-- @ngram:proposition
+title: "{Improvement idea}"
+priority: {1-10}
+context: |
+  {Current situation, why this is beneficial}
+implications: |
+  {Impacts on existing code}
+suggested_changes: |
+  {High-level description of proposed changes}
+-->
+
+<!-- @ngram:escalation
+task_name: "{Decision needed with scope + goal}"
+priority: {1-10}
+category: {objective-needed|context-needed|design-choice-needed|...}
+context: |
+  {Current system, where the issue appears, why it matters}
+questions:
+  - "{Direct question requiring human decision}"
+-->

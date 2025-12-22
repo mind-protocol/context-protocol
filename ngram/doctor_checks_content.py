@@ -7,7 +7,7 @@ Health checks that analyze file content for issues:
 - New undocumented code (code fresher than docs)
 - Recent log errors
 
-DOCS: docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md
+DOCS: docs/cli/core/IMPLEMENTATION_CLI_Code_Architecture/overview/IMPLEMENTATION_Overview.md
 """
 
 import re
@@ -476,15 +476,229 @@ def doctor_check_long_strings(target_dir: Path, config: DoctorConfig) -> List[Do
 
 from .solve_escalations import ESCALATION_TAGS, PROPOSITION_TAGS, IGNORED_FILES
 
+
+def _strip_code_blocks(content: str) -> str:
+    """Remove code blocks (```...```) from content to avoid false positives."""
+    # Remove fenced code blocks
+    return re.sub(r'```[\s\S]*?```', '', content)
+
+
+def _extract_questions_from_text(text: str, is_code: bool = False) -> List[str]:
+    """Extract sentences ending with '?' from text.
+
+    For code files, only looks at comments.
+    """
+    questions = []
+
+    if is_code:
+        # Extract comments from code
+        # Python: # comments and """ docstrings
+        # JS/TS: // comments and /* */ blocks
+        comment_patterns = [
+            r'#\s*(.+\?)',  # Python single-line comments
+            r'//\s*(.+\?)',  # JS/TS single-line comments
+            r'/\*[\s\S]*?\*/',  # Multi-line comments
+            r'"""[\s\S]*?"""',  # Python docstrings
+            r"'''[\s\S]*?'''",  # Python docstrings
+        ]
+
+        for pattern in comment_patterns:
+            matches = re.findall(pattern, text)
+            for match in matches:
+                # Extract question sentences
+                q_matches = re.findall(r'[^.!?\n]*\?', match if isinstance(match, str) else match)
+                questions.extend(q.strip() for q in q_matches if len(q.strip()) > 10)
+    else:
+        # For docs, strip code blocks first
+        clean_text = _strip_code_blocks(text)
+        # Find sentences ending with ?
+        q_matches = re.findall(r'[^.!?\n]*\?', clean_text)
+        questions.extend(q.strip() for q in q_matches if len(q.strip()) > 10)
+
+    return questions
+
+
+def doctor_check_legacy_markers(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
+    """Check for legacy marker formats and unresolved questions.
+
+    Detects:
+    - Old GAPS / IDEAS / QUESTIONS section headers
+    - Legacy `- [ ]` todo items (should be @ngram:todo)
+    - Legacy `- IDEA:` items (should be @ngram:proposition)
+    - Legacy `- QUESTION:` items (should be @ngram:escalation)
+    - Unresolved questions (sentences ending with ?) in docs and code comments
+    """
+    if "legacy_markers" in config.disabled_checks:
+        return []
+
+    issues = []
+    docs_dir = target_dir / "docs"
+
+    # Legacy patterns to detect
+    legacy_patterns = {
+        "GAPS_SECTION": (r'^## GAPS / IDEAS / QUESTIONS', "Legacy GAPS section header"),
+        "LEGACY_TODO": (r'^- \[ \] ', "Legacy todo format (use @ngram:todo)"),
+        "LEGACY_IDEA": (r'^- IDEA:', "Legacy IDEA format (use @ngram:proposition)"),
+        "LEGACY_QUESTION": (r'^- QUESTION:', "Legacy QUESTION format (use @ngram:escalation)"),
+    }
+
+    # Check docs for legacy markers and questions
+    if docs_dir.exists():
+        for doc_file in docs_dir.rglob("*.md"):
+            if should_ignore_path(doc_file, config.ignore, target_dir):
+                continue
+            # Skip templates and archives
+            if "TEMPLATE" in doc_file.name or "_archive_" in doc_file.name:
+                continue
+
+            try:
+                content = doc_file.read_text(errors="ignore")
+                rel_path = str(doc_file.relative_to(target_dir))
+
+                # Check for legacy patterns
+                for marker_type, (pattern, message) in legacy_patterns.items():
+                    if re.search(pattern, content, re.MULTILINE):
+                        issues.append(DoctorIssue(
+                            issue_type="LEGACY_MARKER",
+                            severity="warning",
+                            path=rel_path,
+                            message=message,
+                            details={"marker_type": marker_type},
+                            suggestion="Convert to @ngram:todo, @ngram:proposition, or @ngram:escalation format"
+                        ))
+
+                # Check for unresolved questions (not in code blocks or MARKERS sections)
+                # Remove MARKERS sections and Discussion sections before scanning
+                clean_content = _strip_code_blocks(content)
+                # Remove ## MARKERS sections (they're intentional placeholders)
+                clean_content = re.sub(r'^## MARKERS\n[\s\S]*?(?=^## |\Z)', '', clean_content, flags=re.MULTILINE)
+                # Remove Discussion sections (questions there are intentional)
+                clean_content = re.sub(r'^#+ Discussion\n[\s\S]*?(?=^#+ |\Z)', '', clean_content, flags=re.MULTILINE | re.IGNORECASE)
+                clean_content = re.sub(r'^#+ Open Questions\n[\s\S]*?(?=^#+ |\Z)', '', clean_content, flags=re.MULTILINE | re.IGNORECASE)
+
+                # Find sentences ending with ?
+                q_matches = re.findall(r'[^.!?\n]*\?', clean_content)
+                questions = [q.strip() for q in q_matches if len(q.strip()) > 10]
+
+                # Filter out rhetorical/documentation questions
+                skip_patterns = [
+                    r'^what is',  # Definitional
+                    r'^how to',   # Tutorial
+                    r'^why ',     # Explanatory
+                    r'^when ',    # Conditional
+                    r'^where ',   # Locational
+                    r'example',   # Example questions
+                    r'<!--',      # HTML comments (already markers)
+                ]
+
+                actionable_questions = []
+                for q in questions:
+                    q_lower = q.lower()
+                    # Skip if it's a documentation/rhetorical question
+                    if any(re.search(pat, q_lower) for pat in skip_patterns):
+                        continue
+                    # Skip if it's already in a marker
+                    if '@ngram:' in q:
+                        continue
+                    # Skip very short questions
+                    if len(q) < 20:
+                        continue
+                    actionable_questions.append(q)
+
+                if actionable_questions:
+                    issues.append(DoctorIssue(
+                        issue_type="UNRESOLVED_QUESTION",
+                        severity="info",
+                        path=rel_path,
+                        message=f"{len(actionable_questions)} unresolved question(s)",
+                        details={
+                            "questions": actionable_questions[:5],  # Limit to first 5
+                            "total_count": len(actionable_questions),
+                        },
+                        suggestion="Investigate and convert to @ngram:escalation or @ngram:proposition, or resolve directly"
+                    ))
+
+            except Exception:
+                pass
+
+    # Check code files for questions in comments
+    code_extensions = {".py", ".js", ".ts", ".tsx", ".jsx"}
+
+    for ext in code_extensions:
+        for code_file in target_dir.rglob(f"*{ext}"):
+            if should_ignore_path(code_file, config.ignore, target_dir):
+                continue
+            # Skip test files and prompts
+            if "test" in code_file.name.lower() or "prompt" in str(code_file).lower():
+                continue
+            # Skip node_modules, .venv, etc.
+            if any(p in str(code_file) for p in ["node_modules", ".venv", "__pycache__", ".git"]):
+                continue
+
+            try:
+                content = code_file.read_text(errors="ignore")
+                rel_path = str(code_file.relative_to(target_dir))
+
+                # Extract questions from comments only
+                questions = _extract_questions_from_text(content, is_code=True)
+
+                # Filter out trivial questions
+                actionable_questions = [q for q in questions if len(q) > 20 and '@ngram:' not in q]
+
+                if actionable_questions:
+                    issues.append(DoctorIssue(
+                        issue_type="UNRESOLVED_QUESTION",
+                        severity="info",
+                        path=rel_path,
+                        message=f"{len(actionable_questions)} question(s) in comments",
+                        details={
+                            "questions": actionable_questions[:3],  # Limit to first 3
+                            "total_count": len(actionable_questions),
+                        },
+                        suggestion="Investigate: fix directly if clear, or convert to @ngram:escalation"
+                    ))
+
+            except Exception:
+                pass
+
+    return issues
+
+
+def _extract_marker_priority(content: str, marker_tags: tuple) -> int:
+    """Extract priority from marker YAML. Returns 0-10 (higher = more urgent)."""
+    for tag in marker_tags:
+        if tag not in content:
+            continue
+        # Find the marker section
+        start = content.find(tag)
+        end = min(start + 500, len(content))  # Look at next 500 chars
+        section = content[start:end]
+
+        # Try to find priority field
+        # Format: priority: 8 or priority: high
+        priority_match = re.search(r'priority:\s*(\d+|low|medium|high|critical)', section, re.IGNORECASE)
+        if priority_match:
+            val = priority_match.group(1).lower()
+            if val.isdigit():
+                return int(val)
+            # Convert text priorities to numeric
+            return {"critical": 10, "high": 8, "medium": 5, "low": 2}.get(val, 5)
+    return 5  # Default priority
+
+
 def doctor_check_special_markers(target_dir: Path, config: DoctorConfig) -> List[DoctorIssue]:
-    """Check for special markers that need attention (escalations, propositions)."""
+    """Check for special markers that need attention (escalations, propositions, todos).
+
+    Extracts priority from marker YAML to order results.
+    """
     issues = []
 
     all_marker_info = [
         ("ESCALATION", ESCALATION_TAGS, "Escalation marker needs decision"),
         ("PROPOSITION", PROPOSITION_TAGS, "Agent proposition needs review"),
-        ("TODO", TODO_TAGS, "Todo marker needs a task"),
+        ("TODO", TODO_TAGS, "Todo marker needs attention"),
     ]
+    # Base severity by type - escalations are warnings, others are info
     severity_by_type = {
         "ESCALATION": "warning",
         "PROPOSITION": "info",
@@ -512,16 +726,37 @@ def doctor_check_special_markers(target_dir: Path, config: DoctorConfig) -> List
                 continue
             if not any(tag in content for tag in marker_tags):
                 continue
+
+            # Extract priority from marker YAML
+            priority = _extract_marker_priority(content, marker_tags)
+
+            # High priority markers (7+) get elevated severity
+            severity = severity_by_type.get(issue_type, "info")
+            if priority >= 7:
+                severity = "warning" if severity == "info" else "critical"
+
+            # Find title if available
+            title_match = re.search(r'(?:title|task_name):\s*["\']?([^"\'\n]+)', content)
+            title = title_match.group(1).strip() if title_match else ""
+
+            message = f"{message_template} (priority: {priority})"
+            if title:
+                message = f"{title[:60]} (priority: {priority})"
+
             issues.append(DoctorIssue(
                 issue_type=issue_type,
-                severity=severity_by_type.get(issue_type, "info"),
+                severity=severity,
                 path=rel_path,
-                message=message_template,
+                message=message,
                 details={
                     "markers": [tag for tag in marker_tags if tag in content],
+                    "priority": priority,
+                    "title": title,
                     "content_snippet": content[content.find(next(tag for tag in marker_tags if tag in content)):][:200] + "..." if any(tag in content for tag in marker_tags) else ""
                 },
                 suggestion=f"Review and resolve {issue_type.lower()} in this file"
             ))
 
+    # Sort by priority (highest first) within each issue type
+    issues.sort(key=lambda x: (-x.details.get("priority", 5), x.issue_type))
     return issues

@@ -84,3 +84,39 @@ Update TOUCHES when:
 - A module changes how it uses this concept
 - Dependencies between modules change
 - New interfaces are added
+
+---
+
+## MARKERS
+
+> See VIEW_Escalation for full YAML formats. Use `ngram solve-markers` to triage.
+
+<!-- @ngram:todo
+title: "{Missing module or interface coverage}"
+priority: {low|medium|high|critical}
+context: |
+  {What's not tracked yet}
+task: |
+  {Specific additions needed}
+-->
+
+<!-- @ngram:proposition
+title: "{Concept touchpoint improvement}"
+priority: {1-10}
+context: |
+  {Why this would improve tracking}
+implications: |
+  {Better cross-module coordination}
+suggested_changes: |
+  {New touchpoints or dependencies to track}
+-->
+
+<!-- @ngram:escalation
+task_name: "{Cross-module conflict needing resolution}"
+priority: {1-10}
+category: {inconsistency|design-choice-needed|...}
+context: |
+  {Modules disagreeing about concept usage}
+questions:
+  - "{Which module's interpretation is canonical?}"
+-->

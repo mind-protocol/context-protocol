@@ -174,7 +174,9 @@ Agents must not guess when requirements are vague or designs are ambiguous. Sile
 
 - **Escalations** (`@ngram&#58;escalation`): Use when progress is blocked by a missing decision. Provide context, options, and recommendations.
 - **Propositions** (`@ngram&#58;proposition`): Use to suggest improvements, refactors, or new features. Explain why the idea matters and its implications.
-- **Todos** (`@ngram&#58;todo`): Use to capture actionable tasks surfaced by agents or managers (especially during reviews).
+- **Todos** (`@ngram&#58;todo`): Use to capture actionable tasks surfaced by agents or managers. Include what needs to be done, priority, and context for why it matters.
+
+**See VIEW_Escalation for full YAML formats.** Each marker supports structured fields for searchability and triaging via `ngram solve-markers`.
 
 **Keep humans in the loop.**
 

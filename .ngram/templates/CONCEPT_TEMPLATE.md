@@ -65,3 +65,39 @@ CREATED: {DATE}
 - `TOUCHES_{Where_This_Appears}.md` — where this concept manifests in code
 - {related concept docs}
 - {related module docs}
+
+---
+
+## MARKERS
+
+> See VIEW_Escalation for full YAML formats. Use `ngram solve-markers` to triage.
+
+<!-- @ngram:todo
+title: "{Concept clarification needed}"
+priority: {low|medium|high|critical}
+context: |
+  {Why this concept needs work}
+task: |
+  {Specific clarification to make}
+-->
+
+<!-- @ngram:proposition
+title: "{Concept refinement or expansion}"
+priority: {1-10}
+context: |
+  {Why this would improve understanding}
+implications: |
+  {How it affects module implementations}
+suggested_changes: |
+  {Properties or relationships to add}
+-->
+
+<!-- @ngram:escalation
+task_name: "{Concept definition uncertainty}"
+priority: {1-10}
+category: {naming-needed|scope-needed|...}
+context: |
+  {Current definition, ambiguity}
+questions:
+  - "{What exactly does this concept mean?}"
+-->

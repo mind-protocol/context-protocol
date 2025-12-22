@@ -11,11 +11,14 @@ VERIFIED: {DATE} against {COMMIT}
 ## CHAIN
 
 ```
-PATTERNS:        ./PATTERNS_*.md
+OBJECTIFS:      ./OBJECTIFS_{name}.md
 BEHAVIORS:       ./BEHAVIORS_*.md
+PATTERNS:        ./PATTERNS_*.md
+MECHANISMS:     ./MECHANISMS_*.md (if applicable)
 THIS:            ALGORITHM_*.md (you are here)
 VALIDATION:      ./VALIDATION_{name}.md
 HEALTH:          ./HEALTH_{name}.md
+IMPLEMENTATION:  ./IMPLEMENTATION_{name}.md
 SYNC:            ./SYNC_{name}.md
 
 IMPL:            {path/to/main/source/file.py}
@@ -29,6 +32,14 @@ IMPL:            {path/to/main/source/file.py}
 
 {High-level description of what this algorithm does}
 {One paragraph summary of the approach}
+
+---
+
+## OBJECTIVES AND BEHAVIORS
+
+| Objective | Behaviors Supported | Why This Algorithm Matters |
+|-----------|---------------------|----------------------------|
+| {Objective} | {Behavior IDs} | {what this algorithm guarantees} |
 
 ---
 
@@ -147,10 +158,36 @@ ELSE:
 
 ---
 
-## GAPS / IDEAS / QUESTIONS
+## MARKERS
 
-- [ ] {Algorithm improvement to consider}
-- [ ] {Unclear step that needs work}
-- IDEA: {Optimization opportunity}
-- IDEA: {Alternative approach}
-- QUESTION: {Design question}
+> See VIEW_Escalation for full YAML formats. Use `ngram solve-markers` to triage.
+
+<!-- @ngram:todo
+title: "{Algorithm improvement to consider}"
+priority: {low|medium|high|critical}
+context: |
+  {Why this improvement matters}
+task: |
+  {Concrete algorithm change to make}
+-->
+
+<!-- @ngram:proposition
+title: "{Optimization opportunity or alternative approach}"
+priority: {1-10}
+context: |
+  {Current algorithm limitations}
+implications: |
+  {Performance/correctness impacts}
+suggested_changes: |
+  {Proposed algorithm modifications}
+-->
+
+<!-- @ngram:escalation
+task_name: "{Algorithm design question needing decision}"
+priority: {1-10}
+category: {design-choice-needed|tradeoff-needed|...}
+context: |
+  {Current approach, alternatives considered}
+questions:
+  - "{Direct question requiring human decision}"
+-->

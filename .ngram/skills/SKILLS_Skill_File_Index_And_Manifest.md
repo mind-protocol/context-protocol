@@ -20,3 +20,4 @@ In this package:
 - `SKILL_Define_And_Verify_Health_Signals_Mapped_To_Validation_Invariants.md`
 - `SKILL_Review_Evaluate_Changes_And_Produce_Auditable_Report.md`
 - `SKILL_Update_Module_Sync_State_And_Record_Markers.md`
+- `SKILL_Solve_Markers_Triage_Escalations_Propositions_And_Todos.md`

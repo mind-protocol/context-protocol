@@ -276,3 +276,11 @@ FIX:    Check strength retention, link health
 <!-- @ngram:todo Define thresholds for context relevance -->
 <!-- @ngram:todo Specify agent differentiation metrics -->
 <!-- @ngram:todo Design bootstrap ingest process -->
+
+<!-- @ngram:escalation B9 assumes Spaces don't overlap — what if agent is in multiple Spaces that both have hot Moments? Which triggers first? -->
+<!-- @ngram:escalation B3 "goals complete naturally" — what if goal energy never decays because it keeps getting referenced? Stuck goal problem. -->
+<!-- @ngram:escalation B11 "human focus drives priority" — but human might focus on wrong thing. Should agents be able to surface competing priorities? -->
+
+<!-- @ngram:proposition B5 differentiation could be measured — track "specialization index" as distance from average agent belief vector -->
+<!-- @ngram:proposition B4 resurface could be proactive — agent notices pattern match with cold high-strength Narrative, brings it up -->
+<!-- @ngram:proposition B10 bootstrap could include "seed agents" — pre-trained on similar projects to accelerate differentiation -->

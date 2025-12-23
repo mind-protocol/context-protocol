@@ -510,3 +510,11 @@ failure_mode: |
 <!-- @ngram:todo Write health checkers for energy/strength monitoring -->
 <!-- @ngram:todo Define HOT_THRESHOLD, ACTIVATION_THRESHOLD constants -->
 <!-- @ngram:todo Define MAX_CONTEXT_NARRATIVES constant -->
+
+<!-- @ngram:escalation V-NGRAM-ENERGY-DECAYS vs goals that stay active — need to distinguish "ongoing goal" from "stuck goal". How? -->
+<!-- @ngram:escalation V-NGRAM-STRENGTH-PERSISTS may cause unbounded growth — need to define max strength or soft cap? -->
+<!-- @ngram:escalation V-NGRAM-AGENT-TRIGGERS-ON-HOT doesn't specify priority — if 3 Moments are hot, which one? Highest energy? Random? -->
+
+<!-- @ngram:proposition Add invariant V-NGRAM-NO-ORPHAN-NARRATIVES — every Narrative should be in at least one Space -->
+<!-- @ngram:proposition Add invariant V-NGRAM-HUMAN-GENERATES-MOST — human energy generation should be measurably higher than agents to ensure steering -->
+<!-- @ngram:proposition Add health check for "agent diversity" — alert if all agents converge to same beliefs/spaces -->

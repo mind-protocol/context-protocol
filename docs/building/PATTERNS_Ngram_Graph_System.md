@@ -134,3 +134,19 @@ No task queues. No explicit assignment. Hot Narratives in an agent's Space = wor
 - **Space granularity** — per module? per objective? per feature? TBD through use.
 - **Agent spawn** — fixed 6? dynamic based on load? Start fixed, evolve.
 - **Narrative lifecycle** — when does goal become "done"? Physics (energy → 0) or explicit?
+
+---
+
+## MARKERS
+
+<!-- @ngram:escalation Multiple agents triggered by same Moment — who goes first? Energy split? Sequential? Race condition risk? -->
+<!-- @ngram:escalation Narrative in multiple Spaces via multiple contains links — does it appear in both contexts? Energy split between Spaces? -->
+<!-- @ngram:escalation Bootstrap problem — first Moment creation before agents exist. Human seeds initial state, but how does first agent trigger happen? -->
+<!-- @ngram:escalation Agent "leaving" a Space — explicit move action? Or just add to new Space? Can agent be in 0 Spaces? -->
+<!-- @ngram:escalation Strength accumulation without bound — over years, does everything become max strength? Need soft cap or decay? -->
+
+<!-- @ngram:proposition Use embeddings to auto-create relates links between semantically similar Narratives -->
+<!-- @ngram:proposition Track agent "personality vector" derived from their accumulated beliefs/memories for observability -->
+<!-- @ngram:proposition Explicit "focus" command where human enters Space (like cd) to concentrate energy injection -->
+<!-- @ngram:proposition "Narrative merge" when two Narratives become redundant — physics-driven consolidation? -->
+<!-- @ngram:proposition Agent can "flag" a Narrative for human attention by boosting its energy artificially -->

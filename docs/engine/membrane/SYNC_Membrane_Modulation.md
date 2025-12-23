@@ -102,6 +102,6 @@ ngram validate
 
 | What | Where |
 |------|-------|
-| Pattern | `docs/engine/membrane/PATTERN_Membrane_Modulation.md` |
+| Pattern | `docs/engine/membrane/PATTERNS_Membrane_Modulation.md` |
 | Behaviors | `docs/engine/membrane/BEHAVIORS_Membrane_Modulation.md` |
 | Scoping | `docs/engine/membrane/PATTERNS_Membrane_Scoping.md` |

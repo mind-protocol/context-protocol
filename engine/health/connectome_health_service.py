@@ -6,15 +6,19 @@ Aggregates health signals from ALL systems:
 2. Physics tick metrics (energy flow, completions)
 3. Attention split stats (sink set size, allocations)
 4. Contradiction pressure (narrative conflict values)
-5. Project doctor health (optional, if available)
+5. Physics health checkers (energy conservation, link state, etc.)
+6. Project doctor health (optional, if available)
 
 DOCS: docs/connectome/health/HEALTH_Connectome_Live_Signals.md
 """
 
 import time
+import logging
 from dataclasses import dataclass, field, asdict
 from typing import Dict, List, Optional, Any
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -58,6 +62,24 @@ class StatusInfo:
 
 
 @dataclass
+class PhysicsIndicator:
+    """Single physics health indicator."""
+    name: str
+    status: str  # ok, warn, error, unknown
+    message: str
+    details: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class PhysicsHealth:
+    """Physics health checker results."""
+    overall: str = "unknown"  # ok, warn, error, unknown
+    indicators: List[PhysicsIndicator] = field(default_factory=list)
+    graph_name: str = ""
+    checked_at: int = 0
+
+
+@dataclass
 class ConnectomeHealthPayload:
     """Full health payload matching SSE event format."""
     ts: int = 0
@@ -68,6 +90,7 @@ class ConnectomeHealthPayload:
     counters: Counters = field(default_factory=Counters)
     attention: AttentionStats = field(default_factory=AttentionStats)
     pressure: PressureStats = field(default_factory=PressureStats)
+    physics: PhysicsHealth = field(default_factory=PhysicsHealth)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -90,6 +113,12 @@ class ConnectomeHealthPayload:
             "pressure": {
                 "contradiction": self.pressure.contradiction,
                 "top_edges": self.pressure.top_edges,
+            },
+            "physics": {
+                "overall": self.physics.overall,
+                "indicators": [asdict(ind) for ind in self.physics.indicators],
+                "graph_name": self.physics.graph_name,
+                "checked_at": self.physics.checked_at,
             },
         }
 
@@ -115,11 +144,15 @@ class ConnectomeHealthService:
         self._attention = AttentionStats()
         self._pressure = PressureStats()
         self._counters = Counters()
+        self._physics: Optional[PhysicsHealth] = None
+        self._physics_graph: str = "test"  # Default graph for physics checks
         self._playthrough_id = ""
         self._place_id = ""
         self._last_interrupt: Optional[Dict[str, Any]] = None
         self._interrupt_history: List[int] = []  # timestamps for rate calc
         self._last_focus_change: int = 0
+        self._physics_cache_ttl: int = 10  # Cache physics results for 10 seconds
+        self._physics_last_check: int = 0
 
     def set_context(self, playthrough_id: str, place_id: str):
         """Set current playthrough/place context."""
@@ -176,8 +209,68 @@ class ConnectomeHealthService:
         elif violation_type == "async_epoch":
             self._counters.async_epoch_mismatch += 1
 
+    def set_physics_graph(self, graph_name: str):
+        """Set which graph to run physics health checks on."""
+        self._physics_graph = graph_name
+        self._physics = None  # Invalidate cache
+
+    def _fetch_physics_health(self) -> PhysicsHealth:
+        """Fetch physics health from the physics health checker system."""
+        now = int(time.time())
+
+        # Use cached result if recent
+        if self._physics and (now - self._physics_last_check) < self._physics_cache_ttl:
+            return self._physics
+
+        try:
+            from engine.physics.health.checker import run_all_checks
+
+            # Run all physics health checks
+            aggregate = run_all_checks(graph_name=self._physics_graph)
+
+            # Convert results to indicators
+            indicators = []
+            for result in aggregate.checks:
+                status = result.status.value.lower()
+                indicators.append(PhysicsIndicator(
+                    name=result.checker_name,
+                    status=status,
+                    message=result.message,
+                    details=result.details or {},
+                ))
+
+            overall = aggregate.status.value.lower()
+
+            self._physics = PhysicsHealth(
+                overall=overall,
+                indicators=indicators,
+                graph_name=self._physics_graph,
+                checked_at=now,
+            )
+            self._physics_last_check = now
+
+        except Exception as e:
+            logger.warning(f"Failed to fetch physics health: {e}")
+            self._physics = PhysicsHealth(
+                overall="unknown",
+                indicators=[PhysicsIndicator(
+                    name="physics_check",
+                    status="unknown",
+                    message=f"Check failed: {str(e)[:100]}",
+                    details={},
+                )],
+                graph_name=self._physics_graph,
+                checked_at=now,
+            )
+            self._physics_last_check = now
+
+        return self._physics
+
     def get_health(self) -> ConnectomeHealthPayload:
         """Get current health payload."""
+        # Fetch physics health
+        physics = self._fetch_physics_health()
+
         # Compute status
         notes = []
         state = "OK"
@@ -194,11 +287,25 @@ class ConnectomeHealthService:
             score = 0.0
             notes.append(f"DMZ violations: {self._counters.dmz_violation_attempts}")
 
+        # Physics errors = ERROR
+        if physics.overall == "error" and state != "ERROR":
+            state = "ERROR"
+            score = min(score, 0.3)
+            error_count = sum(1 for ind in physics.indicators if ind.status == "error")
+            notes.append(f"Physics errors: {error_count}")
+
         # Async mismatches = WARN
         if self._counters.async_epoch_mismatch > 0 and state != "ERROR":
             state = "WARN"
             score = min(score, 0.7)
             notes.append(f"Async epoch mismatches: {self._counters.async_epoch_mismatch}")
+
+        # Physics warnings = WARN
+        if physics.overall == "warn" and state == "OK":
+            state = "WARN"
+            score = min(score, 0.8)
+            warn_count = sum(1 for ind in physics.indicators if ind.status == "warn")
+            notes.append(f"Physics warnings: {warn_count}")
 
         # High pressure = WARN
         if self._pressure.contradiction > 0.8 and state == "OK":
@@ -218,6 +325,7 @@ class ConnectomeHealthService:
             counters=self._counters,
             attention=self._attention,
             pressure=self._pressure,
+            physics=physics,
         )
 
 

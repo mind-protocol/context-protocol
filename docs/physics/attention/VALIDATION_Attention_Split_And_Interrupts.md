@@ -11,28 +11,18 @@ VERIFIED: 2025-12-20 against local tree
 ## CHAIN
 
 ```
-PATTERNS:
-  - ./PATTERNS_Attention_Energy_Split.md
-  - ../../engine/moment-graph-engine/PATTERNS_Player_DMZ.md
-  - ../../engine/moment-graph-engine/PATTERNS_Void_Pressure.md
-  - ../../engine/moment-graph-engine/PATTERNS_Simultaneity_And_Contradiction.md
-  - ../../engine/moment-graph-engine/PATTERNS_Instant_Traversal_Moment_Graph.md
-
-BEHAVIORS:
-  - ./BEHAVIORS_Attention_Split_And_Interrupts.md
-  - ../../engine/membrane/BEHAVIORS_Membrane_Modulation.md
-
-THIS:
-  - VALIDATION_Attention_Split_And_Interrupts.md
-
-IMPL:
-  - ../../../engine/physics/attention_split_sink_mass_distribution_mechanism.py
-  - ../../../engine/physics/tick.py
-  - ../../../engine/moment_graph/surface.py
-  - ../../../engine/moment_graph/traversal.py
-  - ../../../engine/moment_graph/queries.py
-  - ../../../engine/infrastructure/canon/canon_holder.py
-  - ../../../engine/world_builder/*
+PATTERNS:        ./PATTERNS_Attention_Energy_Split.md
+                 ../../engine/moment-graph-engine/PATTERNS_Instant_Traversal_Moment_Graph.md
+BEHAVIORS:       ./BEHAVIORS_Attention_Split_And_Interrupts.md
+                 ../../engine/membrane/BEHAVIORS_Membrane_Modulation.md
+THIS:            VALIDATION_Attention_Split_And_Interrupts.md
+IMPL:            ../../../engine/physics/attention_split_sink_mass_distribution_mechanism.py
+                 ../../../engine/physics/tick.py
+                 ../../../engine/moment_graph/surface.py
+                 ../../../engine/moment_graph/traversal.py
+                 ../../../engine/moment_graph/queries.py
+                 ../../../engine/infrastructure/canon/canon_holder.py
+                 ../../../engine/world_builder/*
 ```
 
 ---

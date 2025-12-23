@@ -10,7 +10,7 @@ CREATED: 2025-12-20
 ## CHAIN
 
 ```
-THIS:            PATTERN_Membrane_Modulation.md (you are here)
+THIS:            PATTERNS_Membrane_Modulation.md (you are here)
 BEHAVIORS:       ./BEHAVIORS_Membrane_Modulation.md
 ALGORITHM:       ./ALGORITHM_Membrane_Modulation.md
 VALIDATION:      ./VALIDATION_Membrane_Modulation.md

@@ -21,35 +21,18 @@ This HEALTH layer is **diagnostic, not corrective**:
 ## CHAIN
 
 ```
-OBJECTIVES:
-  - ./OBJECTIVES_Connectome_Health.md
-
-PATTERNS:
-  - PATTERNS_Attention_Energy_Split.md
-  - PATTERNS_Interrupt_By_Focus_Reconfiguration.md
-  - PATTERNS_Void_Pressure.md
-  - PATTERNS_Player_DMZ.md
-  - PATTERNS_Simultaneity_And_Contradiction.md
-  - PATTERNS_Membrane_Modulation.md
-  - PATTERNS_Membrane_Scoping.md
-
-BEHAVIORS:
-  - BEHAVIORS_Attention_Split_And_Interrupts.md
-
-MECHANISMS:
-  - MECHANISMS_Attention_Energy_Split.md
-  - MECHANISMS_Primes_Lag_Decay.md
-  - MECHANISMS_Contradiction_Pressure.md
-
-VALIDATION:
-  - VALIDATION_Attention_Split_And_Interrupts.md
-
-THIS:
-  - HEALTH_Connectome_Live_Signals.md
-
-IMPL:
-  - app/connectome/components/connectome_health_panel.tsx
-  - app/connectome/components/connectome_page_shell_route_layout_and_control_surface.tsx
+OBJECTIVES:      ./OBJECTIVES_Connectome_Health.md
+PATTERNS:        ../../physics/attention/PATTERNS_Attention_Energy_Split.md
+                 ../../engine/membrane/PATTERNS_Membrane_Modulation.md
+                 ../../engine/membrane/PATTERNS_Membrane_Scoping.md
+BEHAVIORS:       ../../physics/attention/BEHAVIORS_Attention_Split_And_Interrupts.md
+MECHANISMS:      ../../physics/mechanisms/MECHANISMS_Attention_Energy_Split.md
+                 ../../physics/mechanisms/MECHANISMS_Primes_Lag_Decay.md
+                 ../../physics/mechanisms/MECHANISMS_Contradiction_Pressure.md
+VALIDATION:      ../../physics/attention/VALIDATION_Attention_Split_And_Interrupts.md
+THIS:            HEALTH_Connectome_Live_Signals.md
+IMPL:            ../../../app/connectome/components/connectome_health_panel.tsx
+                 ../../../app/connectome/components/connectome_page_shell_route_layout_and_control_surface.tsx
 ```
 
 ---

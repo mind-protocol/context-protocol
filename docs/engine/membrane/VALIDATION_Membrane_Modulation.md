@@ -10,7 +10,7 @@ CREATED: 2025-12-20
 ## CHAIN
 
 ```
-PATTERNS:        ./PATTERN_Membrane_Modulation.md
+PATTERNS:        ./PATTERNS_Membrane_Modulation.md
 PATTERNS:        ./PATTERNS_Membrane_Scoping.md
 BEHAVIORS:       ./BEHAVIORS_Membrane_Modulation.md
 ALGORITHM:       ./ALGORITHM_Membrane_Modulation.md

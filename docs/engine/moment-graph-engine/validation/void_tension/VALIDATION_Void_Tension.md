@@ -11,18 +11,11 @@ VERIFIED: 2025-12-20 against local tree
 ## CHAIN
 
 ```
-PATTERNS:
-  - ../../PATTERNS_Void_Pressure.md
+THIS:            VALIDATION_Void_Tension.md
+IMPL:            ../../../../../engine/physics/tick.py
+                 ../../../../../engine/moment_graph/surface.py
 
-BEHAVIORS:
-  - ../../BEHAVIORS_Void_Pressure.md (planned)
-
-THIS:
-  - VALIDATION_Void_Pressure.md
-
-IMPL:
-  - ../../../../../engine/physics/tick.py
-  - ../../../../../engine/moment_graph/surface.py
+# Note: PATTERNS and BEHAVIORS files planned but not yet created
 ```
 
 ---

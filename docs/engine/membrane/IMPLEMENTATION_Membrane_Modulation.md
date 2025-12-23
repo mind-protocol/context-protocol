@@ -11,7 +11,7 @@ VERIFIED: 2025-12-20 against local tree
 ## CHAIN
 
 ```
-PATTERNS:        ./PATTERN_Membrane_Modulation.md
+PATTERNS:        ./PATTERNS_Membrane_Modulation.md
 PATTERNS:        ./PATTERNS_Membrane_Scoping.md
 BEHAVIORS:       ./BEHAVIORS_Membrane_Modulation.md
 ALGORITHM:       ./ALGORITHM_Membrane_Modulation.md

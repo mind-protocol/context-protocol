@@ -1,9 +1,8 @@
-# ngram Graph System — Behaviors: Observable Effects of Graph-Driven Development
+# ngram Graph System — Behaviors: Observable Value
 
 ```
 STATUS: DESIGNING
 CREATED: 2024-12-23
-VERIFIED: not yet
 ```
 
 ---
@@ -11,198 +10,269 @@ VERIFIED: not yet
 ## CHAIN
 
 ```
-OBJECTIVES:      ./OBJECTIVES_Ngram_Graph_System.md
-THIS:            BEHAVIORS_Ngram_Graph_System.md (you are here)
-PATTERNS:        ./PATTERNS_Ngram_Graph_System.md
-ALGORITHM:       ./ALGORITHM_Ngram_Graph_System.md
-VALIDATION:      ./VALIDATION_Ngram_Graph_System.md
-HEALTH:          ./HEALTH_Ngram_Graph_System.md
-IMPLEMENTATION:  (engine/physics/, engine/infrastructure/orchestration/)
-SYNC:            ./SYNC_Ngram_Graph_System.md
-
-IMPL:            engine/infrastructure/orchestration/world_runner.py
+OBJECTIVES:     ./OBJECTIVES_Ngram_Graph_System.md
+PATTERNS:       ./PATTERNS_Ngram_Graph_System.md
+THIS:           BEHAVIORS_Ngram_Graph_System.md (you are here)
+ALGORITHM:      ./ALGORITHM_Ngram_Graph_System.md
+VALIDATION:     ./VALIDATION_Ngram_Graph_System.md
+IMPLEMENTATION: ./IMPLEMENTATION_Ngram_Graph_System.md
+HEALTH:         ./HEALTH_Ngram_Graph_System.md
+SYNC:           ./SYNC_Ngram_Graph_System.md
 ```
 
-> **Contract:** Read docs before modifying. After changes: update IMPL or add TODO to SYNC. Run tests.
+> **Contract:** Read docs before modifying. After changes: update IMPL or add TODO to SYNC.
+
+---
+
+## Why This Matters
+
+These are the outcomes we care about. The value the system produces. Not how it works — what it delivers.
 
 ---
 
 ## BEHAVIORS
 
-### B1: Thinking Produces Graph State
+### B1: Agent Produces Useful Work Without Explicit Instruction
 
-**Why:** All cognitive activity flows into the graph. No thinking is lost. Physics can surface what matters because everything is recorded.
+**Objective:** Graph runs the dev process.
 
-```
-GIVEN:  Any actor (human or agent) performs a cognitive action
-WHEN:   Human writes message, agent thinks, agent queries, human decides
-THEN:   A Moment is created in the graph
-AND:    Moment links to touched Narratives, Spaces, Actors
-AND:    Physics flows energy through new links
-```
-
-### B2: Energy Attracts Without Spawning
-
-**Why:** No task creation logic needed. Goals don't spawn work — they attract energy. Moments near hot goals become hot. Simplicity.
+**Why:** No task assignment. No orchestration layer. Agent receives context, does work. The graph decides what's relevant through physics.
 
 ```
-GIVEN:  A goal Narrative exists with energy > 0
-WHEN:   Human attention flows to that Narrative (proximity, interaction)
-THEN:   Energy propagates to linked Moments
-AND:    Moments near the goal become hot
-AND:    No explicit "work creation" — just physics surfacing relevance
-```
-
-### B3: Hot Moment Triggers Agent
-
-**Why:** Activation from physics, not orchestration. Agent works because something is hot in their Space, not because they were assigned a task.
-
-```
-GIVEN:  A Moment exists with energy > ACTIVATION_THRESHOLD
-WHEN:   An agent is AT the same Space as the Moment
-THEN:   Agent is triggered with context
-AND:    System context = hot Narratives in agent's Space
-AND:    Input = the active Moment (what to work on)
-```
-
-### B4: Work Creates More Moments
-
-**Why:** Chain of work emerges naturally. Agent output becomes input for next cycle. No explicit task queue.
-
-```
-GIVEN:  Agent has been triggered with a hot Moment
-WHEN:   Agent processes and responds
-THEN:   New Moment(s) created from agent output
-AND:    New Moments link to relevant Narratives/Spaces
-AND:    Energy flows from completion
-AND:    Cycle continues
-```
-
-### B5: World Ticks Without Human
-
-**Why:** World is alive, not a tool that waits. Human is actor in world, not controller of it.
-
-```
-GIVEN:  World runner is active at speed x1/x2/x3
-WHEN:   Tick occurs
-THEN:   All actors generate energy based on proximity
-AND:    Energy decays across all nodes/links
-AND:    Strength accumulates where energy flowed
-AND:    This happens whether or not human is active
-```
-
-### B6: Cold Links Retain Strength
-
-**Why:** Memory without recall. Old work resurfaces via high-strength links when area reheats. Nothing truly forgotten.
-
-```
-GIVEN:  Work was done in a Space, then Space went cold
-WHEN:   Human or agent revisits that Space later
-THEN:   High-strength links surface relevant Narratives
-AND:    Old work becomes accessible via strength, not Moment recall
-```
-
-### B7: Agents Differentiate Through State
-
-**Why:** No designed specialization. Differentiation emerges from accumulated beliefs, memories, Space affinity. Discovery, not design.
-
-```
-GIVEN:  6+ agents start with similar state
-WHEN:   Agents work over time, accumulating beliefs/memories
-THEN:   Each agent develops distinct link patterns
-AND:    One gravitates toward physics, another toward docs
-```
-
-### B8: Graph Becomes Canonical
-
-**Why:** Docs are fragile, scattered, stale. Graph is queryable, connected, alive. Markdown becomes view, not source.
-
-```
-GIVEN:  Markdown docs exist in repository
-WHEN:   Docs are ingested into graph
-THEN:   Atomic sections become Narrative nodes
-AND:    Changes create Moments
-AND:    Docs can be regenerated from graph queries
+GIVEN:  Agent in a Space with hot Narratives
+WHEN:   Agent triggered
+THEN:   Agent produces work that addresses those Narratives
+AND:    Work is coherent with context
+AND:    No human had to specify what to do
 ```
 
 ---
 
-## OBJECTIVES SERVED
+### B2: Relevant Context Surfaces, Noise Doesn't
 
-| Behavior ID | Objective | Why It Matters |
-|-------------|-----------|----------------|
-| B1 | Graph runs the dev process | All thinking becomes graph state, physics can surface it |
-| B2 | Graph runs the dev process | No task queues — energy determines relevance |
-| B3 | Agents receive context from graph | Activation from physics, not hardcoded orchestration |
-| B4 | Agents receive context from graph | Work chain emerges from Moment creation |
-| B5 | World runs continuously | World is alive, not event-driven |
-| B6 | Memory through strength | Cold links retain strength for recall |
-| B7 | Many agents, emergent differentiation | No specialized prompts — state determines personality |
-| B8 | Docs dissolve into narratives | Markdown files are views, not source of truth |
+**Objective:** Agents receive context from graph.
 
----
-
-## EDGE CASES
-
-### E1: No Hot Moments in Agent's Space
+**Why:** Context quality determines work quality. Hot Narratives surface. Cold ones don't clutter. Agent sees what matters now.
 
 ```
-GIVEN:  Agent is AT a Space with no Moments above threshold
-THEN:   Agent remains idle
-AND:    No forced work — silence is valid
-```
-
-### E2: Multiple Agents Triggered by Same Moment
-
-```
-GIVEN:  Multiple agents AT same Space, Moment crosses threshold
-THEN:   All eligible agents may be triggered
-AND:    Coordination handled by physics (energy split, timing)
-```
-
-### E3: Human Creates Moment in Cold Space
-
-```
-GIVEN:  Human writes message in a Space with no prior activity
-THEN:   Moment created with initial energy from human
-AND:    Space warms up, may trigger agents if threshold crossed
+GIVEN:  Space has many Narratives
+WHEN:   Actor enters Space
+THEN:   Only hot Narratives appear in context
+AND:    Cold Narratives stay dormant
+AND:    Context is focused, not overwhelming
 ```
 
 ---
 
-## ANTI-BEHAVIORS
+### B3: Goals Complete Naturally Through Physics
 
-### A1: No Task Queue
+**Objective:** Memory through strength.
 
-```
-GIVEN:   Goal Narrative exists
-WHEN:    System runs
-MUST NOT: Create explicit task list or work queue
-INSTEAD:  Energy flows, hot Moments surface naturally
-```
-
-### A2: No Agent Instructions
+**Why:** No explicit "mark done." Energy decays as goal is addressed. Goal goes cold. Feels complete. No ceremony required.
 
 ```
-GIVEN:   Agent is triggered
-WHEN:    Context is assembled
-MUST NOT: Include hardcoded role instructions or specialization
-INSTEAD:  Context is the instruction — hot Narratives in Space
+GIVEN:  Goal Narrative exists
+WHEN:   Work addresses it over time
+THEN:   Goal energy decays naturally
+AND:    Goal stops surfacing in context
+AND:    Completion happens without explicit close
 ```
 
-### A3: No Human as Controller
+---
+
+### B4: Old Work Resurfaces When Relevant Again
+
+**Objective:** Memory through strength.
+
+**Why:** Nothing truly forgotten. High-strength links remember what mattered. When Space reactivated, old knowledge returns.
 
 ```
-GIVEN:   World is running
-WHEN:    Human is inactive
-MUST NOT: Pause world or wait for human input
-INSTEAD:  World ticks continuously, agents work on hot areas
+GIVEN:  Cold Narrative with high strength
+WHEN:   Related area becomes active
+THEN:   Old Narrative resurfaces in context
+AND:    Previous decisions and rationale available
+AND:    No need to re-explain history
+```
+
+---
+
+### B5: Agents Differentiate Over Time
+
+**Objective:** Many agents, emergent differentiation.
+
+**Why:** No hardcoded specialization. Agents accumulate beliefs, memories, Space affinity through work. Distinct personalities emerge.
+
+```
+GIVEN:  Multiple agents starting similar
+WHEN:   Agents work over weeks/months
+THEN:   Each agent develops distinct focus areas
+AND:    Differentiation visible in their outputs
+AND:    No system prompt changes required
+```
+
+---
+
+### B6: Docs Become Queryable Knowledge
+
+**Objective:** Docs dissolve into narratives.
+
+**Why:** Markdown is dead format. Narratives are living graph. Questions get answered from graph, not file search.
+
+```
+GIVEN:  Docs ingested as Narratives
+WHEN:   Actor needs information
+THEN:   Relevant Narratives surface through context
+AND:    Links show relationships between concepts
+AND:    No grep/search through files
+```
+
+---
+
+### B7: Changes Flow to Affected Areas
+
+**Objective:** All actors generate energy through activity.
+
+**Why:** Change creates Moments. Energy flows through links. Affected Narratives warm up. Related agents notice.
+
+```
+GIVEN:  Actor modifies something
+WHEN:   Change recorded as Moment
+THEN:   Linked Narratives receive energy
+AND:    Agents in affected Spaces may trigger
+AND:    Downstream effects propagate naturally
+```
+
+---
+
+### B8: World Stays Alive Without Human Attention
+
+**Objective:** World runs continuously.
+
+**Why:** Not event-driven. Agents work while human sleeps. x1/x2/x3 speeds. Work continues.
+
+```
+GIVEN:  Runner active
+WHEN:   Human not actively engaged
+THEN:   Agents still trigger on hot Narratives
+AND:    Work progresses
+AND:    Human returns to updated state
+```
+
+---
+
+### B9: Parallel Work Doesn't Conflict
+
+**Objective:** Many agents, emergent differentiation.
+
+**Why:** Agents in different Spaces work on different things. No coordination overhead. Physics handles it.
+
+```
+GIVEN:  Multiple agents in different Spaces
+WHEN:   All working simultaneously
+THEN:   Each produces coherent work for their Space
+AND:    No stepping on each other
+AND:    Conflicts rare (different contexts)
+```
+
+---
+
+### B10: New Project Bootstraps Quickly
+
+**Objective:** Same engine, multiple clients.
+
+**Why:** Ingest docs → get Narratives → agents can work. No custom setup. Same physics, different content.
+
+```
+GIVEN:  New project with existing docs
+WHEN:   Docs ingested
+THEN:   Narratives created automatically
+AND:    Spaces populated
+AND:    Agents can start working immediately
+```
+
+---
+
+### B11: Human Focus Drives Priority
+
+**Objective:** All actors generate energy.
+
+**Why:** Human attention = energy. What human focuses on heats up. Agents follow the heat.
+
+```
+GIVEN:  Human focuses on area (enters Space, discusses topic)
+WHEN:   Energy injected through activity
+THEN:   That area becomes hot
+AND:    Agents more likely to work there
+AND:    Human implicitly steers without explicit assignment
+```
+
+---
+
+## INPUTS / OUTPUTS
+
+### System Input: Human Activity
+
+| Input | Effect |
+|-------|--------|
+| Enter Space | Context loaded, proximity increases |
+| Write message | Moment created, energy flows |
+| Create goal | Narrative created, surfaces to agents |
+| Ignore area | Energy decays, goes cold |
+
+### System Output: Observable Value
+
+| Output | Evidence |
+|--------|----------|
+| Useful work | Agent outputs that address context |
+| Relevant context | Hot Narratives match current focus |
+| Natural completion | Goals go quiet when done |
+| Memory recall | Old work resurfaces when relevant |
+| Emergent specialization | Agents develop distinct focuses |
+
+---
+
+## ANTI-BEHAVIORS (Failure Modes)
+
+### A1: Agent Produces Irrelevant Work
+
+```
+GIVEN:  Agent triggered
+WHEN:   Context is noisy or wrong
+THEN:   Work doesn't address what matters
+FIX:    Refine Space boundaries, tune energy thresholds
+```
+
+### A2: Important Context Doesn't Surface
+
+```
+GIVEN:  Relevant Narrative exists
+WHEN:   Energy too low
+THEN:   Actor misses important information
+FIX:    Check link conductivity, strength accumulation
+```
+
+### A3: Goals Never Complete
+
+```
+GIVEN:  Goal Narrative exists
+WHEN:   Energy never decays
+THEN:   Goal haunts context forever
+FIX:    Check decay rates, ensure work links to goal
+```
+
+### A4: Old Work Never Resurfaces
+
+```
+GIVEN:  Cold Narrative with history
+WHEN:   Space reactivated
+THEN:   Previous work not available
+FIX:    Check strength retention, link health
 ```
 
 ---
 
 ## MARKERS
 
-<!-- @ngram:todo Define ACTIVATION_THRESHOLD value -->
-<!-- @ngram:todo Specify how Moment links are auto-created from content -->
-<!-- @ngram:todo Design energy split when multiple agents triggered -->
+<!-- @ngram:todo Define thresholds for context relevance -->
+<!-- @ngram:todo Specify agent differentiation metrics -->
+<!-- @ngram:todo Design bootstrap ingest process -->

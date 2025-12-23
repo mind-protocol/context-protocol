@@ -11,18 +11,11 @@ VERIFIED: 2025-12-20 against local tree
 ## CHAIN
 
 ```
-PATTERNS:
-  - ../../PATTERNS_Player_DMZ.md
+THIS:            VALIDATION_Player_DMZ.md
+IMPL:            ../../../../../engine/world_builder/*
+                 ../../../../../engine/moment_graph/queries.py
 
-BEHAVIORS:
-  - ../../BEHAVIORS_Player_DMZ.md (planned)
-
-THIS:
-  - VALIDATION_Player_DMZ.md
-
-IMPL:
-  - ../../../../../engine/world_builder/*
-  - ../../../../../engine/moment_graph/queries.py
+# Note: PATTERNS and BEHAVIORS files planned but not yet created
 ```
 
 ---

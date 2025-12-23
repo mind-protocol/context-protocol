@@ -1,7 +1,6 @@
-# {Module Name} — Validation: Invariants and Verification
+# {Module Name} — Validation: What Must Be True
 
 ```
-@ngram:id: VALIDATION.{AREA}.{MODULE}
 STATUS: DRAFT | DESIGNING | CANONICAL
 CREATED: {DATE}
 ```
@@ -11,11 +10,11 @@ CREATED: {DATE}
 ## CHAIN
 
 ```
-OBJECTIVES:       ./OBJECTIVES_{name}.md
+OBJECTIVES:      ./OBJECTIVES_{name}.md
 PATTERNS:        ./PATTERNS_*.md
 BEHAVIORS:       ./BEHAVIORS_*.md
-ALGORITHM:       ./ALGORITHM_*.md
 THIS:            VALIDATION_*.md (you are here)
+ALGORITHM:       ./ALGORITHM_*.md (HOW — mechanisms go here)
 IMPLEMENTATION:  ./IMPLEMENTATION_{name}.md
 HEALTH:          ./HEALTH_{name}.md
 SYNC:            ./SYNC_{name}.md
@@ -23,108 +22,75 @@ SYNC:            ./SYNC_{name}.md
 
 ---
 
-## TESTS VS HEALTH
+## PURPOSE
 
-**Tests gate completion. Health monitors runtime.**
+**Validation = what we care about being true.**
 
-| Concern | Tests (CI) | Health (Runtime) |
-|---------|------------|------------------|
-| When | Build time | Production |
-| Data | Fixtures | Real graph |
-| Catches | Code bugs | Emergent drift |
-| Blocks | Merge/deploy | Alerts/pages |
+Not mechanisms. Not test paths. Not how things work.
 
-### Write Tests For
+What properties, if violated, would mean the system has failed its purpose?
 
-| Category | Why |
-|----------|-----|
-| Formula correctness | Deterministic input → output |
-| State transitions | Finite, enumerable |
-| Bounds checking | Known edge cases |
-| Ordering invariants | Sequence matters |
-
-### Use Health Only For
-
-| Category | Why |
-|----------|-----|
-| Drift over time | Needs 1000+ real ticks |
-| Ratio health | Emergent behavior |
-| Graph-wide state | Needs real structure |
+These are the value-producing invariants — the things that make the module worth building.
 
 ---
 
 ## INVARIANTS
 
-### @ngram:id: V-{MODULE}-{NAME}
-**{One-line description}**
+> **Naming:** Name by the value protected, not the mechanism.
+> Bad: "Energy decay runs each tick"
+> Good: "Attention fades without reinforcement"
 
-```yaml
-invariant: V-{MODULE}-{NAME}
-priority: HIGH | MED | LOW
-criteria: |
-  {What must hold, formally or semi-formally}
-verified_by:
-  test: tests/{area}/test_{module}.py::test_{name}
-  health: {area}/health/{module}.py::check_{name}
-  confidence: high | partial | needs-health | untested
-evidence:
-  - {How violation would be detected}
-failure_mode: |
-  {What breaks if this invariant fails}
+### V1: {Value Protected}
+
+**Why we care:** {What breaks or what value is lost if this invariant fails}
+
+```
+MUST:   {What must be true}
+NEVER:  {What must never happen}
 ```
 
-### @ngram:id: V-{MODULE}-{NAME-2}
-**{One-line description}**
+### V2: {Value Protected}
 
-```yaml
-invariant: V-{MODULE}-{NAME-2}
-priority: HIGH | MED | LOW
-criteria: |
-  {What must hold}
-verified_by:
-  test: {test path if applicable}
-  health: {health path if applicable}
-  confidence: untested
-evidence:
-  - {Detection method}
-failure_mode: |
-  {Consequence of failure}
+**Why we care:** {Consequence of violation}
+
+```
+MUST:   {What must be true}
+NEVER:  {What must never happen}
+```
+
+### V3: {Value Protected}
+
+**Why we care:** {Consequence of violation}
+
+```
+MUST:   {What must be true}
+NEVER:  {What must never happen}
 ```
 
 ---
 
-## CONFIDENCE LEVELS
+## PRIORITY
 
-| Level | Meaning | Action |
-|-------|---------|--------|
-| `high` | Test + health cover completely | None |
-| `partial` | Test exists but edge cases remain | Track gaps |
-| `needs-health` | Runtime behavior matters more than test | Write health check |
-| `untested` | Gap, tracked for completion | Write test or justify needs-health |
-
----
-
-## PRIORITY LEVELS
-
-| Priority | Meaning | Requirement |
+| Priority | Meaning | If Violated |
 |----------|---------|-------------|
-| `HIGH` | System breaks without this | MUST have verified_by.test or verified_by.health |
-| `MED` | Degraded behavior | SHOULD have test |
-| `LOW` | Nice to have | MAY defer |
+| **CRITICAL** | System purpose fails | Unusable |
+| **HIGH** | Major value lost | Degraded severely |
+| **MEDIUM** | Partial value lost | Works but worse |
 
 ---
 
-## VALIDATION ID INDEX
+## INVARIANT INDEX
 
-| ID | Category | Priority | Confidence |
-|----|----------|----------|------------|
-| V-{MODULE}-{NAME} | {category} | HIGH | high |
-| V-{MODULE}-{NAME-2} | {category} | MED | untested |
+| ID | Value Protected | Priority |
+|----|-----------------|----------|
+| V1 | {value} | CRITICAL |
+| V2 | {value} | HIGH |
+| V3 | {value} | MEDIUM |
 
 ---
 
 ## MARKERS
 
-<!-- @ngram:todo {Missing test for invariant V-*} -->
-<!-- @ngram:escalation {Test blocked by infrastructure} -->
-<!-- @ngram:proposition {Additional invariant to add} -->
+<!-- @ngram:todo {Invariant that needs clarification} -->
+<!-- @ngram:proposition {Additional invariant to consider} -->
+<!-- @ngram:escalation {Unclear whether this is actually critical} -->

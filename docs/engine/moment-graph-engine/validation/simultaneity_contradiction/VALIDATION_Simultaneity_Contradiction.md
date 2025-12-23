@@ -11,18 +11,11 @@ VERIFIED: 2025-12-20 against local tree
 ## CHAIN
 
 ```
-PATTERNS:
-  - ../../PATTERNS_Simultaneity_And_Contradiction.md
+THIS:            VALIDATION_Simultaneity_Contradiction.md
+IMPL:            ../../../../../engine/infrastructure/canon/canon_holder.py
+                 ../../../../../engine/moment_graph/surface.py
 
-BEHAVIORS:
-  - ../../BEHAVIORS_Simultaneity_And_Contradiction.md (planned)
-
-THIS:
-  - VALIDATION_Simultaneity_Contradiction.md
-
-IMPL:
-  - ../../../../../engine/infrastructure/canon/canon_holder.py
-  - ../../../../../engine/moment_graph/surface.py
+# Note: PATTERNS and BEHAVIORS files planned but not yet created
 ```
 
 ---

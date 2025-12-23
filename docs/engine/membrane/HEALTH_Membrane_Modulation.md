@@ -28,7 +28,7 @@ unbounded frames or hidden state mutations before they impact runtime.
 ## CHAIN
 
 ```
-PATTERNS:        ./PATTERN_Membrane_Modulation.md
+PATTERNS:        ./PATTERNS_Membrane_Modulation.md
 BEHAVIORS:       ./BEHAVIORS_Membrane_Modulation.md
 ALGORITHM:       ./ALGORITHM_Membrane_Modulation.md
 VALIDATION:      ./VALIDATION_Membrane_Modulation.md

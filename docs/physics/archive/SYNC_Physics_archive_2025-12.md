@@ -380,9 +380,9 @@ Original file: SYNC_Physics.md
 
 THIS:            SYNC_Physics.md (you are here)
 
-PATTERNS:        ./PATTERNS_Physics.md
+PATTERNS:        ../PATTERNS_Physics.md
 
-BEHAVIORS:       ./BEHAVIORS_Physics.md
+BEHAVIORS:       ../BEHAVIORS_Physics.md
 
 ALGORITHMS:      ./ALGORITHM_Physics.md (consolidated: energy, tick, canon, handlers, input, actions, QA, speed)
 
@@ -390,11 +390,11 @@ SCHEMA:          ../schema/SCHEMA_Moments.md
 
 API:             ./API_Physics.md
 
-VALIDATION:      ./VALIDATION_Physics.md
+VALIDATION:      ../VALIDATION_Physics.md
 
 IMPLEMENTATION:  ./IMPLEMENTATION_Physics.md (+ Runtime Patterns from INFRASTRUCTURE.md)
 
-HEALTH:          ./HEALTH_Physics.md
+HEALTH:          ../HEALTH_Physics.md
 
 IMPL (existing): ../../engine/physics/tick.py, ../../engine/physics/graph/
 
@@ -403,4 +403,3 @@ IMPL (planned):  ../../engine/handlers/, ../../engine/canon/, ../../engine/infra
 ```
 
 ---
-

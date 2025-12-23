@@ -15,7 +15,7 @@ PATTERNS:        ../PATTERNS_Why_CLI_Over_Copy.md
 BEHAVIORS:       ../BEHAVIORS_CLI_Command_Effects.md
 THIS:            ALGORITHM_Overview.md
 VALIDATION:      ../VALIDATION_CLI_Instruction_Invariants.md
-IMPLEMENTATION:  ../IMPLEMENTATION_CLI_Code_Architecture/IMPLEMENTATION_Overview.md
+IMPLEMENTATION:  ../IMPLEMENTATION_CLI_Code_Architecture/overview/IMPLEMENTATION_Overview.md
 HEALTH:          ../HEALTH_CLI_Command_Test_Coverage.md
 SYNC:            ../SYNC_CLI_Development_State.md
 ```

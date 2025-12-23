@@ -2,9 +2,38 @@
 
 // DOCS: docs/connectome/health/HEALTH_Connectome_Live_Signals.md
 
-import type { ConnectomeHealthEvent, HealthStatus } from "../lib/zustand_connectome_state_store_with_atomic_commit_actions";
+import type { ConnectomeHealthEvent, HealthStatus, PhysicsIndicator } from "../lib/zustand_connectome_state_store_with_atomic_commit_actions";
 
 const status_label = (state?: HealthStatus) => state ?? "UNKNOWN";
+
+const STATUS_ICON: Record<string, string> = {
+  ok: "✓",
+  warn: "⚠",
+  error: "✗",
+  unknown: "?",
+};
+
+const INDICATOR_LABELS: Record<string, string> = {
+  energy_conservation: "Energy",
+  no_negative: "Non-negative",
+  link_state: "Link State",
+  tick_integrity: "Tick Order",
+  moment_lifecycle: "Moments",
+};
+
+function PhysicsIndicatorRow({ indicator }: { indicator: PhysicsIndicator }) {
+  const status = indicator.status.toLowerCase();
+  const icon = STATUS_ICON[status] || "?";
+  const label = INDICATOR_LABELS[indicator.name] || indicator.name;
+
+  return (
+    <div className={`physics-indicator physics-indicator-${status}`}>
+      <span className="physics-indicator-icon">{icon}</span>
+      <span className="physics-indicator-label">{label}</span>
+      <span className="physics-indicator-message">{indicator.message}</span>
+    </div>
+  );
+}
 
 export default function ConnectomeHealthPanel({ ev }: { ev: ConnectomeHealthEvent | null }) {
   if (!ev) {
@@ -22,6 +51,7 @@ export default function ConnectomeHealthPanel({ ev }: { ev: ConnectomeHealthEven
   const counters = ev.counters;
   const attention = ev.attention;
   const pressure = ev.pressure;
+  const physics = ev.physics;
 
   return (
     <div className="connectome-health-panel">
@@ -43,6 +73,28 @@ export default function ConnectomeHealthPanel({ ev }: { ev: ConnectomeHealthEven
           ))}
         </div>
       ) : null}
+
+      {/* Physics Health Indicators */}
+      {physics && physics.indicators.length > 0 && (
+        <div className="connectome-health-physics">
+          <div className="physics-header">
+            <span className="physics-title">Physics Health</span>
+            <span className={`health-badge health-badge-sm health-${physics.overall}`}>
+              {physics.overall.toUpperCase()}
+            </span>
+          </div>
+          <div className="physics-indicators">
+            {physics.indicators.map((indicator) => (
+              <PhysicsIndicatorRow key={indicator.name} indicator={indicator} />
+            ))}
+          </div>
+          {physics.graph_name && (
+            <div className="physics-meta">
+              graph: <strong>{physics.graph_name}</strong>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="connectome-health-grid" style={{ gridTemplateColumns: '1fr' }}>
         <div className="connectome-health-card">

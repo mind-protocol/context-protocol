@@ -11,17 +11,17 @@ UPDATED: 2025-12-20
 ## CHAIN
 
 ```
-PATTERNS:       ./PATTERNS_Physics.md
-BEHAVIORS:      ./BEHAVIORS_Physics.md
-ALGORITHM:      ./ALGORITHM_Physics.md
-VALIDATION:     ./VALIDATION_Physics.md
+PATTERNS:       ../PATTERNS_Physics.md
+BEHAVIORS:      ../BEHAVIORS_Physics.md
+ALGORITHM:      ../ALGORITHM_Physics.md
+VALIDATION:     ../VALIDATION_Physics.md
 THIS:           ./IMPLEMENTATION_Physics.md (you are here)
 IMPLEMENTATION: ./implementation/IMPLEMENTATION_Physics_Code_Structure.md
 IMPLEMENTATION: ./implementation/IMPLEMENTATION_Physics_Architecture.md
 IMPLEMENTATION: ./implementation/IMPLEMENTATION_Physics_Dataflow.md
 IMPLEMENTATION: ./implementation/IMPLEMENTATION_Physics_Runtime.md
-HEALTH:         ./HEALTH_Physics.md
-SYNC:           ./SYNC_Physics.md
+HEALTH:         ../HEALTH_Physics.md
+SYNC:           ../SYNC_Physics.md
 ```
 
 ---

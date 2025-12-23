@@ -9,6 +9,20 @@ const encoder = new TextEncoder();
 const formatEvent = (event: string, data: unknown) =>
   `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
 
+interface PhysicsIndicator {
+  name: string;
+  status: string;
+  message: string;
+  details: Record<string, unknown>;
+}
+
+interface PhysicsHealth {
+  overall: string;
+  indicators: PhysicsIndicator[];
+  graph_name: string;
+  checked_at: number;
+}
+
 interface HealthPayload {
   ts: number;
   playthrough_id: string;
@@ -18,6 +32,7 @@ interface HealthPayload {
   counters: { query_write_attempts: number; dmz_violation_attempts: number; async_epoch_mismatch: number };
   attention: { sink_set_size: { p50: number; p95: number }; focus_reconfig_rate_per_min: number; plateau_seconds: number };
   pressure: { contradiction: number; top_edges: unknown[] };
+  physics?: PhysicsHealth;
 }
 
 async function fetchConnectomeHealth(): Promise<HealthPayload> {

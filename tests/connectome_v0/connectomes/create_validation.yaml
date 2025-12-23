@@ -1,0 +1,89 @@
+connectome: create_validation
+version: "1.0"
+description: Create a validation invariant with full context
+
+steps:
+  get_spaces:
+    type: query
+    store_as: available_spaces
+    preset: all_spaces
+    next: get_behaviors
+
+  get_behaviors:
+    type: query
+    store_as: available_behaviors
+    preset: all_behaviors
+    next: ask_name
+
+  ask_name:
+    type: ask
+    question: "Validation ID? (e.g., V-NGRAM-ENERGY-BOUNDED)"
+    expects:
+      type: string
+      pattern: "^V-[A-Z]+-[A-Z-]+$"
+    next: ask_criteria
+
+  ask_criteria:
+    type: ask
+    question: "What must hold? (the invariant statement)"
+    expects:
+      type: string
+      min_length: 10
+    next: ask_priority
+
+  ask_priority:
+    type: ask
+    question: "Priority?"
+    expects:
+      type: enum
+      options: [HIGH, MED, LOW]
+    next: ask_space
+
+  ask_space:
+    type: ask
+    question: "Which space? Available: {available_spaces}"
+    expects:
+      type: id
+      node_type: space
+    next: ask_behaviors
+
+  ask_behaviors:
+    type: ask
+    question: "Which behaviors does this ensure? (empty ok)"
+    expects:
+      type: id_list
+      node_type: narrative
+      min: 0
+    next: ask_failure_mode
+
+  ask_failure_mode:
+    type: ask
+    question: "What breaks if this fails?"
+    expects:
+      type: string
+      min_length: 10
+    next: do_create
+
+  do_create:
+    type: create
+    nodes:
+      - id: "narrative_validation_{ask_name|slugify}"
+        node_type: narrative
+        type: validation
+        name: "{ask_name}"
+        content: "{ask_criteria}"
+        priority: "{ask_priority}"
+        failure_mode: "{ask_failure_mode}"
+        weight: 0.85
+        energy: 0.0
+    links:
+      - type: contains
+        from: "{ask_space}"
+        to: "narrative_validation_{ask_name|slugify}"
+      - for_each: ask_behaviors
+        type: relates
+        from: "narrative_validation_{ask_name|slugify}"
+        to: "{item}"
+        properties:
+          direction: ensures
+    next: $complete

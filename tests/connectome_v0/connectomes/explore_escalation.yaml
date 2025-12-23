@@ -1,0 +1,100 @@
+connectome: explore_escalation
+version: "1.0"
+description: Load escalation context, decide action
+
+steps:
+  load_escalation:
+    type: query
+    store_as: escalation
+    query: |
+      MATCH (n:Narrative {id: $target_id})
+      RETURN n.id as id, n.name as name, n.content as content, n.status as status
+    next: load_related
+
+  load_related:
+    type: query
+    store_as: related
+    query: |
+      MATCH (n:Narrative {id: $target_id})-[r]-(m)
+      RETURN type(r) as rel_type, m.id as id, m.name as name, labels(m)[0] as type
+    next: ask_action
+
+  ask_action:
+    type: ask
+    question: "Escalation: {escalation.0.name}\nContent: {escalation.0.content}\nRelated: {related}\n\nWhat action?"
+    expects:
+      type: enum
+      options: [resolve, defer, escalate_further, needs_info]
+    next: handle_action
+
+  handle_action:
+    type: branch
+    condition: "{ask_action}"
+    cases:
+      resolve: ask_resolution
+      defer: ask_defer_reason
+      escalate_further: ask_escalate_to
+      needs_info: ask_what_info
+
+  ask_resolution:
+    type: ask
+    question: "How was it resolved?"
+    expects:
+      type: string
+      min_length: 10
+    next: update_resolved
+
+  update_resolved:
+    type: update
+    target: "{escalation.0.id}"
+    set:
+      status: resolved
+      resolution: "{ask_resolution}"
+    next: $complete
+
+  ask_defer_reason:
+    type: ask
+    question: "Why defer? When to revisit?"
+    expects:
+      type: string
+      min_length: 5
+    next: update_deferred
+
+  update_deferred:
+    type: update
+    target: "{escalation.0.id}"
+    set:
+      status: deferred
+      defer_reason: "{ask_defer_reason}"
+    next: $complete
+
+  ask_escalate_to:
+    type: ask
+    question: "Who should handle this?"
+    expects:
+      type: string
+    next: update_escalated
+
+  update_escalated:
+    type: update
+    target: "{escalation.0.id}"
+    set:
+      status: escalated
+      escalated_to: "{ask_escalate_to}"
+    next: $complete
+
+  ask_what_info:
+    type: ask
+    question: "What information is needed?"
+    expects:
+      type: string
+      min_length: 10
+    next: update_needs_info
+
+  update_needs_info:
+    type: update
+    target: "{escalation.0.id}"
+    set:
+      status: needs_info
+      info_needed: "{ask_what_info}"
+    next: $complete

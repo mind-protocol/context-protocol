@@ -1,0 +1,65 @@
+connectome: document_progress
+version: "1.0"
+description: Record what was done, link to affected nodes
+
+steps:
+  load_recent:
+    type: query
+    store_as: recent_moments
+    query: |
+      MATCH (a:Actor {id: $actor_id})-[:SAID]->(m:Moment)
+      RETURN m.id, m.text, m.type
+      ORDER BY m.created_at DESC
+      LIMIT 5
+    next: ask_summary
+
+  ask_summary:
+    type: ask
+    question: "What did you do? (summary)"
+    expects:
+      type: string
+      min_length: 10
+    next: ask_affected
+
+  ask_affected:
+    type: ask
+    question: "What nodes were affected? (IDs, empty ok)"
+    expects:
+      type: id_list
+      min: 0
+    next: ask_todos
+
+  ask_todos:
+    type: ask
+    question: "Any new TODOs? (list, empty ok)"
+    expects:
+      type: string_list
+      min: 0
+    next: do_create
+
+  do_create:
+    type: create
+    nodes:
+      - id: "moment_progress_{timestamp}"
+        node_type: moment
+        type: progress
+        prose: "{ask_summary}"
+        status: spoken
+      - for_each: ask_todos
+        id: "narrative_goal_{item|slugify}"
+        node_type: narrative
+        type: goal
+        name: "{item|truncate50}"
+        content: "{item}"
+        status: pending
+        weight: 0.85
+        energy: 0.3
+    links:
+      - type: expresses
+        from: "{actor_id}"
+        to: "moment_progress_{timestamp}"
+      - for_each: ask_affected
+        type: about
+        from: "moment_progress_{timestamp}"
+        to: "{item}"
+    next: $complete

@@ -34,7 +34,8 @@ from .repair_core import (
     get_depth_types,
     build_agent_prompt,
     parse_decisions_from_output,
-    spawn_repair_agent_async,
+    spawn_work_agent_async,
+    spawn_work_agent_with_verification_async,
 )
 from .repair_escalation_interactive import (
     Colors,
@@ -109,7 +110,7 @@ def save_github_issue_mapping(target_dir: Path, mapping: Dict[str, Dict[str, Any
 # build_agent_prompt, parse_decisions_from_output, etc.) imported from repair_core.py
 
 
-def spawn_repair_agent(
+def spawn_work_agent(
     issue: DoctorIssue,
     target_dir: Path,
     config: DoctorConfig, # New: DoctorConfig to manage fallback status
@@ -166,16 +167,19 @@ def spawn_repair_agent(
         pass
 
     # The actual agent spawning is in repair_core.py
-    return asyncio.run(spawn_repair_agent_async(
-        issue,
-        target_dir,
-        _on_output,
-        instructions,
-        config, # Pass config here
-        github_issue_number,
-        escalation_decisions,
+    # Use verification-enabled version for mandatory checks
+    return asyncio.run(spawn_work_agent_with_verification_async(
+        issue=issue,
+        target_dir=target_dir,
+        on_output=_on_output,
+        instructions=instructions,
+        config=config,
+        github_issue_number=github_issue_number,
+        escalation_decisions=escalation_decisions,
         agent_symbol=agent_symbol,
         agent_provider=agent_provider,
+        max_verification_retries=3,
+        membrane_query=None,  # TODO: Connect to membrane MCP
     ))
 
 
@@ -354,7 +358,7 @@ def repair_command(
             suffix_fmt = f" {Colors.GRAY}{Colors.ITALIC}{suffix}{Colors.RESET}" if suffix else ""
             print(f"  {msg}: {agent_tag} {action} {path_fmt}{suffix_fmt}")
 
-        result = spawn_repair_agent(
+        result = spawn_work_agent(
             issue,
             target_dir,
             config, # Pass config
@@ -398,7 +402,7 @@ def repair_command(
                 github_issue_num = github_mapping.get(issue.path)
                 print(f"  {issue_emoji} Spawning agent to implement decisions...")
 
-                result = spawn_repair_agent(
+                result = spawn_work_agent(
                     issue,
                     target_dir,
                     config, # Pass config
@@ -469,7 +473,7 @@ def repair_command(
                 print(f"  {agent_tag} Implementing: {suggestion_text[:50]}...")
 
                 github_issue_num = github_mapping.get(issue.path)
-                result = spawn_repair_agent(
+                result = spawn_work_agent(
                     issue,
                     target_dir,
                     config, # Pass config
@@ -540,7 +544,7 @@ def repair_command(
             suffix_fmt = f" {Colors.GRAY}{Colors.ITALIC}{suffix}{Colors.RESET}" if suffix else ""
             print(f"\n  {issue_emoji} [{i}/{len(issues_to_fix)}] {msg}: {action} {path_fmt}{suffix_fmt}{github_info}")
 
-            result = spawn_repair_agent(
+            result = spawn_work_agent(
                 issue,
                 target_dir,
                 config,

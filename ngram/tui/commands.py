@@ -353,7 +353,7 @@ async def handle_repair(app: "NgramApp", args: str) -> None:
     
     app._repair_queue = list(all_issues[max_agents:])  # Remaining issues
     app._repair_total = len(all_issues)
-    app._repair_agent_index = max_agents  # Next agent index for symbol
+    app._work_agent_index = max_agents  # Next agent index for symbol
 
     running_count = min(len(all_issues), max_agents)
     status_bar.set_repair_progress(len(all_issues), 0, running_count)
@@ -523,14 +523,14 @@ async def _spawn_agent(app: "NgramApp", issue, agent_index: int, config) -> None
 async def _run_agent(app: "NgramApp", agent, issue, instructions: dict, on_output, config, session_dir=None, folder_name=None) -> None:
     """Run a single repair agent."""
     import asyncio
-    from ..repair_core import spawn_repair_agent_async
+    from ..repair_core import spawn_work_agent_async
 
     manager = app.query_one("#manager-panel")
     agent_container = app.query_one("#agent-container")
     status_bar = app.query_one("#status-bar")
 
     try:
-        result = await spawn_repair_agent_async(
+        result = await spawn_work_agent_async(
             issue=issue,
             target_dir=app.target_dir,
             on_output=on_output,
@@ -655,8 +655,8 @@ async def _spawn_next_from_queue(app: "NgramApp") -> None:
 
     # Pop next issue from queue
     next_issue = app._repair_queue.pop(0)
-    agent_index = getattr(app, '_repair_agent_index', 0)
-    app._repair_agent_index = agent_index + 1
+    agent_index = getattr(app, '_work_agent_index', 0)
+    app._work_agent_index = agent_index + 1
 
     # Update progress before spawning
     completed = len([a for a in app.state.active_agents if a.status in ("completed", "failed")])

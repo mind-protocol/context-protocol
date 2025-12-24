@@ -24,8 +24,16 @@ from pathlib import Path
 from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 from .agent_cli import build_agent_command, normalize_agent
+from .agent_graph import AgentGraph, load_agent_prompt, ISSUE_TO_POSTURE, DEFAULT_POSTURE
 from .doctor_types import DoctorConfig
 from .doctor_files import save_doctor_config
+from .repair_verification import (
+    verify_completion,
+    format_verification_feedback,
+    all_passed,
+    get_failed_membrane_protocols,
+    VerificationResult,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -262,6 +270,14 @@ class RepairResult:
     error: Optional[str] = None
     decisions_made: Optional[List[Dict[str, str]]] = None
     provider_used: Optional[str] = None  # Actual provider used (resolved from "all")
+    # Verification results (when using spawn_work_agent_with_verification_async)
+    verification_results: Optional[List['VerificationResult']] = None
+    verification_passed: bool = False
+    retry_count: int = 0
+    membrane_protocols_needed: Optional[List[str]] = None
+    # Graph agent tracking
+    selected_agent_id: Optional[str] = None
+    selected_posture: Optional[str] = None
 
 
 @dataclass
@@ -608,7 +624,7 @@ def parse_stream_json_line(line: str) -> Optional[str]:
     return None
 
 
-async def spawn_repair_agent_async(
+async def spawn_work_agent_async(
     issue: Any,  # DoctorIssue
     target_dir: Path,
     on_output: Callable[[str], Awaitable[None]],
@@ -622,7 +638,7 @@ async def spawn_repair_agent_async(
     agent_provider: str = "codex",
 ) -> RepairResult:
     """
-    Async version of spawn_repair_agent for TUI integration.
+    Async version of spawn_work_agent for TUI integration.
     """
     # Handle ESCALATION decisions
     if issue.issue_type == "ESCALATION" and escalation_decisions:
@@ -835,3 +851,216 @@ async def spawn_repair_agent_async(
             error=str(e),
             provider_used=agent_provider,
         )
+
+
+def _select_work_agent(issue_type: str) -> tuple[str, str]:
+    """
+    Select a work agent based on issue type posture mapping.
+
+    Returns:
+        Tuple of (agent_id, posture)
+    """
+    posture = ISSUE_TO_POSTURE.get(issue_type, DEFAULT_POSTURE)
+    agent_id = f"agent_{posture}"
+    return agent_id, posture
+
+
+async def spawn_work_agent_with_verification_async(
+    issue: Any,  # DoctorIssue
+    target_dir: Path,
+    on_output: Callable[[str], Awaitable[None]],
+    instructions: Dict[str, Any],
+    config: DoctorConfig,
+    github_issue_number: Optional[int] = None,
+    escalation_decisions: Optional[List[EscalationDecision]] = None,
+    agent_id: Optional[str] = None,
+    session_dir: Optional[Path] = None,
+    agent_symbol: Optional[str] = None,
+    agent_provider: str = "codex",
+    max_verification_retries: int = 3,
+    membrane_query: Optional[Callable] = None,
+    use_graph_agents: bool = True,
+) -> RepairResult:
+    """
+    Spawn repair agent with mandatory verification and retry on failure.
+
+    This function:
+    1. Selects agent based on posture matching to issue type (if use_graph_agents)
+    2. Sets agent status to 'running' in graph
+    3. Runs agent, then runs verification checks
+    4. If verification fails, restarts with --continue and feedback
+    5. Sets agent status back to 'ready' on completion
+
+    Args:
+        issue: The doctor issue to repair
+        target_dir: Project root
+        on_output: Callback for streaming output
+        instructions: Repair instructions
+        config: Doctor config
+        github_issue_number: Optional GitHub issue link
+        escalation_decisions: Decisions for ESCALATION issues
+        agent_id: Agent identifier
+        session_dir: Session directory
+        agent_symbol: Agent emoji symbol
+        agent_provider: Agent CLI provider
+        max_verification_retries: Max retries on verification failure
+        membrane_query: Optional membrane query function
+        use_graph_agents: Whether to use graph-based agent selection/status
+
+    Returns:
+        RepairResult with verification info
+    """
+    # Initialize graph agent management
+    selected_agent_id = None
+    posture = None
+    agent_graph = None
+
+    if use_graph_agents:
+        try:
+            agent_graph = AgentGraph(graph_name="ngram")
+            selected_agent_id, posture = _select_work_agent(issue.issue_type)
+
+            # Set agent to running
+            agent_graph.set_agent_running(selected_agent_id)
+            logger.info(f"[repair] Selected agent {selected_agent_id} (posture: {posture}) for {issue.issue_type}")
+        except Exception as e:
+            logger.warning(f"[repair] Graph agent management failed, continuing without: {e}")
+            agent_graph = None
+
+    total_output = []
+    total_duration = 0.0
+    retry_count = 0
+    last_result = None
+    continue_feedback = ""
+
+    try:
+        while retry_count <= max_verification_retries:
+            # Build prompt with feedback if this is a retry
+            current_instructions = instructions.copy()
+            if continue_feedback:
+                current_instructions["prompt"] = (
+                    continue_feedback + "\n\n" + current_instructions["prompt"]
+                )
+
+            # Capture git HEAD before
+            head_before = _get_git_head(target_dir)
+
+            # Run agent
+            result = await spawn_work_agent_async(
+                issue=issue,
+                target_dir=target_dir,
+                on_output=on_output,
+                instructions=current_instructions,
+                config=config,
+                github_issue_number=github_issue_number,
+                escalation_decisions=escalation_decisions,
+                agent_id=agent_id,
+                session_dir=session_dir,
+                agent_symbol=agent_symbol,
+                agent_provider=agent_provider,
+            )
+
+            # Capture git HEAD after
+            head_after = _get_git_head(target_dir)
+
+            # Collect output and duration
+            total_output.append(result.agent_output)
+            total_duration += result.duration_seconds
+            last_result = result
+
+            # If agent didn't even run successfully, don't verify
+            if result.error and "Exit code" in result.error:
+                logger.warning(f"Agent failed with error: {result.error}")
+                break
+
+            # Run verification
+            verification_results = verify_completion(
+                issue=issue,
+                target_dir=target_dir,
+                head_before=head_before,
+                head_after=head_after,
+                membrane_query=membrane_query,
+            )
+
+            if all_passed(verification_results):
+                # All checks passed!
+                logger.info(f"Verification PASSED for {issue.issue_type} in {issue.path}")
+                return RepairResult(
+                    issue_type=result.issue_type,
+                    target_path=result.target_path,
+                    success=True,
+                    agent_output="\n---\n".join(total_output),
+                    duration_seconds=total_duration,
+                    error=None,
+                    decisions_made=result.decisions_made,
+                    provider_used=result.provider_used,
+                    verification_results=verification_results,
+                    verification_passed=True,
+                    retry_count=retry_count,
+                    membrane_protocols_needed=None,
+                    selected_agent_id=selected_agent_id,
+                    selected_posture=posture,
+                )
+
+            # Verification failed
+            retry_count += 1
+            failed_protocols = get_failed_membrane_protocols(verification_results)
+
+            if retry_count > max_verification_retries:
+                # Max retries exceeded
+                logger.warning(
+                    f"Verification failed after {max_verification_retries} retries "
+                    f"for {issue.issue_type} in {issue.path}"
+                )
+                return RepairResult(
+                    issue_type=result.issue_type,
+                    target_path=result.target_path,
+                    success=False,
+                    agent_output="\n---\n".join(total_output),
+                    duration_seconds=total_duration,
+                    error=f"Verification failed after {max_verification_retries} retries",
+                    decisions_made=result.decisions_made,
+                    provider_used=result.provider_used,
+                    verification_results=verification_results,
+                    verification_passed=False,
+                    retry_count=retry_count - 1,
+                    membrane_protocols_needed=failed_protocols,
+                    selected_agent_id=selected_agent_id,
+                    selected_posture=posture,
+                )
+
+            # Format feedback for next attempt
+            continue_feedback = format_verification_feedback(
+                results=verification_results,
+                issue=issue,
+                attempt=retry_count,
+                max_attempts=max_verification_retries,
+            )
+
+            logger.info(
+                f"Verification failed (attempt {retry_count}/{max_verification_retries}), "
+                f"restarting with feedback. Failed protocols: {failed_protocols}"
+            )
+
+            # Notify via output callback
+            await on_output(f"\n[Verification failed, retry {retry_count}/{max_verification_retries}]\n")
+
+        # Loop exited without success
+        return RepairResult(
+            issue_type=issue.issue_type,
+            target_path=issue.path,
+            success=False,
+            agent_output="\n---\n".join(total_output) if total_output else "",
+            duration_seconds=total_duration,
+            error="Verification loop exited unexpectedly",
+            verification_passed=False,
+            retry_count=retry_count,
+            selected_agent_id=selected_agent_id,
+            selected_posture=posture,
+        )
+
+    finally:
+        # Always set agent back to ready
+        if agent_graph and selected_agent_id:
+            agent_graph.set_agent_ready(selected_agent_id)
+            logger.info(f"[repair] Agent {selected_agent_id} set back to ready")
